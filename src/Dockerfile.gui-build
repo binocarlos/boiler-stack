@@ -1,0 +1,14 @@
+FROM node:5.2.0-slim
+MAINTAINER kaiyadavenport@gmail.com
+
+COPY ./frontend/package.json /app/package.json
+WORKDIR /app
+RUN npm install
+
+COPY ./frontend/shared /app/shared
+COPY ./frontend/gui /app/gui
+
+WORKDIR /app/gui
+
+ENTRYPOINT ["npm", "run"]
+CMD ["release"]

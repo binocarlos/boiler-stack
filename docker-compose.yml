@@ -1,0 +1,40 @@
+version: '2'
+services:
+  mongo:
+    image: mongo
+    container_name: boiler_mongo
+    # we use buildright2 to not conflict with the old version
+    volumes:
+      - /var/lib/boiler/mongo:/data/db
+  router:
+    build:
+      context: ./src
+      dockerfile: Dockerfile.router
+    container_name: boiler_router
+    ports:
+      - "80:80"
+    links:
+      - gui:gui
+      - auth:auth
+    environment:
+      AUTH_SERVICE_HOST: auth
+      AUTH_SERVICE_PORT: 80
+      GUI_SERVICE_HOST: gui
+      GUI_SERVICE_PORT: 8080
+  auth:
+    image: binocarlos/passport-service
+    container_name: boiler_auth
+    depends_on:
+      - mongo
+    links:
+      - mongo:mongo
+    environment:
+      - MONGO_SERVICE_HOST=mongo
+      - HOSTNAME=172.17.1.188
+  gui:
+    build:
+      context: ./src
+      dockerfile: Dockerfile.gui
+    container_name: boiler_gui
+    volumes:
+      - ./src/frontend/gui/dist:/app/www
