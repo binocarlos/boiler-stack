@@ -1,4 +1,4 @@
 FROM nginx
 MAINTAINER kaiyadavenport@gmail.com
-COPY ./router/run.sh /run.sh
+COPY ./run.sh /run.sh
 ENTRYPOINT ["bash", "/run.sh"]

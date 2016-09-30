@@ -1,8 +1,0 @@
-FROM node:5.2.0-slim
-MAINTAINER kaiyadavenport@gmail.com
-COPY ./frontend/gui/webserver/package.json /app/package.json
-WORKDIR /app
-RUN npm install
-COPY ./frontend/gui/webserver /app
-COPY ./frontend/gui/dist /app/www
-ENTRYPOINT ["node", "index.js"]
