@@ -1,76 +1,29 @@
 # boiler-stack
 
-A starting place for a multi-container micro-service application.
+Starting place for apps.
 
-It comes with authentication and a redux boilerplate.
-
-## install
-
-First you need to install:
-
- * [virtualbox](https://www.virtualbox.org/wiki/Downloads)
- * [vagrant](http://www.vagrantup.com/downloads.html)
-
-## start vm
-
-```bash
-$ git clone https://github.com/binocarlos/boiler-stack
-$ cd boiler-stack
-$ vagrant up
-```
-
-This will start a vagrant box and install the things we need.
-
-## ssh into vm
-
-```bash
-$ vagrant ssh
-```
-
-If you are on Linux or OSX, this will connect automatically.  If you are on windows - follow the instructions to use Putty to SSH onto the VM.
-
-## /vagrant
-
-The working folder is `/vagrant` - all of the following commands assume you are in this folder.
-
-```bash
-$ cd /vagrant
-```
+You need `docker` and `docker-compose` (latest versions not the toolbox).
 
 ## install
 
-```bash
-$ make install
+build the images:
+
 ```
-
-## start stack
-
-Use docker-compose to start the stack:
-
-```bash
-$ docker-compose up
-```
-
-## open browser
-
-Open a browser to [http://172.17.1.188](http://172.17.1.188)
-
-## rebuild frontend
-
-In another shell - rebuild the frontend code:
-
-```bash
 $ make build
 ```
 
-You can watch the code:
+## frontend
 
-```bash
-$ make watch
+to build the frontend code:
+
+```
+$ make frontend.build
+$ make frontend.release
+$ make frontend.watch
 ```
 
-And build a release:
+## run stack
 
-```bash
-$ make release
+```
+$ docker-compose up
 ```

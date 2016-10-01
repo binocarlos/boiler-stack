@@ -20,9 +20,8 @@ http {
                       application/x-javascript
                       application/atom+xml;
 
-    # List of backend servers
-    upstream gui_servers {
-        server ${GUI_SERVICE_HOST}:${GUI_SERVICE_PORT};
+    upstream frontend_servers {
+        server ${FRONTEND_SERVICE_HOST}:${FRONTEND_SERVICE_PORT};
     }
 
     upstream auth_servers {
@@ -47,7 +46,7 @@ http {
 
         location / {
 
-            proxy_pass         http://gui_servers;
+            proxy_pass         http://frontend_servers;
             proxy_redirect     off;
             proxy_set_header   Host \$host;
             proxy_set_header   X-Real-IP \$remote_addr;

@@ -1,13 +1,16 @@
-.PHONY: install build release watch
-
-install:
-	cd src/frontend && npm install
-
+.PHONY: build
 build:
-	cd src/frontend/gui && npm run build
+	docker-compose build
+	docker-compose -f docker-compose.commands.yml build
 
-release:
-	cd src/frontend/gui && npm run release
+.PHONY: frontend.build
+frontend.build:
+	docker-compose -f docker-compose.commands.yml run frontendbuild build
 
-watch:
-	cd src/frontend/gui && npm run watch
+.PHONY: frontend.release
+frontend.release:
+	docker-compose -f docker-compose.commands.yml run frontendbuild release
+
+.PHONY: frontend.watch
+frontend.watch:
+	docker-compose -f docker-compose.commands.yml run frontendbuild watch

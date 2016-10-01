@@ -12,13 +12,13 @@ services:
     ports:
       - "80:80"
     links:
-      - gui:gui
+      - frontend:frontend
       - auth:auth
     environment:
       AUTH_SERVICE_HOST: auth
       AUTH_SERVICE_PORT: 80
-      GUI_SERVICE_HOST: gui
-      GUI_SERVICE_PORT: 80
+      FRONTEND_SERVICE_HOST: frontend
+      FRONTEND_SERVICE_PORT: 80
   auth:
     image: binocarlos/passport-service
     container_name: boiler_auth
@@ -29,10 +29,9 @@ services:
     environment:
       - MONGO_SERVICE_HOST=mongo
       - HOSTNAME=localhost
-  gui:
+  frontend:
     build:
-      context: ./src
-      dockerfile: Dockerfile.gui
-    container_name: boiler_gui
+      context: ./frontend
+    container_name: boiler_frontend
     volumes:
-      - ./src/frontend/gui/dist:/app/www
+      - ./frontend/dist:/app/www
