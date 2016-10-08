@@ -1,17 +1,17 @@
 import React, { PropTypes, Component } from 'react'
 import PassportForm from '../components/PassportForm'
 
-class Login extends Component {
+class Register extends Component {
   
   render() {
 
     return (
 
-      <PassportForm page="login" />
+      <PassportForm page="register" />
 
     )
   }
 
 }
 
-export default Login
+export default Register

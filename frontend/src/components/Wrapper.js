@@ -2,6 +2,12 @@ import React, { Component, PropTypes } from 'react'
 import AppWrapper from 'kettle-ui/lib/AppWrapper'
 import AppBar from 'material-ui/AppBar'
 
+const styles = {
+  container:{
+    margin:'100px'
+  }
+}
+
 class Wrapper extends Component {
 
   render() {
@@ -11,11 +17,15 @@ class Wrapper extends Component {
         appbar={
           <AppBar
             showMenuIconButton={false}
-            title="Home"
+            title={this.props.title}
             zDepth={2} />
         }>
+
+        <div style={styles.container}>
         
-        {this.props.children}
+          {this.props.children}
+
+        </div>
         
       </AppWrapper>
     )
