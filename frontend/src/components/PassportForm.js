@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react'
 import Paper from 'material-ui/Paper'
-import { PassportForm } from 'passport-service-gui'
+import { UIPassportForm } from 'passport-service-gui'
 
 class PassportForm extends Component {
   
@@ -9,7 +9,7 @@ class PassportForm extends Component {
     return (
 
       <Paper zDepth={2}>
-        <PassportForm 
+        <UIPassportForm 
           page={this.props.page}
           url="/v1/auth" />
       </Paper>

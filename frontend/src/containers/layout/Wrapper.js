@@ -14,16 +14,11 @@ class Wrapper extends Component {
 
     return (
       <AppWrapper
-        appbar={
-          <AppBar
-            showMenuIconButton={false}
-            title={this.props.title}
-            zDepth={2} />
-        }>
+        appbar={this.props.appbar}>
 
         <div style={styles.container}>
         
-          {this.props.children}
+          {this.props.content}
 
         </div>
         
