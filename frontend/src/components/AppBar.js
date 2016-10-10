@@ -1,18 +1,15 @@
 import React, { Component, PropTypes } from 'react'
 import UIAppBar from 'material-ui/AppBar'
 
-class AppBar extends Component {
-
+export class AppBar extends Component {
   render() {
-
-    return (
+    return (    
       <UIAppBar
         showMenuIconButton={false}
-        title="App"
+        title={this.props.title}
         zDepth={2} />
     )
   }
-
 }
 
 export default AppBar

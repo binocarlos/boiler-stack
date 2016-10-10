@@ -11,10 +11,13 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import Routes from './routes'
 
 import folderreducer from 'folder-ui/lib/reducer'
-import { passportreducer, UserLoader } from 'passport-service-gui'
+import { passportreducer } from 'passport-service-gui'
 
 const finalCreateStore = compose(
-  applyMiddleware(thunk, routerMiddleware),
+  applyMiddleware(
+    thunk,
+    routerMiddleware(hashHistory)
+  ),
   window.devToolsExtension ? window.devToolsExtension() : f => f
 )(createStore)
 
@@ -33,11 +36,9 @@ injectTapEventPlugin()
 ReactDOM.render(  
   <Provider store={store}>
     <MuiThemeProvider>
-      <UserLoader url="/v1/auth/status">
-        <Router history={history}>
-          {routes}
-        </Router>
-      </UserLoader>
+      <Router history={history}>
+        {routes}
+      </Router>
     </MuiThemeProvider>
   </Provider>,
   document.getElementById('mount')

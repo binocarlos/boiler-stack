@@ -2,13 +2,11 @@ import React, { Component, PropTypes } from 'react'
 import { Route, IndexRoute } from 'react-router'
 import { passporttools } from 'passport-service-gui'
 
-import Wrapper from './containers/layout/Wrapper'
-import AppBar from './containers/layout/AppBar'
-import LoginAppBar from './containers/layout/LoginAppBar'
+import Wrapper from './containers/Wrapper'
+import AppBar from './containers/AppBar'
 import Loader from './components/Loader'
 
-import Login from './containers/Login'
-import Register from './containers/Register'
+import PassportForm from './components/PassportForm'
 import Folders from './containers/Folders'
 
 export default (store) => {
@@ -21,18 +19,11 @@ export default (store) => {
   // redirect to /login if not
   const requireAuth = (nextState, replace, callback) => {
     const passport = getUserState()
-
-    console.log('-------------------------------------------');
-    console.log('requireAuth')
-    console.log(JSON.stringify(passport, null, 4))
-    /*
-    if(!passport.loaded) return callback()
-    if (!authenticated) {
+    if (passport.loaded && !passport.loggedIn) {
       replace({
-        pathname: '/login',
-        state: { nextPathname: nextState.location.pathname }
+        pathname: '/login'
       })
-    }*/
+    }
     callback()
   }
 
@@ -40,31 +31,20 @@ export default (store) => {
   // redirect to / if they are
   const requireGuest = (nextState, replace, callback) => {
     const passport = getUserState()
-
-    console.log('-------------------------------------------');
-    console.log('requireGuest')
-    console.log(JSON.stringify(passport, null, 4))
-/*
-    if (authenticated) {
+    if (passport.loaded && passport.loggedIn) {
       replace({
         pathname: '/'
       })
-    }*/
+    }
     callback()
-  }
-
-  const getRoute = (path, content, appbar = AppBar, onEnter = requireAuth) => {
-    return (
-      <Route path={path} components={{content:content,appbar:appbar}} onEnter={onEnter} />
-    )
   }
 
   return (
     <Route path="/" component={Wrapper}>
-      <IndexRoute components={{appbar:AppBar,content:Loader}} onEnter={requireAuth} />
-      {getRoute('folders', Folders)}
-      {getRoute('login', Login, LoginAppBar, requireGuest)}
-      {getRoute('register', Register, LoginAppBar, requireGuest)}
+      <IndexRoute component={Loader} onEnter={requireAuth} />
+      <Route path="folders" component={Folders} onEnter={requireAuth} />
+      <Route path="login" component={PassportForm} page="login" onEnter={requireGuest} />
+      <Route path="register" component={PassportForm} page="register" onEnter={requireGuest} />
     </Route>
   )
 }
