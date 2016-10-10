@@ -6,7 +6,7 @@ import Wrapper from './containers/Wrapper'
 import AppBar from './containers/AppBar'
 import Loader from './components/Loader'
 
-import PassportForm from './components/PassportForm'
+import PassportForm from './containers/PassportForm'
 import Folders from './containers/Folders'
 
 export default (store) => {

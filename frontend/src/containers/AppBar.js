@@ -5,7 +5,7 @@ import UIAppBar from '../components/AppBar'
 
 export class AppBar extends Component {
   render() {
-    return (    
+    return (
       <UIAppBar {...this.props} />
     )
   }
