@@ -11,9 +11,12 @@ export const passportForms = {
     margin:'20px',
   },
   login:{
-    
+
   },
   register:{
     paddingBottom:'20px'
+  },
+  content:{
+    marginTop:'10px'
   }
 }

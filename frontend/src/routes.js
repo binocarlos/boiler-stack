@@ -5,9 +5,11 @@ import { passporttools } from 'passport-service-gui'
 import Wrapper from './containers/Wrapper'
 import AppBar from './containers/AppBar'
 import Loader from './components/Loader'
+import Page from './components/Page'
 
 import PassportForm from './containers/PassportForm'
 import Folders from './containers/Folders'
+import Dashboard from './containers/Dashboard'
 
 export default (store) => {
 
@@ -41,8 +43,11 @@ export default (store) => {
 
   return (
     <Route path="/" component={Wrapper}>
-      <IndexRoute component={Loader} onEnter={requireAuth} />
+      <Route component={Page}>
+        <IndexRoute component={Dashboard} onEnter={requireAuth} />
+      </Route>
       <Route path="folders" component={Folders} onEnter={requireAuth} />
+      <Route path="folders/*" component={Folders} onEnter={requireAuth} />
       <Route path="login" component={PassportForm} page="login" onEnter={requireGuest} />
       <Route path="register" component={PassportForm} page="register" onEnter={requireGuest} />
     </Route>

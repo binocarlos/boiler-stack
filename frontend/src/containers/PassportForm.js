@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { routerActions } from 'react-router-redux'
-import { passporttools } from 'passport-service-gui'
+import { passporttools, actions } from 'passport-service-gui'
+import { auth } from '../settings'
 import UIPassportForm from '../components/PassportForm'
 
 export class PassportForm extends Component {
@@ -14,11 +15,26 @@ export class PassportForm extends Component {
 
 function mapStateToProps(state, ownProps) {
   return {
-    page:ownProps.route.page
+    page:ownProps.route.page,
+    url:auth.url
   }
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
+
+  const postLogin = (err) => {
+
+    if(err) return
+
+      console.log('-------------------------------------------');
+    console.log('doing post login')
+    // clear existing passport state
+    dispatch(actions.resetStatus())
+
+    // redirect to '/'
+    dispatch(routerActions.push('/'))
+  }
+
   return {
     changePage:(page) => {
       // we get synthetic events from the tabs
@@ -27,13 +43,25 @@ function mapDispatchToProps(dispatch, ownProps) {
     changeLocation:(url) => {
       dispatch(routerActions.push(url))
     },
-    onLogin:() => {
+
+    // once the user has logged in - first reset the passport state
+    // then re-direct to '/' which will trigger the UserLoader
+    onLogin: postLogin,
+
+    // once the user has registered
+    // perform a login using the same details
+    onRegister:(err, body, opts) => {
+
+      if(err) return
+
+      opts = Object.assign({}, opts, {
+        url:auth.url + '/login'
+      })
+
       console.log('-------------------------------------------');
-      console.log('did login')
-    },
-    onRegister:() => {
-      console.log('-------------------------------------------');
-      console.log('did register')
+      console.log('doing post register login')
+      console.log(JSON.stringify(opts, null, 4))
+      dispatch(actions.login(opts, postLogin))
     }
   }
 }

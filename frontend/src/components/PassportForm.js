@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 import Paper from 'material-ui/Paper'
 import { Link } from 'react-router'
+import Divider from 'material-ui/Divider'
 import { PassportForm as UIPassportForm } from 'passport-service-gui'
 import { layout, passportForms } from '../styles'
 
@@ -11,11 +12,19 @@ class PassportForm extends Component {
     const pageContent = {
       login:(
         <div style={passportForms.login}>
-          <Link to="/register">Click here</Link> to register
+          <Divider />
+          <div style={passportForms.content}>
+            <Link to="/register">Click here</Link> to register
+          </div>
         </div>
       ),
       register:(
-        <div style={passportForms.register}>Enter your details to register.</div>
+        <div style={passportForms.register}>
+          <Divider />
+          <div style={passportForms.content}>
+            Enter your details to register.
+          </div>
+        </div>
       )
     }
 
@@ -32,7 +41,7 @@ class PassportForm extends Component {
             onLogin={this.props.onLogin}
             onRegister={this.props.onRegister}
             pageContent={pageContent}
-            url="/v1/auth" />
+            url={this.props.url} />
         </Paper>
       </div>
 

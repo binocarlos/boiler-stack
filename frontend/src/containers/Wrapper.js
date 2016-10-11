@@ -6,7 +6,6 @@ import AppWrapper from 'kettle-ui/lib/AppWrapper'
 import AppBar from './AppBar'
 import Loader from '../components/Loader'
 
-
 /*
 
   the Wrapper displays the content of the top-level routes
@@ -32,10 +31,6 @@ import Loader from '../components/Loader'
 export class Wrapper extends Component {
 
   render() {
-
-    
-    
-
     return ( 
       <UserLoader url="/v1/auth/status" onLoaded={this.props.userLoaded}>
         <AppWrapper
