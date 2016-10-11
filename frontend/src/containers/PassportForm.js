@@ -26,8 +26,6 @@ function mapDispatchToProps(dispatch, ownProps) {
 
     if(err) return
 
-      console.log('-------------------------------------------');
-    console.log('doing post login')
     // clear existing passport state
     dispatch(actions.resetStatus())
 
@@ -58,9 +56,6 @@ function mapDispatchToProps(dispatch, ownProps) {
         url:auth.url + '/login'
       })
 
-      console.log('-------------------------------------------');
-      console.log('doing post register login')
-      console.log(JSON.stringify(opts, null, 4))
       dispatch(actions.login(opts, postLogin))
     }
   }
