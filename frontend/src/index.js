@@ -1,45 +1,23 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import injectTapEventPlugin from 'react-tap-event-plugin'
-import { Provider } from 'react-redux'
-import { applyMiddleware, compose, createStore, combineReducers } from 'redux'
-import { Router, hashHistory } from 'react-router'
-import { syncHistoryWithStore, routerReducer, routerMiddleware } from 'react-router-redux'
-import thunk from 'redux-thunk'
-
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import Routes from './routes'
-
+import boilerapp from 'boiler-frontend'
 import folderreducer from 'folder-ui/lib/reducer'
-import { passportreducer } from 'passport-service-gui'
 
-const finalCreateStore = compose(
-  applyMiddleware(
-    thunk,
-    routerMiddleware(hashHistory)
-  ),
-  window.devToolsExtension ? window.devToolsExtension() : f => f
-)(createStore)
+import About from './containers/About'
+import Folders from './containers/Folders'
 
-const reducer = combineReducers({
-  folderui: folderreducer,
-  passport: passportreducer,
-  routing: routerReducer
+boilerapp({
+  mountElement:document.getElementById('mount'),
+  reducers:{
+    folderui:folderreducer
+  },
+  routes:[{
+    path:'/about',
+    component:About,
+    openAccess:true
+  },{
+    path:'/folders',
+    component:Folders
+  }, {
+    path:'/folders/*',
+    components:Folders
+  }]
 })
-
-const store = finalCreateStore(reducer)
-const history = syncHistoryWithStore(hashHistory, store)
-const routes = Routes(store)
-
-injectTapEventPlugin()
-
-ReactDOM.render(  
-  <Provider store={store}>
-    <MuiThemeProvider>
-      <Router history={history}>
-        {routes}
-      </Router>
-    </MuiThemeProvider>
-  </Provider>,
-  document.getElementById('mount')
-)

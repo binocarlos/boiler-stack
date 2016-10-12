@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import UIDashboard from '../components/Dashboard'
+import UIAbout from '../components/About'
 
-export class Dashboard extends Component {
+export class About extends Component {
   render() {
     return (
-      <UIDashboard {...this.props} />
+      <UIAbout {...this.props} />
     )
   }
 }
@@ -21,4 +21,4 @@ function mapDispatchToProps(dispatch, ownProps) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Dashboard)
+)(About)

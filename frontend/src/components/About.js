@@ -1,16 +1,16 @@
 import React, { Component, PropTypes } from 'react'
 import { Link } from 'react-router'
-class Dashboard extends Component {
+class About extends Component {
 
   render() {
 
     return (
       <div>
         <p>
-          This is the dashboard
+          This is the about page
         </p>
         <p>
-          <Link to="/folders">Click here</Link> for the folder app
+          <Link to="/">Go Home</Link>
         </p>
       </div>
     )
@@ -18,4 +18,4 @@ class Dashboard extends Component {
 
 }
 
-export default Dashboard
+export default About
