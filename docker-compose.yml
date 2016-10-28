@@ -14,9 +14,12 @@ services:
     links:
       - frontend:frontend
       - auth:auth
+      - api:api
     environment:
       AUTH_SERVICE_HOST: auth
       AUTH_SERVICE_PORT: 80
+      API_SERVICE_HOST: api
+      API_SERVICE_PORT: 80
       FRONTEND_SERVICE_HOST: frontend
       FRONTEND_SERVICE_PORT: 80
   auth:
@@ -29,6 +32,16 @@ services:
     environment:
       - MONGO_SERVICE_HOST=mongo
       - HOSTNAME=localhost
+  api:
+    build:
+      context: ./api
+    links:
+      - auth:auth
+    volumes:
+      - ./api/src:/app/src
+    environment:
+      AUTH_SERVICE_HOST: auth
+      AUTH_SERVICE_PORT: 80
   frontend:
     build:
       context: ./frontend

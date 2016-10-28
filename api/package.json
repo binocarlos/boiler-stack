@@ -1,0 +1,19 @@
+{
+  "name": "boiler-stack-api",
+  "private": true,
+  "version": "1.0.0",
+  "description": "the api gateway for the boilerstack app",
+  "main": "index.js",
+  "scripts": {
+    
+  },
+  "dependencies": {
+    "concat-stream": "^1.5.1",
+    "http-hash-router": "^1.1.0",
+    "minimist": "^1.2.0",
+    "morgan": "^1.7.0"
+  },
+  "devDependencies": {
+    
+  }
+}

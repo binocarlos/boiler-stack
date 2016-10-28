@@ -1,15 +1,38 @@
-const TYPES = {
-  folder:[{
-    name:'name'
-  }],
-  item:[{
-    name:'name'
-  },{
-    name:'comment'
-  }]
+export const USER_DETAILS = [{
+  name:'firstname',
+  type:'text'
+},
+{
+  name:'lastname',
+  type:'text'
+}]
+
+export const TYPES = {
+  folder:{
+    title:'Folder',
+    fields:[{
+      name:'name'
+    }],
+    initialData:{
+      
+    }
+  },
+  item:{
+    title:'Item',
+    fields:[{
+      name:'name'
+    },{
+      name:'comment'
+    }],
+    initialData:{
+      
+    }
+  }
 }
 
-export function get_schema(item){
-  let type = item.type || 'folder'
-  return TYPES[type]
-}
+export const TABLE_FIELDS = [{
+  title:'name',
+  render:data => data.name
+}]
+
+export const LIBRARY = {}

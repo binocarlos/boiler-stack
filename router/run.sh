@@ -28,6 +28,10 @@ http {
         server ${AUTH_SERVICE_HOST}:${AUTH_SERVICE_PORT};
     }
 
+    upstream api_servers {
+        server ${API_SERVICE_HOST}:${API_SERVICE_PORT};
+    }
+
     server {
 
         
@@ -36,6 +40,17 @@ http {
         location /v1/auth {
 
             proxy_pass         http://auth_servers;
+            proxy_redirect     off;
+            proxy_set_header   Host \$host;
+            proxy_set_header   X-Real-IP \$remote_addr;
+            proxy_set_header   X-Forwarded-For \$proxy_add_x_forwarded_for;
+            proxy_set_header   X-Forwarded-Host \$server_name;
+
+        }
+
+        location /v1/api {
+
+            proxy_pass         http://api_servers;
             proxy_redirect     off;
             proxy_set_header   Host \$host;
             proxy_set_header   X-Real-IP \$remote_addr;
