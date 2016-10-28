@@ -4,8 +4,12 @@ const morgan = require('morgan')
 const HttpHashRouter = require('http-hash-router')
 const concat = require('concat-stream')
 
+var bhttp = require("bhttp")
+
 const logger = morgan('combined')
 const VERSION = require(path.join(__dirname, '..', 'package.json')).version
+
+const tools = require('./tools')
 
 module.exports = function(opts){
 
@@ -16,6 +20,22 @@ module.exports = function(opts){
   router.set(opts.url + '/version', {
     GET:function(req, res){
       res.end(VERSION)
+    }
+  })
+
+  router.set(opts.url + '/user', {
+    GET:function(req, res){
+
+      tools.loadUser(req.headers.cookie, function(err, user){
+        if(err){
+          res.statusCode = 500
+          res.end(err)
+          return
+        }
+        res.setHeader('Content-type', 'application/json')
+        res.end(JSON.stringify(user))
+      })
+      
     }
   })
 /*
