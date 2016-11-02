@@ -5,7 +5,9 @@ import Page from 'boiler-frontend/lib/components/Page'
 
 import FolderReducer from 'folder-ui/lib/reducer'
 import BasicTemplate from 'folder-ui/lib/templates/basic'
-import LocalStorageDB from 'folder-ui/lib/db/localstorage'
+import DiggerDB from 'digger-folder-ui/lib/db'
+import MemoryDB from 'folder-ui/lib/db/memory'
+import CompositeDB from 'folder-ui/lib/db/composite'
 
 import {
   USER_DETAILS,
@@ -25,13 +27,21 @@ const ItemRoutes = (auth) => {
     name:'items',
     path:'items',
     onEnter:auth.user,
-    db:LocalStorageDB({
-      name:'boilerstack.items',
-      data:[{
-        id:'root',
+    db:CompositeDB([{
+      id:'items',
+      rootNode:{
         name:'My Items'
-      }]
-    })
+      },
+      db:DiggerDB({
+        base:'/v1/api/db/apples/pears'
+      })
+    },{
+      id:'itemsm',
+      rootNode:{
+        name:'My Items (M)'
+      },
+      db:MemoryDB()
+    }])
   })
 }
 
