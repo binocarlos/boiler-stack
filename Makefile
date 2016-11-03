@@ -17,7 +17,8 @@ frontend.watch:
 
 .PHONY: api.quick
 api.quick:
-	docker run -ti \
+	docker run -ti --rm \
+		--name boiler_api \
 		--network boilerstack_default \
 		--link boiler_auth:auth \
 		--link boiler_digger:digger \
@@ -29,3 +30,14 @@ api.quick:
 		-e DIGGER_SERVICE_PORT=80 \
 		--entrypoint bash \
 		boilerstack_api
+
+.PHONY: digger.quick
+digger.quick:
+	docker run -ti --rm \
+		--name boiler_digger \
+		--network boilerstack_default \
+		-v ~/projects/boiler-stack/.boilerstack/digger:/data/db \
+		-v ~/projects/digger-rest/router.js:/app/router.js \
+		-v ~/projects/digger-rest/index.js:/app/index.js \
+		--entrypoint bash \
+		binocarlos/digger-rest

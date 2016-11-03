@@ -5,7 +5,7 @@ import Page from 'boiler-frontend/lib/components/Page'
 
 import FolderReducer from 'folder-ui/lib/reducer'
 import BasicTemplate from 'folder-ui/lib/templates/basic'
-import DiggerDB from 'digger-folder-ui/lib/db'
+import DiggerDB from 'digger-folder-ui-db'
 import MemoryDB from 'folder-ui/lib/db/memory'
 import CompositeDB from 'folder-ui/lib/db/composite'
 

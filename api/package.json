@@ -8,6 +8,7 @@
   "dependencies": {
     "bhttp": "^1.2.4",
     "concat-stream": "^1.5.1",
+    "digger-folder-ui": "^1.0.0",
     "http-hash-router": "^1.1.0",
     "minimist": "^1.2.0",
     "morgan": "^1.7.0"

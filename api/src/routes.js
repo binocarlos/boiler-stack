@@ -6,6 +6,7 @@ const concat = require('concat-stream')
 
 const bhttp = require("bhttp")
 const diggerFolderUI = require('digger-folder-ui')
+const diggerFolderUITools = require('digger-folder-ui/tools')
 
 const logger = morgan('combined')
 const VERSION = require(path.join(__dirname, '..', 'package.json')).version
@@ -18,25 +19,28 @@ module.exports = function(opts){
   opts = opts || {}
 
   var router = HttpHashRouter()
-  var folderRoutes = diggerFolderUI({
-    url:tools.diggerUrl()
-  })
+  
+
+  // TODO: this is a placeholder atm
   var auth = Auth({
 
   })
 
-  function errorWrapper(res, fn){
-    return function(err, data){
-      if(err){
-        res.statusCode = 500
-        res.end(err.toString())
-        return
-      }
-      fn(data)
-    }
-  }
+  var errorWrapper = diggerFolderUITools.errorWrapper
 
-  function authWrapper(wrapperOpts, handler){
+  // loads the user using the cookie
+  //
+  // then calls the auth.project handler with:
+  //   * project (from url)
+  //   * section (from url)
+  //   * action (from route)
+  //   * params (from url)
+  //   * user (from auth service)
+  //
+  // then writes the user and all props of the wrapper opts
+  // to the params for the actual request
+
+  function routeWrapper(wrapperOpts, handler){
     return function(req, res, opts){
       tools.loadUser(req.headers.cookie, errorWrapper(res, function(user){
         auth.project({
@@ -47,21 +51,42 @@ module.exports = function(opts){
           user:user
         }, errorWrapper(res, function(info){
           opts.params.user = user
-          opts.params.action = wrapperOpts.action
+          Object.keys(wrapperOpts || {}).forEach(function(key){
+            opts.params[key] = wrapperOpts[key]
+          })
           handler(req, res, opts)
         }))
       }))
     }
   }
 
-  // get the base digger path from the project/section params
-  function getDiggerPath(params){
-    return [
-      'project',
-      params.project,
-      params.section
-    ].join('/')
+  // extract the values from opts.params based on the route
+  // these values are passed in the backend handlers
+  function getParams(params){
+    return {
+      // the item id based on '/:id'
+      id:params.id,
+
+      // BACKEND DIGGER PATH
+      // /db/123/resources/children/:id -> project/123/resources
+      path:[
+        'project',
+        params.project,
+        params.section
+      ].join('/')
+    }
   }
+
+  // 
+  diggerFolderUI({
+    // we extract the item id from this part of the path
+    idParam:'id',
+    mountpoint:opts.url + '/db/:project/:section',
+    diggerurl:tools.diggerUrl(),
+    routeWrapper:routeWrapper,
+    getParams:getParams,
+    router:router
+  })
 
   router.set(opts.url + '/version', {
     GET:function(req, res){
@@ -79,59 +104,6 @@ module.exports = function(opts){
       
     }
   })
-
-  var treeHandler = {
-    GET:authWrapper({
-      action:'tree'
-    }, function(req, res, opts){
-      folderRoutes.loadTree({
-        path:getDiggerPath(opts.params)
-      }, errorWrapper(res, function(data){
-        res.setHeader('Content-type', 'application/json')
-        res.end(JSON.stringify(data))
-      }))
-    })
-  }
-
-  // load the tree
-  router.set(opts.url + '/db/:project/:section/tree', treeHandler)
-
-  var addHandler = {
-    POST:authWrapper({
-      action:'add'
-    }, function(req, res, opts){
-      folderRoutes.addItem(req, {
-        id:opts.params.id,
-        path:getDiggerPath(opts.params)
-      }, errorWrapper(res, function(data){
-        res.setHeader('Content-type', 'application/json')
-        res.end(JSON.stringify(data))
-      }))
-      
-    })
-  }
-
-  // add an item
-  router.set(opts.url + '/db/:project/:section/add', addHandler)
-  router.set(opts.url + '/db/:project/:section/add/:id', addHandler)
-
-/*
-  router.set('/path/*', {
-    GET:getItemByPath,
-    POST:postItemByPath
-  })
-
-  router.set('/select/*', {
-    GET:selectItemsByPath
-  })
-
-  router.set('/item/:id', {
-    GET:getItemById,
-    POST:postItemById,
-    PUT:putItemById,
-    DELETE:deleteItemById
-  })
-*/
 
   function handler(req, res) {
 
