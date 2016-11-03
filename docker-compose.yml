@@ -41,6 +41,7 @@ services:
   api:
     build:
       context: ./api
+    container_name: boiler_api
     links:
       - auth:auth
       - digger:digger
