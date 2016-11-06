@@ -24,6 +24,7 @@ api.quick:
 		--link boiler_digger:digger \
 		--link boiler_storage:storage \
 		-v ~/projects/boiler-stack/api/src:/app/src \
+		-v ~/projects/digger-folder-ui:/app/node_modules/digger-folder-ui \
 		-e AUTH_SERVICE_HOST=auth \
 		-e AUTH_SERVICE_PORT=80 \
 		-e DIGGER_SERVICE_HOST=digger \

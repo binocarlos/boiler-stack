@@ -1,18 +1,9 @@
-const path = require('path')
 const url = require('url')
 const morgan = require('morgan')
 const HttpHashRouter = require('http-hash-router')
-const concat = require('concat-stream')
-
-const bhttp = require("bhttp")
-const diggerFolderUI = require('digger-folder-ui')
-const diggerFolderUITools = require('digger-folder-ui/tools')
-const errorWrapper = diggerFolderUITools.errorWrapper
 
 const logger = morgan('combined')
-const VERSION = require(path.join(__dirname, '..', 'package.json')).version
 
-const tools = require('../tools')
 const Auth = require('../auth')
 
 const Digger = require('./digger')
@@ -35,16 +26,16 @@ module.exports = function(opts){
   var diggerOpts = Object.assign({}, opts, {
     auth:auth,
     // the frontend route prefix
-    frontendPrefix:'project',
+    frontendPrefix:'resources',
     // the backend digger prefix
-    backendPrefix:'db',
+    backendPrefix:'resources',
     // the array of params to map from the route
     paramFields:['project', 'section']
   })
 
   // this setps up the 
-  // /v1/api/db/:project/:section -> (/v1/api/db/apples/oranges)
-  // /project/:project/:section-> (/project/apples/oranges)
+  // /api/v1/resources/:project/:section -> (/api/v1/resources/apples/oranges)
+  // /db/:project/:section-> (/project/apples/oranges)
   Digger(router, diggerOpts)
 
   Version(router, opts)

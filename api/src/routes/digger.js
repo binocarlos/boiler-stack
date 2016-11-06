@@ -54,14 +54,16 @@ module.exports = function(router, opts){
   // extract the values from opts.params based on the route
   // these values are passed in the backend handlers
   function getParams(params){
-    return {
+    var ret = {
       // the item id based on '/:id'
       id:params[opts.idField],
 
-      // BACKEND DIGGER PATH
-      // /db/123/resources/children/:id -> project/123/resources
-      path:[backendPrefix].concat(opts.paramFields).join('/')
+      path:[backendPrefix].concat(opts.paramFields.map(function(field){
+        return params[field]
+      })).join('/')
     }
+    console.log(JSON.stringify(ret, null, 4))
+    return ret
   }
 
   // turn frontend opts.url = '/v1/api', prefix = 'project', paramFields = ['project', 'section'] into
@@ -69,6 +71,8 @@ module.exports = function(router, opts){
   var paramFields = [frontendPrefix].concat(opts.paramFields.map(function(field){
     return ':' + field
   })).join('/')
+
+  console.log('mountpoint: ' + opts.url + '/' + paramFields)
 
   diggerFolderUI({
     // we extract the item id from this part of the path

@@ -9,6 +9,8 @@ import DiggerDB from 'digger-folder-ui-db'
 import MemoryDB from 'folder-ui/lib/db/memory'
 import CompositeDB from 'folder-ui/lib/db/composite'
 
+import appreducer from './reducer'
+
 import {
   USER_DETAILS,
   TYPES,
@@ -33,7 +35,7 @@ const ItemRoutes = (auth) => {
         name:'My Items'
       },
       db:DiggerDB({
-        base:'/api/v1/db/apples/pears'
+        base:'/api/v1/resources/apples/pears'
       })
     },{
       id:'itemsm',
@@ -48,7 +50,8 @@ const ItemRoutes = (auth) => {
 boilerapp({
   mountElement:document.getElementById('mount'),
   reducers:{
-    items:FolderReducer('items')
+    items:FolderReducer('items'),
+    app:appreducer
   },
   dashboard:Dashboard,
   userDetailsSchema:USER_DETAILS,
