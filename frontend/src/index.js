@@ -33,7 +33,7 @@ const ItemRoutes = (auth) => {
         name:'My Items'
       },
       db:DiggerDB({
-        base:'/v1/api/db/apples/pears'
+        base:'/api/v1/db/apples/pears'
       })
     },{
       id:'itemsm',

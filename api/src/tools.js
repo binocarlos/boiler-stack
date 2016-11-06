@@ -10,8 +10,10 @@ function diggerUrl(path){
   return path ? url + path : url
 }
 
+var AUTH_PATH = '/auth/v1/status'
+
 function loadUser(cookie, done){
-  bhttp.get(authUrl('/v1/auth/status'), {
+  bhttp.get(authUrl(AUTH_PATH), {
     decodeJSON:true,
     headers:{
       cookie:cookie

@@ -15,14 +15,13 @@ module.exports = function(opts){
     database:opts.mongodatabase
   })
 
-  var models = Models(mongoose)
+  var models = Models()
   
   var app = express()
   app.use(bodyParser.urlencoded({ extended: true }))
   app.use(bodyParser.json())
   app.use(methodOverride('X-HTTP-Method-Override'))
-  restify.serve(app, models.customer)
-  restify.serve(app, models.invoice)
+  restify.serve(app, models.project)
 
   return app
 }

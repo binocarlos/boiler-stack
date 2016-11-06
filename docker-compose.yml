@@ -12,7 +12,7 @@ services:
       context: ./router
     container_name: boiler_router
     ports:
-      - "8080:80"
+      - "80:80"
     links:
       - frontend:frontend
       - auth:auth
@@ -35,37 +35,41 @@ services:
     environment:
       MONGO_SERVICE_HOST: mongo
       HOSTNAME: localhost
+      SUCCESS_REDIRECT: /api/v1/admin/ensure_project
   digger:
     image: binocarlos/digger-rest
     container_name: boiler_digger
     volumes:
       - ./.boilerstack/digger:/data/db
-  api:
-    build:
-      context: ./api
-    container_name: boiler_api
-    links:
-      - auth:auth
-      - digger:digger
-    volumes:
-      - ./api/src:/app/src
-    environment:
-      AUTH_SERVICE_HOST: auth
-      AUTH_SERVICE_PORT: 80
-      DIGGER_SERVICE_HOST: digger
-      DIGGER_SERVICE_PORT: 80
-  storage:
-    build:
-      context: ./storage
-    container_name: boiler_storage
-    links:
-      - mongo:mongo      
-    volumes:
-      - ./storage/src:/storage/src
-    environment:
-      MONGO_SERVICE_HOST: mongo
-      MONGO_SERVICE_PORT: 27017
-      MONGO_SERVICE_DATABASE: boilerstorge
+  #api:
+  #  build:
+  #    context: ./api
+  #  container_name: boiler_api
+  #  links:
+  #    - auth:auth
+  #    - digger:digger
+  #    - storage:storage
+  #  volumes:
+  #    - ./api/src:/app/src
+  #  environment:
+  #    AUTH_SERVICE_HOST: auth
+  #    AUTH_SERVICE_PORT: 80
+  #    DIGGER_SERVICE_HOST: digger
+  #    DIGGER_SERVICE_PORT: 80
+  #    STORAGE_SERVICE_HOST: storage
+  #    STORAGE_SERVICE_PORT: 80
+  #storage:
+  #  build:
+  #    context: ./storage
+  #  container_name: boiler_storage
+  #  links:
+  #    - mongo:mongo      
+  #  volumes:
+  #    - ./storage/src:/storage/src
+  #  environment:
+  #    MONGO_SERVICE_HOST: mongo
+  #    MONGO_SERVICE_PORT: 27017
+  #    MONGO_SERVICE_DATABASE: boilerstorge
   frontend:
     build:
       context: ./frontend

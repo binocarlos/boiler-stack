@@ -9,7 +9,7 @@ var args = require('minimist')(process.argv, {
   },
   default:{
     port:process.env.PORT || 80,
-    url:process.env.URL || '/v1/api'
+    url:process.env.URL || '/api/v1'
   }
 })
 

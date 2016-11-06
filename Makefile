@@ -22,12 +22,14 @@ api.quick:
 		--network boilerstack_default \
 		--link boiler_auth:auth \
 		--link boiler_digger:digger \
-		-v ~/projects/boiler-stack/api:/app \
-		-v ~/projects/digger-folder-ui:/app/node_modules/digger-folder-ui \
+		--link boiler_storage:storage \
+		-v ~/projects/boiler-stack/api/src:/app/src \
 		-e AUTH_SERVICE_HOST=auth \
 		-e AUTH_SERVICE_PORT=80 \
 		-e DIGGER_SERVICE_HOST=digger \
 		-e DIGGER_SERVICE_PORT=80 \
+		-e STORAGE_SERVICE_HOST=storage \
+		-e STORAGE_SERVICE_PORT=80 \
 		--entrypoint bash \
 		boilerstack_api
 
@@ -41,3 +43,15 @@ digger.quick:
 		-v ~/projects/digger-rest/index.js:/app/index.js \
 		--entrypoint bash \
 		binocarlos/digger-rest
+
+.PHONY: storage.quick
+storage.quick:
+	docker run -ti --rm \
+		--name boiler_storage \
+		--network boilerstack_default \
+		--link boiler_mongo:mongo \
+		-v ~/projects/boiler-stack/storage/src:/app/src \
+		-e MONGO_SERVICE_HOST=mongo \
+		-e MONGO_SERVICE_PORT=27017 \
+		--entrypoint bash \
+		boilerstack_storage

@@ -37,7 +37,7 @@ http {
         
         listen 80;
 
-        location /v1/auth {
+        location /auth/v1 {
 
             proxy_pass         http://auth_servers;
             proxy_redirect     off;
@@ -48,7 +48,7 @@ http {
 
         }
 
-        location /v1/api {
+        location /api/v1 {
 
             proxy_pass         http://api_servers;
             proxy_redirect     off;
