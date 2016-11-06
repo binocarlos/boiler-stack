@@ -54,9 +54,13 @@ module.exports = function(router, opts){
   // extract the values from opts.params based on the route
   // these values are passed in the backend handlers
   function getParams(params){
+
+    console.log('-------------------------------------------');
+    console.log('params are')
+    console.dir(params)
     var ret = {
       // the item id based on '/:id'
-      id:params[opts.idField],
+      id:params[idField],
 
       path:[backendPrefix].concat(opts.paramFields.map(function(field){
         return params[field]
@@ -76,7 +80,7 @@ module.exports = function(router, opts){
 
   diggerFolderUI({
     // we extract the item id from this part of the path
-    idParam:opts.idField,
+    idParam:idField,
     mountpoint:opts.url + '/' + paramFields,
     diggerurl:tools.diggerUrl(),
     routeWrapper:routeWrapper,

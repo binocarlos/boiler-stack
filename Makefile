@@ -17,6 +17,7 @@ frontend.watch:
 
 .PHONY: api.quick
 api.quick:
+	docker rm -f boiler_api || true
 	docker run -ti --rm \
 		--name boiler_api \
 		--network boilerstack_default \
@@ -36,6 +37,7 @@ api.quick:
 
 .PHONY: digger.quick
 digger.quick:
+	docker rm -f boiler_digger || true
 	docker run -ti --rm \
 		--name boiler_digger \
 		--network boilerstack_default \
@@ -47,6 +49,7 @@ digger.quick:
 
 .PHONY: storage.quick
 storage.quick:
+	docker rm -f boiler_storage || true
 	docker run -ti --rm \
 		--name boiler_storage \
 		--network boilerstack_default \

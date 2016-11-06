@@ -14,7 +14,7 @@ export const TYPES = {
       name:'name'
     }],
     initialData:{
-      
+      type:'folder'
     }
   },
   item:{
@@ -25,7 +25,7 @@ export const TYPES = {
       name:'comment'
     }],
     initialData:{
-      
+      type:'item'
     }
   }
 }
