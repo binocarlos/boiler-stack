@@ -26,16 +26,16 @@ module.exports = function(opts){
   var diggerOpts = Object.assign({}, opts, {
     auth:auth,
     // the frontend route prefix
-    frontendPrefix:'resources',
+    frontendPrefix:'digger',
     // the backend digger prefix
-    backendPrefix:'resources',
+    backendPrefix:'project',
     // the array of params to map from the route
     paramFields:['project', 'section']
   })
 
   // this setps up the 
-  // /api/v1/resources/:project/:section -> (/api/v1/resources/apples/oranges)
-  // /db/:project/:section-> (/project/apples/oranges)
+  // /api/v1/digger/:project/:section -> (/api/v1/digger/apples/oranges)
+  // /project/:project/:section-> (/project/apples/oranges)
   Digger(router, diggerOpts)
 
   Version(router, opts)

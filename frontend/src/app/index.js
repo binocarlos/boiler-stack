@@ -18,7 +18,7 @@ import {
   TYPES,
   TABLE_FIELDS,
   LIBRARY
-} from './schema'
+} from '../schema'
 
 import About from './containers/About'
 import Dashboard from './containers/Dashboard'
@@ -54,23 +54,29 @@ const ResourceRoutes = (auth) => {
 
     // the database powering the api requests
     db:CompositeDB([{
-      id:'items',
+      id:'corelibrary',
       rootNode:{
-        name:'My Items'
+        name:'Core Library'
+      },
+      db:DiggerDB({
+
+        // this database speaks to the core system
+        baseurl:(context) => {
+          return '/api/v1/digger/core/resources'
+        }
+      })
+    },{
+      id:'mylibrary',
+      rootNode:{
+        name:'My Library'
       },
       db:DiggerDB({
 
         // what backend api url do we use depends upon the current project
         baseurl:(context) => {
-          return '/api/v1/resources/apples/pears'
+          return '/api/v1/digger/' + context.params.projectid + '/resources'
         }
       })
-    },{
-      id:'itemsm',
-      rootNode:{
-        name:'My Items (M)'
-      },
-      db:MemoryDB()
     }])
   })
 }
