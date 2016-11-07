@@ -6,18 +6,20 @@
   "main": "index.js",
   "scripts": {
     "clean": "mkdir -p dist && rm -rf dist/*",
-    "assets": "cp www/* dist",
+    "assets": "cp -r www/* dist",
+    "prewatch": "npm run assets",
     "watch": "WEBPACK_ARGS=--watch npm run webpack",
-    "prewebpack": "npm run clean && npm run assets",
+    "prewebpackall": "npm run clean && npm run assets",
     "webpack": "webpack $WEBPACK_ARGS",
-    "build": "NODE_ENV=development npm run webpack",
-    "release": "NODE_ENV=production npm run webpack"
+    "webpackall": "APP=app npm run webpack && APP=admin npm run webpack",
+    "build": "NODE_ENV=development npm run webpackall",
+    "release": "NODE_ENV=production npm run webpackall"
   },
   "dependencies": {
     "boiler-frontend": "^2.2.3",
     "deep-get-set": "^1.0.0",
-    "digger-folder-ui-db": "^1.0.0",
-    "folder-ui": "^3.0.0",
+    "digger-folder-ui-db": "^2.0.0",
+    "folder-ui": "^4.0.0",
     "kettle-ui": "^3.0.0",
     "material-ui": "^0.15.4",
     "react": "^15.3.1",
