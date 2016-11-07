@@ -53,13 +53,19 @@ const ResourceRoutes = (auth) => {
     onEnter:auth.user,
 
     // the database powering the api requests
-    db:DiggerDB({
+    db:CompositeDB([{
+      id:'corelibrary',
+      rootNode:{
+        name:'Core Library'
+      },
+      db:DiggerDB({
 
-      // what backend api url do we use depends upon the current project
-      baseurl:(context) => {
-        return '/api/v1/digger/core/resources'
-      }
-    })
+        // this database speaks to the core system
+        baseurl:(context) => {
+          return '/api/v1/digger/core/resources'
+        }
+      })
+    }])
   })
 }
 
