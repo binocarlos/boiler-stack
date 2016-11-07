@@ -87,7 +87,7 @@ boilerapp({
     
   */
   userFilter:(user) => {
-    return user.accesslevel = 'superadmin'
+    return user.accesslevel == 'superadmin'
   },
   getRoutes:(auth) => {
     return (

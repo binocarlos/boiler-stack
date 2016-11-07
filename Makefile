@@ -15,6 +15,15 @@ frontend.release:
 frontend.watch:
 	docker-compose -f docker-compose.commands.yml run frontendbuild watch
 
+.PHONY: mongo.cli
+mongo.cli:
+	docker run -ti --rm \
+		--name mongo_cli \
+		--network boilerstack_default \
+		--link boiler_mongo:mongo \
+		--entrypoint mongo \
+		mongo mongo:27017
+
 .PHONY: api.quick
 api.quick:
 	docker rm -f boiler_api || true
