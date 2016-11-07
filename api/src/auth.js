@@ -21,6 +21,10 @@ module.exports = function(opts){
       var section = context.section
       var user = context.user
 
+      console.log('-------------------------------------------');
+      console.log('making auth assertion')
+      console.log(JSON.stringify(context, null, 4))
+
       done()
 
     }

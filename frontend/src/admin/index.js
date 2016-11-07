@@ -20,8 +20,8 @@ import {
   LIBRARY
 } from '../schema'
 
-import About from './containers/About'
 import Dashboard from './containers/Dashboard'
+import Users from './containers/Users'
 
 /*
 
@@ -53,25 +53,13 @@ const ResourceRoutes = (auth) => {
     onEnter:auth.user,
 
     // the database powering the api requests
-    db:CompositeDB([{
-      id:'items',
-      rootNode:{
-        name:'My Items'
-      },
-      db:DiggerDB({
+    db:DiggerDB({
 
-        // what backend api url do we use depends upon the current project
-        baseurl:(context) => {
-          return '/api/v1/resources/apples/pears'
-        }
-      })
-    },{
-      id:'itemsm',
-      rootNode:{
-        name:'My Items (M)'
-      },
-      db:MemoryDB()
-    }])
+      // what backend api url do we use depends upon the current project
+      baseurl:(context) => {
+        return '/api/v1/digger/core/resources'
+      }
+    })
   })
 }
 
@@ -91,7 +79,7 @@ boilerapp({
     return (
       <Route>
         <Route component={Page}>
-          <Route path="about" component={About} />
+          <Route path="users" component={Users} />
         </Route>
         {ResourceRoutes(auth)}
       </Route>

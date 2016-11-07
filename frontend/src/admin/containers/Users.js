@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import About from '../components/About'
+import Users from '../components/Users'
 
-export class AboutContainer extends Component {
+export class UsersContainer extends Component {
   render() {
     return (
-      <About {...this.props} />
+      <Users {...this.props} />
     )
   }
 }
@@ -21,4 +21,4 @@ function mapDispatchToProps(dispatch, ownProps) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AboutContainer)
+)(UsersContainer)

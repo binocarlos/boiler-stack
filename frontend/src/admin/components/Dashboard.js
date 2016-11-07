@@ -7,13 +7,13 @@ class Dashboard extends Component {
     return (
       <div>
         <p>
-          This is the dashboard
+          This is the admin dashboard
         </p>
         <p>
-          <Link to="/about">About</Link>
+          <Link to="/resources/core">Core Resources</Link>
         </p>
         <p>
-          <Link to="/resources/apples">Items</Link>
+          <Link to="/users">Users</Link>
         </p>
       </div>
     )

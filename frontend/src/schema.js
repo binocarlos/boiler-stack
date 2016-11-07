@@ -39,6 +39,11 @@ export const TABLE_FIELDS = [{
   render:data => data.name
 }]
 
+/*
+
+  custom library items
+  
+*/
 export const LIBRARY = {}
 
 /*
