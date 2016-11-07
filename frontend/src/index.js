@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { Route, IndexRoute } from 'react-router'
+import deep from 'deep-get-set'
+deep.p = true
 import boilerapp from 'boiler-frontend'
 import Page from 'boiler-frontend/lib/components/Page'
 
@@ -21,21 +23,47 @@ import {
 import About from './containers/About'
 import Dashboard from './containers/Dashboard'
 
-const ItemRoutes = (auth) => {
+/*
+
+  a full folder-ui BasicTemplate that shows folder tree and editors
+  for the a resources section
+  
+*/
+const RESOURCE_APP_ID = 'resources'
+
+const ResourceRoutes = (auth) => {
   return BasicTemplate({
+
+    // the schema types
     types:TYPES,
+
+    // the fields to appear in the children table
     tableFields:TABLE_FIELDS,
+
+    // the extra LIBRARY items for biro
     library:LIBRARY,
-    name:'items',
-    path:'items',
+
+    // the reducer name
+    name:RESOURCE_APP_ID,
+
+    // the react-router frontend route path
+    path:'resources/:projectid',
+
+    // what function handles auth on entry
     onEnter:auth.user,
+
+    // the database powering the api requests
     db:CompositeDB([{
       id:'items',
       rootNode:{
         name:'My Items'
       },
       db:DiggerDB({
-        base:'/api/v1/resources/apples/pears'
+
+        // what backend api url do we use depends upon the current project
+        baseurl:(context) => {
+          return '/api/v1/resources/apples/pears'
+        }
       })
     },{
       id:'itemsm',
@@ -50,7 +78,11 @@ const ItemRoutes = (auth) => {
 boilerapp({
   mountElement:document.getElementById('mount'),
   reducers:{
-    items:FolderReducer('items'),
+
+    // the reducer for the resources app
+    [RESOURCE_APP_ID]:FolderReducer(RESOURCE_APP_ID),
+
+    // the generic app reducer
     app:appreducer
   },
   dashboard:Dashboard,
@@ -61,7 +93,7 @@ boilerapp({
         <Route component={Page}>
           <Route path="about" component={About} />
         </Route>
-        {ItemRoutes(auth)}
+        {ResourceRoutes(auth)}
       </Route>
     )
   }

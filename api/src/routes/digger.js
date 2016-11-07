@@ -55,18 +55,16 @@ module.exports = function(router, opts){
   // these values are passed in the backend handlers
   function getParams(params){
 
-    console.log('-------------------------------------------');
-    console.log('params are')
-    console.dir(params)
     var ret = {
       // the item id based on '/:id'
       id:params[idField],
 
+      // construct the backend digger path from the backend prefix and
+      // the param fields we are using
       path:[backendPrefix].concat(opts.paramFields.map(function(field){
         return params[field]
       })).join('/')
     }
-    console.log(JSON.stringify(ret, null, 4))
     return ret
   }
 

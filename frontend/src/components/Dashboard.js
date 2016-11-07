@@ -13,7 +13,7 @@ class Dashboard extends Component {
           <Link to="/about">About</Link>
         </p>
         <p>
-          <Link to="/items">Items</Link>
+          <Link to="/resources/apples">Items</Link>
         </p>
       </div>
     )

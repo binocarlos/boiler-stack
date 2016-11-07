@@ -14,7 +14,9 @@ export const TYPES = {
       name:'name'
     }],
     initialData:{
-      type:'folder'
+      _digger:{
+        tag:'folder'
+      }
     }
   },
   item:{
@@ -25,7 +27,9 @@ export const TYPES = {
       name:'comment'
     }],
     initialData:{
-      type:'item'
+      _digger:{
+        tag:'item'
+      }
     }
   }
 }
@@ -36,3 +40,25 @@ export const TABLE_FIELDS = [{
 }]
 
 export const LIBRARY = {}
+
+/*
+
+  sort by digger tag then name
+  
+*/
+const getItemType = (item = {}) => {
+  const digger = item._digger || {}
+  return (digger.tag || '').toLowerCase()
+}
+
+const getItemName = (item = {}) => {
+  return (item.name || '').toLowerCase()
+}
+
+export const ITEMSORT = (a, b) => {
+  if (getItemType(a) < getItemType(b)) return -1;
+  if (getItemType(a) > getItemType(b)) return 1;
+  if (getItemName(a) < getItemName(b)) return -1;
+  if (getItemName(a) > getItemName(b)) return 1;
+  return 0;
+}

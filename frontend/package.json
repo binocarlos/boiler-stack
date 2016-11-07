@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "boiler-frontend": "^2.2.3",
+    "deep-get-set": "^1.0.0",
     "digger-folder-ui-db": "^1.0.0",
     "folder-ui": "^3.0.0",
     "kettle-ui": "^3.0.0",
