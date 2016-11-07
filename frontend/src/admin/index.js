@@ -81,6 +81,14 @@ boilerapp({
   },
   dashboard:Dashboard,
   userDetailsSchema:USER_DETAILS,
+  /*
+  
+    only super-admin users can access the admin app
+    
+  */
+  userFilter:(user) => {
+    return user.accesslevel = 'superadmin'
+  },
   getRoutes:(auth) => {
     return (
       <Route>
