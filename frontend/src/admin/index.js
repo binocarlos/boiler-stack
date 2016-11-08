@@ -20,6 +20,7 @@ import {
   LIBRARY
 } from '../schema'
 
+
 import Dashboard from './containers/Dashboard'
 import Users from './containers/Users'
 
@@ -31,7 +32,24 @@ import Users from './containers/Users'
 */
 const RESOURCE_APP_ID = 'resources'
 
+const databases = {
+  core:{
+    id:'core',
+    rootNode:{
+      name:'Core Resources'
+    },
+    db:DiggerDB({
+
+      // this database speaks to the core system
+      baseurl:(context) => {
+        return '/api/v1/digger/core/resources'
+      }
+    })
+  }
+}
+
 const ResourceRoutes = (auth) => {
+
   return BasicTemplate({
 
     // the schema types
@@ -53,19 +71,10 @@ const ResourceRoutes = (auth) => {
     onEnter:auth.user,
 
     // the database powering the api requests
-    db:CompositeDB([{
-      id:'corelibrary',
-      rootNode:{
-        name:'Core Library'
-      },
-      db:DiggerDB({
-
-        // this database speaks to the core system
-        baseurl:(context) => {
-          return '/api/v1/digger/core/resources'
-        }
-      })
-    }])
+    db:CompositeDB([
+      databases.core
+    ])
+    
   })
 }
 
