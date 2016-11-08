@@ -37,6 +37,11 @@ const isEditable = (databases, item) => {
   return database.readOnly ? false : true
 }
 
+// tells you if the item can contain children or is just data
+const isLeaf = (types, item) => {
+  return types.isLeaf(getItemType(item))
+}
+
 const tools = {
   getDiggerData,
   getItemType,

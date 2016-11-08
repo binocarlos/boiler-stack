@@ -69,6 +69,9 @@ const ResourceRoutes = (auth) => {
     // the react-router frontend route path
     path:'resources/:projectid',
 
+    // only show folders in the tree
+    treeQuery:'folder',
+
     // what function handles auth on entry
     onEnter:auth.user,
 

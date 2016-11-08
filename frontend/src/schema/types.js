@@ -6,6 +6,7 @@
 const TYPES = {
   user:{
     id:'user',
+    leaf:'true',
     title:'User',
     fields:[{
       name:'firstname',
@@ -33,6 +34,7 @@ const TYPES = {
   },
   item:{
     id:'item',
+    leaf:'true',
     title:'Item',
     fields:[{
       name:'name'
@@ -48,7 +50,17 @@ const TYPES = {
 }
 
 const factory = (opts = {}) => {
-  return TYPES
+  return {
+    types:TYPES,
+    getType:(type) => {
+      return TYPES[type]
+    },
+    isLeaf:(type) => {
+      type = TYPES[type]
+      if(!type) return true
+      return type.leaf ? true : false
+    }
+  }
 }
 
 export default factory

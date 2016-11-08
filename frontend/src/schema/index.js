@@ -14,19 +14,25 @@ const factory = (opts = {}) => {
   if(!databases) throw new Error('schema needs databases option')
 
   const getIcon = Icons(opts)
+  const types = Types(opts)
+
+  const utils = {
+    isEditable:(item) => tools.isEditable(databases, item),
+    isLeaf:(item) => types.isLeaf(tools.getItemType(item)),
+    getIcon
+  }
 
   return {
-    types:Types(opts),
+    types:types.types,
     filterActions:Actions(opts),
     getNewItem:Constructor(opts),
     getDescriptors:Descriptors(opts),
     getTableFields:TableFields({
       ...opts,
-      getIcon
+      ...utils
     }),
     getLibrary:Library(opts),
-    isEditable:(item) => tools.isEditable(databases, item),
-    getIcon
+    ...utils
   }
 }
 

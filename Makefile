@@ -48,11 +48,14 @@ api.quick:
 digger.quick:
 	docker rm -f boiler_digger || true
 	docker run -ti --rm \
+		-p 8088:80 \
 		--name boiler_digger \
 		--network boilerstack_default \
 		-v ~/projects/boiler-stack/.boilerstack/digger:/data/db \
 		-v ~/projects/digger-rest/router.js:/app/router.js \
 		-v ~/projects/digger-rest/index.js:/app/index.js \
+		-v ~/projects/digger-rest/index.js:/app/index.js \
+		-v ~/projects/digger-level/db:/app/node_modules/digger-level/db \
 		--entrypoint bash \
 		binocarlos/digger-rest
 

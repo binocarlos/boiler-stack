@@ -4,19 +4,31 @@ import FlatButton from 'material-ui/FlatButton'
 
 import getColor from './colors'
 
+/*
+
+  HANDLERS
+
+  functions that are run by renderers
+  they are hooked up to the folder-ui actions and have a dispatch function
+  
+*/
 const handlers = {
   noop:(context, settings, data) => false,
   open:(context, settings, data) => {
-    console.log('open')
+    context.dispatch(context.actions.routeOpen(data, context.params))
   },
   edit:(context, settings, data) => {
-    console.log('edit')
-  },
-  delete:(context, settings, data) => {
-    console.log('delete')
+    context.dispatch(context.actions.routeEdit(context.parent, data, context.params))
   }
 }
 
+/*
+
+  RENDERERS
+
+  functions that return React elements to display for table fields
+  
+*/
 const renderers = {
   text:(opts = {}) => (context, settings) => (data) => {
     return data[opts.field]
@@ -33,6 +45,9 @@ const renderers = {
   },
   button:(opts = {}) => (context, settings) => (data) => {
 
+    // check to see if we should display this button
+    if(opts.filter && !opts.filter(data)) return null
+
     const title = typeof(opts.title) == 'function' ?
       opts.title(context, settings, data) :
       opts.title
@@ -47,11 +62,13 @@ const renderers = {
           return false
         }} />
     )
-  }
+  },
+
 }
 /*
 
-  the table fields for the children view
+  FIELDS
+  fields with default configs that include renderers
   
 */
 
@@ -102,11 +119,17 @@ const BUTTON_FIELD = (opts) => {
     },
     render:renderers.button({
       title:opts.title,
-      handler:opts.handler
+      handler:opts.handler,
+      filter:opts.filter
     })
   }
 }
 
+/*
+
+  LAYOUTS (these are collections of fields into one table)
+  
+*/
 const DEFAULT_LAYOUT = 'standard'
 
 const getLayouts = (opts = {}) => {
@@ -116,17 +139,14 @@ const getLayouts = (opts = {}) => {
       TEXT_FIELD(),
       BUTTON_FIELD({
         title:'Open',
-        handler:handlers.open
+        handler:handlers.open,
+        filter:item => !opts.isLeaf(item)
       }),
       BUTTON_FIELD({
         title:(context, settings, data) => {
           return 'Edit'
         },
         handler:handlers.edit
-      }),
-      BUTTON_FIELD({
-        title:'Delete',
-        handler:handlers.delete
       })
     ]
   }
