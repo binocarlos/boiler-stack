@@ -31,7 +31,7 @@ const databases = {
     id:'core',
     readOnly:true,
     rootNode:{
-      name:'Core Resources'
+      name:'System Resources'
     },
     db:DiggerDB({
       readOnly: true,
@@ -77,8 +77,8 @@ const ResourceRoutes = (auth) => {
 
     // the database powering the api requests
     db:CompositeDB([
-      databases.core,
-      databases.user
+      databases.user,
+      databases.core
     ])
   })
 

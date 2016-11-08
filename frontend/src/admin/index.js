@@ -13,13 +13,7 @@ import CompositeDB from 'folder-ui/lib/db/composite'
 
 import appreducer from './reducer'
 
-import {
-  USER_DETAILS,
-  TYPES,
-  TABLE_FIELDS,
-  LIBRARY
-} from '../schema'
-
+import Schema from '../schema'
 
 import Dashboard from './containers/Dashboard'
 import Users from './containers/Users'
@@ -36,7 +30,7 @@ const databases = {
   core:{
     id:'core',
     rootNode:{
-      name:'Core Resources'
+      name:'System Resources'
     },
     db:DiggerDB({
 
@@ -48,24 +42,21 @@ const databases = {
   }
 }
 
+const schema = Schema({
+  databases
+})
+
 const ResourceRoutes = (auth) => {
 
-  return BasicTemplate({
-
-    // the schema types
-    types:TYPES,
-
-    // the fields to appear in the children table
-    tableFields:TABLE_FIELDS,
-
-    // the extra LIBRARY items for biro
-    library:LIBRARY,
-
+  const resourcesProps = Object.assign({}, schema, {
     // the reducer name
     name:RESOURCE_APP_ID,
 
     // the react-router frontend route path
     path:'resources/:projectid',
+
+    // only show folders in the tree
+    treeQuery:'folder',
 
     // what function handles auth on entry
     onEnter:auth.user,
@@ -74,8 +65,9 @@ const ResourceRoutes = (auth) => {
     db:CompositeDB([
       databases.core
     ])
-    
   })
+
+  return BasicTemplate(resourcesProps)
 }
 
 boilerapp({
@@ -89,7 +81,7 @@ boilerapp({
     app:appreducer
   },
   dashboard:Dashboard,
-  userDetailsSchema:USER_DETAILS,
+  userDetailsSchema:schema.types.user.fields,
   /*
   
     only super-admin users can access the admin app
