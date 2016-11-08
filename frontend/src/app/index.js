@@ -117,6 +117,13 @@ const ResourceRoutes = (auth) => {
     // into new objects when they are added
     getNewItem:(parent, descriptor) => {
       return descriptor.initialData
+    },
+
+    childrenToolbarChildren:(context) => {
+      
+    },
+    formToolbarChildren:(context) => {
+      
     }
 
   })
