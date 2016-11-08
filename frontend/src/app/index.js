@@ -10,17 +10,10 @@ import BasicTemplate from 'folder-ui/lib/templates/basic'
 import DiggerDB from 'digger-folder-ui-db'
 import MemoryDB from 'folder-ui/lib/db/memory'
 import CompositeDB from 'folder-ui/lib/db/composite'
-import { getItemCodecId, decodeID } from 'folder-ui/lib/db/composite'
 
 import appreducer from './reducer'
 
-import {
-  USER_DETAILS,
-  TYPES,
-  TABLE_FIELDS,
-  LIBRARY
-} from '../schema'
-
+import Schema from '../schema'
 
 import About from './containers/About'
 import Dashboard from './containers/Dashboard'
@@ -63,19 +56,13 @@ const databases = {
   }
 }
 
+const schema = Schema({
+  databases
+})
+
 const ResourceRoutes = (auth) => {
 
-  return BasicTemplate({
-
-    // the schema types
-    types:TYPES,
-
-    // the fields to appear in the children table
-    tableFields:TABLE_FIELDS,
-
-    // the extra LIBRARY items for biro
-    library:LIBRARY,
-
+  const resourcesProps = Object.assign({}, schema, {
     // the reducer name
     name:RESOURCE_APP_ID,
 
@@ -89,44 +76,10 @@ const ResourceRoutes = (auth) => {
     db:CompositeDB([
       databases.core,
       databases.user
-    ]),
-
-    // decide if the given item is editable
-    // in this case - if it belongs to the core database
-    // it is readonly
-    isEditable:(item) => {
-      const database = databases[getItemCodecId(item)] || {}
-      return database.readOnly ? false : true
-    },
-
-    // remove the edit button for both the core databases
-    filterActions:(context, actions) => {
-      const parentID = decodeID(context.parent.id)
-      const selected = context.selected || []
-      let disableActions = {}
-
-      // this means the current focus is a top-level database container
-      if(databases[parentID]){
-        disableActions.edit = selected.length<=0
-      }
-
-      return actions.filter(action => disableActions[action.id] ? false : true)
-    },
-
-    // we can inject properies from the schema descriptor and the parent
-    // into new objects when they are added
-    getNewItem:(parent, descriptor) => {
-      return descriptor.initialData
-    },
-
-    childrenToolbarChildren:(context) => {
-      
-    },
-    formToolbarChildren:(context) => {
-      
-    }
-
+    ])
   })
+
+  return BasicTemplate(resourcesProps)
 }
 
 boilerapp({
@@ -140,7 +93,7 @@ boilerapp({
     app:appreducer
   },
   dashboard:Dashboard,
-  userDetailsSchema:USER_DETAILS,
+  userDetailsSchema:schema.types.user.fields,
   getRoutes:(auth) => {
     return (
       <Route>
