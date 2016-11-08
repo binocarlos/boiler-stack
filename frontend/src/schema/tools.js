@@ -1,3 +1,5 @@
+import { getItemCodecId, decodeID } from 'folder-ui/lib/db/composite'
+
 /*
 
   useful tools
@@ -16,20 +18,6 @@ const getItemName = (item = {}) => {
   return (item.name || '').toLowerCase()
 }
 
-const getDiggerIcon = (icons, item) => {
-  return getIconByType(icons, getItemType(item))
-}
-
-const getIconByType = (icons, type) => {
-  return icons[type] || icons.file
-}
-
-const getIcon = (icons, isIdTopLevel) => (item) =>  {
-  return isIdTopLevel(item.id) ?
-      getIconByType(icons, 'disk') :
-      getDiggerIcon(icons, item)
-}
-
 const diggerTypeSort = (a, b) => {
   if (getItemType(a) < getItemType(b)) return -1;
   if (getItemType(a) > getItemType(b)) return 1;
@@ -38,14 +26,24 @@ const diggerTypeSort = (a, b) => {
   return 0;
 }
 
+// tells you id a given id is for a top-level database
+const isIdTopLevel = (databases, id) => {
+  return databases[decodeID(id)] ? true : false
+}
+
+// tells you if the database an item belongs to is read-only
+const isEditable = (databases, item) => {
+  const database = databases[getItemCodecId(item)] || {}
+  return database.readOnly ? false : true
+}
+
 const tools = {
   getDiggerData,
   getItemType,
   getItemName,
-  getDiggerIcon,
-  getIconByType,
-  getIcon,
-  diggerTypeSort
+  diggerTypeSort,
+  isIdTopLevel,
+  isEditable
 }
 
 export default tools

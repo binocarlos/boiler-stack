@@ -5,7 +5,7 @@
 */
 const LIBRARY = {}
 
-const factory = (opts = {}) => {
+const factory = (opts = {}) => (context, item) => {
   return LIBRARY
 }
 
