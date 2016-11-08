@@ -4,7 +4,7 @@
   
 */
 const getDescriptors = (opts = {}) => (parent, descriptors = []) => {
-  return descriptors
+  return descriptors.filter(descriptor => descriptor.id != 'user')
 }
 
 export default getDescriptors
