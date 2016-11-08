@@ -3,18 +3,19 @@ import Avatar from 'material-ui/Avatar'
 import List from 'material-ui/List/List'
 import ListItem from 'material-ui/List/ListItem'
 
-import COLORS from './colors'
+import getColor from './colors'
 
 const renderers = {
   text:(fieldname) => (context) => (data) => {
     return data[fieldname]
   },
   icon:(size) => (context, opts) => (data) => {
-    const icon = opts.getIcon(data, 'table', context.theme)
+    const icon = opts.getIcon(data)
+    const color = getColor(context.theme, 'table')
     return (
       <Avatar 
         icon={icon}
-        backgroundColor={COLORS.main}
+        backgroundColor={color}
         size={size || 30} />
     )
   }

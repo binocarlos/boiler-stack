@@ -1,11 +1,31 @@
 import {
   cyan500
 } from 'material-ui/styles/colors'
+import { darken } from 'material-ui/utils/colorManipulator'
 
-const COLORS = {
-
-  // the main color used for tree icons and children table icons
-  main:cyan500
+export const APP_COLORS = {
+  //tree:'lighticon',
+  table:'lighticon'
 }
 
-export default COLORS
+export const THEME_COLORS = {
+  lighticon:'primary1Color'
+}
+
+const getColor = (theme, name) => {
+  if(!theme || !name) return
+  let color = name
+
+  if(APP_COLORS[color]){
+    color = THEME_COLORS[APP_COLORS[color]]
+  }
+  else if(THEME_COLORS[color]){
+    color = THEME_COLORS[color] 
+  }
+
+  if(theme.palette[color]) return theme.palette[color]
+  if(typeof(color) == 'function') return color(theme.palette, name)
+  return null
+}
+
+export default getColor
