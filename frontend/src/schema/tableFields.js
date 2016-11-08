@@ -138,15 +138,16 @@ const getLayouts = (opts = {}) => {
       ICON_FIELD(),
       TEXT_FIELD(),
       BUTTON_FIELD({
-        title:'Open',
-        handler:handlers.open,
-        filter:item => !opts.isLeaf(item)
-      }),
-      BUTTON_FIELD({
         title:(context, settings, data) => {
           return 'Edit'
         },
-        handler:handlers.edit
+        handler:handlers.edit,
+        filter:item => opts.isEditable(item)
+      }),
+      BUTTON_FIELD({
+        title:'Open',
+        handler:handlers.open,
+        filter:item => !opts.isLeaf(item)
       })
     ]
   }
