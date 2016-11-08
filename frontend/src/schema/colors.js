@@ -4,7 +4,6 @@ import {
 import { darken } from 'material-ui/utils/colorManipulator'
 
 export const APP_COLORS = {
-  //tree:'lighticon',
   table:'lighticon'
 }
 
