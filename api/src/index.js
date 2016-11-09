@@ -1,6 +1,6 @@
 var http = require('http')
 var fs = require('fs')
-var Routes = require('./routes')
+var App = require('./app')
 
 var args = require('minimist')(process.argv, {
   alias:{
@@ -13,7 +13,7 @@ var args = require('minimist')(process.argv, {
   }
 })
 
-var routes = Routes(args)
+var routes = App(args)
 
 var httpserver = http.createServer(routes)
 httpserver.listen(args.port, function(){

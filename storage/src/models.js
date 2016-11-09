@@ -32,13 +32,13 @@ var UserSchema = new Schema({
   
 */
 var CollaboratorSchema = new Schema({
+  projectid: { type: Schema.Types.ObjectId, required: true },
   userid: { type: Schema.Types.ObjectId, required: true },
   permission: { type: String, required: true }
 })
 
 var ProjectSchema = new Schema({
-  name: { type: String, required: true },
-  collaborators: { type: [CollaboratorSchema], required: true}
+  name: { type: String, required: true }
 })
 
 
@@ -57,6 +57,7 @@ module.exports = function(opts){
   return {
     user:mongoose.model('users', UserSchema),
     project:mongoose.model('projects', ProjectSchema),
+    collaborator:mongoose.model('collaborators', CollaboratorSchema),
     quote:mongoose.model('quotes', QuoteSchema)
   }
 }
