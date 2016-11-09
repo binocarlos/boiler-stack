@@ -21,13 +21,17 @@ module.exports = function(opts){
     async.waterfall([
 
       function(next){
-        collaborators.loadUserProjectIds(userid, next)
+        collaborators.loadUserCollaborations(userid, next)
       },
 
-      function(projectids, next){
-        async.parallel(projectids.map(function(projectid){
+      function(collaborations, next){
+        async.parallel(collaborations.map(function(collaboration){
           return function(nextproject){
-            projects.loadModel(projectid, nextproject)
+            projects.loadModel(collaboration.projectid, function(err, project){
+              if(err) return nextproject(err)
+              project.permission = collaboration.permission
+              return nextproject(null, project)
+            })
           }
         }), next)
       }
@@ -35,7 +39,32 @@ module.exports = function(opts){
 
   }
 
+  /*
+  
+    first save the project
+    then create an association in the collaborators table
+    
+  */
+  function addUserProject(userid, data, done){
+    async.waterfall([
+
+      function(next){
+        projects.addModel(data, done)
+      },
+
+      function(project, next){
+        collaborators.addModel({
+          userid:userid,
+          projectid:project._id,
+          permission:'owner'
+        }, next)
+      }
+
+    ], done)
+  }
+
   return Object.assign({}, projects, {
-    loadUserProjects:loadUserProjects
+    loadUserProjects:loadUserProjects,
+    addUserProject:addUserProject
   })
 }

@@ -21,23 +21,15 @@ module.exports = function(opts){
     return the projects for which a user has an interest
     
   */
-  function loadUserProjectIds(userid, done){
+  function loadUserCollaborations(userid, done){
     collaborators.loadModels(encodeQuery({
       query:{
         userid:userid
-      },
-      select:{
-        projectid:1
       }
-    }), function(err, models){
-      if(err) return done(err)
-      done(null, models.map(function(model){
-        return model.projectid
-      }))
-    })
+    }), done)
   }
 
   return Object.assign({}, collaborators, {
-    loadUserProjectIds:loadUserProjectIds
+    loadUserCollaborations:loadUserCollaborations
   })
 }

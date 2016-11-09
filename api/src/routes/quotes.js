@@ -23,36 +23,35 @@ module.exports = function(router, opts){
     GET:auth({
       action:'list'
     }, function(req, res, opts){
-      storage.loadModels({
-
-      }, jsonResponseWrapper(res))
+      storage.loadProjectQuotes(opts.params.projectid, jsonResponseWrapper(res))
     }),
     POST:auth({
       action:'add'
     }, function(req, res, opts){
       jsonRequestWrapper(req, res, function(data){
+        data.projectid = opts.params.projectid
         storage.addModel(data, jsonResponseWrapper(res))
       })
     })
   })
 
-  router.set(opts.url + '/quotes/:projectid/:id', {
+  router.set(opts.url + '/quotes/:projectid/:quoteid', {
     GET:auth({
       action:'read'
     }, function(req, res, opts){
-      storage.loadModel(opts.params.id, jsonResponseWrapper(res))
+      storage.loadModel(opts.params.quoteid, jsonResponseWrapper(res))
     }),
     PUT:auth({
       action:'save'
     }, function(req, res, opts){
       jsonRequestWrapper(req, res, function(data){
-        storage.saveModel(opts.params.id, data, jsonResponseWrapper(res))
+        storage.saveModel(opts.params.quoteid, data, jsonResponseWrapper(res))
       })
     }),
     DELETE:auth({
       action:'delete'
     }, function(req, res, opts){
-      storage.deleteModel(opts.params.id, jsonResponseWrapper(res))
+      storage.deleteModel(opts.params.quoteid, jsonResponseWrapper(res))
     })
   })
 }

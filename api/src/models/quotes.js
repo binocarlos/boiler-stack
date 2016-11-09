@@ -6,5 +6,22 @@ module.exports = function(opts){
     model:'quotes',
   }))
 
-  return quotes
+  /*
+  
+    load all the quotes within one project
+    
+  */
+  function loadProjectQuotes(projectid, done){
+
+    collaborators.loadModels(encodeQuery({
+      query:{
+        projectid:projectid
+      }
+    }), done)
+
+  }
+
+  return Object.assign({}, quotes, {
+    loadProjectQuotes:loadProjectQuotes
+  })
 }

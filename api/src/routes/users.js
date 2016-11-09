@@ -42,23 +42,23 @@ module.exports = function(router, opts){
     })
   })
 
-  router.set(opts.url + '/users/:id', {
+  router.set(opts.url + '/users/:userid', {
     GET:auth({
       action:'read'
     }, function(req, res, opts){
-      storage.loadModel(opts.params.id, jsonResponseWrapper(res))
+      storage.loadModel(opts.params.userid, jsonResponseWrapper(res))
     }),
     PUT:auth({
       action:'save'
     }, function(req, res, opts){
       jsonRequestWrapper(req, res, function(data){
-        storage.saveModel(opts.params.id, data, jsonResponseWrapper(res))
+        storage.saveModel(opts.params.userid, data, jsonResponseWrapper(res))
       })
     }),
     DELETE:auth({
       action:'delete'
     }, function(req, res, opts){
-      storage.deleteModel(opts.params.id, jsonResponseWrapper(res))
+      storage.deleteModel(opts.params.userid, jsonResponseWrapper(res))
     })
   })
 }

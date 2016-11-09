@@ -30,28 +30,29 @@ module.exports = function(router, opts){
       action:'add'
     }, function(req, res, opts){
       jsonRequestWrapper(req, res, function(data){
-        storage.addModel(data, jsonResponseWrapper(res))
+        storage.addUserProject(opts.user.id, data, jsonResponseWrapper(res))
       })
     })
   })
 
-  router.set(opts.url + '/projects/:id', {
+  router.set(opts.url + '/projects/:projectid', {
     GET:auth({
       action:'read'
     }, function(req, res, opts){
-      storage.loadModel(opts.params.id, jsonResponseWrapper(res))
+      storage.loadModel(opts.params.projectid, jsonResponseWrapper(res))
     }),
     PUT:auth({
       action:'save'
     }, function(req, res, opts){
       jsonRequestWrapper(req, res, function(data){
-        storage.saveModel(opts.params.id, data, jsonResponseWrapper(res))
+        storage.saveModel(opts.params.projectid, data, jsonResponseWrapper(res))
       })
     }),
     DELETE:auth({
       action:'delete'
     }, function(req, res, opts){
-      storage.deleteModel(opts.params.id, jsonResponseWrapper(res))
+      storage.deleteModel(opts.params.projectid, jsonResponseWrapper(res))
     })
   })
+
 }
