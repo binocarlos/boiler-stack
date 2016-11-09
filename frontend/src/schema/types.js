@@ -22,7 +22,7 @@ const TYPES = {
       type:'text'
     },{
       name:'password',
-      type:'text'
+      inputtype:'password'
     },{
       name:'accesslevel',
       title:'Access Level',

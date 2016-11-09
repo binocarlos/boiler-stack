@@ -52,8 +52,8 @@ function factory(opts){
       }, resHandler(done))
     },
     deleteModel:function(id, done){
-      bhttp.delete(getURL('/' + id), data, {
-        decodeJSON:true
+      bhttp.delete(getURL('/' + id), {
+        
       }, resHandler(done))
     }
   }
