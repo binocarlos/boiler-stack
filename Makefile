@@ -68,6 +68,7 @@ storage.quick:
 		--network boilerstack_default \
 		--link boiler_mongo:mongo \
 		-v ~/projects/boiler-stack/storage/src:/app/src \
+		-v ~/projects/passport-service:/app/node_modules/passport-service \
 		-e MONGO_SERVICE_HOST=mongo \
 		-e MONGO_SERVICE_PORT=27017 \
 		--entrypoint bash \

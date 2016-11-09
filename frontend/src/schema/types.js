@@ -15,11 +15,17 @@ const TYPES = {
     leaf:'true',
     title:'User',
     fields:[{
-      name:'firstname',
+      name:'name',
       type:'text'
-    },
-    {
-      name:'lastname',
+    },{
+      name:'email',
+      type:'text'
+    },{
+      name:'password',
+      inputtype:'password'
+    },{
+      name:'accesslevel',
+      title:'Access Level',
       type:'text'
     }],
     initialData:{
@@ -69,14 +75,9 @@ const TYPES = {
 */
 const METHODS = {
   user:{
+    // an example of a custom getTitle
     getTitle:(data) => {
-      if(data.firstname || data.surname){
-        return [
-          data.firstname,
-          data.surname
-        ].filter(s => s).join(' ')
-      }
-      return null
+      return data.name
     }
   }
 }
@@ -93,13 +94,15 @@ const factory = (opts = {}) => {
       return type.leaf ? true : false
     },
     getTitle:(type, item = {}) => {
-      type = TYPES[type]
-      if(!type) return item.name
+      const typeObj = TYPES[type]
+      if(!typeObj) return item.name
       const methods = METHODS[type]
 
-      return methods && methods.getTitle ?
+      const title = methods && methods.getTitle ?
         methods.getTitle(item) :
-        item.name || type.id.replace(/^(\w)/, (s) => s.toUpperCase())
+        item.name
+
+      return title || type.title
     }
   }
 }

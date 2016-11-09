@@ -46,14 +46,14 @@ function factory(opts){
       }, resHandler(done))
     },
     saveModel:function(id, data, done){
-      bhttp.put(getURL('/' + id), data, {
+      bhttp.patch(getURL('/' + id), data, {
         encodeJSON:true,
         decodeJSON:true
       }, resHandler(done))
     },
     deleteModel:function(id, done){
-      bhttp.put(getURL('/' + id), data, {
-        decodeJSON:true
+      bhttp.delete(getURL('/' + id), {
+        
       }, resHandler(done))
     }
   }

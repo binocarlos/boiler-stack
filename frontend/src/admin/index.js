@@ -59,12 +59,14 @@ const schema = Schema({
   databases,
   getTableLayout:(context) => {
 
+    if(!context.parent) return
+
     // we are loading from the users database
     if(getItemCodecId(context.parent.id) == 'users'){
       return 'users'
     }
 
-    return null
+    return
   }
 })
 
@@ -97,6 +99,7 @@ const UserRoutes = (auth) => {
     name:USER_APP_ID,
     path:'users',
     enableTree:false,
+    enableClipboard:false,
     onEnter:auth.user,
     db:userDB,
     crudParent:userDB.getRootNode('users')

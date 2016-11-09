@@ -84,29 +84,24 @@ const assertionFactory = function(opts){
 
   return {
     standard:function(context, done){
-      console.log('standard auth assertion')
-      console.dir(context)
+      if(!context.user) return done('requires login')
       done()
     },
     users:function(context, done){
-      console.log('users auth assertion')
-      console.dir(context)
+      if(!context.user) return done('requires login')
       if(context.user.accesslevel!='superadmin') return done('superadmin access needed for users')
       done()
     },
     projects:function(context, done){
-      console.log('projects auth assertion')
-      console.dir(context)
+      if(!context.user) return done('requires login')
       done()
     },
     quotes:function(context, done){
-      console.log('quotes auth assertion')
-      console.dir(context)
+      if(!context.user) return done('requires login')
       done()
     },
     digger:function(context, done){
-      console.log('digger auth assertion')
-      console.dir(context)
+      if(!context.user) return done('requires login')
       done()
     }
   }

@@ -31,7 +31,10 @@ const handlers = {
 */
 const renderers = {
   text:(opts = {}) => (context, settings) => (data) => {
-    return data[opts.field]
+    const fields = typeof(opts.field) == 'string' ?
+      [opts.field] :
+      opts.field
+    return fields.map(f => data[f]).join(' ')
   },
   icon:(opts = {}) => (context, settings) => (data) => {
     const icon = settings.getIcon(data)
@@ -79,7 +82,7 @@ const TEXT_FIELD = (opts) => {
   }, opts)
 
   return {
-    title:opts.field,
+    title:opts.title || opts.field,
     render:renderers.text(opts)
   }
 }
@@ -165,10 +168,10 @@ const getLayouts = (opts = {}) => {
     users:[
       ICON_FIELD(),
       TEXT_FIELD({
-        field:'email'
+        field:'name'
       }),
       TEXT_FIELD({
-        field:'name'
+        field:'email'
       }),
       TEXT_FIELD({
         field:'accesslevel'
