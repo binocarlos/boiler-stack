@@ -2,7 +2,7 @@
 
 ```bash
 $ make mongo.cli
-> use auth
+> use boiler
 > db.users.update({
   email:'g@g.com'
 }, {
