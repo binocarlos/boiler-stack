@@ -1,30 +1,8 @@
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
+var UserSchemaFactory = require('passport-service/app/models/user')
 
-/*
-
-  User
-  
-*/
-var UserSchema = new Schema({
-  name: { type: String, default: '' },
-  type: { type: String, default: 'user' },
-  email: { type: String, default: '' },
-  username: { type: String, default: '' },
-  provider: { type: String, default: '' },
-  hashed_password: { type: String, default: '' },
-  salt: { type: String, default: '' },
-  authToken: { type: String, default: '' },
-  facebook: {},
-  twitter: {},
-  github: {},
-  google: {},
-  data: {
-    type:Schema.Types.Mixed,
-    default:{}
-  }
-})
-
+var UserSchema = UserSchemaFactory(mongoose, 'users')
 
 /*
 

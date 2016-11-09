@@ -1,4 +1,5 @@
 var express = require('express')
+var morgan = require('morgan')
 var bodyParser = require('body-parser')
 var methodOverride = require('method-override')
 var mongoose = require('mongoose')
@@ -7,6 +8,7 @@ var restify = require('express-restify-mongoose')
 var tools = require('./tools')
 var Models = require('./models')
 
+var logger = morgan('combined')
 module.exports = function(opts){
 
   tools.connectToMongo({
@@ -18,6 +20,7 @@ module.exports = function(opts){
   var models = Models()
   
   var app = express()
+  app.use(logger)
   app.use(bodyParser.urlencoded({ extended: true }))
   app.use(bodyParser.json())
   app.use(methodOverride('X-HTTP-Method-Override'))

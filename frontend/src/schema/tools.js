@@ -25,14 +25,9 @@ const diggerTypeSort = (a, b) => {
   return 0;
 }
 
-// tells you id a given id is for a top-level database
-const isIdTopLevel = (databases, id) => {
-  return databases[decodeID(id)] ? true : false
-}
-
 // tells you if the database an item belongs to is read-only
 const isEditable = (databases, item) => {
-  const database = databases[getItemCodecId(item)] || {}
+  const database = getItemDatabase(databases, item.id) || {}
   return database.readOnly ? false : true
 }
 
@@ -45,14 +40,29 @@ const getTitle = (types, item) => {
   return types.getTitle(getItemType(item), item)
 }
 
+
+const getItemDatabaseId = (id) => {
+  return getItemCodecId(id)
+}
+
+const getItemDatabase = (databases, id) => {
+  return databases[getItemCodecId(id)]
+}
+// tells you id a given id is for a top-level database
+const isIdTopLevel = (databases, id) => {
+  return getItemDatabase(databases, id) && getItemCodecId(id) == decodeID(id)
+}
+
 const tools = {
   getItemType,
   getItemName,
   diggerTypeSort,
-  isIdTopLevel,
   isEditable,
   isLeaf,
-  getTitle
+  getTitle,
+  isIdTopLevel,
+  getItemDatabaseId,
+  getItemDatabase
 }
 
 export default tools
