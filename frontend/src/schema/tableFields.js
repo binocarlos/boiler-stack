@@ -183,6 +183,25 @@ const getLayouts = (opts = {}) => {
         handler:handlers.edit,
         filter:item => opts.isEditable(item)
       })
+    ],
+
+    /*
+    
+      projects layout
+      
+    */
+    projects:[
+      ICON_FIELD(),
+      TEXT_FIELD({
+        field:'name'
+      }),
+      BUTTON_FIELD({
+        title:(context, settings, data) => {
+          return 'Edit'
+        },
+        handler:handlers.edit,
+        filter:item => opts.isEditable(item)
+      })
     ]
   }
 }

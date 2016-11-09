@@ -11,6 +11,9 @@ const descriptorFilters = {
   },
   users:(parent, descriptors = []) => {
     return descriptors.filter(descriptor => descriptor.id == 'user')
+  },
+  projects:(parent, descriptors = []) => {
+    return descriptors.filter(descriptor => descriptor.id == 'project')
   }
 }
 /*

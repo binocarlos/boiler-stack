@@ -40,7 +40,6 @@ const getTitle = (types, item) => {
   return types.getTitle(getItemType(item), item)
 }
 
-
 const getItemDatabaseId = (id) => {
   return getItemCodecId(id)
 }

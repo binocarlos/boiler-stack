@@ -49,15 +49,26 @@ module.exports = function(opts){
     async.waterfall([
 
       function(next){
-        projects.addModel(data, done)
+        console.log('-------------------------------------------');
+        console.log('add project')
+        projects.addModel(data, next)
       },
 
       function(project, next){
+
+        console.log('-------------------------------------------');
+        console.log('add collan')
+        console.dir(project)
         collaborators.addModel({
           userid:userid,
           projectid:project._id,
           permission:'owner'
-        }, next)
+        }, function(err, d){
+          console.log('-------------------------------------------');
+          console.log(err)
+          console.log(d)
+          next(null, d)
+        })
       }
 
     ], done)

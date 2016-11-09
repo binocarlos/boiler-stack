@@ -33,6 +33,19 @@ const TYPES = {
     }
   },
 
+  project:{
+    id:'project',
+    leaf:'true',
+    title:'Project',
+    fields:[{
+      name:'name',
+      type:'text'
+    }],
+    initialData:{
+      
+    }
+  },
+
   /*
   
     digger

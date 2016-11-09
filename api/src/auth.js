@@ -40,7 +40,7 @@ function sectionWrapper(assertion){
           // if we are here the assertion passed
           // now run the actual handler passing some updated context into the params
           handler(req, res, Object.assign({}, opts, {
-            user:user,
+            user:user.user,
             context:context
           }))
 

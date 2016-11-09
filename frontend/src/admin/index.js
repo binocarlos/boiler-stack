@@ -20,13 +20,6 @@ import Schema from '../schema'
 
 import Dashboard from './containers/Dashboard'
 
-/*
-
-  a full folder-ui BasicTemplate that shows folder tree and editors
-  for the a resources section
-  
-*/
-
 const databases = {
   core:{
     id:'core',
@@ -46,7 +39,6 @@ const databases = {
       name:'Users'
     },
     db:MongoCrudDB({
-      // connect to /api/v1/users
       baseurl:'/api/v1/users',
       inject:{
         _type:'user'
@@ -55,18 +47,16 @@ const databases = {
   }
 }
 
+const TABLE_LAYOUTS = {
+  users:'users'
+}
+
 const schema = Schema({
   databases,
   getTableLayout:(context) => {
-
     if(!context.parent) return
 
-    // we are loading from the users database
-    if(getItemCodecId(context.parent.id) == 'users'){
-      return 'users'
-    }
-
-    return
+    return TABLE_LAYOUTS[getItemCodecId(context.parent.id)]
   }
 })
 

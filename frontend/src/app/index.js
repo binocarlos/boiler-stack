@@ -7,9 +7,13 @@ import Page from 'boiler-frontend/lib/components/Page'
 
 import FolderReducer from 'folder-ui/lib/reducer'
 import BasicTemplate from 'folder-ui/lib/templates/basic'
+import CrudTemplate from 'folder-ui/lib/templates/crud'
 import DiggerDB from 'digger-folder-ui-db'
 import MemoryDB from 'folder-ui/lib/db/memory'
 import CompositeDB from 'folder-ui/lib/db/composite'
+import { getItemCodecId, decodeID } from 'folder-ui/lib/db/composite'
+
+import MongoCrudDB from '../db/mongocrud'
 
 import appreducer from './reducer'
 
@@ -17,14 +21,6 @@ import Schema from '../schema'
 
 import About from './containers/About'
 import Dashboard from './containers/Dashboard'
-
-/*
-
-  a full folder-ui BasicTemplate that shows folder tree and editors
-  for the a resources section
-  
-*/
-const RESOURCE_APP_ID = 'resources'
 
 const databases = {
   core:{
@@ -53,12 +49,42 @@ const databases = {
         return '/api/v1/digger/' + context.params.projectid + '/resources'
       }
     })
+  },
+  projects:{
+    id:'projects',
+    rootNode:{
+      name:'Projects'
+    },
+    db:MongoCrudDB({
+      baseurl:'/api/v1/projects',
+      inject:{
+        _type:'project'
+      }
+    })
   }
 }
 
+const TABLE_LAYOUTS = {
+  projects:'projects'
+}
+
 const schema = Schema({
-  databases
+  databases,
+  getTableLayout:(context) => {
+    if(!context.parent) return
+
+    return TABLE_LAYOUTS[getItemCodecId(context.parent.id)]
+  }
 })
+
+
+/*
+
+  resources app
+  
+*/
+
+const RESOURCE_APP_ID = 'resources'
 
 const ResourceRoutes = (auth) => {
 
@@ -85,14 +111,36 @@ const ResourceRoutes = (auth) => {
   return BasicTemplate(resourcesProps)
 }
 
+
+/*
+
+  project app
+  
+*/
+const PROJECT_APP_ID = 'projects'
+
+const ProjectRoutes = (auth) => {
+
+  const projectDB = CompositeDB([
+    databases.projects
+  ])
+
+  return CrudTemplate(Object.assign({}, schema, {
+    name:PROJECT_APP_ID,
+    path:'projects',
+    enableTree:false,
+    enableClipboard:false,
+    onEnter:auth.user,
+    db:projectDB,
+    crudParent:projectDB.getRootNode('projects')
+  }))
+}
+
 boilerapp({
   mountElement:document.getElementById('mount'),
   reducers:{
-
-    // the reducer for the resources app
     [RESOURCE_APP_ID]:FolderReducer(RESOURCE_APP_ID),
-
-    // the generic app reducer
+    [PROJECT_APP_ID]:FolderReducer(PROJECT_APP_ID),
     app:appreducer
   },
   dashboard:Dashboard,
@@ -104,6 +152,7 @@ boilerapp({
           <Route path="about" component={About} />
         </Route>
         {ResourceRoutes(auth)}
+        {ProjectRoutes(auth)}
       </Route>
     )
   }

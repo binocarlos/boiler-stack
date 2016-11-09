@@ -24,13 +24,13 @@ module.exports = function(router, opts){
     GET:auth({
       action:'list'
     }, function(req, res, opts){
-      storage.loadUserProjects(opts.user.id, jsonResponseWrapper(res))
+      storage.loadUserProjects(opts.user._id, jsonResponseWrapper(res))
     }),
     POST:auth({
       action:'add'
     }, function(req, res, opts){
       jsonRequestWrapper(req, res, function(data){
-        storage.addUserProject(opts.user.id, data, jsonResponseWrapper(res))
+        storage.addUserProject(opts.user._id, data, jsonResponseWrapper(res))
       })
     })
   })
