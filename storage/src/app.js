@@ -21,7 +21,12 @@ module.exports = function(opts){
   app.use(bodyParser.urlencoded({ extended: true }))
   app.use(bodyParser.json())
   app.use(methodOverride('X-HTTP-Method-Override'))
+  
+  restify.serve(app, models.user)
   restify.serve(app, models.project)
+  restify.serve(app, models.collaborator)
+  restify.serve(app, models.quote)
+
 
   return app
 }

@@ -1,7 +1,4 @@
 const diggerFolderUI = require('digger-folder-ui')
-const diggerFolderUITools = require('digger-folder-ui/tools')
-const errorWrapper = diggerFolderUITools.errorWrapper
-
 const tools = require('../tools')
 
 module.exports = function(router, opts){
@@ -18,38 +15,6 @@ module.exports = function(router, opts){
   if(!frontendPrefix) throw new Error('frontendPrefix opt needed')
   if(!backendPrefix) throw new Error('backendPrefix opt needed')
   if(!paramFields) throw new Error('paramFields opt needed')
-
-  // loads the user using the cookie
-  //
-  // then calls the auth.project handler with:
-  //   * project (from url)
-  //   * section (from url)
-  //   * action (from route)
-  //   * params (from url)
-  //   * user (from auth service)
-  //
-  // then writes the user and all props of the wrapper opts
-  // to the params for the actual request
-
-  function routeWrapper(wrapperOpts, handler){
-    return function(req, res, opts){
-      tools.loadUser(req.headers.cookie, errorWrapper(res, function(user){
-
-        var authOpts = Object.assign({}, opts.params, {
-          action:wrapperOpts.action,
-          user:user
-        })
-
-        auth.project(authOpts, errorWrapper(res, function(info){
-          opts.params.user = user
-          Object.keys(wrapperOpts || {}).forEach(function(key){
-            opts.params[key] = wrapperOpts[key]
-          })
-          handler(req, res, opts)
-        }))
-      }))
-    }
-  }
 
   // extract the values from opts.params based on the route
   // these values are passed in the backend handlers
@@ -74,14 +39,14 @@ module.exports = function(router, opts){
     return ':' + field
   })).join('/')
 
-  console.log('mountpoint: ' + opts.url + '/' + paramFields)
+  console.log('digger mountpoint: ' + opts.url + '/' + paramFields)
 
   diggerFolderUI({
     // we extract the item id from this part of the path
     idParam:idField,
     mountpoint:opts.url + '/' + paramFields,
     diggerurl:tools.diggerUrl(),
-    routeWrapper:routeWrapper,
+    routeWrapper:auth,
     getParams:getParams,
     router:router
   })

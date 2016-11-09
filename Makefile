@@ -22,7 +22,7 @@ mongo.cli:
 		--network boilerstack_default \
 		--link boiler_mongo:mongo \
 		--entrypoint mongo \
-		mongo mongo:27017
+		mongo mongo:27017/boiler
 
 .PHONY: api.quick
 api.quick:
@@ -64,6 +64,7 @@ storage.quick:
 	docker rm -f boiler_storage || true
 	docker run -ti --rm \
 		--name boiler_storage \
+		-p 8089:80 \
 		--network boilerstack_default \
 		--link boiler_mongo:mongo \
 		-v ~/projects/boiler-stack/storage/src:/app/src \
@@ -71,3 +72,9 @@ storage.quick:
 		-e MONGO_SERVICE_PORT=27017 \
 		--entrypoint bash \
 		boilerstack_storage
+
+.PHONY: storage.post
+storage.post:
+	curl -H "Content-Type: application/json" -X POST -d '{"name":"Test","projectid":"58226cab426437000123ac8b"}' http://localhost:8089/api/v1/quotes
+
+

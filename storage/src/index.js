@@ -13,7 +13,7 @@ var args = require('minimist')(process.argv, {
     port:process.env.PORT || 80,
     mongohost:process.env.MONGO_SERVICE_HOST || 'mongo',
     mongoport:process.env.MONGO_SERVICE_PORT || 27017,
-    mongodatabase:process.env.MONGO_SERVICE_DATABASE || 'storage'
+    mongodatabase:process.env.MONGO_SERVICE_DATABASE || 'boiler'
   }
 })
 
