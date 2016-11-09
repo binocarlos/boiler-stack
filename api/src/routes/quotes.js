@@ -1,4 +1,4 @@
-const Storage = require('../models/quotes')
+const QuoteStorage = require('../models/quotes')
 const tools = require('../tools')
 const jsonRequestWrapper = tools.jsonRequestWrapper
 const jsonResponseWrapper = tools.jsonResponseWrapper
@@ -15,7 +15,7 @@ module.exports = function(router, opts){
   var auth = opts.auth
   if(!auth) throw new Error('auth required for quotes route')
 
-  var storage = Storage({
+  var storage = QuoteStorage({
     
   })
 

@@ -14,7 +14,7 @@ module.exports = function(opts){
 
   var collaborators = Storage(Object.assign({}, opts, {
     model:'collaborators',
-  })
+  }))
 
   /*
     
@@ -31,9 +31,9 @@ module.exports = function(opts){
       }
     }), function(err, models){
       if(err) return done(err)
-        console.log('-------------------------------------------');
-      console.log('-------------------------------------------');
-      console.dir(models)
+      done(null, models.map(function(model){
+        return model.projectid
+      }))
     })
   }
 

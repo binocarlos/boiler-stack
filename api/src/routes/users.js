@@ -1,4 +1,4 @@
-const Storage = require('../models/users')
+const UserStorage = require('../models/users')
 const tools = require('../tools')
 const jsonRequestWrapper = tools.jsonRequestWrapper
 const jsonResponseWrapper = tools.jsonResponseWrapper
@@ -10,7 +10,7 @@ module.exports = function(router, opts){
   var auth = opts.auth
   if(!auth) throw new Error('auth required for users route')
 
-  var storage = Storage({
+  var storage = UserStorage({
     
   })
 

@@ -1,4 +1,4 @@
-const Storage = require('../models/projects')
+const ProjectStorage = require('../models/projects')
 const tools = require('../tools')
 const jsonRequestWrapper = tools.jsonRequestWrapper
 const jsonResponseWrapper = tools.jsonResponseWrapper
@@ -16,7 +16,7 @@ module.exports = function(router, opts){
   var auth = opts.auth
   if(!auth) throw new Error('auth required for projects route')
 
-  var storage = Storage({
+  var storage = ProjectStorage({
     
   })
 
