@@ -2,16 +2,15 @@ import { getItemCodecId, decodeID } from 'folder-ui/lib/db/composite'
 
 /*
 
-  useful tools
+  for digger items use the tag
+  for storage items the mongo db will inject a _type property
   
 */
-const getDiggerData = (item = {}) => {
-  return item._digger || {}
-}
-
 const getItemType = (item = {}) => {
-  const digger = getDiggerData(item)
-  return (digger.tag || '').toLowerCase()
+  const type = item._digger ?
+    item._digger.tag :
+    item._type
+  return (type || '').toLowerCase()
 }
 
 const getItemName = (item = {}) => {
@@ -42,13 +41,18 @@ const isLeaf = (types, item) => {
   return types.isLeaf(getItemType(item))
 }
 
+const getTitle = (types, item) => {
+  return types.getTitle(getItemType(item), item)
+}
+
 const tools = {
-  getDiggerData,
   getItemType,
   getItemName,
   diggerTypeSort,
   isIdTopLevel,
-  isEditable
+  isEditable,
+  isLeaf,
+  getTitle
 }
 
 export default tools

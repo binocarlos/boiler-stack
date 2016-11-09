@@ -4,6 +4,12 @@
   
 */
 const TYPES = {
+
+  /*
+  
+    storage
+    
+  */
   user:{
     id:'user',
     leaf:'true',
@@ -20,6 +26,12 @@ const TYPES = {
       
     }
   },
+
+  /*
+  
+    digger
+    
+  */
   folder:{
     id:'folder',
     title:'Folder',
@@ -49,6 +61,26 @@ const TYPES = {
   }
 }
 
+/*
+
+  so we can keep the types pure data
+  we keep the functions here
+  
+*/
+const METHODS = {
+  user:{
+    getTitle:(data) => {
+      if(data.firstname || data.surname){
+        return [
+          data.firstname,
+          data.surname
+        ].filter(s => s).join(' ')
+      }
+      return null
+    }
+  }
+}
+
 const factory = (opts = {}) => {
   return {
     types:TYPES,
@@ -59,6 +91,15 @@ const factory = (opts = {}) => {
       type = TYPES[type]
       if(!type) return true
       return type.leaf ? true : false
+    },
+    getTitle:(type, item = {}) => {
+      type = TYPES[type]
+      if(!type) return item.name
+      const methods = METHODS[type]
+
+      return methods && methods.getTitle ?
+        methods.getTitle(item) :
+        item.name || type.id.replace(/^(\w)/, (s) => s.toUpperCase())
     }
   }
 }

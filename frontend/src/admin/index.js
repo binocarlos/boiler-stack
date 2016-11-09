@@ -7,16 +7,18 @@ import Page from 'boiler-frontend/lib/components/Page'
 
 import FolderReducer from 'folder-ui/lib/reducer'
 import BasicTemplate from 'folder-ui/lib/templates/basic'
+import CrudTemplate from 'folder-ui/lib/templates/crud'
 import DiggerDB from 'digger-folder-ui-db'
-import MemoryDB from 'folder-ui/lib/db/memory'
 import CompositeDB from 'folder-ui/lib/db/composite'
+import { getItemCodecId, decodeID } from 'folder-ui/lib/db/composite'
+
+import MongoCrudDB from '../db/mongocrud'
 
 import appreducer from './reducer'
 
 import Schema from '../schema'
 
 import Dashboard from './containers/Dashboard'
-import Users from './containers/Users'
 
 /*
 
@@ -24,7 +26,6 @@ import Users from './containers/Users'
   for the a resources section
   
 */
-const RESOURCE_APP_ID = 'resources'
 
 const databases = {
   core:{
@@ -33,35 +34,49 @@ const databases = {
       name:'System Resources'
     },
     db:DiggerDB({
-
       // this database speaks to the core system
       baseurl:(context) => {
         return '/api/v1/digger/core/resources'
+      }
+    })
+  },
+  users:{
+    id:'users',
+    rootNode:{
+      name:'Users'
+    },
+    db:MongoCrudDB({
+      // connect to /api/v1/users
+      baseurl:'/api/v1/users',
+      inject:{
+        _type:'user'
       }
     })
   }
 }
 
 const schema = Schema({
-  databases
+  databases,
+  getTableLayout:(context) => {
+
+    // we are loading from the users database
+    if(getItemCodecId(context.parent.id) == 'users'){
+      return 'users'
+    }
+
+    return null
+  }
 })
+
+const RESOURCE_APP_ID = 'resources'
 
 const ResourceRoutes = (auth) => {
 
   const resourcesProps = Object.assign({}, schema, {
-    // the reducer name
     name:RESOURCE_APP_ID,
-
-    // the react-router frontend route path
     path:'resources/:projectid',
-
-    // only show folders in the tree
     treeQuery:'folder',
-
-    // what function handles auth on entry
     onEnter:auth.user,
-
-    // the database powering the api requests
     db:CompositeDB([
       databases.core
     ])
@@ -70,12 +85,31 @@ const ResourceRoutes = (auth) => {
   return BasicTemplate(resourcesProps)
 }
 
+const USER_APP_ID = 'users'
+
+const UserRoutes = (auth) => {
+
+  const userDB = CompositeDB([
+    databases.users
+  ])
+
+  return CrudTemplate(Object.assign({}, schema, {
+    name:USER_APP_ID,
+    path:'users',
+    enableTree:false,
+    onEnter:auth.user,
+    db:userDB,
+    crudParent:userDB.getRootNode('users')
+  }))
+}
+
 boilerapp({
   mountElement:document.getElementById('mount'),
   reducers:{
 
-    // the reducer for the resources app
+    // the reducers for the resources apps
     [RESOURCE_APP_ID]:FolderReducer(RESOURCE_APP_ID),
+    [USER_APP_ID]:FolderReducer(USER_APP_ID),
 
     // the generic app reducer
     app:appreducer
@@ -94,9 +128,10 @@ boilerapp({
     return (
       <Route>
         <Route component={Page}>
-          <Route path="users" component={Users} />
+
         </Route>
         {ResourceRoutes(auth)}
+        {UserRoutes(auth)}
       </Route>
     )
   }

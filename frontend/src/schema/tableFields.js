@@ -134,6 +134,12 @@ const DEFAULT_LAYOUT = 'standard'
 
 const getLayouts = (opts = {}) => {
   return {
+
+    /*
+    
+      standard layout
+      
+    */
     standard:[
       ICON_FIELD(),
       TEXT_FIELD(),
@@ -148,6 +154,31 @@ const getLayouts = (opts = {}) => {
         title:'Open',
         handler:handlers.open,
         filter:item => !opts.isLeaf(item)
+      })
+    ],
+
+    /*
+    
+      users layout
+      
+    */
+    users:[
+      ICON_FIELD(),
+      TEXT_FIELD({
+        field:'email'
+      }),
+      TEXT_FIELD({
+        field:'name'
+      }),
+      TEXT_FIELD({
+        field:'accesslevel'
+      }),
+      BUTTON_FIELD({
+        title:(context, settings, data) => {
+          return 'Edit'
+        },
+        handler:handlers.edit,
+        filter:item => opts.isEditable(item)
       })
     ]
   }

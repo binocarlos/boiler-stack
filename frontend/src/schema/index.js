@@ -18,7 +18,8 @@ const factory = (opts = {}) => {
 
   const utils = {
     isEditable:(item) => tools.isEditable(databases, item),
-    isLeaf:(item) => types.isLeaf(tools.getItemType(item)),
+    isLeaf:(item) => tools.isLeaf(types, item),
+    getTitle:(item) => tools.getTitle(types, item),
     getIcon
   }
 
