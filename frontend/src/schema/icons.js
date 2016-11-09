@@ -9,7 +9,7 @@ import getColor from './colors'
 
 const ICONS = {
   folder:FolderIcon,
-  file:FileIcon,
+  item:FileIcon,
   disk:DiskIcon
 }
 
