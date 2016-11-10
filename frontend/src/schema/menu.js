@@ -29,7 +29,7 @@ const appMenu = (opts, context) => {
     path:'/projects'
   },{
     title:'Resources',
-    path:'/resources/apples'
+    path:'/resources'
   },{
     title:'About',
     path:'/about'
@@ -42,7 +42,7 @@ const adminMenu = (opts, context) => {
     path:'/'
   },{
     title:'Resources',
-    path:'/resources/core'
+    path:'/resources'
   },{
     title:'Users',
     path:'/users'

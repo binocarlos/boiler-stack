@@ -1,6 +1,9 @@
 import {
-  cyan500
+  cyan500,
+  cyan300,
+  indigo900
 } from 'material-ui/styles/colors'
+
 import { darken } from 'material-ui/utils/colorManipulator'
 
 export const APP_COLORS = {
@@ -9,6 +12,13 @@ export const APP_COLORS = {
 
 export const THEME_COLORS = {
   lighticon:'primary1Color'
+}
+
+export const COLORS = {
+  highlight:{
+    bg:cyan300,
+    fg:indigo900
+  }
 }
 
 const getColor = (theme, name) => {

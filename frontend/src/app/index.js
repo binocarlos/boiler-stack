@@ -14,12 +14,21 @@ import CompositeDB from 'folder-ui/lib/db/composite'
 
 import MongoCrudDB from '../db/mongocrud'
 
-import appreducer from './reducer'
+import appreducer from '../reducer'
 
 import Schema from '../schema'
 
 import About from './containers/About'
 import Dashboard from './containers/Dashboard'
+import AppBarChildren from './containers/AppBarChildren'
+
+import {
+  getProjectData
+} from '../actions'
+
+import {
+  getCurrentProject
+} from '../tools'
 
 const databases = {
   core:{
@@ -45,7 +54,8 @@ const databases = {
 
       // what backend api url do we use depends upon the current project
       baseurl:(context) => {
-        return '/api/v1/digger/' + context.params.projectid + '/resources'
+        const projectID = getCurrentProject(context.state)
+        return '/api/v1/digger/' + projectID + '/resources'
       }
     })
   },
@@ -63,7 +73,14 @@ const databases = {
   }
 }
 
+const resourceDatabase = CompositeDB([
+  databases.user,
+  databases.core
+])
 
+const projectDatabase = CompositeDB([
+  databases.projects
+])
 
 const schema = Schema({
   appid:'app',
@@ -86,7 +103,7 @@ const ResourceRoutes = (auth) => {
     name:RESOURCE_APP_ID,
 
     // the react-router frontend route path
-    path:'resources/:projectid',
+    path:'resources',
 
     // only show folders in the tree
     treeQuery:'folder',
@@ -95,10 +112,7 @@ const ResourceRoutes = (auth) => {
     onEnter:auth.user,
 
     // the database powering the api requests
-    db:CompositeDB([
-      databases.user,
-      databases.core
-    ])
+    db:resourceDatabase
   })
 
   return BasicTemplate(resourcesProps)
@@ -112,20 +126,25 @@ const ResourceRoutes = (auth) => {
 */
 const PROJECT_APP_ID = 'projects'
 
+const loadProjectData = () => {
+  return getProjectData(databases.projects.db)
+}
+
 const ProjectRoutes = (auth) => {
-
-  const projectDB = CompositeDB([
-    databases.projects
-  ])
-
   return CrudTemplate(Object.assign({}, schema, {
     name:PROJECT_APP_ID,
     path:'projects',
     enableTree:false,
     enableClipboard:false,
     onEnter:auth.user,
-    db:projectDB,
-    crudParent:projectDB.getRootNode('projects')
+    db:projectDatabase,
+    crudParent:projectDatabase.getRootNode('projects'),
+
+    // gets run when something about the projects has changed
+    // re-load the project data that populates the appbar list
+    eventListener:(event, dispatch) => {
+      dispatch(loadProjectData())
+    }
   }))
 }
 
@@ -140,6 +159,13 @@ boilerapp({
   dashboard:Dashboard,
   userDetailsSchema:schema.types.user.fields,
   getMenuChildren:schema.getMenuChildren,
+  getAppBarChildren:(children) => {
+    return (
+      <AppBarChildren loadProjectData={loadProjectData}>
+        {children}
+      </AppBarChildren>
+    )
+  },
   getRoutes:(auth) => {
     return (
       <Route>

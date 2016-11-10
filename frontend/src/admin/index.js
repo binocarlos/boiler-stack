@@ -14,11 +14,15 @@ import { getItemCodecId, decodeID } from 'folder-ui/lib/db/composite'
 
 import MongoCrudDB from '../db/mongocrud'
 
-import appreducer from './reducer'
+import appreducer from '../reducer'
 
 import Schema from '../schema'
 
 import Dashboard from './containers/Dashboard'
+
+import {
+  refreshUser
+} from '../actions'
 
 const databases = {
   core:{
@@ -58,7 +62,7 @@ const ResourceRoutes = (auth) => {
 
   const resourcesProps = Object.assign({}, schema, {
     name:RESOURCE_APP_ID,
-    path:'resources/:projectid',
+    path:'resources',
     treeQuery:'folder',
     onEnter:auth.user,
     db:CompositeDB([
@@ -84,7 +88,12 @@ const UserRoutes = (auth) => {
     enableClipboard:false,
     onEnter:auth.user,
     db:userDB,
-    crudParent:userDB.getRootNode('users')
+    crudParent:userDB.getRootNode('users'),
+
+    // reload the user status if anything changes in the user-table
+    eventListener:(event, dispatch) => {
+      dispatch(refreshUser())
+    }
   }))
 }
 
@@ -92,16 +101,13 @@ boilerapp({
   appTitle:'QuoteRight Admin',
   mountElement:document.getElementById('mount'),
   reducers:{
-
-    // the reducers for the resources apps
     [RESOURCE_APP_ID]:FolderReducer(RESOURCE_APP_ID),
     [USER_APP_ID]:FolderReducer(USER_APP_ID),
-
-    // the generic app reducer
     app:appreducer
   },
   dashboard:Dashboard,
   userDetailsSchema:schema.types.user.fields,
+  getMenuChildren:schema.getMenuChildren,
   /*
   
     only super-admin users can access the admin app

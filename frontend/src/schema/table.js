@@ -6,6 +6,8 @@ import { getItemCodecId, decodeID } from 'folder-ui/lib/db/composite'
 
 import getColor from './colors'
 
+import ProjectStatus from '../fields/ProjectStatus'
+
 /*
 
   HANDLERS
@@ -20,6 +22,9 @@ const handlers = {
     context.dispatch(context.actions.routeOpen(data, context.params))
   },
   edit:(context, settings, data) => {
+    context.dispatch(context.actions.routeEdit(context.parent, data, context.params))
+  },
+  activateProject:(context, settings, data) => {
     context.dispatch(context.actions.routeEdit(context.parent, data, context.params))
   }
 }
@@ -36,7 +41,28 @@ const renderers = {
     const fields = typeof(opts.field) == 'string' ?
       [opts.field] :
       opts.field
-    return fields.map(f => data[f]).join(' ')
+    const text = fields.map(f => data[f]).join(' ')
+
+    // allow easy selection of the text
+    return (
+      <span 
+        onClick={e => {
+          e.preventDefault()
+          e.stopPropagation()
+        }}>
+        {text}
+      </span>
+    )
+  },
+  projectstatus:(opts = {}) => (context, settings) => (data) => {
+    const id = data[opts.field]
+
+    return (
+      <ProjectStatus
+        data={data}
+        value={id}
+        />
+    )
   },
   icon:(opts = {}) => (context, settings) => (data) => {
     const icon = settings.getIcon(data)
@@ -130,6 +156,17 @@ const BUTTON_FIELD = (opts) => {
   }
 }
 
+const PROJECT_STATUS_FIELD = (opts) => {
+
+  opts = Object.assign({}, {
+    field:'littleid'
+  }, opts)
+
+  return {
+    render:renderers.projectstatus(opts)
+  }
+}
+
 /*
 
   LAYOUTS (these are collections of fields into one table)
@@ -197,9 +234,7 @@ const getLayouts = (opts = {}) => {
       TEXT_FIELD({
         field:'name'
       }),
-      TEXT_FIELD({
-        field:'littleid'
-      }),
+      PROJECT_STATUS_FIELD(),
       BUTTON_FIELD({
         title:(context, settings, data) => {
           return 'Edit'

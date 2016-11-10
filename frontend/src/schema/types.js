@@ -38,12 +38,11 @@ const TYPES = {
     leaf:'true',
     title:'Project',
     fields:[{
-      name:'name',
-      type:'text'
-    },{
       name:'littleid',
       title:'id',
-      readonly:true,
+      type:'projectstatus'
+    },{
+      name:'name',
       type:'text'
     }],
     initialData:{

@@ -17,6 +17,12 @@ const getItemName = (item = {}) => {
   return (item.name || '').toLowerCase()
 }
 
+const nameSort = (a, b) => {
+  if (getItemName(a) < getItemName(b)) return -1;
+  if (getItemName(a) > getItemName(b)) return 1;
+  return 0;
+}
+
 const diggerTypeSort = (a, b) => {
   if (getItemType(a) < getItemType(b)) return -1;
   if (getItemType(a) > getItemType(b)) return 1;
@@ -56,6 +62,7 @@ const tools = {
   getItemType,
   getItemName,
   diggerTypeSort,
+  nameSort,
   isEditable,
   isLeaf,
   getTitle,
