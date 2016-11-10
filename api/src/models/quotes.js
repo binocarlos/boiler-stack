@@ -1,10 +1,11 @@
 const Storage = require('../storage')
+const littleid = require('./littleid')
 
 module.exports = function(opts){
 
-  var quotes = Storage(Object.assign({}, opts, {
+  var quotes = littleid(Storage(Object.assign({}, opts, {
     model:'quotes',
-  }))
+  })))
 
   /*
   
@@ -13,7 +14,7 @@ module.exports = function(opts){
   */
   function loadProjectQuotes(projectid, done){
 
-    collaborators.loadModels(encodeQuery({
+    quotes.loadModels(encodeQuery({
       query:{
         projectid:projectid
       }
@@ -22,6 +23,24 @@ module.exports = function(opts){
   }
 
   return Object.assign({}, quotes, {
-    loadProjectQuotes:loadProjectQuotes
+    loadProjectQuotes:loadProjectQuotes,
+    loadModel:function(id, done){
+      quotes.processId(id, function(err, fullid){
+        if(err) return done(err)
+        quotes.loadModel(fullid, done)
+      })
+    },
+    saveModel:function(id, data, done){
+      quotes.processId(id, function(err, fullid){
+        if(err) return done(err)
+        quotes.saveModel(fullid, data, done)
+      })
+    },
+    deleteModel:function(id, done){
+      quotes.processId(id, function(err, fullid){
+        if(err) return done(err)
+        quotes.deleteModel(fullid, done)
+      })
+    }
   })
 }

@@ -1,5 +1,10 @@
 import tools from './tools'
 
+
+const SYSTEM_TYPES = {
+  user:true,
+  project:true
+}
 /*
 
   get the base list
@@ -7,7 +12,7 @@ import tools from './tools'
 */
 const descriptorFilters = {
   standard:(parent, descriptors = []) => {
-    return descriptors.filter(descriptor => descriptor.id != 'user')
+    return descriptors.filter(descriptor => SYSTEM_TYPES[descriptor.id] ? false : true)
   },
   users:(parent, descriptors = []) => {
     return descriptors.filter(descriptor => descriptor.id == 'user')

@@ -7,7 +7,7 @@ const TYPES = {
 
   /*
   
-    storage
+    system
     
   */
   user:{
@@ -50,9 +50,35 @@ const TYPES = {
     }
   },
 
+  client:{
+    id:'client',
+    leaf:'true',
+    title:'Client',
+    fields:[{
+      name:'name',
+      type:'text'
+    }],
+    initialData:{
+      
+    }
+  },
+
+  quote:{
+    id:'quote',
+    leaf:'true',
+    title:'Quote',
+    fields:[{
+      name:'name',
+      type:'text'
+    }],
+    initialData:{
+      
+    }
+  },
+
   /*
   
-    digger
+    resources
     
   */
   folder:{

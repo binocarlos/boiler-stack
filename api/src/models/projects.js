@@ -2,19 +2,13 @@ const async = require('async')
 const Storage = require('../storage')
 const Collaborators = require('./collaborators')
 const tools = require('../tools')
+const littleid = require('./littleid')
 
 module.exports = function(opts){
 
-  var projects = Storage(Object.assign({}, opts, {
+  var projects = littleid(Storage(Object.assign({}, opts, {
     model:'projects',
-  }))
-
-  var addModel = projects.addModel
-
-  projects.addModel = function(data, done){
-    data.littleid = tools.littleid()
-    addModel(data, done)
-  }
+  })))
 
   var collaborators = Collaborators(opts)
 
@@ -107,49 +101,23 @@ module.exports = function(opts){
     ], done)
   }
 
-  /*
-  
-    turn a short project id into a project long one
-    
-  */
-  function processProjectId(id, done){
-    if(!id) return done('no id passed')
-    if(tools.isLittleId(id)){
-      projects.loadModels(tools.encodeQuery({
-        query:{
-          littleid:id
-        },
-        select:{
-          _id:1
-        }
-      }), function(err, projects){
-        if(err) return done(err)
-        if(!projects || projects.length<=0) return done('no project found')
-        done(null, projects[0]._id)
-      })
-    }
-    else{
-      done(null, id)
-    }
-  }
-
   return Object.assign({}, projects, {
     loadUserProjects:loadUserProjects,
     addUserProject:addUserProject,
     loadModel:function(id, done){
-      processProjectId(id, function(err, fullid){
+      projects.processId(id, function(err, fullid){
         if(err) return done(err)
         projects.loadModel(fullid, done)
       })
     },
     saveModel:function(id, data, done){
-      processProjectId(id, function(err, fullid){
+      projects.processId(id, function(err, fullid){
         if(err) return done(err)
         projects.saveModel(fullid, data, done)
       })
     },
     deleteModel:function(id, done){
-      processProjectId(id, function(err, fullid){
+      projects.processId(id, function(err, fullid){
         if(err) return done(err)
         deleteProject(fullid, done)
       })

@@ -8,6 +8,11 @@ import getColor from './colors'
 
 import ProjectStatus from '../fields/ProjectStatus'
 
+
+import {
+  setCurrentProject
+} from '../actions'
+
 /*
 
   HANDLERS
@@ -25,7 +30,7 @@ const handlers = {
     context.dispatch(context.actions.routeEdit(context.parent, data, context.params))
   },
   activateProject:(context, settings, data) => {
-    context.dispatch(context.actions.routeEdit(context.parent, data, context.params))
+    context.dispatch(setCurrentProject(data.littleid))
   }
 }
 
@@ -143,7 +148,6 @@ const BUTTON_FIELD = (opts) => {
   }, opts)
 
   return {
-    title:opts.title,
     preventRowSelection:opts.preventRowSelection,
     style:{
       width:opts.width
@@ -235,6 +239,10 @@ const getLayouts = (opts = {}) => {
         field:'name'
       }),
       PROJECT_STATUS_FIELD(),
+      BUTTON_FIELD({
+        title:'Activate',
+        handler:handlers.activateProject
+      }),
       BUTTON_FIELD({
         title:(context, settings, data) => {
           return 'Edit'

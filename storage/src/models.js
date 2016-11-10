@@ -27,8 +27,21 @@ var ProjectSchema = new Schema({
 */
 var QuoteSchema = new Schema({
   name: { type: String, required: true },
-  projectid: { type: Schema.Types.ObjectId, required: true }
+  projectid: { type: Schema.Types.ObjectId, required: true },
+  littleid: { type: String, required: true }
 })
+
+/*
+
+  Client
+  
+*/
+var ClientSchema = new Schema({
+  name: { type: String, required: true },
+  projectid: { type: Schema.Types.ObjectId, required: true },
+  littleid: { type: String, required: true }
+})
+
 
 module.exports = function(opts){
 
@@ -36,6 +49,7 @@ module.exports = function(opts){
     user:mongoose.model('users', UserSchema),
     project:mongoose.model('projects', ProjectSchema),
     collaborator:mongoose.model('collaborators', CollaboratorSchema),
+    client:mongoose.model('clients', ClientSchema),
     quote:mongoose.model('quotes', QuoteSchema)
   }
 }

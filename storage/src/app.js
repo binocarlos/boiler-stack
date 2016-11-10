@@ -29,6 +29,7 @@ module.exports = function(opts){
   restify.serve(app, models.project)
   restify.serve(app, models.collaborator)
   restify.serve(app, models.quote)
+  restify.serve(app, models.client)
 
 
   return app

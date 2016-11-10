@@ -11,6 +11,7 @@ const Version = require('./routes/version')
 const Users = require('./routes/users')
 const Projects = require('./routes/projects')
 const Quotes = require('./routes/quotes')
+const Clients = require('./routes/clients')
 
 module.exports = function(opts){
 
@@ -52,6 +53,10 @@ module.exports = function(opts){
 
   Quotes(router, Object.assign({}, opts, {
     auth:auth('quotes')
+  }))
+
+  Clients(router, Object.assign({}, opts, {
+    auth:auth('clients')
   }))
 
   function handler(req, res) {
