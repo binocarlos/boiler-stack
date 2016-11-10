@@ -36,7 +36,18 @@ const renderers = {
     const fields = typeof(opts.field) == 'string' ?
       [opts.field] :
       opts.field
-    return fields.map(f => data[f]).join(' ')
+    const text = fields.map(f => data[f]).join(' ')
+
+    // allow easy selection of the text
+    return (
+      <span 
+        onClick={e => {
+          e.preventDefault()
+          e.stopPropagation()
+        }}>
+        {text}
+      </span>
+    )
   },
   icon:(opts = {}) => (context, settings) => (data) => {
     const icon = settings.getIcon(data)

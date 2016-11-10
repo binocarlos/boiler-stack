@@ -101,16 +101,13 @@ boilerapp({
   appTitle:'QuoteRight Admin',
   mountElement:document.getElementById('mount'),
   reducers:{
-
-    // the reducers for the resources apps
     [RESOURCE_APP_ID]:FolderReducer(RESOURCE_APP_ID),
     [USER_APP_ID]:FolderReducer(USER_APP_ID),
-
-    // the generic app reducer
     app:appreducer
   },
   dashboard:Dashboard,
   userDetailsSchema:schema.types.user.fields,
+  getMenuChildren:schema.getMenuChildren,
   /*
   
     only super-admin users can access the admin app
