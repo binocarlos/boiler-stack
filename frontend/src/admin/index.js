@@ -20,6 +20,10 @@ import Schema from '../schema'
 
 import Dashboard from './containers/Dashboard'
 
+import {
+  refreshUserStatus
+} from './actions'
+
 const databases = {
   core:{
     id:'core',
@@ -84,7 +88,12 @@ const UserRoutes = (auth) => {
     enableClipboard:false,
     onEnter:auth.user,
     db:userDB,
-    crudParent:userDB.getRootNode('users')
+    crudParent:userDB.getRootNode('users'),
+
+    // reload the user status if anything changes in the user-table
+    eventListener:(event, dispatch) => {
+      dispatch(refreshUserStatus())
+    }
   }))
 }
 

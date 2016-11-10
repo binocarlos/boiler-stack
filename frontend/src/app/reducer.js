@@ -5,11 +5,11 @@ import {
 } from './actions'
 
 const INITIAL_STATE = {
-  projectData:{
+  projects:{
     status:null,
-    data:null
-  },
-  currentProject:null
+    data:null,
+    active:null
+  }
 }
 
 export default function boilerreducer(state = INITIAL_STATE, action = {}) {
@@ -19,10 +19,12 @@ export default function boilerreducer(state = INITIAL_STATE, action = {}) {
     case GET_PROJECT_DATA:
 
       return update(state, {
-        projectData:{
-          $set:{
-            status:action.status,
-            data:action.data
+        projects:{
+          status:{
+            $set:action.status
+          },
+          data:{
+            $set:action.data
           }
         }
       })
@@ -30,8 +32,10 @@ export default function boilerreducer(state = INITIAL_STATE, action = {}) {
     case SET_CURRENT_PROJECT:
 
       return update(state, {
-        currentProject:{
-          $set:action.id
+        projects:{
+          active:{
+            $set:action.id
+          }
         }
       })
 

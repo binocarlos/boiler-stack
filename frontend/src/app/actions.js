@@ -1,3 +1,5 @@
+import urls from '../db/urls'
+
 export const GET_PROJECT_DATA = 'GET_PROJECT_DATA'
 
 export const getProjectData = (database) => {
@@ -35,4 +37,8 @@ export const setCurrentProject = (id) => {
     type: SET_CURRENT_PROJECT,
     id
   }
+}
+
+export const refreshUserStatus = () => {
+  return {}
 }

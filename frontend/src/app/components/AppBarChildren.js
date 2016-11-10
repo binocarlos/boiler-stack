@@ -38,6 +38,9 @@ class AppBarChildren extends Component {
       return (
         <MenuItem 
           key={i}
+          onTouchTap={() => {
+            this.props.setCurrentProject(project.littleid)
+          }}
           value={project.littleid} 
           primaryText={project.name} />
       )
@@ -64,6 +67,8 @@ class AppBarChildren extends Component {
   }
 
   render() {
+
+    if(!this.props.loggedIn) return this.props.children
 
     return (
       <div>

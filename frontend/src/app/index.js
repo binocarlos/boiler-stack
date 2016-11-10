@@ -73,7 +73,7 @@ const resourceDatabase = CompositeDB([
   databases.core
 ])
 
-const projectDB = CompositeDB([
+const projectDatabase = CompositeDB([
   databases.projects
 ])
 
@@ -132,8 +132,8 @@ const ProjectRoutes = (auth) => {
     enableTree:false,
     enableClipboard:false,
     onEnter:auth.user,
-    db:projectDB,
-    crudParent:projectDB.getRootNode('projects'),
+    db:projectDatabase,
+    crudParent:projectDatabase.getRootNode('projects'),
 
     // gets run when something about the projects has changed
     // re-load the project data that populates the appbar list
