@@ -14,15 +14,15 @@ import { getItemCodecId, decodeID } from 'folder-ui/lib/db/composite'
 
 import MongoCrudDB from '../db/mongocrud'
 
-import appreducer from './reducer'
+import appreducer from '../reducer'
 
 import Schema from '../schema'
 
 import Dashboard from './containers/Dashboard'
 
 import {
-  refreshUserStatus
-} from './actions'
+  refreshUser
+} from '../actions'
 
 const databases = {
   core:{
@@ -92,7 +92,7 @@ const UserRoutes = (auth) => {
 
     // reload the user status if anything changes in the user-table
     eventListener:(event, dispatch) => {
-      dispatch(refreshUserStatus())
+      dispatch(refreshUser())
     }
   }))
 }

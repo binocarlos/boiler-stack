@@ -35,7 +35,7 @@ class AppBarChildren extends Component {
       'Choose project'
   }
 
-  getProjectMenuItems() {
+  getProjectMenuItems(closeMenuHandler) {
 
     let projectList = [].concat(this.props.projects || [])
     projectList.sort(tools.nameSort)
@@ -45,7 +45,8 @@ class AppBarChildren extends Component {
         <MenuItem 
           key={i}
           onTouchTap={() => {
-            this.props.setCurrentProject(project.littleid)
+            closeMenuHandler && closeMenuHandler()
+            this.props.changeProject(project.littleid)
           }}
           value={project.littleid} 
           primaryText={project.name} />
@@ -54,21 +55,25 @@ class AppBarChildren extends Component {
   }
 
   getProjectButton() {
+
+    const getDropdownChildren = (closeMenuHandler) => {
+      return (
+        <Menu>
+          {this.getProjectMenuItems(closeMenuHandler)}
+        </Menu>
+      )
+    }
+
     return (
       <ButtonDropdown
+        getChildren={getDropdownChildren}
         buttonclass={FlatButton}
         buttonprops={{
           label:this.getButtonTitle(),
           labelPosition:'before',
           style:STYLES.button,
           icon:<ExpandMoreIcon />
-        }}>
-
-        <Menu>
-          {this.getProjectMenuItems()}
-        </Menu>
-        
-      </ButtonDropdown>
+        }} />
     )
   }
 

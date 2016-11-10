@@ -4,8 +4,10 @@ import AppBarChildren from '../components/AppBarChildren'
 import { passporttools, actions } from 'passport-service-gui'
 
 import {
-  togleProjectMenu
-} from '../actions'
+  setCurrentProject,
+  updateUser,
+  requestUpdateUserProject
+} from '../../actions'
 
 export class AppBarChildrenContainer extends Component {
 
@@ -22,6 +24,12 @@ export class AppBarChildrenContainer extends Component {
   componentWillReceiveProps(nextProps) {
     if(this.checkForProjectData(nextProps)){
       this.props.requestProjectData()
+    }
+
+    // the user has a projectid but we don't
+    // have that in the state
+    if(nextProps.updateProject){
+      this.props.setCurrentProject(nextProps.updateProject, true)
     }
   }
   
@@ -40,32 +48,44 @@ function mapStateToProps(state, ownProps) {
   const projects = projectState.data || []
   let currentProject = projectState.active
 
+  // we use this to update the store with the
+  // project id from the user
+  let updateProject = null
+
   // if the app has no currentProject
   // see if we can load it from the user
   if(!currentProject && userStatus.loaded && userStatus.loggedIn){
     const user = userStatus.user || {}
     const userData = user.data || {}
-    currentProject = userData.currentProject
+    updateProject = currentProject = userData.currentProject
   }
 
   return {
     loggedIn:userStatus.loaded && userStatus.loggedIn,
     loadingStatus:projectState.status,
     projects,
-    currentProject
+    currentProject,
+    updateProject
   }
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
   return {
+
     setCurrentProject:(id) => {
-      console.log('-------------------------------------------');
-      console.log('project: ' + id)
+      dispatch(setCurrentProject(id))
+    },
+    /*
+    
+      update the user with the project id
+      then set the state with the id
+      
+    */
+    changeProject:(id) => {
+      dispatch(requestUpdateUserProject(id))
     },
     requestProjectData:() => {
-      if(ownProps.loadProjectData){
-        dispatch(ownProps.loadProjectData())
-      }
+      dispatch(ownProps.loadProjectData())
     }
   }
 }

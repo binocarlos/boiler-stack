@@ -14,7 +14,7 @@ import CompositeDB from 'folder-ui/lib/db/composite'
 
 import MongoCrudDB from '../db/mongocrud'
 
-import appreducer from './reducer'
+import appreducer from '../reducer'
 
 import Schema from '../schema'
 
@@ -24,7 +24,7 @@ import AppBarChildren from './containers/AppBarChildren'
 
 import {
   getProjectData
-} from './actions'
+} from '../actions'
 
 const databases = {
   core:{

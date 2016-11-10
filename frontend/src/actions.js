@@ -1,4 +1,9 @@
-import urls from '../db/urls'
+import {
+  refreshUserStatus,
+  updateUserData
+} from 'boiler-frontend/lib/actions'
+
+import urls from './db/urls'
 
 export const GET_PROJECT_DATA = 'GET_PROJECT_DATA'
 
@@ -39,6 +44,19 @@ export const setCurrentProject = (id) => {
   }
 }
 
-export const refreshUserStatus = () => {
-  return {}
+export const requestUpdateUserProject = (id) => {
+  return (dispatch, getState) => {
+    dispatch(setCurrentProject(id))
+    dispatch(updateUser({
+      currentProject:id
+    }))
+  }
+}
+
+export const refreshUser = (done) => {
+  return refreshUserStatus(done)
+}
+
+export const updateUser = (data, done) => {
+  return updateUserData(data, done)
 }

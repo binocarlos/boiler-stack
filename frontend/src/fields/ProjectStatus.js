@@ -66,8 +66,9 @@ class ProjectStatus extends Component {
 
 
 function mapStateToProps(state, ownProps) {
+  const activeProjectID = state.app.projects.active
   return {
-    isActive:true
+    isActive:ownProps.value == activeProjectID
   }
 }
 
