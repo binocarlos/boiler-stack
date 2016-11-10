@@ -16,9 +16,9 @@ var CollaboratorSchema = new Schema({
 })
 
 var ProjectSchema = new Schema({
-  name: { type: String, required: true }
+  name: { type: String, required: true },
+  littleid: { type: String, required: true }
 })
-
 
 /*
 

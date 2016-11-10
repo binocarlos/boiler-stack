@@ -40,6 +40,11 @@ const TYPES = {
     fields:[{
       name:'name',
       type:'text'
+    },{
+      name:'littleid',
+      title:'id',
+      readonly:true,
+      type:'text'
     }],
     initialData:{
       

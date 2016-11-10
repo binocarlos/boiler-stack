@@ -1,12 +1,20 @@
 const async = require('async')
 const Storage = require('../storage')
 const Collaborators = require('./collaborators')
+const tools = require('../tools')
 
 module.exports = function(opts){
 
   var projects = Storage(Object.assign({}, opts, {
     model:'projects',
   }))
+
+  var addModel = projects.addModel
+
+  projects.addModel = function(data, done){
+    data.littleid = tools.littleid()
+    addModel(data, done)
+  }
 
   var collaborators = Collaborators(opts)
 
@@ -49,24 +57,15 @@ module.exports = function(opts){
     async.waterfall([
 
       function(next){
-        console.log('-------------------------------------------');
-        console.log('add project')
         projects.addModel(data, next)
       },
 
       function(project, next){
-
-        console.log('-------------------------------------------');
-        console.log('add collan')
-        console.dir(project)
         collaborators.addModel({
           userid:userid,
           projectid:project._id,
           permission:'owner'
         }, function(err, d){
-          console.log('-------------------------------------------');
-          console.log(err)
-          console.log(d)
           next(null, d)
         })
       }
@@ -74,8 +73,86 @@ module.exports = function(opts){
     ], done)
   }
 
+  /*
+  
+    first remove the project
+    then remove any collaborators with that projectid
+    
+  */
+  function deleteProject(projectid, done){
+
+    var collaborations = []
+    async.series([
+
+      function(next){
+        collaborators.loadProjectCollaborations(projectid, function(err, results){
+          if(err) return next(err)
+          collaborations = results
+          next()
+        })
+      },
+
+      function(next){
+        async.parallel(collaborations.map(function(collaboration){
+          return function(nextcollaboration){
+            collaborators.deleteModel(collaboration._id, nextcollaboration)
+          }
+        }), next)
+      },
+
+      function(next){
+        projects.deleteModel(projectid, next)
+      }
+
+    ], done)
+  }
+
+  /*
+  
+    turn a short project id into a project long one
+    
+  */
+  function processProjectId(id, done){
+    if(!id) return done('no id passed')
+    if(tools.isLittleId(id)){
+      projects.loadModels(tools.encodeQuery({
+        query:{
+          littleid:id
+        },
+        select:{
+          _id:1
+        }
+      }), function(err, projects){
+        if(err) return done(err)
+        if(!projects || projects.length<=0) return done('no project found')
+        done(null, projects[0]._id)
+      })
+    }
+    else{
+      done(null, id)
+    }
+  }
+
   return Object.assign({}, projects, {
     loadUserProjects:loadUserProjects,
-    addUserProject:addUserProject
+    addUserProject:addUserProject,
+    loadModel:function(id, done){
+      processProjectId(id, function(err, fullid){
+        if(err) return done(err)
+        projects.loadModel(fullid, done)
+      })
+    },
+    saveModel:function(id, data, done){
+      processProjectId(id, function(err, fullid){
+        if(err) return done(err)
+        projects.saveModel(fullid, data, done)
+      })
+    },
+    deleteModel:function(id, done){
+      processProjectId(id, function(err, fullid){
+        if(err) return done(err)
+        deleteProject(fullid, done)
+      })
+    }
   })
 }

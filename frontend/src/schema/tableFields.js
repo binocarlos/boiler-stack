@@ -195,6 +195,9 @@ const getLayouts = (opts = {}) => {
       TEXT_FIELD({
         field:'name'
       }),
+      TEXT_FIELD({
+        field:'littleid'
+      }),
       BUTTON_FIELD({
         title:(context, settings, data) => {
           return 'Edit'
