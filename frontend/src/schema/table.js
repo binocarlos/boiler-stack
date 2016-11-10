@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import Avatar from 'material-ui/Avatar'
 import FlatButton from 'material-ui/FlatButton'
 
+import { getItemCodecId, decodeID } from 'folder-ui/lib/db/composite'
+
 import getColor from './colors'
 
 /*
@@ -211,6 +213,16 @@ const getLayouts = (opts = {}) => {
 
 /*
 
+  control which of the layouts above each database uses
+  
+*/
+const TABLE_LAYOUTS = {
+  projects:'projects',
+  users:'users'
+}
+
+/*
+
   context gets:
 
     * parent
@@ -224,12 +236,14 @@ const factory = (opts = {}) => {
 
   const layouts = getLayouts(opts)
 
-  return (context = {}) => {
+  const getLayout = (context = {}) => {
+    if(!context.parent) return
+    return TABLE_LAYOUTS[getItemCodecId(context.parent.id)]
+  }
 
-    const layoutName = opts.getTableLayout ?
-      opts.getTableLayout(context) :
-      DEFAULT_LAYOUT
+  const getFields = (context = {}) => {
 
+    const layoutName = getLayout(context)
     const layout = layouts[layoutName] || layouts[DEFAULT_LAYOUT]
 
     const filteredLayout = opts.filterTableLayout ?
@@ -241,6 +255,13 @@ const factory = (opts = {}) => {
         render:field.render(context, opts)
       })
     })
+  }
+
+  
+
+  return {
+    getFields,
+    getLayout
   }
 }
 

@@ -11,7 +11,6 @@ import CrudTemplate from 'folder-ui/lib/templates/crud'
 import DiggerDB from 'digger-folder-ui-db'
 import MemoryDB from 'folder-ui/lib/db/memory'
 import CompositeDB from 'folder-ui/lib/db/composite'
-import { getItemCodecId, decodeID } from 'folder-ui/lib/db/composite'
 
 import MongoCrudDB from '../db/mongocrud'
 
@@ -64,17 +63,11 @@ const databases = {
   }
 }
 
-const TABLE_LAYOUTS = {
-  projects:'projects'
-}
+
 
 const schema = Schema({
-  databases,
-  getTableLayout:(context) => {
-    if(!context.parent) return
-
-    return TABLE_LAYOUTS[getItemCodecId(context.parent.id)]
-  }
+  appid:'app',
+  databases
 })
 
 
@@ -137,6 +130,7 @@ const ProjectRoutes = (auth) => {
 }
 
 boilerapp({
+  appTitle:'QuoteRight',
   mountElement:document.getElementById('mount'),
   reducers:{
     [RESOURCE_APP_ID]:FolderReducer(RESOURCE_APP_ID),
@@ -145,6 +139,7 @@ boilerapp({
   },
   dashboard:Dashboard,
   userDetailsSchema:schema.types.user.fields,
+  getMenuChildren:schema.getMenuChildren,
   getRoutes:(auth) => {
     return (
       <Route>
