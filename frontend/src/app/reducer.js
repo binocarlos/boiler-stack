@@ -1,14 +1,15 @@
 import update from 'react/lib/update'
 import {
-  GET_PROJECT_DATA
+  GET_PROJECT_DATA,
+  SET_CURRENT_PROJECT
 } from './actions'
 
 const INITIAL_STATE = {
   projectData:{
     status:null,
-    error:null,
     data:null
-  }
+  },
+  currentProject:null
 }
 
 export default function boilerreducer(state = INITIAL_STATE, action = {}) {
@@ -21,11 +22,19 @@ export default function boilerreducer(state = INITIAL_STATE, action = {}) {
         projectData:{
           $set:{
             status:action.status,
-            error:action.error,
             data:action.data
           }
         }
       })
+
+    case SET_CURRENT_PROJECT:
+
+      return update(state, {
+        currentProject:{
+          $set:action.id
+        }
+      })
+
 
     default:
       return state
