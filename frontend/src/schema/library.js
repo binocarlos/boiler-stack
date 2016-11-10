@@ -1,4 +1,5 @@
 import Chip from '../fields/Chip'
+import ProjectStatus from '../fields/ProjectStatus'
 
 /*
 
@@ -6,7 +7,8 @@ import Chip from '../fields/Chip'
   
 */
 const LIBRARY = {
-  chip:Chip
+  chip:Chip,
+  projectstatus:ProjectStatus
 }
 
 const factory = (opts = {}) => (context, item) => {

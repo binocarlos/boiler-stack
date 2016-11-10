@@ -40,7 +40,7 @@ const TYPES = {
     fields:[{
       name:'littleid',
       title:'id',
-      type:'chip'
+      type:'projectstatus'
     },{
       name:'name',
       type:'text'
