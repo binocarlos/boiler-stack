@@ -1,4 +1,5 @@
 const bhttp = require('bhttp')
+const hat = require('hat')
 const concat = require('concat-stream')
 const errorWrapper = require('digger-folder-ui/tools').errorWrapper
 const jsonRequestWrapper = require('digger-folder-ui/tools').jsonRequestWrapper
@@ -33,6 +34,25 @@ function loadUser(cookie, done){
   })
 }
 
+const LITTLEID_LENGTH = 8
+
+function littleid(){
+  return hat().substring(0,LITTLEID_LENGTH)
+}
+
+function isLittleId(id){
+  return id.length == LITTLEID_LENGTH
+}
+
+function encodeQuery(query){
+  if(!query) return null
+  var ret = {}
+  Object.keys(query || {}).forEach(function(key){
+    ret[key] = JSON.stringify(query[key])
+  })
+  return ret
+}
+
 module.exports = {
   loadUser:loadUser,
   authUrl:authUrl,
@@ -40,5 +60,8 @@ module.exports = {
   storageUrl:storageUrl,
   errorWrapper:errorWrapper,
   jsonRequestWrapper:jsonRequestWrapper,
-  jsonResponseWrapper:jsonResponseWrapper
+  jsonResponseWrapper:jsonResponseWrapper,
+  littleid:littleid,
+  isLittleId:isLittleId,
+  encodeQuery:encodeQuery
 }
