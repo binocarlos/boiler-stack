@@ -31,6 +31,12 @@ const appMenu = (opts, context) => {
     title:'Resources',
     path:'/resources'
   },{
+    title:'Clients',
+    path:'/clients'
+  },{
+    title:'Quotes',
+    path:'/quotes'
+  },{
     title:'About',
     path:'/about'
   }])

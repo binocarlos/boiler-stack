@@ -2,19 +2,7 @@ const tools = require('../tools')
 
 module.exports = function(storage){
 
-  var addModel = storage.addModel
-
-  storage.addModel = function(data, done){
-    data.littleid = tools.littleid()
-    addModel(data, done)
-  }
-
-  /*
-  
-    turn a short project id into a project long one
-    
-  */
-  storage.processId = function(id, done){
+  function processId(id, done){
     if(!id) return done('no id passed')
     if(tools.isLittleId(id)){
 
@@ -37,5 +25,29 @@ module.exports = function(storage){
     }
   }
 
-  return storage
+  return Object.assign({}, storage, {
+    processId:processId,
+    addModel:function(data, done){
+      data.littleid = tools.littleid()
+      storage.addModel(data, done)
+    },
+    loadModel:function(id, done){
+      processId(id, function(err, fullid){
+        if(err) return done(err)
+        storage.loadModel(fullid, done)
+      })
+    },
+    saveModel:function(id, data, done){
+      processId(id, function(err, fullid){
+        if(err) return done(err)
+        storage.saveModel(fullid, data, done)
+      })
+    },
+    deleteModel:function(id, done){
+      processId(id, function(err, fullid){
+        if(err) return done(err)
+        storage.deleteModel(fullid, done)
+      })
+    }
+  })
 }

@@ -3,7 +3,13 @@ import tools from './tools'
 
 const SYSTEM_TYPES = {
   user:true,
-  project:true
+  project:true,
+  client:true,
+  quote:true
+}
+
+const descriptorFilter = (types = SYSTEM_TYPES, include = false) => (parent, descriptors = []) => {
+  return descriptors.filter(descriptor => types[descriptor.id] ? include : !include)
 }
 /*
 
@@ -11,15 +17,19 @@ const SYSTEM_TYPES = {
   
 */
 const descriptorFilters = {
-  standard:(parent, descriptors = []) => {
-    return descriptors.filter(descriptor => SYSTEM_TYPES[descriptor.id] ? false : true)
-  },
-  users:(parent, descriptors = []) => {
-    return descriptors.filter(descriptor => descriptor.id == 'user')
-  },
-  projects:(parent, descriptors = []) => {
-    return descriptors.filter(descriptor => descriptor.id == 'project')
-  }
+  standard:descriptorFilter(),
+  users:descriptorFilter({
+    user:true
+  }, true),
+  projects:descriptorFilter({
+    project:true
+  }, true),
+  clients:descriptorFilter({
+    client:true
+  }, true),
+  quotes:descriptorFilter({
+    quote:true
+  }, true)
 }
 /*
 

@@ -250,6 +250,44 @@ const getLayouts = (opts = {}) => {
         handler:handlers.edit,
         filter:item => opts.isEditable(item)
       })
+    ],
+
+    /*
+    
+      clients layout
+      
+    */
+    clients:[
+      ICON_FIELD(),
+      TEXT_FIELD({
+        field:'name'
+      }),
+      BUTTON_FIELD({
+        title:(context, settings, data) => {
+          return 'Edit'
+        },
+        handler:handlers.edit,
+        filter:item => opts.isEditable(item)
+      })
+    ],
+
+    /*
+    
+      quotes layout
+      
+    */
+    quotes:[
+      ICON_FIELD(),
+      TEXT_FIELD({
+        field:'name'
+      }),
+      BUTTON_FIELD({
+        title:(context, settings, data) => {
+          return 'Edit'
+        },
+        handler:handlers.edit,
+        filter:item => opts.isEditable(item)
+      })
     ]
   }
 }
@@ -261,7 +299,9 @@ const getLayouts = (opts = {}) => {
 */
 const TABLE_LAYOUTS = {
   projects:'projects',
-  users:'users'
+  users:'users',
+  clients:'clients',
+  quotes:'quotes'
 }
 
 /*

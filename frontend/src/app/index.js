@@ -31,8 +31,8 @@ import {
 } from '../tools'
 
 const databases = {
-  core:{
-    id:'core',
+  coreresources:{
+    id:'coreresources',
     readOnly:true,
     rootNode:{
       name:'System Resources'
@@ -45,8 +45,8 @@ const databases = {
       }
     })
   },
-  user:{
-    id:'user',
+  userresources:{
+    id:'userresources',
     rootNode:{
       name:'My Resources'
     },
@@ -70,16 +70,54 @@ const databases = {
         _type:'project'
       }
     })
+  },
+  clients:{
+    id:'clients',
+    rootNode:{
+      name:'Clients'
+    },
+    db:MongoCrudDB({
+      baseurl:(context) => {
+        const projectID = getCurrentProject(context.state)
+        return '/api/v1/clients/' + projectID
+      },
+      inject:{
+        _type:'client'
+      }
+    })
+  },
+  quotes:{
+    id:'quotes',
+    rootNode:{
+      name:'Quotes'
+    },
+    db:MongoCrudDB({
+      baseurl:(context) => {
+        const projectID = getCurrentProject(context.state)
+        return '/api/v1/quotes/' + projectID
+      },
+      inject:{
+        _type:'quote'
+      }
+    })
   }
 }
 
 const resourceDatabase = CompositeDB([
-  databases.user,
-  databases.core
+  databases.userresources,
+  databases.coreresources
 ])
 
 const projectDatabase = CompositeDB([
   databases.projects
+])
+
+const clientDatabase = CompositeDB([
+  databases.clients
+])
+
+const quoteDatabase = CompositeDB([
+  databases.quotes
 ])
 
 const schema = Schema({
@@ -148,12 +186,53 @@ const ProjectRoutes = (auth) => {
   }))
 }
 
+/*
+
+  client app
+  
+*/
+const CLIENT_APP_ID = 'clients'
+
+const ClientRoutes = (auth) => {
+  return CrudTemplate(Object.assign({}, schema, {
+    name:CLIENT_APP_ID,
+    path:'clients',
+    enableTree:false,
+    enableClipboard:false,
+    onEnter:auth.user,
+    db:clientDatabase,
+    crudParent:clientDatabase.getRootNode('clients')
+  }))
+}
+
+
+/*
+
+  quote app
+  
+*/
+const QUOTE_APP_ID = 'quotes'
+
+const QuoteRoutes = (auth) => {
+  return CrudTemplate(Object.assign({}, schema, {
+    name:QUOTE_APP_ID,
+    path:'quotes',
+    enableTree:false,
+    enableClipboard:false,
+    onEnter:auth.user,
+    db:quoteDatabase,
+    crudParent:quoteDatabase.getRootNode('quotes')
+  }))
+}
+
 boilerapp({
   appTitle:'QuoteRight',
   mountElement:document.getElementById('mount'),
   reducers:{
     [RESOURCE_APP_ID]:FolderReducer(RESOURCE_APP_ID),
     [PROJECT_APP_ID]:FolderReducer(PROJECT_APP_ID),
+    [CLIENT_APP_ID]:FolderReducer(CLIENT_APP_ID),
+    [QUOTE_APP_ID]:FolderReducer(QUOTE_APP_ID),
     app:appreducer
   },
   dashboard:Dashboard,
@@ -174,6 +253,8 @@ boilerapp({
         </Route>
         {ResourceRoutes(auth)}
         {ProjectRoutes(auth)}
+        {ClientRoutes(auth)}
+        {QuoteRoutes(auth)}
       </Route>
     )
   }

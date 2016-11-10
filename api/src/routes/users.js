@@ -10,7 +10,7 @@ module.exports = function(router, opts){
   var auth = opts.auth
   if(!auth) throw new Error('auth required for users route')
 
-  var storage = UserStorage({
+  var users = UserStorage({
     
   })
 
@@ -29,7 +29,7 @@ module.exports = function(router, opts){
     GET:auth({
       action:'list'
     }, function(req, res, opts){
-      storage.loadModels({
+      users.loadModels({
 
       }, jsonResponseWrapper(res))
     }),
@@ -37,7 +37,7 @@ module.exports = function(router, opts){
       action:'add'
     }, function(req, res, opts){
       jsonRequestWrapper(req, res, function(data){
-        storage.addModel(data, jsonResponseWrapper(res))
+        users.addModel(data, jsonResponseWrapper(res))
       })
     })
   })
@@ -46,19 +46,19 @@ module.exports = function(router, opts){
     GET:auth({
       action:'read'
     }, function(req, res, opts){
-      storage.loadModel(opts.params.userid, jsonResponseWrapper(res))
+      users.loadModel(opts.params.userid, jsonResponseWrapper(res))
     }),
     PUT:auth({
       action:'save'
     }, function(req, res, opts){
       jsonRequestWrapper(req, res, function(data){
-        storage.saveModel(opts.params.userid, data, jsonResponseWrapper(res))
+        users.saveModel(opts.params.userid, data, jsonResponseWrapper(res))
       })
     }),
     DELETE:auth({
       action:'delete'
     }, function(req, res, opts){
-      storage.deleteModel(opts.params.userid, jsonResponseWrapper(res))
+      users.deleteModel(opts.params.userid, jsonResponseWrapper(res))
     })
   })
 }

@@ -104,23 +104,6 @@ module.exports = function(opts){
   return Object.assign({}, projects, {
     loadUserProjects:loadUserProjects,
     addUserProject:addUserProject,
-    loadModel:function(id, done){
-      projects.processId(id, function(err, fullid){
-        if(err) return done(err)
-        projects.loadModel(fullid, done)
-      })
-    },
-    saveModel:function(id, data, done){
-      projects.processId(id, function(err, fullid){
-        if(err) return done(err)
-        projects.saveModel(fullid, data, done)
-      })
-    },
-    deleteModel:function(id, done){
-      projects.processId(id, function(err, fullid){
-        if(err) return done(err)
-        deleteProject(fullid, done)
-      })
-    }
+    deleteModel:deleteProject
   })
 }

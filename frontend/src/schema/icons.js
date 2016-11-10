@@ -3,8 +3,11 @@ import React, { Component, PropTypes } from 'react'
 import FolderIcon from 'material-ui/svg-icons/file/folder'
 import FileIcon from 'material-ui/svg-icons/editor/insert-drive-file'
 import DiskIcon from 'material-ui/svg-icons/navigation/apps'
+import MediaFolder from 'material-ui/svg-icons/action/perm-media'
 import People from 'material-ui/svg-icons/social/people'
 import Person from 'material-ui/svg-icons/social/person'
+
+import Project from 'material-ui/svg-icons/file/cloud'
 
 import { decodeID } from 'folder-ui/lib/db/composite'
 
@@ -20,6 +23,8 @@ const ICONS = {
   folder:FolderIcon,
   item:FileIcon,
   disk:DiskIcon,
+  project:Project,
+  resourcedisk:MediaFolder,
   people:People,
   user:Person
 }
@@ -31,7 +36,10 @@ const ICONS = {
 */
 const TOP_LEVEL_ICONS = {
   standard:'disk',
-  users:'people'
+  users:'people',
+  projects:'project',
+  coreresources:'resourcedisk',
+  userresources:'resourcedisk'
 }
 
 const factory = (opts = {}) => {

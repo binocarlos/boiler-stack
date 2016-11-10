@@ -24,6 +24,9 @@ function factory(opts){
   function resHandler(done){
     return function(err, resp){
       if(err) return done(err)
+      if(resp.statusCode >= 400){
+        return done(JSON.stringify(resp.body))
+      }
       done(null, resp.body)
     }
   }

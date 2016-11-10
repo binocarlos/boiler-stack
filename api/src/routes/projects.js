@@ -16,7 +16,7 @@ module.exports = function(router, opts){
   var auth = opts.auth
   if(!auth) throw new Error('auth required for projects route')
 
-  var storage = ProjectStorage({
+  var projects = ProjectStorage({
     
   })
 
@@ -24,13 +24,13 @@ module.exports = function(router, opts){
     GET:auth({
       action:'list'
     }, function(req, res, opts){
-      storage.loadUserProjects(opts.user._id, jsonResponseWrapper(res))
+      projects.loadUserProjects(opts.user._id, jsonResponseWrapper(res))
     }),
     POST:auth({
       action:'add'
     }, function(req, res, opts){
       jsonRequestWrapper(req, res, function(data){
-        storage.addUserProject(opts.user._id, data, jsonResponseWrapper(res))
+        projects.addUserProject(opts.user._id, data, jsonResponseWrapper(res))
       })
     })
   })
@@ -39,19 +39,19 @@ module.exports = function(router, opts){
     GET:auth({
       action:'read'
     }, function(req, res, opts){
-      storage.loadModel(opts.params.projectid, jsonResponseWrapper(res))
+      projects.loadModel(opts.params.projectid, jsonResponseWrapper(res))
     }),
     PUT:auth({
       action:'save'
     }, function(req, res, opts){
       jsonRequestWrapper(req, res, function(data){
-        storage.saveModel(opts.params.projectid, data, jsonResponseWrapper(res))
+        projects.saveModel(opts.params.projectid, data, jsonResponseWrapper(res))
       })
     }),
     DELETE:auth({
       action:'delete'
     }, function(req, res, opts){
-      storage.deleteModel(opts.params.projectid, jsonResponseWrapper(res))
+      projects.deleteModel(opts.params.projectid, jsonResponseWrapper(res))
     })
   })
 
