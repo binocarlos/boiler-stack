@@ -29,10 +29,10 @@ const STYLES = {
 class AppBarChildren extends Component {
 
   getButtonTitle() {
-    const currentProject = this.props.projects.filter(project => project.id == this.props.currentProject)[0]
+    const currentProject = this.props.projects.filter(project => project.littleid == this.props.currentProject)[0]
     return currentProject ?
-      currentProject.name :
-      'Choose project'
+      (currentProject.name || currentProject.littleid).toLowerCase() :
+      'choose project'
   }
 
   getProjectMenuItems(closeMenuHandler) {
@@ -70,6 +70,9 @@ class AppBarChildren extends Component {
         buttonclass={FlatButton}
         buttonprops={{
           label:this.getButtonTitle(),
+          labelStyle:{
+            textTransform:'none'
+          },
           labelPosition:'before',
           style:STYLES.button,
           icon:<ExpandMoreIcon />
