@@ -26,6 +26,10 @@ import {
   getProjectData
 } from '../actions'
 
+import {
+  getCurrentProject
+} from '../tools'
+
 const databases = {
   core:{
     id:'core',
@@ -50,7 +54,8 @@ const databases = {
 
       // what backend api url do we use depends upon the current project
       baseurl:(context) => {
-        return '/api/v1/digger/' + context.params.projectid + '/resources'
+        const projectID = getCurrentProject(context.state)
+        return '/api/v1/digger/' + projectID + '/resources'
       }
     })
   },
@@ -98,7 +103,7 @@ const ResourceRoutes = (auth) => {
     name:RESOURCE_APP_ID,
 
     // the react-router frontend route path
-    path:'resources/:projectid',
+    path:'resources',
 
     // only show folders in the tree
     treeQuery:'folder',

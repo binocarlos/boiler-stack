@@ -62,7 +62,7 @@ const ResourceRoutes = (auth) => {
 
   const resourcesProps = Object.assign({}, schema, {
     name:RESOURCE_APP_ID,
-    path:'resources/:projectid',
+    path:'resources',
     treeQuery:'folder',
     onEnter:auth.user,
     db:CompositeDB([

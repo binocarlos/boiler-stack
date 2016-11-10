@@ -1,3 +1,5 @@
+import { push } from 'react-router-redux'
+
 import {
   refreshUserStatus,
   updateUserData
@@ -50,6 +52,7 @@ export const requestUpdateUserProject = (id) => {
     dispatch(updateUser({
       currentProject:id
     }))
+    dispatch(push('/projects'))
   }
 }
 
