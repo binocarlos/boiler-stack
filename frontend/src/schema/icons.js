@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 
 import FolderIcon from 'material-ui/svg-icons/file/folder'
 import FileIcon from 'material-ui/svg-icons/editor/insert-drive-file'
-import DiskIcon from 'material-ui/svg-icons/device/storage'
+import DiskIcon from 'material-ui/svg-icons/navigation/apps'
 import People from 'material-ui/svg-icons/social/people'
 import Person from 'material-ui/svg-icons/social/person'
 

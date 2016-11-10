@@ -47,17 +47,9 @@ const databases = {
   }
 }
 
-const TABLE_LAYOUTS = {
-  users:'users'
-}
-
 const schema = Schema({
-  databases,
-  getTableLayout:(context) => {
-    if(!context.parent) return
-
-    return TABLE_LAYOUTS[getItemCodecId(context.parent.id)]
-  }
+  appid:'admin',
+  databases
 })
 
 const RESOURCE_APP_ID = 'resources'
@@ -97,6 +89,7 @@ const UserRoutes = (auth) => {
 }
 
 boilerapp({
+  appTitle:'QuoteRight Admin',
   mountElement:document.getElementById('mount'),
   reducers:{
 

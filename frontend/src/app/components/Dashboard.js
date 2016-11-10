@@ -16,7 +16,7 @@ class Dashboard extends Component {
           <Link to="/projects">Projects</Link>
         </p>
         <p>
-          <Link to="/resources/apples">Items</Link>
+          <Link to="/resources/apples">Resources</Link>
         </p>
       </div>
     )
