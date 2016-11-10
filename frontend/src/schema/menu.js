@@ -3,12 +3,21 @@ import MenuItem from 'material-ui/MenuItem'
 
 import tools from './tools'
 
+import {
+  ICONS,
+  TOP_LEVEL_ICONS
+} from './icons'
+
+const getIcon = (name) => {
+  return ICONS[TOP_LEVEL_ICONS[name]]
+}
+
 const buildMenu = (opts, context, items = []) => {
   return (
     <div>
       {items.map((item, i) => {
         return (
-          <MenuItem key={i} onTouchTap={() => {
+          <MenuItem leftIcon={<item.icon />} key={i} onTouchTap={() => {
             if(item.path) context.click(item.path)
             context.close()
           }}>
@@ -23,35 +32,44 @@ const buildMenu = (opts, context, items = []) => {
 const appMenu = (opts, context) => {
   return buildMenu(opts, context, [{
     title:'Dashboard',
-    path:'/'
+    path:'/',
+    icon:getIcon('dashboard')
   },{
     title:'Projects',
-    path:'/projects'
+    path:'/projects',
+    icon:getIcon('projects')
   },{
     title:'Resources',
-    path:'/resources'
+    path:'/resources',
+    icon:getIcon('userresources')
   },{
     title:'Clients',
-    path:'/clients'
+    path:'/clients',
+    icon:getIcon('clients')
   },{
     title:'Quotes',
-    path:'/quotes'
+    path:'/quotes',
+    icon:getIcon('quotes')
   },{
     title:'About',
-    path:'/about'
+    path:'/about',
+    icon:getIcon('about')
   }])
 }
 
 const adminMenu = (opts, context) => {
   return buildMenu(opts, context, [{
     title:'Dashboard',
-    path:'/'
+    path:'/',
+    icon:getIcon('dashboard')
   },{
     title:'Resources',
-    path:'/resources'
+    path:'/resources',
+    icon:getIcon('userresources')
   },{
     title:'Users',
-    path:'/users'
+    path:'/users',
+    icon:getIcon('users')
   }])
 }
 

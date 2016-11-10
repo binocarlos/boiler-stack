@@ -6,6 +6,9 @@ import DiskIcon from 'material-ui/svg-icons/navigation/apps'
 import MediaFolder from 'material-ui/svg-icons/action/perm-media'
 import People from 'material-ui/svg-icons/social/people'
 import Person from 'material-ui/svg-icons/social/person'
+import Quote from 'material-ui/svg-icons/action/assessment'
+import Dashboard from 'material-ui/svg-icons/action/dashboard'
+import About from 'material-ui/svg-icons/action/info-outline'
 
 import Project from 'material-ui/svg-icons/file/cloud'
 
@@ -19,14 +22,18 @@ import getColor from './colors'
   the actual icon elements
   
 */
-const ICONS = {
+export const ICONS = {
   folder:FolderIcon,
   item:FileIcon,
   disk:DiskIcon,
   project:Project,
-  resourcedisk:MediaFolder,
+  resources:MediaFolder,
   people:People,
-  user:Person
+  user:Person,
+  client:Person,
+  quote:Quote,
+  dashboard:Dashboard,
+  about:About
 }
 
 /*
@@ -34,12 +41,16 @@ const ICONS = {
   what icons to use for what top level database id
   
 */
-const TOP_LEVEL_ICONS = {
+export const TOP_LEVEL_ICONS = {
   standard:'disk',
   users:'people',
+  clients:'people',
+  quotes:'quote',
   projects:'project',
-  coreresources:'resourcedisk',
-  userresources:'resourcedisk'
+  coreresources:'resources',
+  userresources:'resources',
+  dashboard:'dashboard',
+  about:'about'
 }
 
 const factory = (opts = {}) => {
