@@ -11,7 +11,7 @@ const styles = {
 
 class ChipComponent extends Component {
   render() {
-    if(!this.props.value) return ''
+    if(!this.props.value) return <div />
     return (
       <Chip
         style={styles.chip}>
