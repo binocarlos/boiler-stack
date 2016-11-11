@@ -39,7 +39,6 @@ const databases = {
     },
     db:DiggerDB({
       readOnly: true,
-      // this database speaks to the core system
       baseurl:(context) => {
         return '/api/v1/digger/core/resources'
       }
@@ -51,8 +50,6 @@ const databases = {
       name:'My Resources'
     },
     db:DiggerDB({
-
-      // what backend api url do we use depends upon the current project
       baseurl:(context) => {
         const projectID = getCurrentProject(context.state)
         return '/api/v1/digger/' + projectID + '/resources'
@@ -67,7 +64,6 @@ const databases = {
     },
     db:DiggerDB({
       readOnly: true,
-      // this database speaks to the core system
       baseurl:(context) => {
         return '/api/v1/digger/core/templates'
       }
@@ -79,11 +75,34 @@ const databases = {
       name:'My Templates'
     },
     db:DiggerDB({
-
-      // what backend api url do we use depends upon the current project
       baseurl:(context) => {
         const projectID = getCurrentProject(context.state)
         return '/api/v1/digger/' + projectID + '/templates'
+      }
+    })
+  },
+  coregangs:{
+    id:'coregangs',
+    readOnly:true,
+    rootNode:{
+      name:'System Gangs'
+    },
+    db:DiggerDB({
+      readOnly: true,
+      baseurl:(context) => {
+        return '/api/v1/digger/core/gangs'
+      }
+    })
+  },
+  usergangs:{
+    id:'usergangs',
+    rootNode:{
+      name:'My Gangs'
+    },
+    db:DiggerDB({
+      baseurl:(context) => {
+        const projectID = getCurrentProject(context.state)
+        return '/api/v1/digger/' + projectID + '/gangs'
       }
     })
   },
@@ -139,6 +158,11 @@ const resourceDatabase = CompositeDB([
 const templateDatabase = CompositeDB([
   databases.usertemplates,
   databases.coretemplates
+])
+
+const gangDatabase = CompositeDB([
+  databases.usergangs,
+  databases.coregangs
 ])
 
 const projectDatabase = CompositeDB([
@@ -200,6 +224,27 @@ const TemplateRoutes = (auth) => {
   })
 
   return BasicTemplate(templatesProps)
+}
+
+/*
+
+  gangs app
+  
+*/
+
+const GANG_APP_ID = 'gangs'
+
+const GangRoutes = (auth) => {
+
+  const gangsProps = Object.assign({}, schema, {
+    name:GANG_APP_ID,
+    path:'gangs',
+    treeQuery:'folder',
+    onEnter:auth.user,
+    db:gangDatabase
+  })
+
+  return BasicTemplate(gangsProps)
 }
 
 /*
@@ -279,6 +324,7 @@ boilerapp({
     [CLIENT_APP_ID]:FolderReducer(CLIENT_APP_ID),
     [QUOTE_APP_ID]:FolderReducer(QUOTE_APP_ID),
     [TEMPLATE_APP_ID]:FolderReducer(TEMPLATE_APP_ID),
+    [GANG_APP_ID]:FolderReducer(GANG_APP_ID),
     app:appreducer
   },
   dashboard:Dashboard,
@@ -302,6 +348,7 @@ boilerapp({
         {ClientRoutes(auth)}
         {QuoteRoutes(auth)}
         {TemplateRoutes(auth)}
+        {GangRoutes(auth)}
       </Route>
     )
   }

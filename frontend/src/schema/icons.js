@@ -61,8 +61,44 @@ export const TOP_LEVEL_ICONS = {
   userresources:'resources',
   coretemplates:'template',
   usertemplates:'template',
+  coregangs:'gang',
+  usergangs:'gang',
+  gangs:'gang',
+  templates:'template',
+  resources:'resources',
   dashboard:'dashboard',
   about:'about'
+}
+
+export const TOP_LEVEL_BUTTONS = [{
+  path:'/projects',
+  title:'Projects',
+  icon:<Project />
+},{
+  path:'/clients',
+  title:'Clients',
+  icon:<People />
+},{
+  path:'/resources',
+  title:'Resources',
+  icon:<MediaFolder />
+},{
+  path:'/templates',
+  title:'Templates',
+  icon:<Template />
+},{
+  path:'/gangs',
+  title:'Gangs',
+  icon:<Gang />
+},{
+  path:'/quotes',
+  title:'Quotes',
+  icon:<Quote />
+}]
+
+export const iconFactory = (name) => {
+  name = TOP_LEVEL_ICONS[name] || name
+  return ICONS[name]
 }
 
 const factory = (opts = {}) => {

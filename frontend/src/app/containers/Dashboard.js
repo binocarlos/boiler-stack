@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { push } from 'react-router-redux'
 import Dashboard from '../components/Dashboard'
 
 export class DashboardContainer extends Component {
@@ -15,7 +16,11 @@ function mapStateToProps(state, ownProps) {
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
-  return {}
+  return {
+    gotoPage:(path) => {
+      dispatch(push(path))
+    }
+  }
 }
 
 export default connect(

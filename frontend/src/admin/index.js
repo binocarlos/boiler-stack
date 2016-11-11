@@ -25,15 +25,38 @@ import {
 } from '../actions'
 
 const databases = {
-  core:{
-    id:'core',
+  coreresources:{
+    id:'coreresources',
     rootNode:{
       name:'System Resources'
     },
     db:DiggerDB({
-      // this database speaks to the core system
       baseurl:(context) => {
         return '/api/v1/digger/core/resources'
+      }
+    })
+  },
+  coretemplates:{
+    id:'coretemplates',
+    rootNode:{
+      name:'System Templates'
+    },
+    db:DiggerDB({
+      baseurl:(context) => {
+        return '/api/v1/digger/core/templates'
+      }
+    })
+  },
+  coregangs:{
+    id:'coregangs',
+    readOnly:true,
+    rootNode:{
+      name:'System Gangs'
+    },
+    db:DiggerDB({
+      readOnly: true,
+      baseurl:(context) => {
+        return '/api/v1/digger/core/gangs'
       }
     })
   },
@@ -51,6 +74,23 @@ const databases = {
   }
 }
 
+
+const resourceDatabase = CompositeDB([
+  databases.coreresources
+])
+
+const templateDatabase = CompositeDB([
+  databases.coretemplates
+])
+
+const gangDatabase = CompositeDB([
+  databases.coregangs
+])
+
+const userDatabase = CompositeDB([
+  databases.users
+])
+
 const schema = Schema({
   appid:'admin',
   databases
@@ -65,21 +105,45 @@ const ResourceRoutes = (auth) => {
     path:'resources',
     treeQuery:'folder',
     onEnter:auth.user,
-    db:CompositeDB([
-      databases.core
-    ])
+    db:resourceDatabase
   })
 
   return BasicTemplate(resourcesProps)
 }
 
+const TEMPLATE_APP_ID = 'templates'
+
+const TemplateRoutes = (auth) => {
+
+  const templatesProps = Object.assign({}, schema, {
+    name:TEMPLATE_APP_ID,
+    path:'templates',
+    treeQuery:'folder',
+    onEnter:auth.user,
+    db:templateDatabase
+  })
+
+  return BasicTemplate(templatesProps)
+}
+
+const GANG_APP_ID = 'gangs'
+
+const GangRoutes = (auth) => {
+
+  const gangsProps = Object.assign({}, schema, {
+    name:GANG_APP_ID,
+    path:'gangs',
+    treeQuery:'folder',
+    onEnter:auth.user,
+    db:gangDatabase
+  })
+
+  return BasicTemplate(gangsProps)
+}
+
 const USER_APP_ID = 'users'
 
 const UserRoutes = (auth) => {
-
-  const userDB = CompositeDB([
-    databases.users
-  ])
 
   return CrudTemplate(Object.assign({}, schema, {
     name:USER_APP_ID,
@@ -87,8 +151,8 @@ const UserRoutes = (auth) => {
     enableTree:false,
     enableClipboard:false,
     onEnter:auth.user,
-    db:userDB,
-    crudParent:userDB.getRootNode('users'),
+    db:userDatabase,
+    crudParent:userDatabase.getRootNode('users'),
 
     // reload the user status if anything changes in the user-table
     eventListener:(event, dispatch) => {
@@ -102,7 +166,9 @@ boilerapp({
   mountElement:document.getElementById('mount'),
   reducers:{
     [RESOURCE_APP_ID]:FolderReducer(RESOURCE_APP_ID),
+    [TEMPLATE_APP_ID]:FolderReducer(TEMPLATE_APP_ID),
     [USER_APP_ID]:FolderReducer(USER_APP_ID),
+    [GANG_APP_ID]:FolderReducer(GANG_APP_ID),
     app:appreducer
   },
   dashboard:Dashboard,
@@ -123,7 +189,9 @@ boilerapp({
 
         </Route>
         {ResourceRoutes(auth)}
+        {TemplateRoutes(auth)}
         {UserRoutes(auth)}
+        {GangRoutes(auth)}
       </Route>
     )
   }

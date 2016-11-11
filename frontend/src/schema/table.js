@@ -49,7 +49,7 @@ const renderers = {
       opts.field
     let text = fields.map(f => data[f]).join(' ')
 
-    text = opts.mapText ? opts.mapText(text) : text
+    text = opts.mapText ? opts.mapText(text, data) : text
 
     // allow easy selection of the text
     return (
@@ -216,7 +216,12 @@ const getLayouts = (opts = {}) => {
       TEXT_FIELD(),
       TEXT_FIELD({
         field:'price',
-        mapText:tools.currency
+        mapText:(price, item) => {
+          // folders do not have a price
+          return item._digger.tag != 'folder' ?
+            tools.currency(price) :
+            ''
+        }
       }),
       BUTTON_FIELD({
         title:(context, settings, data) => {
@@ -239,6 +244,30 @@ const getLayouts = (opts = {}) => {
       
     */
     templates:[
+      ICON_FIELD(),
+      TEXT_FIELD({
+        field:'name'
+      }),
+      BUTTON_FIELD({
+        title:(context, settings, data) => {
+          return 'Edit'
+        },
+        handler:handlers.edit,
+        filter:item => opts.isEditable(item)
+      }),
+      BUTTON_FIELD({
+        title:'Open',
+        handler:handlers.open,
+        filter:item => !opts.isLeaf(item)
+      })
+    ],
+
+    /*
+    
+      gangs layout
+      
+    */
+    gangs:[
       ICON_FIELD(),
       TEXT_FIELD({
         field:'name'
@@ -360,7 +389,9 @@ const TABLE_LAYOUTS = {
   coreresources:'resources',
   userresources:'resources',
   coretemplates:'templates',
-  usertemplates:'templates'
+  usertemplates:'templates',
+  coregangs:'gangs',
+  usergangs:'gangs'
 }
 
 /*

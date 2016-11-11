@@ -85,7 +85,24 @@ const TYPES = {
       type:'text'
     }],
     initialData:{
-      
+      _digger:{
+        tag:'template'
+      }
+    }
+  },
+
+  gang:{
+    id:'gang',
+    leaf:'true',
+    title:'Gang',
+    fields:[{
+      name:'name',
+      type:'text'
+    }],
+    initialData:{
+      _digger:{
+        tag:'gang'
+      }
     }
   },
 
