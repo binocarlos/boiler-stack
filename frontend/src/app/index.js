@@ -59,6 +59,34 @@ const databases = {
       }
     })
   },
+  coretemplates:{
+    id:'coretemplates',
+    readOnly:true,
+    rootNode:{
+      name:'System Templates'
+    },
+    db:DiggerDB({
+      readOnly: true,
+      // this database speaks to the core system
+      baseurl:(context) => {
+        return '/api/v1/digger/core/templates'
+      }
+    })
+  },
+  usertemplates:{
+    id:'usertemplates',
+    rootNode:{
+      name:'My Templates'
+    },
+    db:DiggerDB({
+
+      // what backend api url do we use depends upon the current project
+      baseurl:(context) => {
+        const projectID = getCurrentProject(context.state)
+        return '/api/v1/digger/' + projectID + '/templates'
+      }
+    })
+  },
   projects:{
     id:'projects',
     rootNode:{
@@ -108,6 +136,11 @@ const resourceDatabase = CompositeDB([
   databases.coreresources
 ])
 
+const templateDatabase = CompositeDB([
+  databases.usertemplates,
+  databases.coretemplates
+])
+
 const projectDatabase = CompositeDB([
   databases.projects
 ])
@@ -137,25 +170,36 @@ const RESOURCE_APP_ID = 'resources'
 const ResourceRoutes = (auth) => {
 
   const resourcesProps = Object.assign({}, schema, {
-    // the reducer name
     name:RESOURCE_APP_ID,
-
-    // the react-router frontend route path
     path:'resources',
-
-    // only show folders in the tree
     treeQuery:'folder',
-
-    // what function handles auth on entry
     onEnter:auth.user,
-
-    // the database powering the api requests
     db:resourceDatabase
   })
 
   return BasicTemplate(resourcesProps)
 }
 
+/*
+
+  templates app
+  
+*/
+
+const TEMPLATE_APP_ID = 'templates'
+
+const TemplateRoutes = (auth) => {
+
+  const templatesProps = Object.assign({}, schema, {
+    name:TEMPLATE_APP_ID,
+    path:'templates',
+    treeQuery:'folder',
+    onEnter:auth.user,
+    db:templateDatabase
+  })
+
+  return BasicTemplate(templatesProps)
+}
 
 /*
 
@@ -233,6 +277,7 @@ boilerapp({
     [PROJECT_APP_ID]:FolderReducer(PROJECT_APP_ID),
     [CLIENT_APP_ID]:FolderReducer(CLIENT_APP_ID),
     [QUOTE_APP_ID]:FolderReducer(QUOTE_APP_ID),
+    [TEMPLATE_APP_ID]:FolderReducer(TEMPLATE_APP_ID),
     app:appreducer
   },
   dashboard:Dashboard,
@@ -255,6 +300,7 @@ boilerapp({
         {ProjectRoutes(auth)}
         {ClientRoutes(auth)}
         {QuoteRoutes(auth)}
+        {TemplateRoutes(auth)}
       </Route>
     )
   }

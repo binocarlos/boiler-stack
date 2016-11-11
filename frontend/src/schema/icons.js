@@ -6,8 +6,13 @@ import DiskIcon from 'material-ui/svg-icons/navigation/apps'
 import MediaFolder from 'material-ui/svg-icons/action/perm-media'
 import People from 'material-ui/svg-icons/social/people'
 import Person from 'material-ui/svg-icons/social/person'
-import Quote from 'material-ui/svg-icons/action/assessment'
+import Quote from 'material-ui/svg-icons/action/assignment'
+import Template from 'material-ui/svg-icons/action/donut-small'
 import Dashboard from 'material-ui/svg-icons/action/dashboard'
+import Gang from 'material-ui/svg-icons/action/group-work'
+import Labour from 'material-ui/svg-icons/maps/transfer-within-a-station'
+import Material from 'material-ui/svg-icons/editor/format-paint'
+import Hire from 'material-ui/svg-icons/maps/local-shipping'
 import About from 'material-ui/svg-icons/action/info-outline'
 
 import Project from 'material-ui/svg-icons/file/cloud'
@@ -32,8 +37,13 @@ export const ICONS = {
   user:Person,
   client:Person,
   quote:Quote,
+  template:Template,
+  gang:Gang,
   dashboard:Dashboard,
-  about:About
+  about:About,
+  labour:Labour,
+  material:Material,
+  hire:Hire
 }
 
 /*
@@ -49,6 +59,8 @@ export const TOP_LEVEL_ICONS = {
   projects:'project',
   coreresources:'resources',
   userresources:'resources',
+  coretemplates:'template',
+  usertemplates:'template',
   dashboard:'dashboard',
   about:'about'
 }

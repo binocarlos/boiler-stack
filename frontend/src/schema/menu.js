@@ -39,13 +39,17 @@ const appMenu = (opts, context) => {
     path:'/projects',
     icon:getIcon('projects')
   },{
+    title:'Clients',
+    path:'/clients',
+    icon:getIcon('clients')
+  },{
     title:'Resources',
     path:'/resources',
     icon:getIcon('userresources')
   },{
-    title:'Clients',
-    path:'/clients',
-    icon:getIcon('clients')
+    title:'Templates',
+    path:'/templates',
+    icon:getIcon('usertemplates')
   },{
     title:'Quotes',
     path:'/quotes',
@@ -65,7 +69,11 @@ const adminMenu = (opts, context) => {
   },{
     title:'Resources',
     path:'/resources',
-    icon:getIcon('userresources')
+    icon:getIcon('coreresources')
+  },{
+    title:'Templates',
+    path:'/templates',
+    icon:getIcon('coretemplates')
   },{
     title:'Users',
     path:'/users',

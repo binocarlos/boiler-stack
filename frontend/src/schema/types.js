@@ -76,6 +76,19 @@ const TYPES = {
     }
   },
 
+  template:{
+    id:'template',
+    leaf:'true',
+    title:'Template',
+    fields:[{
+      name:'name',
+      type:'text'
+    }],
+    initialData:{
+      
+    }
+  },
+
   /*
   
     resources
@@ -105,6 +118,22 @@ const TYPES = {
     initialData:{
       _digger:{
         tag:'item'
+      }
+    }
+  },
+  labour:{
+    id:'labour',
+    leaf:'true',
+    title:'Labour',
+    fields:[{
+      name:'name'
+    },{
+      name:'price',
+      type:'number'
+    }],
+    initialData:{
+      _digger:{
+        tag:'labour'
       }
     }
   }

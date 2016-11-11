@@ -205,6 +205,31 @@ const getLayouts = (opts = {}) => {
 
     /*
     
+      templates layout
+      
+    */
+    templates:[
+      ICON_FIELD(),
+      TEXT_FIELD({
+        field:'name'
+      }),
+      BUTTON_FIELD({
+        title:(context, settings, data) => {
+          return 'Edit'
+        },
+        handler:handlers.edit,
+        filter:item => opts.isEditable(item)
+      }),
+      BUTTON_FIELD({
+        title:'Open',
+        handler:handlers.open,
+        filter:item => !opts.isLeaf(item)
+      })
+    ],
+
+
+    /*
+    
       users layout
       
     */
@@ -301,7 +326,9 @@ const TABLE_LAYOUTS = {
   projects:'projects',
   users:'users',
   clients:'clients',
-  quotes:'quotes'
+  quotes:'quotes',
+  coretemplates:'templates',
+  usertemplates:'templates'
 }
 
 /*

@@ -5,12 +5,19 @@ const SYSTEM_TYPES = {
   user:true,
   project:true,
   client:true,
-  quote:true
+  quote:true,
+  template:true
+}
+
+const TEMPLATE_TYPES = {
+  folder:true,
+  template:true
 }
 
 const descriptorFilter = (types = SYSTEM_TYPES, include = false) => (parent, descriptors = []) => {
   return descriptors.filter(descriptor => types[descriptor.id] ? include : !include)
 }
+
 /*
 
   get the base list
@@ -29,7 +36,9 @@ const descriptorFilters = {
   }, true),
   quotes:descriptorFilter({
     quote:true
-  }, true)
+  }, true),
+  coretemplates:descriptorFilter(TEMPLATE_TYPES, true),
+  usertemplates:descriptorFilter(TEMPLATE_TYPES, true)
 }
 /*
 
