@@ -120,8 +120,11 @@ const getTopLevelIcon = (item) => {
   return TOP_LEVEL_ICONS[itemid] || TOP_LEVEL_ICONS.standard
 }
 
-const getItemIcon = (item) => {
-  return getItemType(item) || 'folder'
+export const getItemIcon = (item, getElement = false) => {
+  const iconName = getItemType(item) || 'folder'
+  return getElement ?
+    ICONS[iconName] :
+    iconName
 }
 
 const getIcon = (opts) => {

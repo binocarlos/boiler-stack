@@ -58,8 +58,8 @@ export const isIdTopLevel = (databases, id) => {
   return getItemDatabase(databases, id) && getItemCodecId(id) == decodeID(id)
 }
 
-export const currency = (string) => {
-  const parts = string.split('.')
+export const currency = (string = '') => {
+  const parts = string.toString().split('.')
 
   const pounds = parts[0] || '0'
   let pence = parts[1] || '00'

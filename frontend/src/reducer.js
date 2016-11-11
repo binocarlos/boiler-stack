@@ -52,7 +52,13 @@ export default function boilerreducer(state = INITIAL_STATE, action = {}) {
       return update(state, {
         digger:{
           [action.tag]:{
-            $set:processDiggerResults(action.data)
+            $set:{
+              data:processDiggerResults(action.data),
+              selector:action.selector,
+              section:action.section,
+              projectId:action.projectId,
+              includeCore:action.includeCore
+            }
           }
         }
       })

@@ -1,10 +1,20 @@
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
 
-import {List, ListItem} from 'material-ui/List';
+import {List, ListItem} from 'material-ui/List'
+import Divider from 'material-ui/Divider'
+import IconMenu from 'material-ui/IconMenu'
+import IconButton from 'material-ui/IconButton'
+import MenuItem from 'material-ui/MenuItem'
+import Avatar from 'material-ui/Avatar'
+import Subheader from 'material-ui/Subheader'
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
+import AutoComplete from 'material-ui/AutoComplete'
+import {grey400, darkBlack, lightBlack, cyan500} from 'material-ui/styles/colors'
 
 import {
   nameSort,
+  diggerTypeSort,
   currency,
   getDiggerArray
 } from '../tools'
@@ -14,11 +24,16 @@ import {
 } from '../actions'
 
 import {
-  iconFactory
+  getItemIcon,
+  ICONS
 } from '../schema/icons'
 
-const LabourIcon = iconFactory('labour')
-
+const styles = {
+  listContainer:{
+    width:'300px',
+    maxWidth:'300px'
+  }
+}
 /*
 
   a drop down list populated by a selector
@@ -26,49 +41,96 @@ const LabourIcon = iconFactory('labour')
   each item is mapped onto the diggerid
   
 */
+const iconButtonElement = (
+  <IconButton
+    touch={true}
+  >
+    <MoreVertIcon color={grey400} />
+  </IconButton>
+)
+
 class DiggerList extends Component {
 
   componentDidMount() {
     this.props.requestData()
   }
 
-  getItemList() {
-    const rightIconMenu = (
-      <IconMenu iconButtonElement={iconButtonElement}>
-        <MenuItem>Edit</MenuItem>
-        <MenuItem>Delete</MenuItem>
-      </IconMenu>
+  getAutoComplete() {
+    return (
+      <AutoComplete
+        floatingLabelText={this.props.title}
+        hintText="Search..."
+        filter={AutoComplete.fuzzyFilter}
+        dataSource={this.props.autoCompleteData}
+        maxSearchResults={5}
+        onNewRequest={(item, index) => {
+          if(index<0) return
+          this.props.addItem(item)
+        }}
+        dataSourceConfig={{
+          text:'name',
+          value:'id'
+        }}
+      />
     )
+  }
+
+  getItemList() {
 
     return (
-      <div>
+      <div style={styles.listContainer}>
         <List>
-          <Subheader>{this.props.title}</Subheader>
           {
-            this.props.data.map(item => {
+            this.props.data.map((item, i) => {
+              
+              const getSecondaryText = this.props.schema.getSecondaryText ?
+                this.props.schema.getSecondaryText(item) :
+                null
+
+              const iconClass = ICONS[getItemIcon(item)]
+
+              const rightIconMenu = (
+                <IconMenu iconButtonElement={iconButtonElement}>
+                  <MenuItem
+                    onTouchTap={() => {
+                      this.props.changeItem(item, 1)
+                    }}>Increase</MenuItem>
+                  <MenuItem
+                    onTouchTap={() => {
+                      this.props.changeItem(item, -1)
+                    }}>Reduce</MenuItem>
+                  <MenuItem
+                    onTouchTap={() => {
+                      this.props.deleteItem(item)
+                    }}>Delete</MenuItem>
+                </IconMenu>
+              )
+
+              const itemName = item._count > 1 ?
+                item.name + ' x ' + item._count :
+                item.name
+
               return (
                 <ListItem
                   key={i}
-                  leftAvatar={<Avatar icon={<LabourIcon />} />}
-                  primaryText={item.name}
+                  leftIcon={React.createElement(iconClass, {color:cyan500})}
+                  primaryText={itemName}
                   rightIconButton={rightIconMenu}
-                  secondaryText={
-                    <p>
-                      <span style={{color: darkBlack}}>{currency(item.price)}</span>
-                    </p>
-                  }
+                  secondaryText={getSecondaryText}
                   secondaryTextLines={1}
                 />
               )
-            }).join(<Divider inset={true} />)
+            })
           }
         </List>
       </div>
     )
   }
+
   render() {
     return (
       <div>
+        {this.getAutoComplete()}
         {this.getItemList()}
       </div>
     )
@@ -77,11 +139,38 @@ class DiggerList extends Component {
 
 function mapStateToProps(state, ownProps) {
   const tag = ownProps.schema.tag
-  const db = state.app.digger[tag]
-  const data = getDiggerArray(db)
+  const db = state.app.digger[tag] || {}
+  const itemIds = ownProps.value || []
+
+  let data = []
+  let autoCompleteData = []
+
+  if(db){
+    const state = db.data
+    const allItems = getDiggerArray(state)
+
+    data = (ownProps.value || []).map(item => {
+      return Object.assign({}, state.db[item.id], {
+        id:item.id,
+        _count:item.count
+      })
+    })
+
+    data.sort(diggerTypeSort)
+
+    autoCompleteData = allItems.map(item => {
+      return {
+        name:item.name + ' (' + currency(item.price) + ')',
+        id:item._digger.diggerid
+      }
+    })
+
+    autoCompleteData.sort(nameSort)
+  }
 
   return {
-    data
+    data,
+    autoCompleteData
   }
 }
 
@@ -94,10 +183,38 @@ function mapDispatchToProps(dispatch, ownProps) {
   const tag = ownProps.schema.tag
 
   // the query
-  const selector = ownProps.schema.selected
+  const selector = ownProps.schema.selector
 
   // should we also load from /api/v1/digger/core ?
   const includeCore = ownProps.schema.includeCore
+
+  const insertItem = (id, direction = 1) => {
+    let idArray = ownProps.value || []
+    let existing = (ownProps.value || []).filter(item => item.id == id)[0]
+
+    if(existing){
+      existing.count += direction
+
+      if(existing.count<=0){
+        idArray = idArray.filter(item => item.id != id)
+      }
+    }
+    else{
+      idArray.push({
+        id:id,
+        count:1
+      })
+    }
+    ownProps.update(idArray)
+  }
+
+  const deleteItem = (id) => {
+    let idArray = ownProps.value || []
+    idArray = idArray.filter(item => {
+      return item.id != id
+    })
+    ownProps.update(idArray)
+  }
 
   return {
     requestData:() => {
@@ -107,6 +224,15 @@ function mapDispatchToProps(dispatch, ownProps) {
         selector,
         includeCore
       }))
+    },
+    addItem:(item) => {
+      insertItem(item.id)      
+    },
+    changeItem:(item, direction) => {
+      insertItem(item.id, direction)
+    },
+    deleteItem:(item) => {
+      deleteItem(item.id)
     }
   }
 }

@@ -1,3 +1,8 @@
+import React, { PropTypes, Component } from 'react'
+import {
+  currency
+} from '../tools'
+
 /*
 
   the different types we have in our system
@@ -104,11 +109,19 @@ const TYPES = {
       type:'text'
     },{
       name:'members',
+      title:'Add Labour',
       type:'diggerlist',
       section:'resources',
       tag:'team_members',
       selector:'labour',
-      includeCore:true
+      includeCore:true,
+      getSecondaryText:(item) => {
+        return (
+          <i>
+            {currency(item.price)}
+          </i>
+        )
+      }
     }],
     initialData:{
       _digger:{

@@ -108,14 +108,16 @@ const runDiggerSelector = (opts = {}, done) => {
 export const diggerSelector = (opts = {}, done) => {
   return (dispatch, getState) => {
     const activeProjectID = getCurrentProject(getState())
+    let includeCore = false
     parallel({
       project:(next) => {
         if(!activeProjectID || !opts.includeCore) return next(null, [])
+        includeCore = true
         runDiggerSelector({
           section:opts.section,
           project:activeProjectID,
           selector:opts.selector
-        })
+        }, next)
       },
 
       core:(next) => {
@@ -123,7 +125,7 @@ export const diggerSelector = (opts = {}, done) => {
           section:opts.section,
           project:'core',
           selector:opts.selector
-        })
+        }, next)
       }
     }, (err, data) => {
       if(err){
@@ -136,7 +138,11 @@ export const diggerSelector = (opts = {}, done) => {
       dispatch({
         type:DIGGER_SELECTOR,
         tag:opts.tag,
-        data:finalData
+        data:finalData,
+        selector:opts.selector,
+        section:opts.section,
+        projectId:activeProjectID,
+        includeCore
       })
       done && done(null, finalData)
     })
