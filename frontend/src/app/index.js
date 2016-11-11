@@ -8,11 +8,13 @@ import Page from 'boiler-frontend/lib/components/Page'
 import FolderReducer from 'folder-ui/lib/reducer'
 import BasicTemplate from 'folder-ui/lib/templates/basic'
 import CrudTemplate from 'folder-ui/lib/templates/crud'
+import QuoteTemplate from '../templates/quote'
 import DiggerDB from 'digger-folder-ui-db'
 import MemoryDB from 'folder-ui/lib/db/memory'
 import CompositeDB from 'folder-ui/lib/db/composite'
 
 import MongoCrudDB from '../db/mongocrud'
+import QuoteDB from '../db/quote'
 
 import appreducer from '../reducer'
 
@@ -147,6 +149,15 @@ const databases = {
         _type:'quote'
       }
     })
+  },
+  quote:{
+    id:'quote',
+    rootNode:{
+      name:'Quote'
+    },
+    db:QuoteDB({
+      
+    })
   }
 }
 
@@ -168,6 +179,9 @@ const composites = {
   ]),
   quotes:CompositeDB([
     databases.quotes
+  ]),
+  quote:CompositeDB([
+    databases.quote
   ]),
   projects:CompositeDB([
     databases.projects
@@ -236,7 +250,7 @@ const clientApp = CrudTemplate(Object.assign({}, schema, {
   getFormContext:getFormContext
 }))
 
-const quoteApp = CrudTemplate(Object.assign({}, schema, {
+const quotesApp = CrudTemplate(Object.assign({}, schema, {
   name:'quotes',
   path:'quotes',
   enableTree:false,
@@ -247,6 +261,14 @@ const quoteApp = CrudTemplate(Object.assign({}, schema, {
 }))
 
 
+const quoteApp = QuoteTemplate(Object.assign({}, schema, {
+  name:'quote',
+  path:'quote/:quoteid',
+  treeQuery:'folder',
+  showTableHeader:true,
+  getFormContext:getFormContext,
+  db:composites.quote
+}))
 
 const projectApp = CrudTemplate(Object.assign({}, schema, {
   name:'projects',
@@ -273,6 +295,7 @@ boilerapp({
     [templateApp.name]:FolderReducer(templateApp.name),
     [teamApp.name]:FolderReducer(teamApp.name),
     [clientApp.name]:FolderReducer(clientApp.name),
+    [quotesApp.name]:FolderReducer(quotesApp.name),
     [quoteApp.name]:FolderReducer(quoteApp.name),
     [projectApp.name]:FolderReducer(projectApp.name),
     app:appreducer
@@ -297,6 +320,7 @@ boilerapp({
         {templateApp.getRoutes(auth.user)}
         {teamApp.getRoutes(auth.user)}
         {clientApp.getRoutes(auth.user)}
+        {quotesApp.getRoutes(auth.user)}
         {quoteApp.getRoutes(auth.user)}
         {projectApp.getRoutes(auth.user)}
       </Route>

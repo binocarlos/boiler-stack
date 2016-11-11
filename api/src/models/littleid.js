@@ -34,6 +34,10 @@ module.exports = function(storage){
     loadModel:function(id, done){
       processId(id, function(err, fullid){
         if(err) return done(err)
+          console.log('-------------------------------------------');
+        console.log('-------------------------------------------');
+        console.log('loading')
+        console.log(fullid)
         storage.loadModel(fullid, done)
       })
     },

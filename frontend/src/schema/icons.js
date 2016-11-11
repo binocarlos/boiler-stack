@@ -60,6 +60,7 @@ export const TOP_LEVEL_ICONS = {
   users:'people',
   clients:'people',
   quotes:'quote',
+  quote:'quote',
   projects:'project',
   coreresources:'resources',
   userresources:'resources',

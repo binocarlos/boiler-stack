@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import { push } from 'react-router-redux'
 import Avatar from 'material-ui/Avatar'
 import FlatButton from 'material-ui/FlatButton'
 
@@ -34,6 +35,9 @@ const handlers = {
   },
   activateProject:(context, settings, data) => {
     context.dispatch(setCurrentProject(data.littleid))
+  },
+  openQuote:(context, settings, data) => {
+    context.dispatch(push('/quote/' + data._id))
   }
 }
 
@@ -372,6 +376,10 @@ const getLayouts = (opts = {}) => {
         field:'clientname'
       }),
       BUTTON_FIELD({
+        title:'Open',
+        handler:handlers.openQuote
+      }),
+      BUTTON_FIELD({
         title:(context, settings, data) => {
           return 'Edit'
         },
@@ -392,6 +400,7 @@ const TABLE_LAYOUTS = {
   users:'users',
   clients:'clients',
   quotes:'quotes',
+  quote:'quote',
   coreresources:'resources',
   userresources:'resources',
   coretemplates:'templates',
