@@ -5,6 +5,7 @@ import FlatButton from 'material-ui/FlatButton'
 import { getItemCodecId, decodeID } from 'folder-ui/lib/db/composite'
 
 import getColor from './colors'
+import tools from './tools'
 
 import ProjectStatus from '../fields/ProjectStatus'
 
@@ -46,7 +47,9 @@ const renderers = {
     const fields = typeof(opts.field) == 'string' ?
       [opts.field] :
       opts.field
-    const text = fields.map(f => data[f]).join(' ')
+    let text = fields.map(f => data[f]).join(' ')
+
+    text = opts.mapText ? opts.mapText(text) : text
 
     // allow easy selection of the text
     return (
@@ -205,6 +208,33 @@ const getLayouts = (opts = {}) => {
 
     /*
     
+      resources layout
+      
+    */
+    resources:[
+      ICON_FIELD(),
+      TEXT_FIELD(),
+      TEXT_FIELD({
+        field:'price',
+        mapText:tools.currency
+      }),
+      BUTTON_FIELD({
+        title:(context, settings, data) => {
+          return 'Edit'
+        },
+        handler:handlers.edit,
+        filter:item => opts.isEditable(item)
+      }),
+      BUTTON_FIELD({
+        title:'Open',
+        handler:handlers.open,
+        filter:item => !opts.isLeaf(item)
+      })
+    ],
+
+
+    /*
+    
       templates layout
       
     */
@@ -327,6 +357,8 @@ const TABLE_LAYOUTS = {
   users:'users',
   clients:'clients',
   quotes:'quotes',
+  coreresources:'resources',
+  userresources:'resources',
   coretemplates:'templates',
   usertemplates:'templates'
 }

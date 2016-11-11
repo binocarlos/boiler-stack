@@ -106,21 +106,7 @@ const TYPES = {
       }
     }
   },
-  item:{
-    id:'item',
-    leaf:'true',
-    title:'Item',
-    fields:[{
-      name:'name'
-    },{
-      name:'comment'
-    }],
-    initialData:{
-      _digger:{
-        tag:'item'
-      }
-    }
-  },
+
   labour:{
     id:'labour',
     leaf:'true',
@@ -129,11 +115,47 @@ const TYPES = {
       name:'name'
     },{
       name:'price',
+      title:'Rate',
       type:'number'
     }],
     initialData:{
       _digger:{
         tag:'labour'
+      }
+    }
+  },
+
+  material:{
+    id:'material',
+    leaf:'true',
+    title:'Material',
+    fields:[{
+      name:'name'
+    },{
+      name:'price',
+      type:'number'
+    }],
+    initialData:{
+      _digger:{
+        tag:'material'
+      }
+    }
+  },
+
+  hire:{
+    id:'hire',
+    leaf:'true',
+    title:'Hire',
+    fields:[{
+      name:'name'
+    },{
+      name:'price',
+      title:'Rate',
+      type:'number'
+    }],
+    initialData:{
+      _digger:{
+        tag:'hire'
       }
     }
   }

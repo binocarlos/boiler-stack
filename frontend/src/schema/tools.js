@@ -58,6 +58,19 @@ const isIdTopLevel = (databases, id) => {
   return getItemDatabase(databases, id) && getItemCodecId(id) == decodeID(id)
 }
 
+const currency = (string) => {
+  const parts = string.split('.')
+
+  const pounds = parts[0] || '0'
+  let pence = parts[1] || '00'
+
+  if(pence.length==1){
+    pence += '0'
+  }
+
+  return '£' + pounds + '.' + pence
+}
+
 const tools = {
   getItemType,
   getItemName,
@@ -68,7 +81,8 @@ const tools = {
   getTitle,
   isIdTopLevel,
   getItemDatabaseId,
-  getItemDatabase
+  getItemDatabase,
+  currency
 }
 
 export default tools

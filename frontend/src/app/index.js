@@ -174,6 +174,7 @@ const ResourceRoutes = (auth) => {
     path:'resources',
     treeQuery:'folder',
     onEnter:auth.user,
+    showTableHeader:true,
     db:resourceDatabase
   })
 
