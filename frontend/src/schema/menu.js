@@ -1,8 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import MenuItem from 'material-ui/MenuItem'
 
-import tools from './tools'
-
 import {
   ICONS,
   TOP_LEVEL_ICONS

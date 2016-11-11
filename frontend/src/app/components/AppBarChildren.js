@@ -8,7 +8,10 @@ import MenuItem from 'material-ui/MenuItem'
 import ExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more'
 import ButtonDropdown from 'kettle-ui/lib/ButtonDropdown'
 
-import tools from '../../schema/tools'
+import {
+  nameSort
+} from '../../tools'
+
 
 const STYLES = {
   button:{
@@ -38,7 +41,7 @@ class AppBarChildren extends Component {
   getProjectMenuItems(closeMenuHandler) {
 
     let projectList = [].concat(this.props.projects || [])
-    projectList.sort(tools.nameSort)
+    projectList.sort(nameSort)
 
     return projectList.map((project, i) => {
       return (

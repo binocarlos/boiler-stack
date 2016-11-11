@@ -74,101 +74,80 @@ const databases = {
   }
 }
 
-
-const resourceDatabase = CompositeDB([
-  databases.coreresources
-])
-
-const templateDatabase = CompositeDB([
-  databases.coretemplates
-])
-
-const gangDatabase = CompositeDB([
-  databases.coregangs
-])
-
-const userDatabase = CompositeDB([
-  databases.users
-])
+const composites = {
+  resources:CompositeDB([
+    databases.coreresources
+  ]),
+  templates:CompositeDB([
+    databases.coretemplates
+  ]),
+  gangs:CompositeDB([
+    databases.coregangs
+  ]),  
+  users:CompositeDB([
+    databases.users
+  ])
+}
 
 const schema = Schema({
   appid:'admin',
   databases
 })
 
-const RESOURCE_APP_ID = 'resources'
-
-const ResourceRoutes = (auth) => {
-
-  const resourcesProps = Object.assign({}, schema, {
-    name:RESOURCE_APP_ID,
-    path:'resources',
-    treeQuery:'folder',
-    onEnter:auth.user,
-    db:resourceDatabase
-  })
-
-  return BasicTemplate(resourcesProps)
+const getFormContext = () => {
+  return {
+    databases:databases
+  }
 }
 
-const TEMPLATE_APP_ID = 'templates'
+const resourceApp = BasicTemplate(Object.assign({}, schema, {
+  name:'resources',
+  path:'resources',
+  treeQuery:'folder',
+  showTableHeader:true,
+  getFormContext:getFormContext,
+  db:composites.resources
+}))
 
-const TemplateRoutes = (auth) => {
+const templateApp = BasicTemplate(Object.assign({}, schema, {
+  name:'templates',
+  path:'templates',
+  treeQuery:'folder',
+  getFormContext:getFormContext,
+  db:composites.templates
+}))
 
-  const templatesProps = Object.assign({}, schema, {
-    name:TEMPLATE_APP_ID,
-    path:'templates',
-    treeQuery:'folder',
-    onEnter:auth.user,
-    db:templateDatabase
-  })
+const gangApp = BasicTemplate(Object.assign({}, schema, {
+  name:'gangs',
+  path:'gangs',
+  treeQuery:'folder',
+  getFormContext:getFormContext,
+  db:composites.gangs
+}))
 
-  return BasicTemplate(templatesProps)
-}
+const userApp = CrudTemplate(Object.assign({}, schema, {
+  name:'users',
+  path:'users',
+  enableTree:false,
+  enableClipboard:false,
+  db:composites.users,
+  crudParent:userDatabase.getRootNode('users'),
 
-const GANG_APP_ID = 'gangs'
+  // reload the user status if anything changes in the user-table
+  eventListener:(event, dispatch) => {
+    dispatch(refreshUser())
+  }
+}))
 
-const GangRoutes = (auth) => {
-
-  const gangsProps = Object.assign({}, schema, {
-    name:GANG_APP_ID,
-    path:'gangs',
-    treeQuery:'folder',
-    onEnter:auth.user,
-    db:gangDatabase
-  })
-
-  return BasicTemplate(gangsProps)
-}
-
-const USER_APP_ID = 'users'
-
-const UserRoutes = (auth) => {
-
-  return CrudTemplate(Object.assign({}, schema, {
-    name:USER_APP_ID,
-    path:'users',
-    enableTree:false,
-    enableClipboard:false,
-    onEnter:auth.user,
-    db:userDatabase,
-    crudParent:userDatabase.getRootNode('users'),
-
-    // reload the user status if anything changes in the user-table
-    eventListener:(event, dispatch) => {
-      dispatch(refreshUser())
-    }
-  }))
-}
 
 boilerapp({
   appTitle:'QuoteRight Admin',
   mountElement:document.getElementById('mount'),
   reducers:{
-    [RESOURCE_APP_ID]:FolderReducer(RESOURCE_APP_ID),
-    [TEMPLATE_APP_ID]:FolderReducer(TEMPLATE_APP_ID),
-    [USER_APP_ID]:FolderReducer(USER_APP_ID),
-    [GANG_APP_ID]:FolderReducer(GANG_APP_ID),
+    [resourceApp.name]:FolderReducer(resourceApp.name),
+    [templateApp.name]:FolderReducer(templateApp.name),
+    [gangApp.name]:FolderReducer(gangApp.name),
+    [userApp.name]:FolderReducer(userApp.name),
     app:appreducer
   },
   dashboard:Dashboard,
@@ -188,10 +167,10 @@ boilerapp({
         <Route component={Page}>
 
         </Route>
-        {ResourceRoutes(auth)}
-        {TemplateRoutes(auth)}
-        {UserRoutes(auth)}
-        {GangRoutes(auth)}
+        {resourceApp.getRoutes(auth.user)}
+        {templateApp.getRoutes(auth.user)}
+        {gangApp.getRoutes(auth.user)}
+        {userApp.getRoutes(auth.user)}
       </Route>
     )
   }

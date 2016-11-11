@@ -1,6 +1,8 @@
 import Chip from '../fields/Chip'
 import ProjectStatus from '../fields/ProjectStatus'
 import NumberField from '../fields/NumberField'
+import ClientId from '../fields/ClientId'
+
 /*
 
   GUI components for the schema
@@ -9,7 +11,8 @@ import NumberField from '../fields/NumberField'
 const LIBRARY = {
   chip:Chip,
   projectstatus:ProjectStatus,
-  number:NumberField
+  number:NumberField,
+  clientid:ClientId
 }
 
 const factory = (opts = {}) => (context, item) => {

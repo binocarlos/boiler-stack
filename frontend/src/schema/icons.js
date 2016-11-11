@@ -19,8 +19,12 @@ import Project from 'material-ui/svg-icons/file/cloud'
 
 import { decodeID } from 'folder-ui/lib/db/composite'
 
-import tools from './tools'
 import getColor from './colors'
+
+import {
+  getItemType,
+  isIdTopLevel
+} from '../tools'
 
 /*
 
@@ -117,7 +121,7 @@ const getTopLevelIcon = (item) => {
 }
 
 const getItemIcon = (item) => {
-  return tools.getItemType(item) || 'folder'
+  return getItemType(item) || 'folder'
 }
 
 const getIcon = (opts) => {
@@ -125,7 +129,7 @@ const getIcon = (opts) => {
   const icons = factory(opts)
 
   return (item, type, theme) =>  {
-    const iconType = tools.isIdTopLevel(opts.databases, item.id) ?
+    const iconType = isIdTopLevel(opts.databases, item.id) ?
         getTopLevelIcon(item) :
         getItemIcon(item)
     return icons(iconType, type, theme)

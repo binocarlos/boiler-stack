@@ -5,7 +5,9 @@ import FlatButton from 'material-ui/FlatButton'
 import { getItemCodecId, decodeID } from 'folder-ui/lib/db/composite'
 
 import getColor from './colors'
-import tools from './tools'
+import {
+  currency
+} from '../tools'
 
 import ProjectStatus from '../fields/ProjectStatus'
 
@@ -219,7 +221,7 @@ const getLayouts = (opts = {}) => {
         mapText:(price, item) => {
           // folders do not have a price
           return item._digger.tag != 'folder' ?
-            tools.currency(price) :
+            currency(price) :
             ''
         }
       }),
@@ -364,6 +366,10 @@ const getLayouts = (opts = {}) => {
       ICON_FIELD(),
       TEXT_FIELD({
         field:'name'
+      }),
+      TEXT_FIELD({
+        title:'Title',
+        field:'clientname'
       }),
       BUTTON_FIELD({
         title:(context, settings, data) => {

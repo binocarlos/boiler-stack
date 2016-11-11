@@ -70,6 +70,10 @@ const TYPES = {
     fields:[{
       name:'name',
       type:'text'
+    },{
+      name:'clientid',
+      type:'clientid',
+      title:'Client'
     }],
     initialData:{
       

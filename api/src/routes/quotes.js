@@ -23,7 +23,7 @@ module.exports = function(router, opts){
     GET:auth({
       action:'list'
     }, function(req, res, opts){
-      quotes.loadProjectQuotes(opts.params.projectid, jsonResponseWrapper(res))
+      quotes.loadFullQuotes(opts.params.projectid, jsonResponseWrapper(res))
     }),
     POST:auth({
       action:'add'

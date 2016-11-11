@@ -1,4 +1,6 @@
-import tools from './tools'
+import {
+  isIdTopLevel
+} from '../tools'
 
 /*
 
@@ -22,7 +24,7 @@ const filterActions = (opts = {}) => (context = {}, actions = []) => {
   let disableActions = {}
 
   // this means the current focus is a top-level database container
-  if(tools.isIdTopLevel(opts.databases, context.parent.id)){
+  if(isIdTopLevel(opts.databases, context.parent.id)){
     disableActions.edit = context.selected.length<=0
   }
 

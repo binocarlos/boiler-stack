@@ -1,4 +1,6 @@
-import tools from './tools'
+import {
+  getItemDatabaseId
+} from '../tools'
 
 
 const SYSTEM_TYPES = {
@@ -54,7 +56,7 @@ const descriptorFilters = {
   
 */
 const getDescriptors = (opts = {}) => (parent, descriptors = []) => {
-  const databaseid = tools.getItemDatabaseId(parent.id)
+  const databaseid = getItemDatabaseId(parent.id)
   const descriptorfn = descriptorFilters[databaseid] || descriptorFilters.standard
   return descriptorfn(parent, descriptors)
 }

@@ -5,6 +5,10 @@ import { COLORS } from '../schema/colors'
 import Chip from 'material-ui/Chip'
 import Avatar from 'material-ui/Avatar'
 
+import {
+  getCurrentProject
+} from '../tools'
+
 /*
 
   a chip that reads the current project and display 'active'
@@ -66,7 +70,7 @@ class ProjectStatus extends Component {
 
 
 function mapStateToProps(state, ownProps) {
-  const activeProjectID = state.app.projects.active
+  const activeProjectID = getCurrentProject(state)
   return {
     isActive:ownProps.value == activeProjectID
   }

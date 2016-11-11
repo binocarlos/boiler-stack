@@ -150,181 +150,131 @@ const databases = {
   }
 }
 
-const resourceDatabase = CompositeDB([
-  databases.userresources,
-  databases.coreresources
-])
-
-const templateDatabase = CompositeDB([
-  databases.usertemplates,
-  databases.coretemplates
-])
-
-const gangDatabase = CompositeDB([
-  databases.usergangs,
-  databases.coregangs
-])
-
-const projectDatabase = CompositeDB([
-  databases.projects
-])
-
-const clientDatabase = CompositeDB([
-  databases.clients
-])
-
-const quoteDatabase = CompositeDB([
-  databases.quotes
-])
+const composites = {
+  resources:CompositeDB([
+    databases.userresources,
+    databases.coreresources
+  ]),
+  templates:CompositeDB([
+    databases.usertemplates,
+    databases.coretemplates
+  ]),
+  gangs:CompositeDB([
+    databases.usertemplates,
+    databases.coretemplates
+  ]),
+  clients:CompositeDB([
+    databases.clients
+  ]),
+  quotes:CompositeDB([
+    databases.quotes
+  ]),
+  projects:CompositeDB([
+    databases.projects
+  ])
+}
 
 const schema = Schema({
   appid:'app',
   databases
 })
 
-
-/*
-
-  resources app
-  
-*/
-
-const RESOURCE_APP_ID = 'resources'
-
-const ResourceRoutes = (auth) => {
-
-  const resourcesProps = Object.assign({}, schema, {
-    name:RESOURCE_APP_ID,
-    path:'resources',
-    treeQuery:'folder',
-    onEnter:auth.user,
-    showTableHeader:true,
-    db:resourceDatabase
-  })
-
-  return BasicTemplate(resourcesProps)
+const getFormContext = () => {
+  return {
+    loadClients:() => {
+      return (dispatch, getState) => {
+        dispatch(clientApp.actions.requestChildren({
+          state:getState()
+        }, 'clients_clients'))
+      }
+    }
+  }
 }
-
-/*
-
-  templates app
-  
-*/
-
-const TEMPLATE_APP_ID = 'templates'
-
-const TemplateRoutes = (auth) => {
-
-  const templatesProps = Object.assign({}, schema, {
-    name:TEMPLATE_APP_ID,
-    path:'templates',
-    treeQuery:'folder',
-    onEnter:auth.user,
-    db:templateDatabase
-  })
-
-  return BasicTemplate(templatesProps)
-}
-
-/*
-
-  gangs app
-  
-*/
-
-const GANG_APP_ID = 'gangs'
-
-const GangRoutes = (auth) => {
-
-  const gangsProps = Object.assign({}, schema, {
-    name:GANG_APP_ID,
-    path:'gangs',
-    treeQuery:'folder',
-    onEnter:auth.user,
-    db:gangDatabase
-  })
-
-  return BasicTemplate(gangsProps)
-}
-
-/*
-
-  project app
-  
-*/
-const PROJECT_APP_ID = 'projects'
 
 const loadProjectData = () => {
   return getProjectData(databases.projects.db)
 }
 
-const ProjectRoutes = (auth) => {
-  return CrudTemplate(Object.assign({}, schema, {
-    name:PROJECT_APP_ID,
-    path:'projects',
-    enableTree:false,
-    enableClipboard:false,
-    onEnter:auth.user,
-    db:projectDatabase,
-    crudParent:projectDatabase.getRootNode('projects'),
-
-    // gets run when something about the projects has changed
-    // re-load the project data that populates the appbar list
-    eventListener:(event, dispatch) => {
-      dispatch(loadProjectData())
-    }
-  }))
-}
 
 /*
 
-  client app
+  apps
   
 */
-const CLIENT_APP_ID = 'clients'
+const resourceApp = BasicTemplate(Object.assign({}, schema, {
+  name:'resources',
+  path:'resources',
+  treeQuery:'folder',
+  showTableHeader:true,
+  getFormContext:getFormContext,
+  db:composites.resources
+}))
 
-const ClientRoutes = (auth) => {
-  return CrudTemplate(Object.assign({}, schema, {
-    name:CLIENT_APP_ID,
-    path:'clients',
-    enableTree:false,
-    enableClipboard:false,
-    onEnter:auth.user,
-    db:clientDatabase,
-    crudParent:clientDatabase.getRootNode('clients')
-  }))
-}
+const templateApp = BasicTemplate(Object.assign({}, schema, {
+  name:'templates',
+  path:'templates',
+  treeQuery:'folder',
+  getFormContext:getFormContext,
+  db:composites.templates
+}))
+
+const gangApp = BasicTemplate(Object.assign({}, schema, {
+  name:'gangs',
+  path:'gangs',
+  treeQuery:'folder',
+  getFormContext:getFormContext,
+  db:composites.gangs
+}))
+
+const clientApp = CrudTemplate(Object.assign({}, schema, {
+  name:'clients',
+  path:'clients',
+  enableTree:false,
+  enableClipboard:false,
+  db:composites.clients,
+  crudParent:composites.clients.getRootNode('clients'),
+  getFormContext:getFormContext
+}))
+
+const quoteApp = CrudTemplate(Object.assign({}, schema, {
+  name:'quotes',
+  path:'quotes',
+  enableTree:false,
+  enableClipboard:false,
+  db:composites.quotes,
+  crudParent:composites.quotes.getRootNode('quotes'),
+  getFormContext:getFormContext
+}))
 
 
-/*
 
-  quote app
-  
-*/
-const QUOTE_APP_ID = 'quotes'
+const projectApp = CrudTemplate(Object.assign({}, schema, {
+  name:'projects',
+  path:'projects',
+  enableTree:false,
+  enableClipboard:false,
+  db:composites.projects,
+  crudParent:composites.projects.getRootNode('projects'),
+  getFormContext:getFormContext,
+  // gets run when something about the projects has changed
+  // re-load the project data that populates the appbar list
+  eventListener:(event, dispatch) => {
+    dispatch(loadProjectData())
+  }
+}))
 
-const QuoteRoutes = (auth) => {
-  return CrudTemplate(Object.assign({}, schema, {
-    name:QUOTE_APP_ID,
-    path:'quotes',
-    enableTree:false,
-    enableClipboard:false,
-    onEnter:auth.user,
-    db:quoteDatabase,
-    crudParent:quoteDatabase.getRootNode('quotes')
-  }))
-}
+
 
 boilerapp({
   appTitle:'QuoteRight',
   mountElement:document.getElementById('mount'),
   reducers:{
-    [RESOURCE_APP_ID]:FolderReducer(RESOURCE_APP_ID),
-    [PROJECT_APP_ID]:FolderReducer(PROJECT_APP_ID),
-    [CLIENT_APP_ID]:FolderReducer(CLIENT_APP_ID),
-    [QUOTE_APP_ID]:FolderReducer(QUOTE_APP_ID),
-    [TEMPLATE_APP_ID]:FolderReducer(TEMPLATE_APP_ID),
-    [GANG_APP_ID]:FolderReducer(GANG_APP_ID),
+    [resourceApp.name]:FolderReducer(resourceApp.name),
+    [templateApp.name]:FolderReducer(templateApp.name),
+    [gangApp.name]:FolderReducer(gangApp.name),
+    [clientApp.name]:FolderReducer(clientApp.name),
+    [quoteApp.name]:FolderReducer(quoteApp.name),
+    [projectApp.name]:FolderReducer(projectApp.name),
     app:appreducer
   },
   dashboard:Dashboard,
@@ -343,12 +293,12 @@ boilerapp({
         <Route component={Page}>
           <Route path="about" component={About} />
         </Route>
-        {ResourceRoutes(auth)}
-        {ProjectRoutes(auth)}
-        {ClientRoutes(auth)}
-        {QuoteRoutes(auth)}
-        {TemplateRoutes(auth)}
-        {GangRoutes(auth)}
+        {resourceApp.getRoutes(auth.user)}
+        {templateApp.getRoutes(auth.user)}
+        {gangApp.getRoutes(auth.user)}
+        {clientApp.getRoutes(auth.user)}
+        {quoteApp.getRoutes(auth.user)}
+        {projectApp.getRoutes(auth.user)}
       </Route>
     )
   }

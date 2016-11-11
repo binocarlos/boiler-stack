@@ -6,7 +6,13 @@ import Menu from './menu'
 import Descriptors from './descriptors'
 import Constructor from './constructor'
 import Actions from './actions'
-import tools from './tools'
+
+import {
+  isEditable as isEditableTools,
+  isLeaf as isLeafTools,
+  getTitle as getTitleTools,
+  getItemType as getItemTypeTools
+} from '../tools'
 
 const factory = (opts = {}) => {
 
@@ -17,10 +23,10 @@ const factory = (opts = {}) => {
   const types = Types(opts)
 
   const getIcon = Icons(opts)
-  const isEditable = (item) => tools.isEditable(databases, item)
-  const isLeaf = (item) => tools.isLeaf(types, item)
-  const getTitle = (item) => tools.getTitle(types, item)
-  const getItemType = tools.getItemType
+  const isEditable = (item) => isEditableTools(databases, item)
+  const isLeaf = (item) => isLeafTools(types, item)
+  const getTitle = (item) => getTitleTools(types, item)
+  const getItemType = getItemTypeTools
   
   const itemConstructor = Constructor(opts)
   const descriptors = Descriptors(opts)
