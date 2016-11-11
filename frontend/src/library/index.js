@@ -3,6 +3,7 @@ import ProjectStatus from './ProjectStatus'
 import NumberField from './NumberField'
 import ClientId from './ClientId'
 import DiggerList from './DiggerList'
+import UnitField from './UnitField'
 
 /*
 
@@ -14,7 +15,8 @@ const LIBRARY = {
   projectstatus:ProjectStatus,
   number:NumberField,
   clientid:ClientId,
-  diggerlist:DiggerList
+  diggerlist:DiggerList,
+  unit:UnitField
 }
 
 const factory = (opts = {}) => (context, item) => {

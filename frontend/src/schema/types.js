@@ -92,6 +92,48 @@ const TYPES = {
     fields:[{
       name:'name',
       type:'text'
+    },{
+      name:'unit',
+      type:'unit'
+    },{
+      name:'baseline',
+      type:'number'
+    },{
+      name:'resources',
+      title:'Add Resources',
+      type:'diggerlist',
+      section:'resources',
+      tag:'template_resources',
+      selector:'labour,material,hire',
+      includeCore:true,
+      mapAutocompleteData:(item) => {
+        return Object.assign({}, item, {
+          name:item.name + ' (' + currency(item.price) + ')',
+        })
+      },
+      getSecondaryText:(item) => {
+        return (
+          <i>
+            {currency(item.price)}
+          </i>
+        )
+      }
+    },{
+      name:'teams',
+      title:'Add Teams',
+      type:'diggerlist',
+      section:'teams',
+      tag:'template_teams',
+      selector:'team',
+      includeCore:true,
+      getSecondaryText:(item) => {
+        const count = (item.members || []).length
+        return (
+          <i>
+            {count} labourer{count==1?'':'s'}
+          </i>
+        )
+      }
     }],
     initialData:{
       _digger:{
@@ -115,6 +157,11 @@ const TYPES = {
       tag:'team_members',
       selector:'labour',
       includeCore:true,
+      mapAutocompleteData:(item) => {
+        return Object.assign({}, item, {
+          name:item.name + ' (' + currency(item.price) + ')',
+        })
+      },
       getSecondaryText:(item) => {
         return (
           <i>

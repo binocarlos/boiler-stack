@@ -142,10 +142,14 @@ function mapStateToProps(state, ownProps) {
   const db = state.app.digger[tag] || {}
   const itemIds = ownProps.value || []
 
+  const mapAutocompleteData = ownProps.schema.mapAutocompleteData ?
+    ownProps.schema.mapAutocompleteData :
+    (data) => data
+
   let data = []
   let autoCompleteData = []
 
-  if(db){
+  if(db && db.data){
     const state = db.data
     const allItems = getDiggerArray(state)
 
@@ -159,11 +163,14 @@ function mapStateToProps(state, ownProps) {
     data.sort(diggerTypeSort)
 
     autoCompleteData = allItems.map(item => {
-      return {
-        name:item.name + ' (' + currency(item.price) + ')',
+      return Object.assign({}, mapAutocompleteData(item), {
         id:item._digger.diggerid
-      }
+      })
     })
+
+    if(ownProps.schema.mapAutocompleteData){
+      autoCompleteData = autoCompleteData.map(ownProps.schema.mapAutocompleteData)
+    }
 
     autoCompleteData.sort(nameSort)
   }

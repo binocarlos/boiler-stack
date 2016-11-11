@@ -91,7 +91,7 @@ export const TOP_LEVEL_BUTTONS = [{
   title:'Templates',
   icon:<Template />
 },{
-  path:'/team',
+  path:'/teams',
   title:'Teams',
   icon:<Team />
 },{
