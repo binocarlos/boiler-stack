@@ -74,3 +74,21 @@ export const currency = (string) => {
 export const getCurrentProject = (state) => {
   return state.app.projects.active
 }
+
+export const processDiggerResults = (data = []) => {
+  let db = {}
+  let list = data.map(item => {
+    const id = item._digger.diggerid
+    db[id] = item
+    return id
+  })
+  return {
+    db:db,
+    list:list
+  }
+}
+
+export const getDiggerArray = (state) => {
+  if(!state) return []
+  return state.list.map(id => state.db[id])
+}

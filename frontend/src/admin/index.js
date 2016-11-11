@@ -47,16 +47,14 @@ const databases = {
       }
     })
   },
-  coregangs:{
-    id:'coregangs',
-    readOnly:true,
+  coreteams:{
+    id:'coreteams',
     rootNode:{
-      name:'System Gangs'
+      name:'System Teams'
     },
     db:DiggerDB({
-      readOnly: true,
       baseurl:(context) => {
-        return '/api/v1/digger/core/gangs'
+        return '/api/v1/digger/core/teams'
       }
     })
   },
@@ -81,8 +79,8 @@ const composites = {
   templates:CompositeDB([
     databases.coretemplates
   ]),
-  gangs:CompositeDB([
-    databases.coregangs
+  teams:CompositeDB([
+    databases.coreteams
   ]),  
   users:CompositeDB([
     databases.users
@@ -117,12 +115,12 @@ const templateApp = BasicTemplate(Object.assign({}, schema, {
   db:composites.templates
 }))
 
-const gangApp = BasicTemplate(Object.assign({}, schema, {
-  name:'gangs',
-  path:'gangs',
+const teamApp = BasicTemplate(Object.assign({}, schema, {
+  name:'teams',
+  path:'teams',
   treeQuery:'folder',
   getFormContext:getFormContext,
-  db:composites.gangs
+  db:composites.teams
 }))
 
 const userApp = CrudTemplate(Object.assign({}, schema, {
@@ -131,7 +129,7 @@ const userApp = CrudTemplate(Object.assign({}, schema, {
   enableTree:false,
   enableClipboard:false,
   db:composites.users,
-  crudParent:userDatabase.getRootNode('users'),
+  crudParent:composites.users.getRootNode('users'),
 
   // reload the user status if anything changes in the user-table
   eventListener:(event, dispatch) => {
@@ -146,7 +144,7 @@ boilerapp({
   reducers:{
     [resourceApp.name]:FolderReducer(resourceApp.name),
     [templateApp.name]:FolderReducer(templateApp.name),
-    [gangApp.name]:FolderReducer(gangApp.name),
+    [teamApp.name]:FolderReducer(teamApp.name),
     [userApp.name]:FolderReducer(userApp.name),
     app:appreducer
   },
@@ -169,7 +167,7 @@ boilerapp({
         </Route>
         {resourceApp.getRoutes(auth.user)}
         {templateApp.getRoutes(auth.user)}
-        {gangApp.getRoutes(auth.user)}
+        {teamApp.getRoutes(auth.user)}
         {userApp.getRoutes(auth.user)}
       </Route>
     )

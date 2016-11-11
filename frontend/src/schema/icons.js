@@ -9,7 +9,7 @@ import Person from 'material-ui/svg-icons/social/person'
 import Quote from 'material-ui/svg-icons/action/assignment'
 import Template from 'material-ui/svg-icons/action/donut-small'
 import Dashboard from 'material-ui/svg-icons/action/dashboard'
-import Gang from 'material-ui/svg-icons/action/group-work'
+import Team from 'material-ui/svg-icons/action/group-work'
 import Labour from 'material-ui/svg-icons/maps/transfer-within-a-station'
 import Material from 'material-ui/svg-icons/editor/format-paint'
 import Hire from 'material-ui/svg-icons/maps/local-shipping'
@@ -42,7 +42,7 @@ export const ICONS = {
   client:Person,
   quote:Quote,
   template:Template,
-  gang:Gang,
+  team:Team,
   dashboard:Dashboard,
   about:About,
   labour:Labour,
@@ -65,9 +65,9 @@ export const TOP_LEVEL_ICONS = {
   userresources:'resources',
   coretemplates:'template',
   usertemplates:'template',
-  coregangs:'gang',
-  usergangs:'gang',
-  gangs:'gang',
+  coreteams:'team',
+  userteams:'team',
+  teams:'team',
   templates:'template',
   resources:'resources',
   dashboard:'dashboard',
@@ -91,9 +91,9 @@ export const TOP_LEVEL_BUTTONS = [{
   title:'Templates',
   icon:<Template />
 },{
-  path:'/gangs',
-  title:'Gangs',
-  icon:<Gang />
+  path:'/team',
+  title:'Teams',
+  icon:<Team />
 },{
   path:'/quotes',
   title:'Quotes',

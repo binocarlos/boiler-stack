@@ -1,14 +1,21 @@
 import update from 'react/lib/update'
 import {
   GET_PROJECT_DATA,
-  SET_CURRENT_PROJECT
+  SET_CURRENT_PROJECT,
+  DIGGER_SELECTOR
 } from './actions'
+
+import {
+  processDiggerResults
+} from './tools'
 
 const INITIAL_STATE = {
   projects:{
     status:null,
     data:null,
     active:null
+  },
+  digger:{
   }
 }
 
@@ -39,6 +46,16 @@ export default function boilerreducer(state = INITIAL_STATE, action = {}) {
         }
       })
 
+    case DIGGER_SELECTOR:
+
+      
+      return update(state, {
+        digger:{
+          [action.tag]:{
+            $set:processDiggerResults(action.data)
+          }
+        }
+      })
 
     default:
       return state

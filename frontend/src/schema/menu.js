@@ -49,9 +49,9 @@ const appMenu = (opts, context) => {
     path:'/templates',
     icon:getIcon('usertemplates')
   },{
-    title:'Gangs',
-    path:'/gangs',
-    icon:getIcon('usergangs')
+    title:'Teams',
+    path:'/teams',
+    icon:getIcon('userteams')
   },{
     title:'Quotes',
     path:'/quotes',
@@ -77,9 +77,9 @@ const adminMenu = (opts, context) => {
     path:'/templates',
     icon:getIcon('coretemplates')
   },{
-    title:'Gangs',
-    path:'/gangs',
-    icon:getIcon('coregangs')
+    title:'Teams',
+    path:'/teams',
+    icon:getIcon('coreteams')
   },{
     title:'Users',
     path:'/users',

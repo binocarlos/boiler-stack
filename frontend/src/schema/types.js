@@ -95,17 +95,24 @@ const TYPES = {
     }
   },
 
-  gang:{
-    id:'gang',
+  team:{
+    id:'team',
     leaf:'true',
-    title:'Gang',
+    title:'Team',
     fields:[{
       name:'name',
       type:'text'
+    },{
+      name:'members',
+      type:'diggerlist',
+      section:'resources',
+      tag:'team_members',
+      selector:'labour',
+      includeCore:true
     }],
     initialData:{
       _digger:{
-        tag:'gang'
+        tag:'team'
       }
     }
   },

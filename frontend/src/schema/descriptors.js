@@ -9,7 +9,7 @@ const SYSTEM_TYPES = {
   client:true,
   quote:true,
   template:true,
-  gang:true
+  team:true
 }
 
 const TEMPLATE_TYPES = {
@@ -17,9 +17,9 @@ const TEMPLATE_TYPES = {
   template:true
 }
 
-const GANG_TYPES = {
+const TEAM_TYPES = {
   folder:true,
-  gang:true
+  team:true
 }
 
 const descriptorFilter = (types = SYSTEM_TYPES, include = false) => (parent, descriptors = []) => {
@@ -47,8 +47,8 @@ const descriptorFilters = {
   }, true),
   coretemplates:descriptorFilter(TEMPLATE_TYPES, true),
   usertemplates:descriptorFilter(TEMPLATE_TYPES, true),
-  coregangs:descriptorFilter(GANG_TYPES, true),
-  usergangs:descriptorFilter(GANG_TYPES, true)
+  coreteams:descriptorFilter(TEAM_TYPES, true),
+  userteams:descriptorFilter(TEAM_TYPES, true)
 }
 /*
 

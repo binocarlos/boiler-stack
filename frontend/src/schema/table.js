@@ -9,7 +9,7 @@ import {
   currency
 } from '../tools'
 
-import ProjectStatus from '../fields/ProjectStatus'
+import ProjectStatus from '../library/ProjectStatus'
 
 
 import {
@@ -269,7 +269,7 @@ const getLayouts = (opts = {}) => {
       gangs layout
       
     */
-    gangs:[
+    teams:[
       ICON_FIELD(),
       TEXT_FIELD({
         field:'name'
@@ -396,8 +396,8 @@ const TABLE_LAYOUTS = {
   userresources:'resources',
   coretemplates:'templates',
   usertemplates:'templates',
-  coregangs:'gangs',
-  usergangs:'gangs'
+  coreteam:'teams',
+  userteam:'teams'
 }
 
 /*

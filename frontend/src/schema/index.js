@@ -1,6 +1,6 @@
 import Icons from './icons'
 import Types from './types'
-import Library from './library'
+import Library from '../library'
 import Table from './table'
 import Menu from './menu'
 import Descriptors from './descriptors'

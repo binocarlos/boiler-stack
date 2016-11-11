@@ -81,28 +81,28 @@ const databases = {
       }
     })
   },
-  coregangs:{
-    id:'coregangs',
+  coreteams:{
+    id:'coreteams',
     readOnly:true,
     rootNode:{
-      name:'System Gangs'
+      name:'System Teams'
     },
     db:DiggerDB({
       readOnly: true,
       baseurl:(context) => {
-        return '/api/v1/digger/core/gangs'
+        return '/api/v1/digger/core/teams'
       }
     })
   },
-  usergangs:{
-    id:'usergangs',
+  userteams:{
+    id:'userteams',
     rootNode:{
-      name:'My Gangs'
+      name:'My Teams'
     },
     db:DiggerDB({
       baseurl:(context) => {
         const projectID = getCurrentProject(context.state)
-        return '/api/v1/digger/' + projectID + '/gangs'
+        return '/api/v1/digger/' + projectID + '/teams'
       }
     })
   },
@@ -159,9 +159,9 @@ const composites = {
     databases.usertemplates,
     databases.coretemplates
   ]),
-  gangs:CompositeDB([
-    databases.usertemplates,
-    databases.coretemplates
+  teams:CompositeDB([
+    databases.userteams,
+    databases.coreteams
   ]),
   clients:CompositeDB([
     databases.clients
@@ -218,12 +218,12 @@ const templateApp = BasicTemplate(Object.assign({}, schema, {
   db:composites.templates
 }))
 
-const gangApp = BasicTemplate(Object.assign({}, schema, {
-  name:'gangs',
-  path:'gangs',
+const teamApp = BasicTemplate(Object.assign({}, schema, {
+  name:'teams',
+  path:'teams',
   treeQuery:'folder',
   getFormContext:getFormContext,
-  db:composites.gangs
+  db:composites.teams
 }))
 
 const clientApp = CrudTemplate(Object.assign({}, schema, {
@@ -271,7 +271,7 @@ boilerapp({
   reducers:{
     [resourceApp.name]:FolderReducer(resourceApp.name),
     [templateApp.name]:FolderReducer(templateApp.name),
-    [gangApp.name]:FolderReducer(gangApp.name),
+    [teamApp.name]:FolderReducer(teamApp.name),
     [clientApp.name]:FolderReducer(clientApp.name),
     [quoteApp.name]:FolderReducer(quoteApp.name),
     [projectApp.name]:FolderReducer(projectApp.name),
@@ -295,7 +295,7 @@ boilerapp({
         </Route>
         {resourceApp.getRoutes(auth.user)}
         {templateApp.getRoutes(auth.user)}
-        {gangApp.getRoutes(auth.user)}
+        {teamApp.getRoutes(auth.user)}
         {clientApp.getRoutes(auth.user)}
         {quoteApp.getRoutes(auth.user)}
         {projectApp.getRoutes(auth.user)}
