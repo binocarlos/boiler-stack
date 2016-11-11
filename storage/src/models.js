@@ -29,7 +29,8 @@ var QuoteSchema = new Schema({
   name: { type: String, required: true },
   projectid: { type: Schema.Types.ObjectId, required: true },
   clientid: { type: Schema.Types.ObjectId, required: true },
-  littleid: { type: String, required: true }
+  littleid: { type: String, required: true },
+  data: { type:Schema.Types.Mixed, default:{} }
 })
 
 /*

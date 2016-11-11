@@ -220,6 +220,9 @@ const TYPES = {
     fields:[{
       name:'name'
     },{
+      name:'unit',
+      type:'unit'
+    },{
       name:'price',
       type:'number'
     }],

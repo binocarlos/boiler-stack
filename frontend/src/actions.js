@@ -71,6 +71,17 @@ export const updateUser = (data, done) => {
   return updateUserData(data, done)
 }
 
+
+export const QUOTE_EDITOR_SETTINGS = 'QUOTE_EDITOR_SETTINGS'
+
+export const quoteEditorSettings = (name, value) => {
+  return {
+    type:QUOTE_EDITOR_SETTINGS,
+    name,
+    value
+  }
+}
+
 /*
 
   generic digger selector on the current project

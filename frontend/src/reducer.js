@@ -2,7 +2,8 @@ import update from 'react/lib/update'
 import {
   GET_PROJECT_DATA,
   SET_CURRENT_PROJECT,
-  DIGGER_SELECTOR
+  DIGGER_SELECTOR,
+  QUOTE_EDITOR_SETTINGS
 } from './actions'
 
 import {
@@ -16,6 +17,10 @@ const INITIAL_STATE = {
     active:null
   },
   digger:{
+
+  },
+  quoteEditorSettings:{
+
   }
 }
 
@@ -59,6 +64,16 @@ export default function boilerreducer(state = INITIAL_STATE, action = {}) {
               projectId:action.projectId,
               includeCore:action.includeCore
             }
+          }
+        }
+      })
+
+    case QUOTE_EDITOR_SETTINGS:
+
+      return update(state, {
+        quoteEditorSettings:{
+          [action.name]:{
+            $set:action.value
           }
         }
       })

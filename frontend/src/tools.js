@@ -71,7 +71,8 @@ export const currency = (string = '') => {
   return '£' + pounds + '.' + pence
 }
 
-export const getCurrentProject = (state) => {
+export const getCurrentProject = (state = {}) => {
+  if(!state.app) return null
   return state.app.projects.active
 }
 
