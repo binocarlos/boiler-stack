@@ -32,6 +32,11 @@ import {
   getCurrentProject
 } from '../tools'
 
+/*
+
+  the raw api objects
+  
+*/
 const databases = {
   coreresources:{
     id:'coreresources',
@@ -161,6 +166,11 @@ const databases = {
   }
 }
 
+/*
+
+  collections of raw database apis into a single interface
+  
+*/
 const composites = {
   resources:CompositeDB([
     databases.userresources,
@@ -212,7 +222,7 @@ const loadProjectData = () => {
 
 /*
 
-  apps
+  apps - these are all folder-ui templates
   
 */
 const resourceApp = BasicTemplate(Object.assign({}, schema, {
@@ -286,7 +296,11 @@ const projectApp = CrudTemplate(Object.assign({}, schema, {
 }))
 
 
+/*
 
+  the entrypoint - this is driven from boiler-frontend
+  
+*/
 boilerapp({
   appTitle:'QuoteRight',
   mountElement:document.getElementById('mount'),

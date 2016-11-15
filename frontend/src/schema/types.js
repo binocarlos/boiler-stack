@@ -62,6 +62,18 @@ const TYPES = {
     fields:[{
       name:'name',
       type:'text'
+    },{
+      name:'phone',
+      type:'text'
+    },{
+      name:'email',
+      type:'text'
+    },{
+      name:'address',
+      type:'text'
+    },{
+      name:'postcode',
+      type:'text'
     }],
     initialData:{
       
