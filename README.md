@@ -4,6 +4,8 @@ Starting place for apps.
 
 You need `docker` and `docker-compose` (latest versions not the toolbox).
 
+If you get errors with docker, run as `sudo`.
+
 ## install
 
 build the images:
