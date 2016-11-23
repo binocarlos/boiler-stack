@@ -10,6 +10,14 @@ var nodeEnvPlugin = new webpack.DefinePlugin({
   'process.env.NODE_ENV': RELEASE ? '"production"' : '"development"'
 })
 
+// Added in for ERROR in ./~/react-tap-event-plugin/src/injectTapEventPlugin.js
+var reactDomLibPath = path.join(__dirname, "./node_modules/react-dom/lib");
+var alias = {};
+["EventPluginHub", "EventConstants", "EventPluginUtils", "EventPropagators",
+ "SyntheticUIEvent", "CSSPropertyOperations", "ViewportMetrics"].forEach(function(filename){
+    alias["react/lib/"+filename] = path.join(__dirname, "./node_modules/react-dom/lib", filename);
+});
+
 module.exports = {
   devtool: RELEASE ? [] : [
     'source-map'
@@ -25,9 +33,10 @@ module.exports = {
 
   resolve: {
     extensions: ['', '.js', '.jsx'],
-    alias: {
+    /*alias: {
       react: path.resolve('./node_modules/react')
-    }
+    }*/
+    alias: alias
   },
 
   plugins: RELEASE ? [
