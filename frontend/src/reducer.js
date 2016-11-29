@@ -15,7 +15,7 @@ const INITIAL_STATE = {
 export default function boilerreducer(state = INITIAL_STATE, action = {}) {
   switch (action.type) {
 
-    // requst the project data
+    // request the project data
     case GET_PROJECT_DATA:
 
       return update(state, {

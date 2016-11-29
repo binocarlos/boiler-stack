@@ -28,7 +28,7 @@ module.exports = function(opts){
     auth:auth
   })
 
-  // this setps up the 
+  // this sets up the 
   // /api/v1/digger/:project/:section -> (/api/v1/digger/apples/oranges)
   // /project/:project/:section-> (/project/apples/oranges)
   Digger(router, Object.assign({}, opts, {
