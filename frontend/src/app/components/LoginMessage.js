@@ -1,7 +1,12 @@
 import React, { PropTypes, Component } from 'react'
 import { Link } from 'react-router'
 import Divider from 'material-ui/Divider'
-import styles from '../styles'
+
+const styles = {
+  marginTop:{
+    marginTop:'10px'
+  }
+}
 
 class LoginMessage extends Component {
   

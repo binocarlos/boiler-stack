@@ -2,8 +2,7 @@ import json from 'rollup-plugin-json';
 import babel from 'rollup-plugin-babel';
 
 export default {
-  entry: 'src/main.js',
-  format: 'cjs',
+  entry: 'src/app/index.js',
   plugins: [ json(), babel() ],
-  dest: 'bundle.js'
+  dest: 'dist/app.js'
 };

@@ -1,7 +1,7 @@
 {
   "name": "boiler-stack-frontend",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "the frontend for the boilerstack app",
   "main": "index.js",
   "scripts": {
@@ -17,13 +17,14 @@
     "webpackall": "APP=app npm run webpack",
     "build": "NODE_ENV=development npm run webpackall",
     "release": "WEBPACK_ARGS=-p NODE_ENV=production npm run webpackall",
-    "build:stats": "webpack --json | webpack-bundle-size-analyzer",
+    "build:stats": "webpack -p --json | webpack-bundle-size-analyzer",
     "build:test": "rollup src/app/index.js --output bundle.js"
   },
   "dependencies": {
+    "immutability-helper": "^2.0.0",
     "babel-polyfill": "^6.16.0",
     "boiler-frontend": "file:../../boiler-frontend",
-    "kettle-ui": "^3.6.4",
+    "kettle-ui": "^3.7.0",
     "material-ui": "^0.16.4",
     "passport-slim-ui": "file:../../passport-slim-ui",
     "react": "^15.4.1",

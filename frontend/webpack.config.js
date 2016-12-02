@@ -54,6 +54,10 @@ module.exports = {
     path: path.join(__dirname, 'dist'),
     filename: APP + '.js'
   },
+  externals:{
+    'react':'React',
+    'react-dom':'ReactDOM'
+  },
   module: {
     rules: [
       {
