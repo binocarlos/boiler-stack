@@ -1,69 +1,76 @@
-'use strict';
+const webpack = require('webpack');
+const path = require('path');
 
-var path = require('path')
-var webpack = require('webpack')
+const APP = process.env.APP || 'app'
+const nodeEnv = process.env.NODE_ENV || 'development';
+const isProd = nodeEnv === 'production';
 
-var RELEASE = process.env.NODE_ENV == 'production' ? true : false;
-var APP = process.env.APP || 'app'
+const plugins = [
+  new webpack.optimize.CommonsChunkPlugin({
+    name: 'vendor',
+    minChunks: Infinity,
+    filename: 'vendor.bundle.js'
+  }),
+  new webpack.DefinePlugin({
+    'process.env': { NODE_ENV: JSON.stringify(nodeEnv) }
+  }),
+  new webpack.NamedModulesPlugin(),
+];
 
-var nodeEnvPlugin = new webpack.DefinePlugin({
-  'process.env.NODE_ENV': RELEASE ? '"production"' : '"development"'
-})
-
-// Added in for ERROR in ./~/react-tap-event-plugin/src/injectTapEventPlugin.js
-var reactDomLibPath = path.join(__dirname, "./node_modules/react-dom/lib");
-var alias = {};
-["EventPluginHub", "EventConstants", "EventPluginUtils", "EventPropagators",
- "SyntheticUIEvent", "CSSPropertyOperations", "ViewportMetrics"].forEach(function(filename){
-    alias["react/lib/"+filename] = path.join(__dirname, "./node_modules/react-dom/lib", filename);
-});
+if (isProd) {
+  plugins.push(
+    new webpack.LoaderOptionsPlugin({
+      minimize: true,
+      debug: false
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false,
+        screw_ie8: true,
+        conditionals: true,
+        unused: true,
+        comparisons: true,
+        sequences: true,
+        dead_code: true,
+        evaluate: true,
+        if_return: true,
+        join_vars: true,
+      },
+      output: {
+        comments: false
+      },
+    })
+  );
+}
 
 module.exports = {
-  devtool: RELEASE ? [] : [
-    'source-map'
-  ],
-  entry: [
-    './src/' + APP + '/index'
-  ],
-    
+  devtool: isProd ? '' : 'cheap-module-source-map',
+  context: path.resolve(__dirname, 'src', APP),
+  entry: {
+    js: './index.js',
+    vendor: ['react', 'react-dom']
+  },
   output: {
     path: path.join(__dirname, 'dist'),
     filename: APP + '.js'
   },
-
-  resolve: {
-    extensions: ['', '.js', '.jsx'],
-    /*alias: {
-      react: path.resolve('./node_modules/react')
-    }*/
-    alias: alias
-  },
-
-  plugins: RELEASE ? [
-
-    nodeEnvPlugin,
-
-    new webpack.optimize.UglifyJsPlugin({
-      minimize: true,
-      compress: {
-        warnings: false
-      }
-    })
-  ] : [
-    nodeEnvPlugin
-  ],
-
   module: {
-    loaders: [
+    rules: [
       {
-        test: /.jsx?$/,
-        loader: 'babel-loader',
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        query: {
-          presets: ['es2015', 'react', 'stage-1']
-        }
-      }
-
+        use: [
+          'babel-loader'
+        ]
+      },
+    ],
+  },
+  resolve: {
+    extensions: ['.webpack-loader.js', '.web-loader.js', '.loader.js', '.js', '.jsx'],
+    modules: [
+      path.resolve(__dirname, 'node_modules'),
+      path.resolve(__dirname, 'src')
     ]
-  }
+  },
+  plugins
 };

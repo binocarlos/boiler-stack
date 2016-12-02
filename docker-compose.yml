@@ -19,9 +19,13 @@ services:
   # edge router
   router:
     image: binocarlos/noxy
-    container_name: passport_slim_router
+    container_name: boiler_router
     ports:
-      - "8000:80"
+      - "80:80"
+    depends_on:
+      - frontend
+      - auth
+      - api
     links:
       - frontend:frontend
       - auth:auth
@@ -38,7 +42,7 @@ services:
       context: ./frontend
     container_name: boiler_frontend
     volumes:
-      - ./frontend/dist:/app/www
+      - ./frontend/dist:/usr/share/nginx/html
   # stateless services
   auth:
     image: binocarlos/passport-slim

@@ -1,7 +1,3 @@
-FROM node:5.2.0-slim
+FROM nginx
 MAINTAINER kaiyadavenport@gmail.com
-WORKDIR /app
-COPY ./webserver /app
-COPY ./dist /app/www
-RUN npm install
-ENTRYPOINT ["node", "index.js"]
+COPY dist /usr/share/nginx/html
