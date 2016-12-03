@@ -1,4 +1,4 @@
-import update from 'react/lib/update'
+import update from 'immutability-helper'
 import {
   GET_PROJECT_DATA,
   SET_CURRENT_PROJECT

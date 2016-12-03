@@ -1,14 +1,11 @@
+import 'babel-polyfill'
 import React, { Component, PropTypes } from 'react'
-//import ReactDOM from 'react-dom'
-import { Route, IndexRoute } from 'react-router'
+import ReactDOM from 'react-dom'
 
-import LoginMessage from './components/LoginMessage'
-import Form from 'kettle-ui/lib/Form'
-//import AppFactory from 'boiler-frontend/lib/factory'
-//import PassportBoiler from 'passport-slim-ui/lib/passportboiler'
-/*
+import injectTapEventPlugin from 'react-tap-event-plugin'
 
 import AppFactory from 'boiler-frontend/lib/factory'
+import PassportBoiler from 'passport-slim-ui/lib/passportboiler'
 
 const appSettings = Object.assign({}, PassportBoiler({
 
@@ -16,13 +13,11 @@ const appSettings = Object.assign({}, PassportBoiler({
   mountElement:document.getElementById('mount')
 })
 
+var Root = AppFactory(appSettings)
 
-
-
-var Root = AppFactory()
+injectTapEventPlugin()
 
 ReactDOM.render(
   Root,
   document.getElementById('mount')
 )
-*/
