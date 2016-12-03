@@ -53,7 +53,7 @@ const Status = (settings = {}) => {
     name:'status',
     trigger:actions.STATUS.REQUEST,
     actions:actions.status,
-    apiHandler:(action) => {
+    apiHandler:() => {
       return call(api.status, url)
     }
   })
@@ -66,8 +66,8 @@ const Login = (settings = {}) => {
     name:'login',
     trigger:actions.LOGIN.REQUEST,
     actions:actions.login,
-    apiHandler:(action) => {
-      return call(api.login, url, action.data)
+    apiHandler:(data) => {
+      return call(api.login, url, data)
     }
   })
 }
@@ -79,8 +79,8 @@ const Register = (settings = {}) => {
     name:'register',
     trigger:actions.REGISTER.REQUEST,
     actions:actions.register,
-    apiHandler:(action) => {
-      return call(api.register, url, action.data)
+    apiHandler:(data) => {
+      return call(api.register, url, data)
     }
   })
 }

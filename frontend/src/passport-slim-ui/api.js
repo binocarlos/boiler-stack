@@ -1,43 +1,49 @@
 import axios from 'axios'
 import bows from 'bows'
 
-const logger = bows('passport:api')
-
 const getAPI = url => {
 
-  logger('getAPI:request', url)
+  const logger = bows('passport:api GET ' + url)
 
-  return axios
-    .get(url, {
-      responseType: 'json'
-    })
+  return axios({
+    method: 'get',
+    url: url,
+    responseType: 'json'
+  })
     .then(res => {
-      logger('getAPI:response', res.status, res.data)
+      logger('response', res.status, res.data)
       return {
         loggedIn:res.data.loggedIn,
         user:res.data.data
       }
     }, err => {
-      logger('getAPI:response:error', err)
-      return err
+      logger('error', err.message)
+      throw err
     })
 }
 
 const postAPI = (url, data) => {
 
-  logger('postAPI:request', url, data)
+  const logger = bows('passport:api POST ' + url)
 
-  return axios
-    .post(url, data, {
-      responseType: 'json',
-      requestType: 'json'
-    })
+  logger('data', data)
+
+  return axios({
+    method: 'post',
+    url: url,
+    data: data,
+    responseType: 'json',
+    transformRequest: [(data) => JSON.stringify(data)]
+  })
     .then(res => {
-      logger('postAPI:response', url, res.status, res.data)
+      logger('response', res.status, res.data)
       return res.data
-    }, err => {
-      logger('postAPI:response:error', err)
-      return err
+    }, (err) => {
+      if (err.response && err.response.data) {
+        err.message = err.response.data.error
+      }
+      logger('error', err.message)
+      throw err
     })
 }
 

@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import FormComponent from 'kettle-ui/lib/Form'
 
-import { formupdate } from '../actions'
+import { formupdate, login } from '../actions'
 import { getLoginSchema } from '../schema'
 import { getForm } from '../reducers/selectors'
 
@@ -20,6 +20,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     data:formState.data,
     meta:formState.meta,
+    disableButton:formState.meta.valid ? false : true,
     title:'Login',
     schema:getLoginSchema({
       primaryKey:settings.primaryKey
@@ -33,15 +34,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(formupdate('login', data, meta))
     },
     submit:(data, meta) => {
-      if(!meta.valid){
-        console.log('error')
-        return
-        //return dispatch(formerror(ownProps.name, data, meta))
-      }
-      console.log('submit login')
-      console.dir(data)
-      console.dir(meta)
-      //dispatch(ownProps.submit(data, meta));
+      if(!meta.valid) return
+      return dispatch(login.request(data))
     }
   }
 }
