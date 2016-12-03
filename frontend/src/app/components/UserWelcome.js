@@ -1,14 +1,17 @@
 import React, { Component, PropTypes } from 'react'
 import { Link } from 'react-router'
-import Welcome from './Welcome'
+import Page from 'kettle-ui/lib/Page'
 
 class UserWelcome extends Component {
 
   render() {
 
     return (
-      <Welcome>
+      <Page>
         <div>
+          <p>
+            Welcome!
+          </p>
           <p>
             <Link to="/login">Click here</Link> to login
           </p>
@@ -16,7 +19,7 @@ class UserWelcome extends Component {
             <Link to="/register">Click here</Link> to register
           </p>
         </div>
-      </Welcome>
+      </Page>
     )
   }
 
