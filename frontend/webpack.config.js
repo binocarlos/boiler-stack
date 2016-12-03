@@ -1,10 +1,15 @@
 const webpack = require('webpack')
 const path = require('path')
+const fs = require('fs')
 const buildPath = path.resolve(__dirname, 'dist')
 const nodeModulesPath = path.resolve(__dirname, 'node_modules')
 
 var RELEASE = process.env.NODE_ENV == 'production' ? true : false;
 var APP = process.env.APP || 'app'
+
+var includePaths = [
+  fs.realpathSync(__dirname + '/src')
+];
 
 const config = {
   entry: [path.join(__dirname, '/src/' + APP + '/index.js')],
@@ -30,6 +35,7 @@ const config = {
     new webpack.NoErrorsPlugin()
   ] : [
 
+    new webpack.optimize.DedupePlugin(),
     new webpack.DefinePlugin({
       'process.env':{
         'NODE_ENV': JSON.stringify('development')
@@ -39,12 +45,11 @@ const config = {
 
   ],
   module: {
-    noParse: [ "react", "react-dom" ],
     loaders: [
       {
         test: /\.js$/,
         loaders: ['babel-loader'],
-        exclude: [nodeModulesPath]
+        include: includePaths
       },
     ],
   },
