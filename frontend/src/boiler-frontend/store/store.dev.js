@@ -4,7 +4,9 @@ import createLogger from 'redux-logger'
 
 export default function configureStore(rootReducer, middleware, initialState) {
 
-  const logger = createLogger()
+  const logger = createLogger({
+    collapsed:true
+  })
   const sagaMiddleware = createSagaMiddleware()
   middleware = [
     sagaMiddleware

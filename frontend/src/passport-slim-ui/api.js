@@ -5,38 +5,50 @@ const logger = bows('passport:api')
 
 const getAPI = url => {
 
-  logger('getAPI', url)
+  logger('getAPI:request', url)
 
   return axios
     .get(url, {
       responseType: 'json'
-    })/*
-    .then(function(response) {
-      console.log(response.data);
-      console.log(response.status);
-      console.log(response.statusText);
-      console.log(response.headers);
-      console.log(response.config);
     })
-  .catch(function (error) {
-    if (error.response) {
-      // The request was made, but the server responded with a status code
-      // that falls out of the range of 2xx
-      console.log(error.response.data);
-      console.log(error.response.status);
-      console.log(error.response.headers);
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      console.log('Error', error.message);
-    }
-    console.log(error.config);
-  })*/
+    .then(res => {
+      logger('getAPI:response', res.status, res.data)
+      return {
+        loggedIn:res.data.loggedIn,
+        user:res.data.data
+      }
+    }, err => {
+      logger('getAPI:response:error', err)
+      return err
+    })
 }
 
-const fetchUser = url => getAPI(url)
+const postAPI = (url, data) => {
+
+  logger('postAPI:request', url, data)
+
+  return axios
+    .post(url, data, {
+      responseType: 'json',
+      requestType: 'json'
+    })
+    .then(res => {
+      logger('postAPI:response', url, res.status, res.data)
+      return res.data
+    }, err => {
+      logger('postAPI:response:error', err)
+      return err
+    })
+}
+
+const status = url => getAPI(url)
+const login = (url, data) => postAPI(url, data)
+const register = (url, data) => postAPI(url, data)
 
 const api = {
-  fetchUser
+  status,
+  login,
+  register
 }
 
 export default api

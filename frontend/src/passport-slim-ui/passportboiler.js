@@ -7,7 +7,7 @@
 import React, { Component, PropTypes } from 'react'
 import { Route } from 'react-router'
 
-import PassportReducer from './reducer'
+import PassportReducer from './reducers'
 import PassportSaga from './sagas'
 import PassportAuth from './auth'
 import PassportRoutes from './routes'

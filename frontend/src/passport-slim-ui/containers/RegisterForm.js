@@ -4,6 +4,7 @@ import FormComponent from 'kettle-ui/lib/Form'
 
 import { formupdate } from '../actions'
 import { getRegisterSchema } from '../schema'
+import { getForm } from '../reducers/selectors'
 
 export class RegisterForm extends Component {
   render() {
@@ -14,11 +15,11 @@ export class RegisterForm extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const passportState = state[ownProps.reducername || 'passport']
   const settings = ownProps.settings || {}
+  const formState = getForm(state, 'register')
   return {
-    data:passportState.register.data,
-    meta:passportState.register.meta,
+    data:formState.data,
+    meta:formState.meta,
     title:'Register',
     schema:getRegisterSchema({
       includeEmail:settings.includeEmail,

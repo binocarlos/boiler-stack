@@ -12,16 +12,12 @@ const DEFAULT_PASSPORT_SETTINGS = {
   passportURL:'/auth/v1',
   statusPath:'/status',
   loginPath:'/login',
-  registerPathj:'/register',
+  registerPath:'/register',
   userFilter:() => true
 }
 
 const factory = (settings = {}) => {
   return Object.assign({}, DEFAULT_PASSPORT_SETTINGS, settings)
-}
-
-export const getURL = (settings = {}, route = 'status') => {
-  return settings.passportURL + settings[route + 'Path']
 }
 
 export default factory
