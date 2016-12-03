@@ -48,11 +48,18 @@ const config = {
     loaders: [
       {
         test: /\.js$/,
-        loaders: ['babel-loader'],
-        include: includePaths
-      },
-    ],
-  },
-};
+        exclude: /(node_modules)/,
+        loader: 'babel-loader',
+        babelrc: false,
+        include: includePaths,
+        cacheDirectory: true,
+        query: {
+          presets: ['es2015', 'react', 'stage-2'],
+          plugins: ['transform-runtime']
+        }
+      }
+    ]
+  }
+}
 
 module.exports = config;

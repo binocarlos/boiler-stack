@@ -1,9 +1,12 @@
 import axios from 'axios'
+import bows from 'bows'
+
+const logger = bows('passport:api')
 
 const getAPI = url => {
-  console.log('-------------------------------------------');
-  console.log('-------------------------------------------');
-  console.log('FETCH: ' + url)
+
+  logger('getAPI', url)
+
   return axios
     .get(url, {
       responseType: 'json'

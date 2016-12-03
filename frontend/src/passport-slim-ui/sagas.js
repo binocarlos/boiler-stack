@@ -2,6 +2,9 @@ import { takeLatest } from 'redux-saga'
 import { call, put, fork } from 'redux-saga/effects'
 import api from './api'
 import { getURL } from './settings'
+import bows from 'bows'
+
+const logger = bows('passport:sagas')
 
 // triggers an initial user-load when the app starts
 // the saga ends immediately
@@ -21,6 +24,7 @@ const Status = (settings = {}) => {
   function *getUserStatus(action) {
 
     const statusURL = getURL(settings, 'status')
+    logger('getUserStatus: ', statusURL)
 
     try {
       const user = yield call(api.fetchUser, getURL(settings, 'status'))
@@ -39,7 +43,6 @@ const Status = (settings = {}) => {
 
 
 const factory = (settings = {}) => {
-
   return function* passportSaga() {
     yield [
       fork(InitialLoad(settings)),

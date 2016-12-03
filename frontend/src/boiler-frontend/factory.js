@@ -8,14 +8,16 @@ import SettingsFactory from './settings'
 import boilerReducer from './reducer'
 import Routes from './routes'
 import Store from './store'
-
 import Sagas from './sagas'
+import messages from './messages'
 
 import Root from './containers/Root'
 
 const boilerapp = (settings = {}) => {
 
   settings = SettingsFactory(settings)
+
+  messages.boot(settings)
 
   const rootReducer = combineReducers({
     routing: routerReducer,
