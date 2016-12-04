@@ -29,6 +29,9 @@ export class UserMenu extends Component {
   }
 
   getUserMenu() {
+
+    const extraItems = this.props.settings.getUserMenuItems()
+    
     return (
       <IconMenu
         iconButtonElement={
@@ -38,14 +41,9 @@ export class UserMenu extends Component {
         anchorOrigin={{horizontal: 'right', vertical: 'top'}}
       >
         <MenuItem 
-          onClick={() => this.props.changeLocation('/accountdetails')}
-          primaryText="Account Details" />
-        <MenuItem 
           onClick={() => this.props.changeLocation('/help')}
           primaryText="Help" />
-        <MenuItem 
-          onClick={() => this.props.doLogout()}
-          primaryText="Sign out" />
+        {extraItems}
       </IconMenu>
     )
   }

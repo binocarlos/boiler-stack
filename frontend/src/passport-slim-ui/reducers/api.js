@@ -9,7 +9,7 @@ const DEFAULT_STATE = {
 
 export default function apiReducerFactory({ types }){
 
-  if (!Array.isArray(types) || types.length !== 3) {
+  if (!Array.isArray(types)) {
     throw new Error('Expected types to be an array of three elements.')
   }
 
@@ -43,6 +43,13 @@ export default function apiReducerFactory({ types }){
             loaded:true,
             data:null,
             error:action.error
+          }
+        })
+
+      case types[3]:
+        return update(state, {
+          data:{
+            $set:action.data
           }
         })
 

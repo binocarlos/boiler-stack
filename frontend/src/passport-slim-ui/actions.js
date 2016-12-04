@@ -2,9 +2,10 @@ const REQUEST = 'REQUEST'
 const LOADING = 'LOADING'
 const SUCCESS = 'SUCCESS'
 const FAILURE = 'FAILURE'
+const UPDATE = 'UPDATE'
 
 function createRequestTypes(base) {
-  return [REQUEST, LOADING, SUCCESS, FAILURE].reduce((acc, type) => {
+  return [REQUEST, LOADING, SUCCESS, FAILURE, UPDATE].reduce((acc, type) => {
     acc[type] = `${base}_${type}`
     return acc
   }, {})
@@ -26,6 +27,7 @@ export const status = {
   request: (noloading) => action(PASSPORT_STATUS.REQUEST, {noloading}),
   loading: () => action(PASSPORT_STATUS.LOADING),
   success: (data) => action(PASSPORT_STATUS.SUCCESS, {data}),
+  update: (data) => action(PASSPORT_STATUS.UPDATE, {data}),
   failure: (error) => action(PASSPORT_STATUS.FAILURE, {error})
 }
 

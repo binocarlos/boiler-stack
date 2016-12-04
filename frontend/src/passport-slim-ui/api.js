@@ -12,10 +12,7 @@ const getAPI = url => {
   })
     .then(res => {
       logger('response', res.status, res.data)
-      return {
-        loggedIn:res.data.loggedIn,
-        user:res.data.data
-      }
+      return res.data
     }, err => {
       logger('error', err.message)
       throw err

@@ -113,9 +113,12 @@ const PostSubmit = (trigger) => {
   function* postSubmitHandler(action) {
     logger('handler', action)
 
+    logger('clearing route assertion')
+    yield put(actions.clearRouteAssertion())
+
     // send the user data into the status reducer
     logger('updating user status')
-    yield put(actions.status.success({
+    yield put(actions.status.update({
       loggedIn:true,
       data:action.data.data
     }))

@@ -6,6 +6,8 @@ class UserWelcome extends Component {
 
   render() {
 
+    const settings = this.props.route.settings
+
     return (
       <Page>
         <div>
@@ -13,7 +15,7 @@ class UserWelcome extends Component {
             Welcome!
           </p>
           <p>
-            <a href="/auth/v1/logout?redirect=/app">Click here</a> to logout
+            <a href={settings.fullLogoutPath}>Click here</a> to logout
           </p>
         </div>
       </Page>

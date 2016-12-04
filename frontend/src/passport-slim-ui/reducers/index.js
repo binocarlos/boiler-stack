@@ -9,7 +9,8 @@ const statusApi = ApiReducer({
   types:[
     actions.PASSPORT_STATUS.LOADING,
     actions.PASSPORT_STATUS.SUCCESS,
-    actions.PASSPORT_STATUS.FAILURE
+    actions.PASSPORT_STATUS.FAILURE,
+    actions.PASSPORT_STATUS.UPDATE
   ]
 })
 

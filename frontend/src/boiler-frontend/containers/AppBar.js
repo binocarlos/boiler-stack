@@ -19,11 +19,14 @@ function mapStateToProps(state, ownProps) {
   const user = ownProps.settings.getUser(state)
   const title = ownProps.settings.getTitle(user)
   const openAccess = ownProps.settings.openAccess
+  const appURL = ownProps.settings.appURL
+
   return {
     user,
     title,
     state,
     openAccess,
+    appURL,
     isMenuOpen:state.boiler.isMenuOpen,
     getMenu:ownProps.settings.getMenu
   }
@@ -36,19 +39,6 @@ function mapDispatchToProps(dispatch, ownProps) {
     },
     toggleMenu:(open) => {
       dispatch(toggle_menu(open))
-    },
-    doLogout:(url) => {
-      console.log('logout')
-      return
-      
-      // ping the logout endpoint
-      //dispatch(actions.logout(url, (err, body, opts) => {
-        // clear existing passport state
-        //dispatch(actions.resetStatus())
-
-        // redirect to '/'
-        //dispatch(routerActions.push(constants.loginPath))
-      //}))
     }
   }
 }

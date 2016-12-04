@@ -1,6 +1,6 @@
 export const statusData = (state) => state.passport.statusApi
-export const isUserLoaded = (state) => !statusData(state).loading && statusData(state).loaded
-export const isUserLoggedIn = (state) => isUserLoaded(state) && getUser(state).loggedIn
+export const isUserLoaded = (state) => !statusData(state).loading && statusData(state).loaded ? true : false
+export const isUserLoggedIn = (state) => isUserLoaded(state) && getUser(state).loggedIn ? true : false
 export const getUser = (state) => statusData(state).data
 export const getUserData = (state) => isUserLoggedIn(state) ? getUser(state).data : null
 export const getForm = (state, name) => {

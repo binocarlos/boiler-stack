@@ -7,7 +7,9 @@ injectTapEventPlugin()
 import AppFactory from '../boiler-frontend/factory'
 import PassportBoiler from '../passport-slim-ui/passportboiler'
 
-const appSettings = PassportBoiler({}, {
+const appSettings = PassportBoiler({
+  appURL:'/app'
+}, {
   mountElement:document.getElementById('mount')
 })
 
