@@ -13,6 +13,8 @@ import PassportAuth from './auth'
 import PassportRoutes from './routes'
 import Settings, { AppSettings } from './settings'
 
+import { isUserLoaded } from './reducers/selectors'
+
 const passportBoiler = (passportSettings = {}, appSettings = {}) => {
 
   passportSettings = Settings(passportSettings)
@@ -38,6 +40,10 @@ const passportBoiler = (passportSettings = {}, appSettings = {}) => {
         {passportRoutes}
       </Route>
     )
+  }
+
+  appSettings.isReady = (state) => {
+    return isUserLoaded(state)
   }
 
   return appSettings

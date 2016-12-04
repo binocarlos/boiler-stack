@@ -19,6 +19,7 @@ const SETTINGS = {
   getUser:(state) => null,
   getRoutes:(auth) => [],
   getTitle:(state, user) => 'MyApp',
+  isReady:() => true,
   getMenu:null
 }
 

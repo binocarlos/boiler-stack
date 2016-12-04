@@ -44,5 +44,5 @@ export const register = {
 }
 
 export const formupdate = (form, data, meta) => action(PASSPORT_FORM_UPDATE, {form, data, meta})
-export const makeRouteAssertion = (requireUser, failureRedirect) => action(PASSPORT_MAKE_ROUTE_ASSERTION, {requireUser, failureRedirect})
+export const makeRouteAssertion = (rule, failureRedirect) => action(PASSPORT_MAKE_ROUTE_ASSERTION, {rule, failureRedirect})
 export const clearRouteAssertion = () => action(PASSPORT_CLEAR_ROUTE_ASSERTION)

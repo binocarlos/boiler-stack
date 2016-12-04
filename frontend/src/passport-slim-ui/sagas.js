@@ -1,5 +1,5 @@
 import { takeLatest } from 'redux-saga'
-import { fork, put, call, take } from 'redux-saga/effects'
+import { fork, put, call, take, select } from 'redux-saga/effects'
 import { push } from 'react-router-redux'
 import bows from 'bows'
 bows.config({
@@ -7,7 +7,15 @@ bows.config({
 })
 import api from './api'
 import * as actions from './actions'
-
+import { 
+  isUserLoaded,
+  isUserLoggedIn,
+  getUser,
+  getRouteAssertion,
+  hasRouteAssertion
+} 
+from './reducers/selectors'
+import { checkAssertion } from './auth'
 
 const mainlogger = bows('passport:saga')
 
@@ -123,6 +131,55 @@ const PostSubmit = (trigger) => {
   return apiSaga
 }
 
+
+//  * PASSPORT_MAKE_ROUTE_ASSERTION -> check if user is loaded
+//    * if yes do assertion + PASSPORT_CLEAR_ROUTE_ASSERTION
+//  * PASSPORT_STATUS.SUCCESS -> check if there is an assertion
+//    * if yes do assertion + PASSPORT_CLEAR_ROUTE_ASSERTION
+const RouteAssertion = () => {
+
+  // this is where if there is a route assertion - we do it
+  function* applyRouteAssertion() {
+    const hasAssertion = yield select(hasRouteAssertion)
+    const userLoaded = yield select(isUserLoaded)
+    if(!hasAssertion || !userLoaded) return
+
+    const userData = yield select(getUser)
+    const assertion = yield select(getRouteAssertion)
+
+    if(!checkAssertion(assertion.rule, userData)){
+      yield put(push(assertion.failureRedirect))
+    }
+
+    yield put(actions.clearRouteAssertion())
+  }
+
+  function* checkRouteAssertion() {
+    const userLoaded = yield select(isUserLoaded)
+
+    if(userLoaded){
+      yield call(applyRouteAssertion)
+    }
+  }
+
+  function* waitForRouteAssertion() {
+    yield takeLatest(actions.PASSPORT_MAKE_ROUTE_ASSERTION, checkRouteAssertion)
+  }
+
+  function* waitForStatusUpdate() {
+    yield takeLatest(actions.PASSPORT_STATUS.SUCCESS, applyRouteAssertion)
+  }
+
+  function* routeAssertionSaga() {
+    yield [
+      fork(waitForRouteAssertion),
+      fork(waitForStatusUpdate)
+    ]
+  }
+
+  return routeAssertionSaga
+}
+
 const factory = (settings = {}) => {
   return function* passportSaga() {
     yield [
@@ -131,7 +188,8 @@ const factory = (settings = {}) => {
       fork(PostSubmit(actions.PASSPORT_REGISTER.SUCCESS)),
       fork(Status(settings)),
       fork(Login(settings)),
-      fork(Register(settings))
+      fork(Register(settings)),
+      fork(RouteAssertion())
     ]
   }
 }

@@ -3,7 +3,7 @@ import * as actions from '../actions'
 
 const DEFAULT_STATE = {
   active:false,
-  requireUser:false,
+  rule:null,
   failureRedirect:null
 }
 
@@ -16,7 +16,7 @@ export default function routeAssertionReducerFactory(opts = {}){
         return update(state, {
           $set:{
             active:true,
-            requireUser:action.requireUser,
+            rule:action.rule,
             failureRedirect:action.failureRedirect
           }
         })
@@ -25,7 +25,7 @@ export default function routeAssertionReducerFactory(opts = {}){
         return update(state, {
           $set:{
             active:false,
-            requireUser:false,
+            rule:null,
             failureRedirect:null
           }
         })

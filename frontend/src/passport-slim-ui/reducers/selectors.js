@@ -1,8 +1,13 @@
-export const isUserLoaded = (state) => !state.passport.statusapi.loading && state.passport.statusapi.loaded
-export const getUser = (state) => state.passport.statusapi.data
+export const statusData = (state) => state.passport.statusApi
+export const isUserLoaded = (state) => !statusData(state).loading && statusData(state).loaded
+export const isUserLoggedIn = (state) => isUserLoaded(state) && getUser(state).loggedIn
+export const getUser = (state) => statusData(state).data
+export const getUserData = (state) => isUserLoggedIn(state) ? getUser(state).data : null
 export const getForm = (state, name) => {
-  return Object.assign({}, state.passport[name + 'form'], {
-    error:state.passport[name + 'api'].error,
-    loading:state.passport[name + 'api'].loading
+  return Object.assign({}, state.passport[name + 'Form'], {
+    error:state.passport[name + 'Api'].error,
+    loading:state.passport[name + 'Api'].loading
   })
 }
+export const getRouteAssertion = (state) => state.passport.routeAssertion
+export const hasRouteAssertion = (state) => getRouteAssertion(state).active

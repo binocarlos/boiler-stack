@@ -12,7 +12,10 @@ export class AppWrapperContainer extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  return {}
+  const settings = ownProps.route.settings
+  return {
+    isReady:settings.isReady(state)
+  }
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
