@@ -13,12 +13,6 @@ class UserWelcome extends Component {
             Welcome!
           </p>
           <p>
-            <Link to="/login">Click here</Link> to login
-          </p>
-          <p>
-            <Link to="/register">Click here</Link> to register
-          </p>
-          <p>
             <a href="/auth/v1/logout">Click here</a> to logout
           </p>
         </div>

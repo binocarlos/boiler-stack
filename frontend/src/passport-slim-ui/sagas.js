@@ -1,8 +1,9 @@
 import { takeLatest } from 'redux-saga'
-import { fork, put, call } from 'redux-saga/effects'
+import { fork, put, call, take } from 'redux-saga/effects'
+import { push } from 'react-router-redux'
 import bows from 'bows'
 bows.config({
-  padLength:32
+  padLength:64
 })
 import api from './api'
 import * as actions from './actions'
@@ -51,7 +52,7 @@ const Status = (settings = {}) => {
   mainlogger('creating status saga: ' + url)
   return ApiSagaFactory({
     name:'status',
-    trigger:actions.STATUS.REQUEST,
+    trigger:actions.PASSPORT_STATUS.REQUEST,
     actions:actions.status,
     apiHandler:() => {
       return call(api.status, url)
@@ -64,7 +65,7 @@ const Login = (settings = {}) => {
   mainlogger('creating login saga: ' + url)
   return ApiSagaFactory({
     name:'login',
-    trigger:actions.LOGIN.REQUEST,
+    trigger:actions.PASSPORT_LOGIN.REQUEST,
     actions:actions.login,
     apiHandler:(data) => {
       return call(api.login, url, data)
@@ -77,7 +78,7 @@ const Register = (settings = {}) => {
   mainlogger('creating register saga: ' + url)
   return ApiSagaFactory({
     name:'register',
-    trigger:actions.REGISTER.REQUEST,
+    trigger:actions.PASSPORT_REGISTER.REQUEST,
     actions:actions.register,
     apiHandler:(data) => {
       return call(api.register, url, data)
@@ -94,10 +95,40 @@ const InitialUserLoad = () => {
   return initialUserLoad
 }
 
+// listen for once the user has registered/logged in
+//  * reload the user stats
+//  * re-direct the app
+const PostSubmit = (trigger) => {
+
+  const logger = bows('passport:PostSubmit:' + trigger)
+
+  function* postSubmitHandler(action) {
+    logger('handler', action)
+
+    // send the user data into the status reducer
+    logger('updating user status')
+    yield put(actions.status.success({
+      loggedIn:true,
+      data:action.data.data
+    }))
+
+    logger('redirecting')
+    yield put(push('/'))
+  }
+
+  function* apiSaga() {
+    yield takeLatest(trigger, postSubmitHandler)
+  }
+
+  return apiSaga
+}
+
 const factory = (settings = {}) => {
   return function* passportSaga() {
     yield [
       fork(InitialUserLoad()),
+      fork(PostSubmit(actions.PASSPORT_LOGIN.SUCCESS)),
+      fork(PostSubmit(actions.PASSPORT_REGISTER.SUCCESS)),
       fork(Status(settings)),
       fork(Login(settings)),
       fork(Register(settings))

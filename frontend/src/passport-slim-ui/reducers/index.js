@@ -3,45 +3,49 @@ import { combineReducers } from 'redux'
 import * as actions from '../actions'
 import ApiReducer from './api'
 import FormReducer from './form'
+import RouteAssertionReducer from './routeassertion'
 
-const statusapi = ApiReducer({
+const statusApi = ApiReducer({
   types:[
-    actions.STATUS.LOADING,
-    actions.STATUS.SUCCESS,
-    actions.STATUS.FAILURE
+    actions.PASSPORT_STATUS.LOADING,
+    actions.PASSPORT_STATUS.SUCCESS,
+    actions.PASSPORT_STATUS.FAILURE
   ]
 })
 
-const loginapi = ApiReducer({
+const loginApi = ApiReducer({
   types:[
-    actions.LOGIN.LOADING,
-    actions.LOGIN.SUCCESS,
-    actions.LOGIN.FAILURE
+    actions.PASSPORT_LOGIN.LOADING,
+    actions.PASSPORT_LOGIN.SUCCESS,
+    actions.PASSPORT_LOGIN.FAILURE
   ]
 })
 
-const registerapi = ApiReducer({
+const registerApi = ApiReducer({
   types:[
-    actions.REGISTER.LOADING,
-    actions.REGISTER.SUCCESS,
-    actions.REGISTER.FAILURE
+    actions.PASSPORT_REGISTER.LOADING,
+    actions.PASSPORT_REGISTER.SUCCESS,
+    actions.PASSPORT_REGISTER.FAILURE
   ]
 })
 
-const loginform = FormReducer({
+const loginForm = FormReducer({
   name:'login'
 })
 
-const registerform = FormReducer({
+const registerForm = FormReducer({
   name:'register'
 })
 
+const routeAssertion = RouteAssertionReducer()
+
 const rootReducer = combineReducers({
-  statusapi,
-  loginapi,
-  registerapi,
-  loginform,
-  registerform
+  statusApi,
+  loginApi,
+  registerApi,
+  loginForm,
+  registerForm,
+  routeAssertion
 })
 
 export default rootReducer

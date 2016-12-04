@@ -31,8 +31,8 @@ class FormTabs extends Component {
       styles[key] = Object.assign({}, STYLES[key], styles[key])
     })
 
-    const loginContent = this.props.settings.loginContent
-    const registerContent = this.props.settings.registerContent
+    const LoginContent = this.props.settings.loginContent
+    const RegisterContent = this.props.settings.registerContent
 
     return (
       <Page>
@@ -41,14 +41,14 @@ class FormTabs extends Component {
             <Tab label={this.props.loginTitle || 'Login'} value="login">
               <div style={Object.assign({}, styles.loginwrapper, styles.wrapper)}>
                 <LoginForm settings={this.props.settings}>
-                  {loginContent}
+                  <LoginContent props={this.props} />
                 </LoginForm>
               </div>
             </Tab>
             <Tab label={this.props.registerTitle || 'Register'} value="register">
               <div style={Object.assign({}, styles.registerwrapper, styles.wrapper)}>
                 <RegisterForm settings={this.props.settings}>
-                  {registerContent}
+                  <RegisterContent props={this.props} />
                 </RegisterForm>
               </div>
             </Tab>

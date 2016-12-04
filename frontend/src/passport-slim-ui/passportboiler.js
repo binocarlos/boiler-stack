@@ -5,18 +5,18 @@
   
 */
 import React, { Component, PropTypes } from 'react'
-import { Route } from 'react-router'
+import { Route, IndexRoute } from 'react-router'
 
 import PassportReducer from './reducers'
 import PassportSaga from './sagas'
 import PassportAuth from './auth'
 import PassportRoutes from './routes'
-import Settings from './settings'
+import Settings, { AppSettings } from './settings'
 
-const passportBoiler = (passportSettings = {}) => {
+const passportBoiler = (passportSettings = {}, appSettings = {}) => {
 
-  let appSettings = {}
   passportSettings = Settings(passportSettings)
+  appSettings = AppSettings(appSettings)
 
   appSettings.sagas = (appSettings.sagas || []).concat([PassportSaga(passportSettings)])
   appSettings.reducers = Object.assign({}, appSettings.reducers, {
@@ -25,14 +25,15 @@ const passportBoiler = (passportSettings = {}) => {
 
   const originalGetRoutes = appSettings.getRoutes
 
-  appSettings.getRoutes = (store) => {
+  appSettings.getRoutes = (store, settings) => {
     const auth = PassportAuth(store, passportSettings)
 
-    const originalRoutes = originalGetRoutes ? originalGetRoutes(auth) : null
+    const originalRoutes = originalGetRoutes ? originalGetRoutes(store, settings, auth) : null
     const passportRoutes = PassportRoutes(passportSettings)
 
     return (
       <Route>
+        <IndexRoute component={settings.welcome} onEnter={auth.ensureUser('/login')} />
         {originalRoutes}
         {passportRoutes}
       </Route>

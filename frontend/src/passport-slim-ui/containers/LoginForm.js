@@ -20,6 +20,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     data:formState.data,
     meta:formState.meta,
+    error:formState.error,
     disableButton:formState.meta.valid ? false : true,
     title:'Login',
     schema:getLoginSchema({
