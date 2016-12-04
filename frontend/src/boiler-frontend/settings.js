@@ -3,8 +3,6 @@ import React, { Component, PropTypes } from 'react'
 import AppBar from './containers/AppBar'
 
 import Welcome from './components/Welcome'
-import Dashboard from './components/Dashboard'
-import Help from './components/Help'
 
 import STYLES from './styles'
 
@@ -14,13 +12,12 @@ const SETTINGS = {
   sagas:[],
   appbar:AppBar,
   welcome:Welcome,
-  dashboard:Dashboard,
-  help:Help,
   getUser:(state) => null,
-  getRoutes:(auth) => [],
+  getRoutes:(store, settings) => [],
+  getMenu:(store, settings) => null,
+  getUserMenu:(store, settings) => [],
   getTitle:(state, user) => 'MyApp',
-  isReady:() => true,
-  getMenu:null
+  isReady:() => true
 }
 
 // merge the settings with the defaults

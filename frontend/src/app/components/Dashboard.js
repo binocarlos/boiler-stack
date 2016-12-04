@@ -1,11 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 import { Link } from 'react-router'
+import Page from 'kettle-ui/lib/Page'
+
 class Dashboard extends Component {
 
   render() {
 
     return (
-      <div>
+      <Page>
         <p>
           This is the dashboard
         </p>
@@ -24,7 +26,7 @@ class Dashboard extends Component {
         <p>
           <Link to="/quotes">Quotes</Link>
         </p>
-      </div>
+      </Page>
     )
   }
 

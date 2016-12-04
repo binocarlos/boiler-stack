@@ -52,14 +52,19 @@ const passportBoiler = (passportSettings = {}, appSettings = {}) => {
     return getUserData(state)
   }
 
-  appSettings.getUserMenuItems = () => {
-    return (
-      <MenuItem 
-        onClick={() => {
-          document.location = passportSettings.fullLogoutPath
-        }}
-        primaryText="Sign out" />
-    )
+  const originalGetUserMenu = appSettings.getUserMenu
+
+  appSettings.getUserMenu = () => {
+
+    const origItems = (originalGetUserMenu ? originalGetUserMenu() : null) || []
+
+    return origItems.concat([{
+      label:'Sign Out',
+      handler:() => {
+        document.location = passportSettings.fullLogoutPath
+      }
+    }])
+
   }
 
   return appSettings

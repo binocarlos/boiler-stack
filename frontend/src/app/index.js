@@ -1,19 +1,14 @@
 import 'babel-polyfill'
 import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
+import { Route, IndexRoute } from 'react-router'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 injectTapEventPlugin()
 
 import AppFactory from '../boiler-frontend/factory'
-import PassportBoiler from '../passport-slim-ui/passportboiler'
+import Settings from './settings'
 
-const appSettings = PassportBoiler({
-  appURL:'/app'
-}, {
-  mountElement:document.getElementById('mount')
-})
-
-var Root = AppFactory(appSettings)
+var Root = AppFactory(Settings())
 
 ReactDOM.render(
   Root,

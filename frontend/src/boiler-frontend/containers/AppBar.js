@@ -28,7 +28,8 @@ function mapStateToProps(state, ownProps) {
     openAccess,
     appURL,
     isMenuOpen:state.boiler.isMenuOpen,
-    getMenu:ownProps.settings.getMenu
+    getMenu:ownProps.settings.getMenu,
+    getUserMenu:ownProps.settings.getUserMenu
   }
 }
 

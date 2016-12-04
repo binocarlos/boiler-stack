@@ -29,10 +29,8 @@ export class UserMenu extends Component {
   }
 
   getUserMenu() {
-
-    const extraItems = this.props.settings.getUserMenuItems()
-    
-    return (
+    const menuItems = this.props.settings.getUserMenu ? this.props.settings.getUserMenu() : null
+    return menuItems.length <= 0 ? null : (
       <IconMenu
         iconButtonElement={
           <IconButton iconStyle={STYLES.button}><MoreVertIcon /></IconButton>
@@ -40,23 +38,35 @@ export class UserMenu extends Component {
         targetOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'top'}}
       >
-        <MenuItem 
-          onClick={() => this.props.changeLocation('/help')}
-          primaryText="Help" />
-        {extraItems}
+        {(menuItems || []).map((item, i) => {
+
+          let itemHandler = item.handler
+          if(!itemHandler) {
+            itemHandler = () => {
+              if(item.linkTo) this.props.changeLocation(item.linkTo)
+            }
+          }
+
+          return (
+            <MenuItem 
+              key={i}
+              onClick={itemHandler}
+              primaryText={item.label} />
+          )
+        })}
       </IconMenu>
     )
   }
 
   render() {
-
     if(this.props.openAccess){
-      return null
+      return this.getUserMenu()
     }
-    
-    return this.props.user ?
-      this.getUserMenu() :
-      this.getLoginButton()
+    else{
+      return this.props.user ?
+        this.getUserMenu() :
+        this.getLoginButton()
+    }
   }
 }
 
