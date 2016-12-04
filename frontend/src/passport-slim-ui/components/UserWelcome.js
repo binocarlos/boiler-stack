@@ -13,7 +13,7 @@ class UserWelcome extends Component {
             Welcome!
           </p>
           <p>
-            <a href="/auth/v1/logout">Click here</a> to logout
+            <a href="/auth/v1/logout?redirect=/app">Click here</a> to logout
           </p>
         </div>
       </Page>
