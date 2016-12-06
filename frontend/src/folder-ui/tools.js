@@ -29,7 +29,7 @@ export const getTableRows = (table) => {
 export const ContainerWrapper = (ComponentClass = Component, opts = {}) => {
   return class ContainerClass extends Component {
     render() {
-      const finalProps = Object.assign({}, this.props, opts, inneropts)
+      const finalProps = Object.assign({}, this.props, opts)
       return <ComponentClass {...finalProps} />
     }
   }

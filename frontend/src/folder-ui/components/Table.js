@@ -24,7 +24,7 @@ const getRenderFunction = (field) => {
   }
 }
 
-class ItemTable extends Component {
+class Table extends Component {
 
 
   render() {
@@ -99,4 +99,4 @@ class ItemTable extends Component {
   }
 }
 
-export default muiThemeable()(ItemTable)
+export default muiThemeable()(Table)

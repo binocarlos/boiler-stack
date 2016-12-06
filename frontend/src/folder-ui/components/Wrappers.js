@@ -5,16 +5,13 @@ import FolderToolbarWrapper from 'kettle-ui/lib/ToolbarWrapper'
 export class ToolbarWrapper extends Component {
 
   render() {
-
-    const { main, toolbar } = this.props
-
     return (
       <FolderToolbarWrapper
         offsetWidth={this.props.offsetWidth}
-        toolbar={toolbar}
+        toolbar={this.props.toolbar}
         >
 
-        {main}
+        {this.props.children}
 
       </FolderToolbarWrapper>
     )
@@ -26,8 +23,6 @@ export class TreeWrapper extends Component {
 
   render() {
 
-    const { main, sidebar } = this.props
-
     return (
       <NavWrapper
         width={this.props.width || 200}
@@ -35,10 +30,10 @@ export class TreeWrapper extends Component {
           zDepth:1,
           rounded:false
         }}
-        navbar={sidebar}
+        navbar={this.props.tree}
         >
         
-        {main}
+        {this.props.children}
 
       </NavWrapper>
     )

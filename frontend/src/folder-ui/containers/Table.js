@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import Tree from '../components/Tree'
+import { ToolbarWrapper } from '../components/Wrappers'
+//import ActionToolbar from '../components/ActionToolbar'
+//import ItemTable from '../components/ItemTable'
 
-export class TreeContainer extends Component {
+export class TableContainer extends Component {
 
   componentDidMount() {
     this.props.requestInitialData()
@@ -13,26 +15,27 @@ export class TreeContainer extends Component {
   }
 
   render() {
+    const toolbar = (
+      <div>table Toolbar</div>
+    )
+
     return (
-      <Tree {...this.props} />
+      <ToolbarWrapper
+        toolbar={toolbar}>
+        <div>hello table content</div>
+      </ToolbarWrapper>
     )
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  state = ownProps.selector(state)
-  return {
-    data:state.data,
-    children:state.children,
-    rootids:state.rootids,
-    open:state.open
-  }
+  return {}
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     requestInitialData:() => {
-      console.log('load tree container')
+      console.log('load table container')
     }
   }
 }
@@ -40,4 +43,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(TreeContainer)
+)(TableContainer)

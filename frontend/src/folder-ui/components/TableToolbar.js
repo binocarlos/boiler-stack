@@ -2,12 +2,12 @@ import React, { Component, PropTypes } from 'react'
 import muiThemeable from 'material-ui/styles/muiThemeable'
 import Toolbar from 'kettle-ui/lib/Toolbar'
 
-class ListToolbar extends Component {
+class ActionToolbar extends Component {
 
   getButtons() {
 
-    const buttons = []
-    const actions = this.props.getActions()
+    const buttons = this.props.buttons || []
+    const actions = this.props.actions
 
     if(actions.length>0){
       buttons.push({
@@ -17,10 +17,6 @@ class ListToolbar extends Component {
         items:actions
       })
     }
-
-    buttons = this.props.getExtraButtons ?
-      buttons.concat(this.props.getExtraButtons()) :
-      buttons
 
     return buttons
   }
@@ -39,4 +35,4 @@ class ListToolbar extends Component {
   }
 }
 
-export default muiThemeable()(ListToolbar)
+export default muiThemeable()(ActionToolbar)

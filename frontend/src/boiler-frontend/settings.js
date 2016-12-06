@@ -2,8 +2,6 @@ import React, { Component, PropTypes } from 'react'
 
 import AppBar from './containers/AppBar'
 
-import Welcome from './components/Welcome'
-
 import STYLES from './styles'
 
 const SETTINGS = {
@@ -11,7 +9,6 @@ const SETTINGS = {
   reducers:{},
   sagas:[],
   appbar:AppBar,
-  welcome:Welcome,
   getUser:(state) => null,
   getRoutes:(store, settings) => [],
   getMenu:(store, settings) => null,
