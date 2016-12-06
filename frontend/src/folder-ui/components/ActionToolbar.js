@@ -7,7 +7,7 @@ class ActionToolbar extends Component {
   getButtons() {
 
     const buttons = this.props.buttons || []
-    const actions = this.props.actions
+    const actions = this.props.actions || []
 
     if(actions.length>0){
       buttons.push({
@@ -21,15 +21,21 @@ class ActionToolbar extends Component {
     return buttons
   }
 
+  getIcon() {
+    return this.props.getIcon ?
+      this.props.getIcon() :
+      null
+  }
+
   render() {
     const newProps = Object.assign({}, this.props, {
       leftbuttons:this.getButtons(),
-      icon:this.props.getIcon()
+      icon:this.getIcon()
     })
 
     return (
       <Toolbar {...newProps}>
-        {toolbarChildren}
+        {this.props.children}
       </Toolbar>
     )
   }

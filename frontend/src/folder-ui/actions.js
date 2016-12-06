@@ -1,54 +1,75 @@
+/*
+
+  types
+  
+*/
 const REQUEST = 'REQUEST'
 const SUCCESS = 'SUCCESS'
 const FAILURE = 'FAILURE'
 
-function createRequestTypes(base) {
-  return [REQUEST, SUCCESS, FAILURE].reduce((acc, type) => {
+const requestTypes = [REQUEST, SUCCESS, FAILURE]
+
+const createRequestTypes = (base) => {
+  return requestTypes.reduce((acc, type) => {
     acc[type] = `${base}_${type}`
     return acc
   }, {})
 }
 
-const TREE_TOGGLE = 'TREE_TOGGLE'
-function createTreeTypes(base) {
-  return [TREE_TOGGLE].reduce((acc, type) => {
-    acc[type] = `${base}_${type}`
-    return acc
-  }, {})
-}
-
-//export const PASSPORT_STATUS = createRequestTypes('PASSPORT_STATUS')
-
-//export const PASSPORT_FORM_UPDATE = 'PASSPORT_FORM_UPDATE'
-//export const PASSPORT_MAKE_ROUTE_ASSERTION = 'PASSPORT_MAKE_ROUTE_ASSERTION'
-//export const PASSPORT_CLEAR_ROUTE_ASSERTION = 'PASSPORT_CLEAR_ROUTE_ASSERTION'
-
-function action(type, payload = {}) {
+const action = (type, payload = {}) => {
   return {type, ...payload}
 }
 
-export const status = {
-  request: (noloading) => action(PASSPORT_STATUS.REQUEST, {noloading}),
-  loading: () => action(PASSPORT_STATUS.LOADING),
-  success: (data) => action(PASSPORT_STATUS.SUCCESS, {data}),
-  update: (data) => action(PASSPORT_STATUS.UPDATE, {data}),
-  failure: (error) => action(PASSPORT_STATUS.FAILURE, {error})
+
+
+/*
+
+  tree
+  
+*/
+
+const TREE_TOGGLE = 'TREE_TOGGLE'
+
+const treeTypes = (base) => {
+  return requestTypes.concat([TREE_TOGGLE]).reduce((acc, type) => {
+    acc[type] = `${base}_${type}`
+    return acc
+  }, {})
 }
 
-export const login = {
-  request: (data) => action(PASSPORT_LOGIN.REQUEST, {data}),
-  loading: () => action(PASSPORT_LOGIN.LOADING),
-  success: (data) => action(PASSPORT_LOGIN.SUCCESS, {data}),
-  failure: (error) => action(PASSPORT_LOGIN.FAILURE, {error})
+const treeActions = (base) => {
+  const types = createTreeTypes(base)
+  return {
+    types,
+    request: () => action(types.REQUEST),
+    success: (data) => action(types.SUCCESS, {data}),
+    failure: (error) => action(types.FAILURE, {error}),
+    toggle: (id, value) => action(types.TREE_TOGGLE, {id,value})
+  }
 }
 
-export const register = {
-  request: (data) => action(PASSPORT_REGISTER.REQUEST, {data}),
-  loading: () => action(PASSPORT_REGISTER.LOADING),
-  success: (data) => action(PASSPORT_REGISTER.SUCCESS, {data}),
-  failure: (error) => action(PASSPORT_REGISTER.FAILURE, {error})
+/*
+
+  table
+  
+*/
+
+const TABLE_SELECTED = 'TABLE_SELECTED'
+
+const tableTypes = (base) => {
+  return requestTypes.concat([TABLE_SELECTED]).reduce((acc, type) => {
+    acc[type] = `${base}_${type}`
+    return acc
+  }, {})
 }
 
-export const formupdate = (form, data, meta) => action(PASSPORT_FORM_UPDATE, {form, data, meta})
-export const makeRouteAssertion = (rule, failureRedirect) => action(PASSPORT_MAKE_ROUTE_ASSERTION, {rule, failureRedirect})
-export const clearRouteAssertion = () => action(PASSPORT_CLEAR_ROUTE_ASSERTION)
+export const tableActions = (base) => {
+  const types = createTreeTypes(base)
+  return {
+    types,
+    request: () => action(types.REQUEST),
+    success: (data) => action(types.SUCCESS, {data}),
+    failure: (error) => action(types.FAILURE, {error}),
+    selected: (ids) => action(types.TABLE_SELECTED, {ids})
+  }
+}

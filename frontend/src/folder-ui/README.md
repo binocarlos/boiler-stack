@@ -1,10 +1,12 @@
-## ItemTable
+## Components
+
+#### Table
 
  * `fields` (array) - the column descriptors
  * `data` (array) - the data
  * `selectable` (boolean) - can the user select rows
  * `multiSelectable` (boolean) - can the user select multiple rows
- * `selected` (array) - an array of currently selected items
+ * `selected` (array) - an array of currently selected item ids
  * `showCheckboxes` (boolean) - display selectable checkboxes on each row
  * `height` (style)
  * `showHeader` (boolean) - whether to show the column titles
@@ -19,7 +21,7 @@ Each field in the `fields` property has:
  * `render(data, field)` - a custom function to render the cell contents
  * `preventRowSelection` - prevent a click selecting the row
 
-## Tree
+#### Tree
 
  * `data` (object) - a flat map of id -> object
  * `children` (object) - a flat map of id -> [childids]
@@ -33,7 +35,7 @@ Each field in the `fields` property has:
  * `selectItem(item)` - run when an item is clicked
  * `toggleItem(id, open)` - run when an item is toggled
 
-## EditToolbar
+#### FormToolbar
 
  * `title`
  * `icon`
@@ -42,15 +44,15 @@ Each field in the `fields` property has:
  * `revert()`
  * `save()`
 
-## ListToolbar
+#### ActionToolbar
 
  * `title`
  * `icon`
  * `actionButtonTitle` - the title of the `actions` button
- * `getActions()` - return an array of actions for the actions dropdown
- * `getExtraButtons()` - return an array of extra button descriptors
+ * `actions` - return an array of actions for the actions dropdown
+ * `buttons` - return an array of extra button descriptors
 
-## Form
+#### Form
 
  * `data`
  * `meta`
@@ -59,61 +61,29 @@ Each field in the `fields` property has:
  * `onUpdate(data, meta)`
  * `getContext()`
 
-## ToolbarWrapper
+#### ToolbarWrapper
 
  * `toolbar`
- * `main`
+ * `children`
 
-## TreeWrapper
+#### TreeWrapper
 
- * `sidebar`
- * `main`
+ * `tree`
+ * `children`
 
+## Containers
 
-## Database API
+#### Collection
 
-Each object that does database stuff must provide:
+A list type component/toolbar combo
 
- * `loadTree(done)`
- * `loadChildren(id, done)`
- * `loadDeepChildren(id, done)`
- * `loadItem(id, done)`
- * `addItem(parentid, data, done)`
- * `saveItem(id, data, done)`
- * `deleteItem(id, done)`
- * `mapPasteData(mode, data)`
-
-## Ajax Database
-
-Pass an object that knows the urls for each endpoint:
-
-```javascript
-const base = '/api/v1'
-const urls = {
-  loadTree: base + '/tree',
-  loadChildren: base + '/children/:id',
-  loadDeepChildren: base + '/deepchildren/:id',
-  loadItem: base + '/item/:id',
-  addItem: base + '/item/:parent',
-  saveItem: base + '/item/:id',
-  deleteItem: base + '/item/:id'
-}
-```
-
-
-## Routes
-
-```javascript
-<Route component={NavWrapper}>
-  <Route path={opts.path} components={views.tree} onEnter={onEnter}>
-    <IndexRoute components={views.view} />
-    <Route path="view" components={views.view} />
-    <Route path="view/:id" components={views.view} />
-    <Route path="delete/:parent/:ids" components={views.view} />
-    <Route path="edit/:id" components={views.edit} />
-    <Route path="edit/:parent/:id" components={views.edit} />
-    <Route path="add/:parent/:type" components={views.edit} />
-  </Route>
-</Route>
-```
-
+ * `selector(state)` - return an object with:
+   * `data` - array of item data
+   * `selected` - array of item ids
+   * `parent` - object (the parent of the data)
+ * `tableClass` - use a custom Table component
+ * `toolbarClass` - use a custom Toolbar component
+ * `tableProps` - props to be passed to the `Table` component
+ * `toolbarProps` - props to be passed to the `Toolbar` component
+ * `getTableFields(parent, data)`
+ * `onRowSelection(dispatch, idArray)`

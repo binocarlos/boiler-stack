@@ -44,10 +44,16 @@ class FormToolbar extends Component {
       ]
   }
 
+  getIcon() {
+    return this.props.getIcon ?
+      this.props.getIcon() :
+      null
+  }
+
   render() {
     const newProps = Object.assign({}, this.props, {
       leftbuttons:this.getButtons(),
-      icon:this.props.getIcon()
+      icon:this.getIcon()
     })
 
     return (

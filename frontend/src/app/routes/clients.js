@@ -3,13 +3,25 @@ import { Route, IndexRoute } from 'react-router'
 
 import { ContainerWrapper } from '../../folder-ui/tools'
 
-import Table from '../../folder-ui/containers/Table'
+import Collection from '../../folder-ui/containers/Collection'
 import Form from '../../folder-ui/containers/Form'
 
 const ClientRoutes = (store, settings, auth) => {
 
-  const TableContainer = ContainerWrapper(Table, {
-
+  const TableContainer = ContainerWrapper(Collection, {
+    selector:(state) => {
+      return {
+        data:[],
+        selected:[],
+        parent:{}
+      }
+    },
+    getTableFields:(parent, data) => {
+      return []
+    },
+    onRowSelection:(dispatch, idArray) => {
+      
+    }
   })
 
   const FormContainer = ContainerWrapper(Form, {

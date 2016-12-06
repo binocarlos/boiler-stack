@@ -24,16 +24,25 @@ const getRenderFunction = (field) => {
   }
 }
 
-class Table extends Component {
+class TableComponent extends Component {
 
 
   render() {
+    console.log('-------------------------------------------');
+    console.log('-------------------------------------------');
+    console.dir(this.props)
 
     const fields = this.props.fields || []
     const data = this.props.data || []
-    const selected = {}
+    const selected = {};
     (this.props.selected || []).forEach(id => selected[id] = true)
 
+    console.log('-------------------------------------------');
+    console.dir({
+      fields,
+      data,
+      selected
+    })
     return (
       <Table
         height={this.props.height}
@@ -99,4 +108,4 @@ class Table extends Component {
   }
 }
 
-export default muiThemeable()(Table)
+export default muiThemeable()(TableComponent)
