@@ -18,17 +18,17 @@ const pasteHandler = (db) => {
     item.children = item.children.map(child => {
       return mapPasteData(mode, child)
     })
-    return db.mapPasteData(mode, item)
+    return db.mapPasteData ? db.mapPasteData(mode, item) : item
   }
 
-  return (context, mode, parent, items, done) => {
+  return (mode, parentid, items, done) => {
 
     waterfall([
       (next) => {
 
         // load each of the paste items deep tree
         parallel(items.map(item => (nextitem) => {
-          db.loadDeepChildren(context, item.id, nextitem)
+          db.loadDeepChildren(item.id, nextitem)
         }), (err, data) => {
           if(err) return next(err)
 
@@ -49,7 +49,7 @@ const pasteHandler = (db) => {
       (fullitems, next) => {
 
         parallel(fullitems.map(item => (nextitem) => {
-          db.addItem(context, parent, item, nextitem)
+          db.addItem(parentid, item, nextitem)
         }), (err) => {
           if(err) return next(err)
           next(null, fullitems)
@@ -61,7 +61,7 @@ const pasteHandler = (db) => {
       (fullitems, next) => {
         if(mode!='cut') return next()
         parallel(fullitems.map(item => (nextitem) => {
-          db.deleteItem(context, item.id, nextitem)
+          db.deleteItem(item.id, nextitem)
         }), next)
       }
 
