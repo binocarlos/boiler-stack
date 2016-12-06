@@ -1,7 +1,28 @@
 import React, { Component, PropTypes } from 'react'
 import NavWrapper from 'kettle-ui/lib/NavWrapper'
+import FolderToolbarWrapper from 'kettle-ui/lib/ToolbarWrapper'
 
-class TreeWrapper extends Component {
+export class ToolbarWrapper extends Component {
+
+  render() {
+
+    const { main, toolbar } = this.props
+
+    return (
+      <FolderToolbarWrapper
+        offsetWidth={this.props.offsetWidth}
+        toolbar={toolbar}
+        >
+
+        {main}
+
+      </FolderToolbarWrapper>
+    )
+  }
+
+}
+
+export class TreeWrapper extends Component {
 
   render() {
 
@@ -24,5 +45,3 @@ class TreeWrapper extends Component {
   }
 
 }
-
-export default TreeWrapper

@@ -17,7 +17,7 @@
         id:'db2',
         name:'My DB 2'
       },
-      db:DB2()
+      db:DB2()isRootID
     }]
   })
   
@@ -31,6 +31,7 @@ import { serialize } from '../tools'
 // multiple data sources into one tree
 const CODEC_KEY = '_folderui_dbname'
 const CODEC_DELIMITER = '_'
+const ROOT_NODE_ID = 'root'
 
 const extractCodecFromId = (id) => {
   if(!id) return
@@ -54,7 +55,7 @@ export const decodeID = (id) => {
   return idParts.join(CODEC_DELIMITER)
 }
 
-// reducer -> database
+// app -> database
 const decode = (item) => {
   if(!item) return item
   if(typeof(item) == 'string') {
@@ -81,7 +82,7 @@ const codecFactory = (database) => {
     return id == encodeID(database.id)
   }
 
-  // database -> reducer
+  // database -> app
   const encode = (item) => {
     if(!item) return item
     item[CODEC_KEY] = database.id
@@ -94,7 +95,7 @@ const codecFactory = (database) => {
 
   const rootNodeFactory = (extra = {}) => {
     return Object.assign({}, database.rootNode, {
-      id:database.id
+      id:ROOT_NODE_ID
     }, extra)
   }
 
@@ -166,13 +167,10 @@ const codecFactory = (database) => {
     database.db.deleteItem(context, decodeID(id), done)
   }
 
-  const filterPaste = (mode, item) => {
-    return database.db.filterPaste(mode, item)
-  }
-
   return {
     id:database.id,
     database,
+    db:database.db,
     encode,
     decode,
     loadTree,
@@ -182,8 +180,10 @@ const codecFactory = (database) => {
     saveItem,
     addItem,
     deleteItem,
-    filterPaste,
-    getRootNode
+    
+    getRootNode,
+
+    isRootID
   }
 }
 
@@ -209,7 +209,7 @@ const compositedb = (databases = []) => {
         codec.getRootNode(extra) :
         null
     },
-    loadTree:(context, done) => {
+    loadTree:(done) => {
       // load each of the databases answers
       // then filter each node with a tag for that db
       async.parallel(databases.map((database) => {
@@ -220,40 +220,46 @@ const compositedb = (databases = []) => {
       }), done)
 
     },
-    loadChildren:(context, id, done) => {
+    loadChildren:(id, done) => {
       const codec = getItemCodec(id)
       if(!codec) return done('no codec found for: ' + getItemCodecId(id))
       codec.loadChildren(context, id, done)
     },
-    loadDeepChildren:(context, id, done) => {
+    loadDeepChildren:(id, done) => {
       const codec = getItemCodec(id)
       if(!codec) return done('no codec found for: ' + getItemCodecId(id))
       codec.loadDeepChildren(context, id, done)
     },
-    loadItem:(context, id, done) => {
+    loadItem:(id, done) => {
       const codec = getItemCodec(id)
       if(!codec) return done('no codec found for: ' + getItemCodecId(id))
       codec.loadItem(context, id, done)
     },
-    saveItem:(context, id, data, done) => {
+    saveItem:(id, data, done) => {
       const codec = getItemCodec(id)
       if(!codec) return done('no codec found for: ' + getItemCodecId(id))
-      codec.saveItem(context, id, data, done)
+      codec.db.saveItem(id, data, done)
     },
-    addItem:(context, parent, item, done) => {
-      const codec = getItemCodec(parent)
-      if(!codec) return done('no codec found for: ' + getItemCodecId(parent))
-      codec.addItem(context, parent, item, done)
+    addItem:(parentid, data, done) => {
+      const codec = getItemCodec(parentid)
+      if(!codec) return done('no codec found for: ' + getItemCodecId(parentid))
+      parentid = codecisRootID(parentid) ? null : parent
+    database.db.addItem(context, decode(parent), decode(item), (err, data) => {
+      if(err) return done(err)
+      done(null, encode(data))
+    })
+
+      codec.db.addItem(parent, item, done)
     },
-    deleteItem:(context, id, done) => {
+    deleteItem:(id, done) => {
       const codec = getItemCodec(id)
       if(!codec) return done('no codec found for: ' + getItemCodecId(id))
-      codec.deleteItem(context, id, done)
+      codec.db.deleteItem(decodeID(id), done)
     },
     // the wrapper for pasteItems that checks if the paste items are from
     // the same codec source as the parent
     pasteItems:(handler) => {
-      return (context, mode, parent, items, done) => {
+      return (mode, parent, items, done) => {
         const parentCodec = getItemCodec(parent.id)
         const differentOrigin = items.filter(item => {
           const itemCodec = getItemCodec(item.id)
@@ -262,14 +268,14 @@ const compositedb = (databases = []) => {
 
         // this forces the mode to 'copy' if the origins are different
         mode = differentOrigin ? 'copy' : mode
-        handler(context, mode, parent, items, done)
+        handler(mode, parent, items, done)
       }
     },
     // loop over each item - get it's codec then use that to map the paste data
-    filterPaste:(mode, item) => {
+    mapPasteData:(mode, item) => {
       const codec = getItemCodec(item.id)
       if(!codec) return done('no codec found for: ' + getItemCodecId(item.id))
-      return codec.filterPaste(mode, item)
+      return codec.db.mapPasteData(mode, item)      
     }
 
   }

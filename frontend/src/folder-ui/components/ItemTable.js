@@ -16,35 +16,23 @@ const getFieldTitle = (field = {}) => {
     ''
 }
 
-class ChildrenTable extends Component {
-
-  // the info we pass to functions
-  getContext() {
-    return {
-      parent:this.props.parent,
-      children:this.props.data,
-      getState:this.props.getState,
-      dispatch:this.props.dispatch,
-      actions:this.props.actions,
-      theme:this.props.muiTheme,
-      params:this.props.params
-    }
+const getRenderFunction = (field) => {
+  return field.render || function(data, field){
+    return (
+      <div>{data[field.name]}</div>
+    )
   }
+}
+
+class ItemTable extends Component {
+
 
   render() {
 
-    const fields = this.props.getFields ?
-      this.props.getFields(this.getContext()) :
-      []
+    const fields = this.props.fields || []
     const data = this.props.data || []
-    const selected = this.props.selected
-    const renderfns = fields.map(field => {
-      return field.render || function(data){
-        return (
-          <div>{data}</div>
-        )
-      }
-    })
+    const selected = {}
+    (this.props.selected || []).forEach(id => selected[id] = true)
 
     return (
       <Table
@@ -52,6 +40,7 @@ class ChildrenTable extends Component {
         selectable={this.props.selectable}
         multiSelectable={this.props.multiSelectable}
         onRowSelection={(indexes) => {
+          // return an array of ids not indexes
           this.props.onRowSelection(indexes.map(index => {
             return this.props.data[index].id
           }))
@@ -66,7 +55,7 @@ class ChildrenTable extends Component {
           <TableRow>
             {fields.map( (field, index) => {
               return (
-                <TableHeaderColumn key={index} style={field.style}>
+                <TableHeaderColumn key={index} style={field.headerStyle}>
                   <div>
                     {getFieldTitle(field)}
                   </div>
@@ -81,10 +70,11 @@ class ChildrenTable extends Component {
           deselectOnClickaway={false}
         >
           {data.map( (row, index) => (
-            <TableRow key={index} selected={this.props.selected[row.id]}>
+            <TableRow key={index} selected={selected[row.id]}>
               {fields.map( (field, index) => {
-                const render = renderfns[index]
-                const content = render(row)
+
+                const render = getRenderFunction(field)
+                const content = render(row, field)
 
                 const wrappedContent = field.preventRowSelection ?
                   (
@@ -109,13 +99,4 @@ class ChildrenTable extends Component {
   }
 }
 
-ChildrenTable.defaultProps = {
-  showCheckboxes: false,
-  multiSelectable: false,
-  selectable: true,
-  selected:{},
-  data:[],
-  showHeader: true
-}
-
-export default muiThemeable()(ChildrenTable)
+export default muiThemeable()(ItemTable)

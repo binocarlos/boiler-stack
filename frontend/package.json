@@ -25,6 +25,13 @@
     "webpack": "^1.13.3"
   },
   "dependencies": {
+    "async": "^2.1.2",
+    "biro": "^3.3.3",
+    "biro-material-ui": "^2.3.2",
+    "digger-folder-ui-db": "^3.0.0",
+    "local-storage": "^1.4.2",
+    "hat": "^0.0.3",
+    "pluralise": "^1.0.0",
     "axios": "^0.15.3",
     "bows": "^1.6.0",
     "immutability-helper": "^2.0.0",

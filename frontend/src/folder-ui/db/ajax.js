@@ -5,33 +5,32 @@
   
 */
 
-import superagent from 'superagent'
+import axios from 'axios'
+import bows from 'bows'
 
 export default function ajaxdb(opts = {}){
-
-  if(!opts.baseurl || (typeof(opts.baseurl) != 'function' && typeof(opts.baseurl) != 'string')){
-    throw new Error('ajax db requires a baseurl that is a function or string')
-  }
 
   if(!opts.urls){
     throw new Error('ajax db requires a urls object')
   }
 
   const urls = opts.urls
+  const databaseTitle = opts.title || 'ajax'
+  const logger = bows('folder-ui:db:' + databaseTitle)
+  logger('urls', urls)
 
-  /*
-  
-    the baseurl option might be a function - in which case pass it the context
-    
-  */
-  const getBaseUrl = (context) => {
-    return typeof(opts.baseurl) == 'function' ?
-      opts.baseurl(context) :
-      opts.baseurl
+  // turn /children/:id + {id:10} -> /children/10
+  const getUrl = (name, params) => {
+    if(!opts.urls[name]) throw new Error(name + ' url not found')
+    return opts.urls[name].replace(/\/:(\w+?)/g, (match, paramName) => {
+      const paramValue = params[paramName]
+      return paramValue ? '/' + paramValue : ''
+    })
   }
 
   return {
-    loadTree:(context, done) => {
+    loadTree:(done) => {
+
       superagent
         .get(urls.loadTree(getBaseUrl(context), context.search))
         .set('Accept', 'application/json')
@@ -44,7 +43,7 @@ export default function ajaxdb(opts = {}){
           }
         })
     },
-    loadChildren:(context, id, done) => {
+    loadChildren:(id, done) => {
       superagent
         .get(urls.loadChildren(getBaseUrl(context), id))
         .set('Accept', 'application/json')
@@ -57,7 +56,7 @@ export default function ajaxdb(opts = {}){
           }
         })
     },
-    loadDeepChildren:(context, id, done) => {
+    loadDeepChildren:(id, done) => {
       superagent
         .get(urls.loadDeepChildren(getBaseUrl(context), id))
         .set('Accept', 'application/json')
@@ -70,7 +69,7 @@ export default function ajaxdb(opts = {}){
           }
         })
     },
-    loadItem:(context, id, done) => {
+    loadItem:(id, done) => {
       superagent
         .get(urls.loadItem(getBaseUrl(context), id))
         .set('Accept', 'application/json')
@@ -83,7 +82,7 @@ export default function ajaxdb(opts = {}){
           }
         })
     },
-    addItem:(context, parent, item, done) => {
+    addItem:(parentid, item, done) => {
       if(opts.readOnly) return done('this database is readonly')
       superagent
         .post(urls.addItem(getBaseUrl(context), parent ? parent.id : null))
@@ -98,7 +97,7 @@ export default function ajaxdb(opts = {}){
           }
         })
     },
-    saveItem:(context, id, data, done) => {
+    saveItem:(id, data, done) => {
       if(opts.readOnly) return done('this database is readonly')
       superagent
         .put(urls.saveItem(getBaseUrl(context), id))
@@ -114,7 +113,7 @@ export default function ajaxdb(opts = {}){
         })
     },
     
-    deleteItem:(context, id, done) => {
+    deleteItem:(id, done) => {
       if(opts.readOnly) return done('this database is readonly')
       superagent
         .delete(urls.deleteItem(getBaseUrl(context), id))
@@ -129,7 +128,7 @@ export default function ajaxdb(opts = {}){
         })
     },
 
-    filterPaste:(mode, item) => {
+    mapPasteData:(mode, item) => {
       return item
     }
     

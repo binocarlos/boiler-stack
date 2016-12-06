@@ -6,7 +6,7 @@ import parallel from 'async/parallel'
   a proxy paste handler that
 
   * load deep children for each clipboard item
-  * call filterPaste for each item
+  * call mapPasteData for each item
   * call addItem for the paste parent + item
   * if mode is cut - call deleteItem for each item
   
@@ -14,11 +14,11 @@ import parallel from 'async/parallel'
 
 const pasteHandler = (db) => {
 
-  const filterPaste = (mode, item) => {
+  const mapPasteData = (mode, item) => {
     item.children = item.children.map(child => {
-      return filterPaste(mode, child)
+      return mapPasteData(mode, child)
     })
-    return db.filterPaste(mode, item)
+    return db.mapPasteData(mode, item)
   }
 
   return (context, mode, parent, items, done) => {
@@ -36,8 +36,8 @@ const pasteHandler = (db) => {
           // property is what we just loaded for that item
           next(null, items.map((item, i) => {
 
-            // return the object via the paste filter of the database
-            return filterPaste(mode, Object.assign({}, item, {
+            // return the object via the mapPasteData of the database
+            return mapPasteData(mode, Object.assign({}, item, {
               children:data[i]
             }))
           }))

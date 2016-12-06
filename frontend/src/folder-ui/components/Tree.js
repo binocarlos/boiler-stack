@@ -23,7 +23,7 @@ class Tree extends Component {
   
   getIcon(data) {
     return this.props.getIcon ? 
-      this.props.getIcon(data, 'tree', this.props.muiTheme) :
+      this.props.getIcon(data, this.props.muiTheme) :
       <Folder />
   }
 
@@ -38,19 +38,12 @@ class Tree extends Component {
       null
   }
 
-  getTreeNode(data = {}, i = 0) {
+  getTreeNode(id, i = 0) {
 
-    const children = data.children || []
-    const open = this.props.open || {}
+    const data = this.props.data[id]
+    const children = this.props.children[id] || []
     const name = data.name || 'no title'
-
-    let handleClick = () => {
-      this.props.selectNode(data)
-    }
-
-    let handleToggle = () => {
-      this.props.toggleNode(data)
-    }
+    const isOpen = this.props.open[id] ? true : false
 
     return (
       <ListItem 
@@ -60,13 +53,13 @@ class Tree extends Component {
         leftIcon={this.getIcon(data)} 
         style={this.getItemStyle(data)}
         onTouchTap={() => {
-          this.props.selectNode(data)
+          this.props.selectItem(data)
         }}
         onNestedListToggle={() => {
-          this.props.toggleNode(data)
+          this.props.toggleItem(data.id, !isOpen)
         }}
-        open={open[data.id] ? true : false}
-        initiallyOpen={data.open ? true : false}
+        open={isOpen}
+        initiallyOpen={isOpen}
         nestedItems={children.map(this.getTreeNode.bind(this))} />
     )
   }
@@ -87,7 +80,7 @@ class Tree extends Component {
           : 
           null
         }
-        {data.map(this.getTreeNode.bind(this))}
+        {rootids.map(this.getTreeNode.bind(this))}
       </List>
     )    
   }

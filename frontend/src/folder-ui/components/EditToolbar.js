@@ -4,13 +4,13 @@ import Toolbar from 'kettle-ui/lib/Toolbar'
 
 class FormToolbar extends Component {
 
-  getLeftButtons() {
+  getButtons() {
 
     const cancelButton = {
       id:'cancel',
       title:'Cancel',
       handler:() => {
-        this.props.cancel(this.props.parentNode)
+        this.props.cancel()
       }
     }
 
@@ -29,11 +29,11 @@ class FormToolbar extends Component {
         primary:true
       },
       handler:() => {
-        this.props.save(this.props.data, this.props.meta, this.props.parentNode)
+        this.props.save()
       }
     }
 
-    return this.props.readonly ?
+    return this.props.readOnly ?
       [
         cancelButton
       ] :
@@ -44,32 +44,10 @@ class FormToolbar extends Component {
       ]
   }
 
-  // the info we pass to functions
-  getContext() {
-    return {
-      item:this.props.data,
-      parent:this.props.parentNode,
-      schema:this.props.schema,
-      mode:this.props.mode,
-      getState:this.props.getState,
-      dispatch:this.props.dispatch,
-      actions:this.props.actions,
-      params:this.props.params
-    }
-  }
-
   render() {
-    const toolbarChildren = this.props.getChildren ? 
-      this.props.getChildren(this.getContext()) : 
-      null
-
-    const icon = this.props.getIcon && this.props.data ?
-      this.props.getIcon(this.props.data, 'toolbar', this.props.muiTheme) :
-      null
-
     const newProps = Object.assign({}, this.props, {
-      leftbuttons:this.getLeftButtons(),
-      icon
+      leftbuttons:this.getButtons(),
+      icon:this.props.getIcon()
     })
 
     return (

@@ -13,42 +13,17 @@ const STYLES = {
   }
 }
 
-function getStyles(){
-  return STYLES
-}
-
-class FormViewer extends Component {
-
-  // the info we pass to functions
-  getContext() {
-    return {
-      id:this.props.id,
-      item:this.props.data,
-      mode:this.props.mode,
-      descriptor:this.props.descriptor,
-      schema:this.props.schema,
-      parent:this.props.parentNode,
-      getState:this.props.getState,
-      dispatch:this.props.dispatch,
-      actions:this.props.actions,
-      params:this.props.params
-    }
-  }
+class Form extends Component {
 
   render() {
 
-    const customLibary = this.props.getLibrary ?
-      this.props.getLibrary(this.getContext(), this.props.data) :
-      {}
-
-    let library = Object.assign({}, muiLibrary, customLibary)
-    let styles = getStyles()
+    let library = Object.assign({}, muiLibrary, this.props.library)
 
     return (
      
-      <div style={styles.outerwrapper}>
+      <div style={STYLES.outerwrapper}>
         <Paper zDepth={2}>
-          <div style={styles.innerwrapper}>
+          <div style={STYLES.innerwrapper}>
             <Biro 
               data={this.props.data}
               meta={this.props.meta}
@@ -65,8 +40,4 @@ class FormViewer extends Component {
   }
 }
 
-FormViewer.defaultProps = {
-  
-}
-
-export default FormViewer
+export default Form

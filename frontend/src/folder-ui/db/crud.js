@@ -4,14 +4,7 @@
   
 */
 
-import Ajax from './ajax'
-import urls from './urls'
-
-export default function crudDB(opts = {}){
-
-  const db = Ajax(Object.assign({}, opts, {
-    urls:urls.crud
-  }))
+export default function crudDB(db, opts = {}){
 
   /*
   
