@@ -1,11 +1,12 @@
 import update from 'immutability-helper'
+import { combineReducers } from 'redux'
 
 const DEFAULT_STATE = {
   selected:[]
 }
 
 const tableReducerFactory = (types) => {
-  const tableReducer = (state = DEFAULT_STATE, action) => {
+  return (state = DEFAULT_STATE, action) => {
     switch (action.type) {
       case types.selected:
         return update(state, {
@@ -17,8 +18,6 @@ const tableReducerFactory = (types) => {
         return state
     }
   }
-
-  return tableReducer
 }
 
 export default tableReducerFactory

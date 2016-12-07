@@ -6,9 +6,13 @@ import injectTapEventPlugin from 'react-tap-event-plugin'
 injectTapEventPlugin()
 
 import AppFactory from '../boiler-frontend/factory'
-import Settings from './settings'
+import Apps from './apps'
 
-var Root = AppFactory(Settings())
+const Root = AppFactory(Apps({
+  passport:{
+    appURL:'/app'  
+  }
+}))
 
 ReactDOM.render(
   Root,

@@ -7,8 +7,6 @@
 import React, { Component, PropTypes } from 'react'
 import { Route, IndexRoute } from 'react-router'
 
-import MenuItem from 'material-ui/MenuItem'
-
 import PassportReducer from './reducers'
 import PassportSaga from './sagas'
 import PassportAuth from './auth'
@@ -42,14 +40,6 @@ const passportBoiler = (passportSettings = {}, appSettings = {}) => {
         {passportRoutes}
       </Route>
     )
-  }
-
-  appSettings.isReady = (state) => {
-    return isUserLoaded(state)
-  }
-
-  appSettings.getUser = (state) => {
-    return getUserData(state)
   }
 
   const originalGetUserMenu = appSettings.getUserMenu

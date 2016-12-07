@@ -1,40 +1,103 @@
 import React from 'react'
+import { Route, IndexRoute } from 'react-router'
 import { combineReducers } from 'redux'
 import { hashHistory } from 'react-router'
 
 import { syncHistoryWithStore, routerReducer, routerMiddleware } from 'react-router-redux'
+import { fork } from 'redux-saga/effects'
 
-import SettingsFactory from './settings'
-import boilerReducer from './reducer'
-import Routes from './routes'
 import Store from './store'
-import Sagas from './sagas'
 import messages from './messages'
 
 import Root from './containers/Root'
+import AppWrapper from './containers/AppWrapper'
+import AppBar from './components/AppBar'
 
-const boilerapp = (settings = {}) => {
+import BoilerApp from './boilerapp'
 
-  settings = SettingsFactory(settings)
+const DEFAULT_SETTINGS = {
+  titlebarClickUrl:'/',
+  appbarComponent:AppBar,
+  hasMenu:false,
+  getTitle:(state) => '',
+  isReady:(state) => true,
+  getAppbarContent:(state, dispatch) => null,
+  getMenuContent:(state, dispatch) => null
+}
 
-  messages.boot(settings)
+const settingsFactory = (apps, settings = {}) => {
+  settings = Object.assign({}, DEFAULT_SETTINGS, settings)
+  return apps.reduce((allSettings, app) => {
+    return Object.assign({}, allSettings, app.getSettings ? app.getSettings() : {})
+  }, settings)
+}
+
+const sagaFactory = (apps = []) => {
+  const sagas = apps.reduce((allSagas, app) => {
+    return allSagas.concat(app.getSagas ? app.getSagas() : [])
+  }, [])
+
+  return function *root() {
+    yield sagas.map(fork)
+  }
+}
+
+const reducerFactory = (apps = []) => {
+  return apps.reduce((allReducers, app) => {
+    return Object.assign({}, allReducers, app.getReducers ? app.getReducers() : {})
+  }, {})
+}
+
+const routeFactory = (store, apps = [], settings = {}) => {
+
+  const routeContext = apps.reduce((context, app) => {
+    return Object.assign({}, context, app.getRouteContext ? app.getRouteContext(store) : null)
+  }, {})
+  
+  const appRoutes = apps.map((app, i) => {
+    const innerRoutes = app.getRoutes ?
+      app.getRoutes(store, routeContext) :
+      null
+    return innerRoutes ? (
+      <Route key={i}>
+        {innerRoutes}
+      </Route>
+    ) : null
+  }).filter(routes => routes)
+
+  return (
+    <Route path="/" component={AppWrapper} settings={settings}>
+      {appRoutes}
+    </Route>
+  )
+}
+
+const boilerapp = (apps = [], settings = {}) => {
+
+  // add the boiler application
+  apps = apps.concat([
+    BoilerApp()
+  ])
+  
+  settings = settingsFactory(apps, settings)
+  const reducers = reducerFactory(apps)
+  const saga = sagaFactory(apps)
 
   const rootReducer = combineReducers({
     routing: routerReducer,
-    boiler: boilerReducer,
-    ...settings.reducers
+    ...reducers
   })
 
-  const middleware = [
+  const store = Store(rootReducer, [
     routerMiddleware(hashHistory)
-  ].concat(settings.middleware)
+  ], window.__INITIAL_STATE__)
 
-  const store = Store(rootReducer, middleware, window.__INITIAL_STATE__)
   const history = syncHistoryWithStore(hashHistory, store)
-  const routes = Routes(store, settings)
+  const routes = routeFactory(store, apps, settings)
   
-  store.runSaga(Sagas(settings.sagas))
-  
+  messages.boot(settings)
+  store.runSaga(saga)
+
   return (
     <Root
       store={store}

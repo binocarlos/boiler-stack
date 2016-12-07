@@ -1,6 +1,6 @@
 import * as actions from './actions'
 
-export default (store, settings = {}) => {
+export default (store) => {
 
   const ensureUser = (redirectUrl) => (nextState, replace, callback) => {
     store.dispatch(actions.makeRouteAssertion('user', redirectUrl))

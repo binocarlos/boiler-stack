@@ -87,3 +87,4 @@ A list type component/toolbar combo
  * `toolbarProps` - props to be passed to the `Toolbar` component
  * `getTableFields(parent, data)`
  * `onRowSelection(dispatch, idArray)`
+ * `requestInitialData(dispatch)`

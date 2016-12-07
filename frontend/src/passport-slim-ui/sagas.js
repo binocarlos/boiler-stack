@@ -103,6 +103,21 @@ const InitialUserLoad = () => {
   return initialUserLoad
 }
 
+// triggers an initial user-load when the app starts
+// the saga ends immediately
+const Logout = (opts = {}) => {
+  if(!opts.path) throw new Error('Logout saga needs path')
+  function* doLogout(action) {
+    document.location = opts.path
+  }
+
+  function* logoutSaga() {
+    yield takeLatest(actions.PASSPORT_LOGOUT, doLogout)
+  }
+
+  return logoutSaga
+}
+
 // listen for once the user has registered/logged in
 //  * reload the user stats
 //  * re-direct the app
@@ -187,6 +202,9 @@ const factory = (settings = {}) => {
   return function* passportSaga() {
     yield [
       fork(InitialUserLoad()),
+      fork(Logout({
+        path:settings.fullLogoutPath
+      })),
       fork(PostSubmit(actions.PASSPORT_LOGIN.SUCCESS)),
       fork(PostSubmit(actions.PASSPORT_REGISTER.SUCCESS)),
       fork(Status(settings)),

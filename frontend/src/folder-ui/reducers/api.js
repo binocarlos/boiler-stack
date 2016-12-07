@@ -8,31 +8,22 @@ const DEFAULT_STATE = {
 }
 
 const apiReducerFactory = (types) => {
-  if (!Array.isArray(types) || types.length !== 3) {
-    throw new Error('Expected types to be an array of three elements.')
-  }
-  if (!types.every(t => typeof t === 'string')) {
-    throw new Error('Expected types to be strings.')
-  }
-
-  const [ requestType, successType, failureType ] = types
-
   const apiReducer = (state = DEFAULT_STATE, action) => {
     switch (action.type) {
-      case requestType:
+      case types.request:
         return update(state, {
           loading:true,
           loaded:false,
           error:null
         })
-      case successType:
+      case types.success:
         return update(state, {
           loading:false,
           loaded:true,
           error:null,
           result:action.result
         })
-      case failureType:
+      case types.failure:
         return update(state, {
           loading:false,
           loaded:true,

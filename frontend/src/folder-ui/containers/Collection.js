@@ -63,7 +63,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
   return {
     requestInitialData:() => {
-      console.log('load collection container')
+      if(!this.props.requestInitialData) throw new Error('no requestInitialData prop given to Collection container')
+      this.props.requestInitialData(dispatch)
     },
     tableHandlers,
     toolbarHandlers

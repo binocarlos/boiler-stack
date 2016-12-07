@@ -5,11 +5,9 @@ const DEFAULT_STATE = {
   isMenuOpen:false
 }
 
-export default function boilerreducer(state = DEFAULT_STATE, action = {}) {
+const boilerreducer = (state = DEFAULT_STATE, action = {}) => {
   switch (action.type) {
-
     case 'BOILER_TOGGLE_MENU':
-
       return update(state, {
         isMenuOpen:{
           $set:action.open
@@ -20,3 +18,5 @@ export default function boilerreducer(state = DEFAULT_STATE, action = {}) {
       return state
   }
 }
+
+export default boilerreducer

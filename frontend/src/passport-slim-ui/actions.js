@@ -18,6 +18,7 @@ export const PASSPORT_REGISTER = createRequestTypes('PASSPORT_REGISTER')
 export const PASSPORT_FORM_UPDATE = 'PASSPORT_FORM_UPDATE'
 export const PASSPORT_MAKE_ROUTE_ASSERTION = 'PASSPORT_MAKE_ROUTE_ASSERTION'
 export const PASSPORT_CLEAR_ROUTE_ASSERTION = 'PASSPORT_CLEAR_ROUTE_ASSERTION'
+export const PASSPORT_LOGOUT = 'PASSPORT_LOGOUT'
 
 function action(type, payload = {}) {
   return {type, ...payload}
@@ -48,3 +49,4 @@ export const register = {
 export const formupdate = (form, data, meta) => action(PASSPORT_FORM_UPDATE, {form, data, meta})
 export const makeRouteAssertion = (rule, failureRedirect) => action(PASSPORT_MAKE_ROUTE_ASSERTION, {rule, failureRedirect})
 export const clearRouteAssertion = () => action(PASSPORT_CLEAR_ROUTE_ASSERTION)
+export const logout = () => action(PASSPORT_LOGOUT)

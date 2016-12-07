@@ -1,11 +1,12 @@
 import update from 'immutability-helper'
+import { combineReducers } from 'redux'
 
 const DEFAULT_STATE = {
   open:{}
 }
 
 const treeReducerFactory = (types) => {
-  const treeReducer = (state = DEFAULT_STATE, action) => {
+  return (state = DEFAULT_STATE, action) => {
     switch (action.type) {
       case types.toggle:
         return update(state, {
@@ -19,8 +20,6 @@ const treeReducerFactory = (types) => {
         return state
     }
   }
-
-  return treeReducer
 }
 
 export default treeReducerFactory
