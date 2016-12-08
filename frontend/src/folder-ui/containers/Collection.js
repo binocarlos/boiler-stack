@@ -19,9 +19,17 @@ export class TableContainer extends Component {
     const TableComponent = this.props.tableClass || Table
     const ToolbarComponent = this.props.toolbarClass || ActionToolbar
 
+    const parentToolbarProps = this.props.getToolbarProps ?
+      this.props.getToolbarProps() :
+      {}
+
+    const parentTableProps = this.props.getTableProps ?
+      this.props.getTableProps() :
+      {}
+
     // we merge together the two sets of props with the data props in common
-    const tableProps = Object.assign({}, this.props.tableProps, this.props.tableHandlers, this.props.dataProps)
-    const toolbarProps = Object.assign({}, this.props.toolbarProps, this.props.toolbarHandlers, this.props.dataProps)
+    const toolbarProps = Object.assign({}, parentToolbarProps, this.props.toolbarHandlers, this.props.dataProps)
+    const tableProps = Object.assign({}, parentTableProps, this.props.tableHandlers, this.props.dataProps)
 
     return (
       <ToolbarWrapper
