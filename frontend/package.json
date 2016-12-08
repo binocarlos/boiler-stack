@@ -7,6 +7,7 @@
   "scripts": {
     "assets": "mkdir -p dist && rm -rf dist/* && cp -r www/* dist",
     "prebuild": "npm run assets",
+    "prewatch": "npm run assets",
     "prerelease": "npm run assets",
     "build": "webpack --config webpack.config.js --progress --colors",
     "watch": "webpack --watch --config webpack.config.js --progress --colors",

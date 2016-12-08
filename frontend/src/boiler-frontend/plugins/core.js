@@ -1,6 +1,6 @@
-import reducer from './reducer'
+import reducer from '../reducer'
 
-const BoilerApp = (settings = {}) => {
+const BoilerCore = (settings = {}) => {
 
   const getReducers = () => {
     return {
@@ -13,4 +13,4 @@ const BoilerApp = (settings = {}) => {
   }
 }
 
-export default BoilerApp
+export default BoilerCore

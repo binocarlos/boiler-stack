@@ -4,7 +4,7 @@ import FormComponent from 'kettle-ui/lib/Form'
 
 import { formupdate, register } from '../actions'
 import { getRegisterSchema } from '../schema'
-import { getForm } from '../reducers/selectors'
+import { getForm } from '../selectors'
 
 export class RegisterForm extends Component {
   render() {

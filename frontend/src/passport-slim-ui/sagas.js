@@ -14,7 +14,7 @@ import {
   getRouteAssertion,
   hasRouteAssertion
 } 
-from './reducers/selectors'
+from './selectors'
 import { checkAssertion } from './auth'
 
 const mainlogger = bows('passport:saga')

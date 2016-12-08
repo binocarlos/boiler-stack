@@ -5,14 +5,16 @@ const buildPath = path.resolve(__dirname, 'dist')
 const nodeModulesPath = path.resolve(__dirname, 'node_modules')
 
 var RELEASE = process.env.NODE_ENV == 'production' ? true : false;
-var APP = process.env.APP || 'app'
+var APP = process.env.APP || 'user'
+
+var APP_FOLDER = 'app_' + APP
 
 var includePaths = [
   fs.realpathSync(__dirname + '/src')
 ];
 
 const config = {
-  entry: [path.join(__dirname, '/src/' + APP + '/index.js')],
+  entry: [path.join(__dirname, '/src/' + APP_FOLDER + '/index.js')],
   devtool: 'source-map',
   output: {
     path: buildPath,

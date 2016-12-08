@@ -8,7 +8,7 @@ import MenuItem from 'material-ui/MenuItem'
 import ExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more'
 import ButtonDropdown from 'kettle-ui/lib/ButtonDropdown'
 
-import tools from '../../schema/tools'
+import { nameSort } from '../../folder-ui/tools'
 
 const STYLES = {
   button:{
@@ -26,40 +26,40 @@ const STYLES = {
   }
 }
 
-class AppBarChildren extends Component {
+class AccountMenu extends Component {
 
   getButtonTitle() {
-    const currentProject = this.props.projects.filter(project => project.littleid == this.props.currentProject)[0]
-    return currentProject ?
-      (currentProject.name || currentProject.littleid).toLowerCase() :
-      'choose project'
+    const currentAccount = this.props.accounts.filter(account => account.littleid == this.props.currentAccount)[0]
+    return currentAccount ?
+      (currentAccount.name || currentAccount.littleid).toLowerCase() :
+      'choose account'
   }
 
-  getProjectMenuItems(closeMenuHandler) {
+  getAccountMenuItems(closeMenuHandler) {
 
-    let projectList = [].concat(this.props.projects || [])
-    projectList.sort(tools.nameSort)
+    let accountList = [].concat(this.props.accounts || [])
+    accountList.sort(nameSort)
 
-    return projectList.map((project, i) => {
+    return accountList.map((account, i) => {
       return (
         <MenuItem 
           key={i}
           onTouchTap={() => {
             closeMenuHandler && closeMenuHandler()
-            this.props.changeProject(project.littleid)
+            this.props.changeAccount(account.littleid)
           }}
-          value={project.littleid} 
-          primaryText={project.name} />
+          value={account.littleid} 
+          primaryText={account.name} />
       )
     })
   }
 
-  getProjectButton() {
+  getAccountButton() {
 
     const getDropdownChildren = (closeMenuHandler) => {
       return (
         <Menu>
-          {this.getProjectMenuItems(closeMenuHandler)}
+          {this.getAccountMenuItems(closeMenuHandler)}
         </Menu>
       )
     }
@@ -81,14 +81,11 @@ class AppBarChildren extends Component {
   }
 
   render() {
-
-    if(!this.props.loggedIn) return this.props.children
-
     return (
       <div>
         <div style={STYLES.leftContainer}>
           <div style={STYLES.padding}>
-            {this.getProjectButton()}
+            {this.getAccountButton()}
           </div>
         </div>
         <div style={STYLES.rightContainer}>
@@ -103,4 +100,4 @@ class AppBarChildren extends Component {
 
 }
 
-export default AppBarChildren
+export default AccountMenu

@@ -52,3 +52,15 @@ export class ChildrenWrapper extends Component {
 export const serialize = (val) => {
   return JSON.parse(JSON.stringify(val))
 }
+
+
+// item tools
+export const getItemName = (item = {}) => {
+  return (item.name || '').toLowerCase()
+}
+
+export const nameSort = (a, b) => {
+  if (getItemName(a) < getItemName(b)) return -1;
+  if (getItemName(a) > getItemName(b)) return 1;
+  return 0;
+}

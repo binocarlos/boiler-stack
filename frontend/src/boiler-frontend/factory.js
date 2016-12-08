@@ -13,7 +13,7 @@ import Root from './containers/Root'
 import AppWrapper from './containers/AppWrapper'
 import AppBar from './components/AppBar'
 
-import BoilerApp from './boilerapp'
+import BoilerPlugin from './plugins/core'
 
 const DEFAULT_SETTINGS = {
   titlebarClickUrl:'/',
@@ -25,16 +25,16 @@ const DEFAULT_SETTINGS = {
   getMenuContent:(state, dispatch) => null
 }
 
-const settingsFactory = (apps, settings = {}) => {
+const settingsFactory = (plugins = [], settings = {}) => {
   settings = Object.assign({}, DEFAULT_SETTINGS, settings)
-  return apps.reduce((allSettings, app) => {
-    return Object.assign({}, allSettings, app.getSettings ? app.getSettings() : {})
+  return plugins.reduce((allSettings, plugin) => {
+    return Object.assign({}, allSettings, plugin.getSettings ? plugin.getSettings() : {})
   }, settings)
 }
 
-const sagaFactory = (apps = []) => {
-  const sagas = apps.reduce((allSagas, app) => {
-    return allSagas.concat(app.getSagas ? app.getSagas() : [])
+const sagaFactory = (plugins = []) => {
+  const sagas = plugins.reduce((allSagas, plugin) => {
+    return allSagas.concat(plugin.getSagas ? plugin.getSagas() : [])
   }, [])
 
   return function *root() {
@@ -42,21 +42,21 @@ const sagaFactory = (apps = []) => {
   }
 }
 
-const reducerFactory = (apps = []) => {
-  return apps.reduce((allReducers, app) => {
-    return Object.assign({}, allReducers, app.getReducers ? app.getReducers() : {})
+const reducerFactory = (plugins = []) => {
+  return plugins.reduce((allReducers, plugin) => {
+    return Object.assign({}, allReducers, plugin.getReducers ? plugin.getReducers() : {})
   }, {})
 }
 
-const routeFactory = (store, apps = [], settings = {}) => {
+const routeFactory = (store, plugins = [], settings = {}) => {
 
-  const routeContext = apps.reduce((context, app) => {
-    return Object.assign({}, context, app.getRouteContext ? app.getRouteContext(store) : null)
+  const routeContext = plugins.reduce((context, plugin) => {
+    return Object.assign({}, context, plugin.getRouteContext ? plugin.getRouteContext(store) : null)
   }, {})
   
-  const appRoutes = apps.map((app, i) => {
-    const innerRoutes = app.getRoutes ?
-      app.getRoutes(store, routeContext) :
+  const appRoutes = plugins.map((plugin, i) => {
+    const innerRoutes = plugin.getRoutes ?
+      plugin.getRoutes(store, routeContext) :
       null
     return innerRoutes ? (
       <Route key={i}>
@@ -72,16 +72,16 @@ const routeFactory = (store, apps = [], settings = {}) => {
   )
 }
 
-const boilerapp = (apps = [], settings = {}) => {
+const boilerapp = (plugins = [], settings = {}) => {
 
   // add the boiler application
-  apps = apps.concat([
-    BoilerApp()
+  plugins = plugins.concat([
+    BoilerPlugin()
   ])
   
-  settings = settingsFactory(apps, settings)
-  const reducers = reducerFactory(apps)
-  const saga = sagaFactory(apps)
+  settings = settingsFactory(plugins, settings)
+  const reducers = reducerFactory(plugins)
+  const saga = sagaFactory(plugins)
 
   const rootReducer = combineReducers({
     routing: routerReducer,
@@ -93,7 +93,7 @@ const boilerapp = (apps = [], settings = {}) => {
   ], window.__INITIAL_STATE__)
 
   const history = syncHistoryWithStore(hashHistory, store)
-  const routes = routeFactory(store, apps, settings)
+  const routes = routeFactory(store, plugins, settings)
   
   messages.boot(settings)
   store.runSaga(saga)

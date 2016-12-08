@@ -1,4 +1,6 @@
+const async = require('async')
 const Storage = require('../storage')
+const Accounts = require('./accounts')
 const Projects = require('./projects')
 const littleid = require('./littleid')
 const tools = require('../tools')
@@ -9,6 +11,7 @@ module.exports = function(opts){
     model:'quotes'
   })))
 
+  var accounts = Accounts()
   var projects = Projects()
 
   /*
@@ -16,8 +19,19 @@ module.exports = function(opts){
     load all the quotes within one project
     
   */
+  function loadAccountQuotes(id, done){
+    accounts.processId(id, function(err, fullid){
+      if(err) return done(err)
+      quotes.loadModels(tools.encodeQuery({
+        query:{
+          accountid:fullid
+        }
+      }), done)
+    })
+  }
+
   function loadProjectQuotes(id, done){
-    projects.processId(id, function(err, fullid){
+    accounts.processId(id, function(err, fullid){
       if(err) return done(err)
       quotes.loadModels(tools.encodeQuery({
         query:{
@@ -27,15 +41,22 @@ module.exports = function(opts){
     })
   }
 
-  function addProjectQuote(id, data, done){
-    projects.processId(id, function(err, fullid){
-      if(err) return done(err)
-      data.projectid = fullid
-      quotes.addModel(data, done)
-    })
+  function addProjectQuote(projectid, data, done){
+    async.waterfall([
+      function(next){
+        projects.loadModel(projectid, next)
+      },
+
+      function(project, next){
+        data.accountid = project.accountid
+        data.projectid = project.id
+        quotes.addModel(data, next)
+      }
+    ], done)
   }
 
   return Object.assign({}, quotes, {
+    loadAccountQuotes:loadAccountQuotes,
     loadProjectQuotes:loadProjectQuotes,
     addProjectQuote:addProjectQuote
   })

@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import { routerActions } from 'react-router-redux'
-import { isUserLoggedIn } from '../../passport-slim-ui/reducers/selectors'
+import { isUserLoggedIn } from '../../passport-slim-ui/selectors'
 import { logout } from '../../passport-slim-ui/actions'
+
+import AccountMenu from '../containers/AccountMenu'
 import UserMenu from '../../boiler-frontend/components/UserMenu'
 import Menu from '../../boiler-frontend/components/Menu'
 
@@ -88,15 +90,22 @@ const guestMenu = (dispatch) => {
 
 // the content on the right-hand side of the appbar
 export const getAppbarContent = (state, dispatch) => {
-  const menuItems = isUserLoggedIn(state) ?
+  const userLoggedIn = isUserLoggedIn(state)
+  const menuItems = userLoggedIn ?
     userAppbarMenu(dispatch) :
     guestAppbarMenu(dispatch)
 
-  return (
+  const userMenu = (
     <UserMenu
       items={menuItems}
       />
   )
+
+  return userLoggedIn ? (
+    <AccountMenu>
+      {userMenu}
+    </AccountMenu>
+  ) : userMenu
 }
 
 // the menu options we show on the right

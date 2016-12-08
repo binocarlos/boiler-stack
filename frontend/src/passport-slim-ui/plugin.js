@@ -7,9 +7,9 @@ import PassportSaga from './sagas'
 import PassportAuth from './auth'
 import PassportRoutes from './routes'
 import PassportSettings from './settings'
-import { isUserLoaded, getUserData } from './reducers/selectors'
+import { isUserLoaded, getUserData } from './selectors'
 
-const PassportApp = (settings = {}) => {
+const PassportPlugin = (settings = {}) => {
 
   const passportSettings = PassportSettings(settings)
 
@@ -50,4 +50,4 @@ const PassportApp = (settings = {}) => {
   }
 }
 
-export default PassportApp
+export default PassportPlugin

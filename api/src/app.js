@@ -9,6 +9,7 @@ const Auth = require('./auth')
 const Digger = require('./routes/digger')
 const Version = require('./routes/version')
 const Users = require('./routes/users')
+const Accounts = require('./routes/accounts')
 const Projects = require('./routes/projects')
 const Quotes = require('./routes/quotes')
 const Clients = require('./routes/clients')
@@ -36,15 +37,19 @@ module.exports = function(opts){
     // the frontend route prefix
     frontendPrefix:'digger',
     // the backend digger prefix
-    backendPrefix:'project',
+    backendPrefix:'account',
     // the array of params to map from the route
-    paramFields:['project', 'section']
+    paramFields:['account', 'section']
   }))
 
   Version(router)
 
   Users(router, Object.assign({}, opts, {
     auth:auth('users')
+  }))
+
+  Accounts(router, Object.assign({}, opts, {
+    auth:auth('accounts')
   }))
 
   Projects(router, Object.assign({}, opts, {

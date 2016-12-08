@@ -7,9 +7,13 @@ import Dashboard from '../components/Dashboard'
 import Help from '../components/Help'
 import About from '../components/About'
 
-const CoreApp = (settings = {}) => {
+const CorePlugin = (settings = {}) => {
 
   const getRoutes = (store, context) => {
+
+    console.log('-------------------------------------------');
+    console.log('routes')
+    console.dir(context)
     const auth = context.auth
     return (
       <Route>
@@ -35,4 +39,4 @@ const CoreApp = (settings = {}) => {
   }
 }
 
-export default CoreApp
+export default CorePlugin

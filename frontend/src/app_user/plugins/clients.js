@@ -11,7 +11,7 @@ import { ContainerWrapper } from '../../folder-ui/tools'
 import Collection from '../../folder-ui/containers/Collection'
 import Form from '../../folder-ui/containers/Form'
 
-const ClientApp = (settings) => {
+const ClientPlugin = (settings) => {
 
   const tableApiActions = ApiActions('CLIENTS_TABLE')
   const tableActions = TableActions('CLIENTS_TABLE')
@@ -85,4 +85,4 @@ const ClientApp = (settings) => {
   }
 }
 
-export default ClientApp
+export default ClientPlugin

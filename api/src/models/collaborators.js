@@ -22,16 +22,44 @@ module.exports = function(opts){
     }), done)
   }
 
-  function loadProjectCollaborations(projectid, done){
+  function loadAccountCollaborations(accountid, done){
     collaborators.loadModels(tools.encodeQuery({
       query:{
-        projectid:projectid
+        accountid:accountid
       }
     }), done)
   }
 
+  function deleteAccountCollaborations(accountid, done){
+    async.waterfall([
+
+      function(next){
+        loadAccountCollaborations(accountid, next)
+      },
+
+      function(collaborations, next){
+        async.parallel(collaborations.map(function(collaboration){
+          return function(nextcollaboration){
+            collaborators.deleteModel(collaboration._id, nextcollaboration)
+          }
+        }), next)
+      }
+
+    ], done)
+  }
+
+  function createAccountOwner(accountid, userid, done){
+    collaborators.addModel({
+      userid:userid,
+      accountid:account._id,
+      permission:'owner'
+    }, next)
+  }
+
   return Object.assign({}, collaborators, {
     loadUserCollaborations:loadUserCollaborations,
-    loadProjectCollaborations:loadProjectCollaborations
+    loadAccountCollaborations:loadAccountCollaborations,
+    deleteAccountCollaborations:deleteAccountCollaborations,
+    createAccountOwner:createAccountOwner
   })
 }

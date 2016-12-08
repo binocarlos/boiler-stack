@@ -1,5 +1,5 @@
 const Storage = require('../storage')
-const Projects = require('./projects')
+const Accounts = require('./accounts')
 const littleid = require('./littleid')
 const tools = require('../tools')
 
@@ -9,35 +9,35 @@ module.exports = function(opts){
     model:'clients'
   })))
 
-  var projects = Projects()
+  var accounts = Accounts()
 
   /*
   
     load all the clients within one project
     
   */
-  function loadProjectClients(id, done){
-    projects.processId(id, function(err, fullid){
+  function loadAccountClients(id, done){
+    accounts.processId(id, function(err, fullid){
       if(err) return done(err)
       var query = tools.encodeQuery({
         query:{
-          projectid:fullid
+          accountid:fullid
         }
       })
       clients.loadModels(query, done)
     })
   }
 
-  function addProjectClient(id, data, done){
-    projects.processId(id, function(err, fullid){
+  function addAccountClient(id, data, done){
+    accounts.processId(id, function(err, fullid){
       if(err) return done(err)
-      data.projectid = fullid
+      data.accountid = fullid
       clients.addModel(data, done)
     })
   }
 
   return Object.assign({}, clients, {
-    loadProjectClients:loadProjectClients,
-    addProjectClient:addProjectClient
+    loadAccountClients:loadAccountClients,
+    addAccountClient:addAccountClient
   })
 }

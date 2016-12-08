@@ -10,6 +10,10 @@ import {
   toggle_menu
 } from '../actions'
 
+import {
+  isMenuOpen
+} from '../selectors'
+
 export class AppWrapperContainer extends Component {
   render() {
     const AppBarComponent = this.props.appbarComponent
@@ -72,7 +76,7 @@ function mapStateToProps(state, ownProps) {
     getAppbarContent:settings.getAppbarContent,
     getMenuContent:settings.getMenuContent,
     hasMenu:settings.hasMenu,
-    isMenuOpen:state.boiler.isMenuOpen
+    isMenuOpen:isMenuOpen(state)
   }
 }
 

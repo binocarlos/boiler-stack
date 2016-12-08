@@ -4,7 +4,7 @@ import FormComponent from 'kettle-ui/lib/Form'
 
 import { formupdate, login } from '../actions'
 import { getLoginSchema } from '../schema'
-import { getForm } from '../reducers/selectors'
+import { getForm } from '../selectors'
 
 export class LoginForm extends Component {
   render() {

@@ -1,4 +1,4 @@
-var QuoteStorage = require('../models/quotes')
+var AccountStorage = require('../models/accounts')
 var tools = require('../tools')
 var jsonRequestWrapper = tools.jsonRequestWrapper
 var jsonResponseWrapper = tools.jsonResponseWrapper
@@ -6,51 +6,52 @@ var errorWrapper = tools.jsonErrorResponse
 
 /*
 
-  quotes
+  make sure the user has an account created that they own
   
 */
 module.exports = function(router, opts){
 
   opts = opts || {}
   var auth = opts.auth
-  if(!auth) throw new Error('auth required for quotes route')
+  if(!auth) throw new Error('auth required for accounts route')
 
-  var quotes = QuoteStorage({
+  var accounts = AccountStorage({
     
   })
 
-  router.set(opts.url + '/quotes/:projectid', {
+  router.set(opts.url + '/accounts', {
     GET:auth({
       action:'list'
     }, function(req, res, opts){
-      quotes.loadProjectQuotes(opts.params.projectid, jsonResponseWrapper(res))
+      accounts.loadUserAccounts(opts.user._id, jsonResponseWrapper(res))
     }),
     POST:auth({
       action:'add'
     }, function(req, res, opts){
       jsonRequestWrapper(req, res, function(data){
-        quotes.addProjectQuote(opts.params.projectid, data, jsonResponseWrapper(res))
+        accounts.addUserAccount(opts.user._id, data, jsonResponseWrapper(res))
       })
     })
   })
 
-  router.set(opts.url + '/quotes/:projectid/:quoteid', {
+  router.set(opts.url + '/accounts/:accountid', {
     GET:auth({
       action:'read'
     }, function(req, res, opts){
-      quotes.loadModel(opts.params.quoteid, jsonResponseWrapper(res))
+      accounts.loadModel(opts.params.accountid, jsonResponseWrapper(res))
     }),
     PUT:auth({
       action:'save'
     }, function(req, res, opts){
       jsonRequestWrapper(req, res, function(data){
-        quotes.saveModel(opts.params.quoteid, data, jsonResponseWrapper(res))
+        accounts.saveModel(opts.params.accountid, data, jsonResponseWrapper(res))
       })
     }),
     DELETE:auth({
       action:'delete'
     }, function(req, res, opts){
-      quotes.deleteModel(opts.params.quoteid, jsonResponseWrapper(res))
+      accounts.deleteModel(opts.params.accountid, jsonResponseWrapper(res))
     })
   })
+
 }

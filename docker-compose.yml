@@ -102,6 +102,9 @@ services:
       - storage:storage
     volumes:
       - ./api/src:/app/src
+    #entrypoint: 
+    #  - "sleep"
+    #  - "10000000"
     environment:
       AUTH_SERVICE_HOST: auth
       AUTH_SERVICE_PORT: 80

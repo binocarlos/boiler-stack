@@ -20,22 +20,22 @@ module.exports = function(router, opts){
     
   })
 
-  router.set(opts.url + '/projects', {
+  router.set(opts.url + '/projects/:accountid', {
     GET:auth({
       action:'list'
     }, function(req, res, opts){
-      projects.loadUserProjects(opts.user._id, jsonResponseWrapper(res))
+      projects.loadAccountProjects(opts.params.accountid, jsonResponseWrapper(res))
     }),
     POST:auth({
       action:'add'
     }, function(req, res, opts){
       jsonRequestWrapper(req, res, function(data){
-        projects.addUserProject(opts.user._id, data, jsonResponseWrapper(res))
+        projects.addAccountProject(opts.params.accountid, data, jsonResponseWrapper(res))
       })
     })
   })
 
-  router.set(opts.url + '/projects/:projectid', {
+  router.set(opts.url + '/projects/:accountid/:projectid', {
     GET:auth({
       action:'read'
     }, function(req, res, opts){
