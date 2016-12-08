@@ -26,7 +26,7 @@ export const ApiActions = (base) => {
   const types = apiTypes(base)
   return {
     types,
-    request: (query) => action(types.REQUEST, query),
+    request: (query, data) => action(types.REQUEST, {query, data}),
     success: (data) => action(types.SUCCESS, {data}),
     failure: (error) => action(types.FAILURE, {error})
   }

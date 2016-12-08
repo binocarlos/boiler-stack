@@ -10,34 +10,19 @@ import bows from 'bows'
 
 export default function ajaxdb(opts = {}){
 
-  if(!opts.urls){
-    throw new Error('ajax db requires a urls object')
-  }
+  const logger = bows('folder-ui:' + (opts.name || 'ajax'))
 
-  const urls = opts.urls
-  const databaseTitle = opts.title || 'ajax'
-  const logger = bows('folder-ui:db:' + databaseTitle)
-  logger('urls', urls)
-
-  // turn /children/:id + {id:10} -> /children/10
-  const getUrl = (name, params) => {
-    if(!opts.urls[name]) throw new Error(name + ' url not found')
-    return opts.urls[name].replace(/\/:(\w+?)/g, (match, paramName) => {
-      const paramValue = params[paramName]
-      return paramValue ? '/' + paramValue : ''
-    })
-  }
-
-  const httpAPI = (opts = {}) => {
-    logger(opts.method.toUpperCase(), url)
+  const httpAPI = (req = {}) => {
+    logger(req.method.toUpperCase(), req.url)
 
     let reqOpts = {
-      method: opts.method,
-      url: opts.url,
+      method: req.method,
+      url: req.url,
       responseType: 'json'
     }
 
-    if(opts.data){
+    if(req.data){
+      logger(req.data)
       reqOpts.responseType = 'json'
       reqOpts.transformRequest = [(data) => JSON.stringify(data)]
     }

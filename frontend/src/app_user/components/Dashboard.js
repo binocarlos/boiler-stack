@@ -15,6 +15,9 @@ class Dashboard extends Component {
           <Link to="/about">About</Link>
         </p>
         <p>
+          <Link to="/accounts">Accounts</Link>
+        </p>
+        <p>
           <Link to="/projects">Projects</Link>
         </p>
         <p>

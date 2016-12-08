@@ -32,9 +32,9 @@ const settingsFactory = (plugins = [], settings = {}) => {
   }, settings)
 }
 
-const sagaFactory = (plugins = []) => {
+const sagaFactory = (plugins = [], store) => {
   const sagas = plugins.reduce((allSagas, plugin) => {
-    return allSagas.concat(plugin.getSagas ? plugin.getSagas() : [])
+    return allSagas.concat(plugin.getSagas ? plugin.getSagas(store) : [])
   }, [])
 
   return function *root() {
@@ -81,7 +81,6 @@ const boilerapp = (plugins = [], settings = {}) => {
   
   settings = settingsFactory(plugins, settings)
   const reducers = reducerFactory(plugins)
-  const saga = sagaFactory(plugins)
 
   const rootReducer = combineReducers({
     routing: routerReducer,
@@ -91,6 +90,8 @@ const boilerapp = (plugins = [], settings = {}) => {
   const store = Store(rootReducer, [
     routerMiddleware(hashHistory)
   ], window.__INITIAL_STATE__)
+
+  const saga = sagaFactory(plugins, store)
 
   const history = syncHistoryWithStore(hashHistory, store)
   const routes = routeFactory(store, plugins, settings)

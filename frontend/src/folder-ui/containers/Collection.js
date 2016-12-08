@@ -50,6 +50,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
 
+  if(!ownProps.requestInitialData) throw new Error('no requestInitialData prop given to Collection container')
+
   const tableHandlers = {
     onRowSelection:(idArray) => {
       if(!ownProps.onRowSelection) return
@@ -63,8 +65,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
   return {
     requestInitialData:() => {
-      if(!this.props.requestInitialData) throw new Error('no requestInitialData prop given to Collection container')
-      this.props.requestInitialData(dispatch)
+      ownProps.requestInitialData(dispatch)
     },
     tableHandlers,
     toolbarHandlers

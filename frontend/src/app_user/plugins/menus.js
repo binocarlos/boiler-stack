@@ -1,22 +1,14 @@
 import React, { Component, PropTypes } from 'react'
 import { routerActions } from 'react-router-redux'
 
+import { isUserLoggedIn } from '../../passport-slim-ui/selectors'
+import { logout } from '../../passport-slim-ui/actions'
+import { toggle_menu } from '../../boiler-frontend/actions'
+
 import UserMenu from '../../boiler-frontend/components/UserMenu'
 import Menu from '../../boiler-frontend/components/Menu'
 
 import AccountMenu from '../containers/AccountMenu'
-
-import { 
-  isUserLoggedIn 
-} from '../../passport-slim-ui/selectors'
-
-import { 
-  logout 
-} from '../../passport-slim-ui/actions'
-
-import {
-  toggle_menu
-} from '../../boiler-frontend/actions'
 
 const mapMenuItems = (items, dispatch, extrafn) => items.map(item => {
   if(item.path){

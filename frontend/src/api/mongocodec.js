@@ -1,13 +1,11 @@
-import CrudDB from 'folder-ui/lib/db/crud'
-
 /*
 
-  a CRUD db for folder-ui that knows to encode/decode from to Mongo
+  encode / decode for items from mongo
   
 */
 
-export default function mongoCrudDB(opts = {}){
-  return CrudDB(Object.assign({}, opts, {
+export default function MongoCodec(opts = {}){
+  return {
     encode:(data) => {
       let ret = Object.assign({}, data, opts.inject, {
         id:data._id
@@ -18,11 +16,11 @@ export default function mongoCrudDB(opts = {}){
     decode:(data) => {
       let ret = Object.assign({}, data)
       delete(ret.id)
-      Object.keys(opts.inject || {}).forEach(function(key){
+      Object.keys(opts.inject || {}).forEach((key) => {
         delete(ret[key])
       })
       ret = opts.decode ? opts.decode(ret) : ret
       return ret
     }
-  }))
+  }
 }

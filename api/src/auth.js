@@ -30,7 +30,7 @@ function sectionWrapper(assertion){
         //   * user - loaded from the auth service
         //
         var authContext = Object.assign({}, opts.params, context, {
-          user:user.user
+          user:user.data
         })
 
         // run the assertion passing it the context
@@ -40,7 +40,7 @@ function sectionWrapper(assertion){
           // if we are here the assertion passed
           // now run the actual handler passing some updated context into the params
           handler(req, res, Object.assign({}, opts, {
-            user:user.user,
+            user:user.data,
             context:context
           }))
 
@@ -82,26 +82,16 @@ function sectionWrapper(assertion){
 const assertionFactory = function(opts){
   opts = opts || {}
 
+  function normalUser(context, done){
+    if(!context.user) return done('requires login')
+    done() 
+  }
+
   return {
-    standard:function(context, done){
-      if(!context.user) return done('requires login')
-      done()
-    },
+    standard:normalUser,
     users:function(context, done){
       if(!context.user) return done('requires login')
       if(context.user.accesslevel!='superadmin') return done('superadmin access needed for users')
-      done()
-    },
-    projects:function(context, done){
-      if(!context.user) return done('requires login')
-      done()
-    },
-    quotes:function(context, done){
-      if(!context.user) return done('requires login')
-      done()
-    },
-    digger:function(context, done){
-      if(!context.user) return done('requires login')
       done()
     }
   }

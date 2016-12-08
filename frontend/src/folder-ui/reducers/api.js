@@ -3,32 +3,41 @@ import update from 'immutability-helper'
 const DEFAULT_STATE = {
   loading:false,
   loaded:false,
+  query:null,
   error:null,
-  result:null
+  data:null
 }
 
 const apiReducerFactory = (types) => {
   const apiReducer = (state = DEFAULT_STATE, action) => {
     switch (action.type) {
-      case types.request:
+      case types.REQUEST:
         return update(state, {
-          loading:true,
-          loaded:false,
-          error:null
+          $merge:{
+            query:action.query,
+            loading:true,
+            loaded:false,
+            error:null
+          }
         })
-      case types.success:
+      case types.SUCCESS:
+
         return update(state, {
-          loading:false,
-          loaded:true,
-          error:null,
-          result:action.result
+          $merge:{
+            loading:false,
+            loaded:true,
+            error:null,
+            data:action.data
+          }
         })
-      case types.failure:
+      case types.FAILURE:
         return update(state, {
-          loading:false,
-          loaded:true,
-          error:action.error,
-          result:null
+          $merge:{
+            loading:false,
+            loaded:true,
+            error:action.error,
+            data:null
+          }
         })
       default:
         return state

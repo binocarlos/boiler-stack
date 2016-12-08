@@ -23,13 +23,13 @@ module.exports = function(router, opts){
     GET:auth({
       action:'list'
     }, function(req, res, opts){
-      accounts.loadUserAccounts(opts.user._id, jsonResponseWrapper(res))
+      accounts.loadUserAccounts(opts.user.id, jsonResponseWrapper(res))
     }),
     POST:auth({
       action:'add'
     }, function(req, res, opts){
       jsonRequestWrapper(req, res, function(data){
-        accounts.addUserAccount(opts.user._id, data, jsonResponseWrapper(res))
+        accounts.addUserAccount(opts.user.id, data, jsonResponseWrapper(res))
       })
     })
   })

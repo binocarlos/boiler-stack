@@ -6,11 +6,13 @@ import injectTapEventPlugin from 'react-tap-event-plugin'
 injectTapEventPlugin()
 
 import AppFactory from '../boiler-frontend/factory'
+import Passport from '../passport-slim-ui/plugin'
 
 import Core from './plugins/core'
 import Menus from './plugins/menus'
 import Routes from './plugins/routes'
-import Passport from '../passport-slim-ui/plugin'
+import Accounts from './plugins/accounts'
+
 
 const Root = AppFactory([
   Core({
@@ -20,7 +22,8 @@ const Root = AppFactory([
   Routes(),
   Passport({
     appURL:'/app'  
-  })
+  }),
+  Accounts()
 ], {
   // cli override settings here
 })

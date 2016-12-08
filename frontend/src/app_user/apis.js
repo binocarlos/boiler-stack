@@ -3,6 +3,7 @@ import DiggerDB from 'digger-folder-ui-db'
 
 // the raw apis for each database
 export const apis = {
+  /*
   coreresources:DiggerDB({
     readOnly: true,
     // this database speaks to the core system
@@ -23,6 +24,12 @@ export const apis = {
       _type:'project'
     }
   }),
+  accounts:MongoCrudDB({
+    baseurl:'/api/v1/accounts',
+    inject:{
+      _type:'account'
+    }
+  }),
   clients:MongoCrudDB({
     baseurl:(context) => {
       const projectID = getCurrentProject(context.state)
@@ -39,6 +46,13 @@ export const apis = {
     },
     inject:{
       _type:'quote'
+    }
+  })*/
+
+  accounts:MongoCrudDB({
+    baseurl:'/api/v1/accounts',
+    inject:{
+      _type:'account'
     }
   })
 
