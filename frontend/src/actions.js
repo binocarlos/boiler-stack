@@ -1,4 +1,4 @@
-import { push } from 'react-router-redux'
+/*import { push } from 'react-router-redux'
 
 import {
   refreshUserStatus,
@@ -63,3 +63,4 @@ export const refreshUser = (done) => {
 export const updateUser = (data, done) => {
   return updateUserData(data, done)
 }
+*/

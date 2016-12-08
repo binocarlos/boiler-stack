@@ -1,41 +1,13 @@
-import React, { Component, PropTypes } from 'react'
-import { Route, IndexRoute } from 'react-router'
-import { routerActions } from 'react-router-redux'
-import { getAppbarContent, getMenuContent } from './menus'
-
-import Dashboard from '../components/Dashboard'
-import Help from '../components/Help'
-import About from '../components/About'
-
 const CorePlugin = (settings = {}) => {
-
-  const getRoutes = (store, context) => {
-
-    console.log('-------------------------------------------');
-    console.log('routes')
-    console.dir(context)
-    const auth = context.auth
-    return (
-      <Route>
-        <IndexRoute components={Dashboard} onEnter={auth.ensureUser('/login')} />
-        <Route path="help" component={Help} />
-        <Route path="about" component={About} />
-      </Route>
-    )
-  }
 
   const getSettings = () => {
     return {
-      getTitle:(state) => 'Boiler Stack',
-      hasMenu:true,
-      getAppbarContent,
-      getMenuContent
+      getTitle:(state) => settings.title || 'Boiler Stack'
     }
   }
 
   return {
-    getSettings,
-    getRoutes
+    getSettings
   }
 }
 

@@ -12,6 +12,7 @@ import {
 
 export class AccountMenuContainer extends Component {
   render() {
+    if(this.props.accounts.length <= 0) return this.props.children
     return (
       <AccountMenu {...this.props} />
     )
