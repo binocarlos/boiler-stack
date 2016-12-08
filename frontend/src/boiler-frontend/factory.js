@@ -21,8 +21,8 @@ const DEFAULT_SETTINGS = {
   hasMenu:false,
   getTitle:(state) => '',
   isReady:(state) => true,
-  getAppbarContent:(state, dispatch) => null,
-  getMenuContent:(state, dispatch) => null
+  getAppbarContent:(store) => () => null,
+  getMenuContent:(store) => () => null
 }
 
 const settingsFactory = (plugins = [], settings = {}) => {
@@ -66,7 +66,7 @@ const routeFactory = (store, plugins = [], settings = {}) => {
   }).filter(routes => routes)
 
   return (
-    <Route path="/" component={AppWrapper} settings={settings}>
+    <Route path="/" component={AppWrapper} store={store} settings={settings}>
       {appRoutes}
     </Route>
   )

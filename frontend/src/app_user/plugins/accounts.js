@@ -24,7 +24,7 @@ const AccountsPlugin = (settings = {}) => {
   const tableApiReducer = ApiReducer(tableApiActions.types)
   const tableReducer = TableReducer(tableActions.types)
   
-  const TableContainer = ContainerWrapper(Collection, {
+  const TableContainerFactory = (store) => ContainerWrapper(Collection, {
     selector:(state) => {
       return {
         data:[],
@@ -35,19 +35,22 @@ const AccountsPlugin = (settings = {}) => {
     getTableFields:(parent, data) => {
       return []
     },
-    onRowSelection:(dispatch, idArray) => {
+    onRowSelection:(idArray) => {
       
     },
-    requestInitialData:(dispatch) => {
-      dispatch(tableApiActions.request(/* query, data */))
+    requestInitialData:() => {
+      store.dispatch(tableApiActions.request(/* query, data */))
     }
   })
 
-  const FormContainer = ContainerWrapper(Form, {
+  const FormContainerFactory = (store) => ContainerWrapper(Form, {
 
   })
 
   const getRoutes = (store, context) => {
+    const TableContainer = TableContainerFactory(store)
+    const FormContainer = FormContainerFactory(store)
+
     return (
       <Route path="accounts">
         <IndexRoute component={TableContainer} />

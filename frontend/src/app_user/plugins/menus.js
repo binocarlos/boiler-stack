@@ -77,11 +77,11 @@ const guestMenu = (dispatch) => {
 }
 
 // the content on the right-hand side of the appbar
-const getAppbarContent = (state, dispatch) => {
-  const userLoggedIn = isUserLoggedIn(state)
+const getAppbarContent = (store) => () => {
+  const userLoggedIn = isUserLoggedIn(store.getState())
   const menuItems = userLoggedIn ?
-    userAppbarMenu(dispatch) :
-    guestAppbarMenu(dispatch)
+    userAppbarMenu(store.dispatch) :
+    guestAppbarMenu(store.dispatch)
 
   const userMenu = (
     <UserMenu
@@ -97,10 +97,10 @@ const getAppbarContent = (state, dispatch) => {
 }
 
 // the menu options we show on the right
-const getMenuContent = (state, dispatch) => {
-  const menuItems = isUserLoggedIn(state) ?
-    userMenu(dispatch) :
-    guestMenu(dispatch)
+const getMenuContent = (store) => () => {
+  const menuItems = isUserLoggedIn(store.getState()) ?
+    userMenu(store.dispatch) :
+    guestMenu(store.dispatch)
 
   return (
     <Menu

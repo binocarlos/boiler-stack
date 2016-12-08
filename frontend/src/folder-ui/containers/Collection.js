@@ -42,8 +42,7 @@ const mapStateToProps = (state, ownProps) => {
     dataProps:{
       data:localState.data,
       selected:localState.selected,
-      parent:localState.parent,
-      fields:fields
+      parent:localState.parent
     }
   }
 }
@@ -55,7 +54,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const tableHandlers = {
     onRowSelection:(idArray) => {
       if(!ownProps.onRowSelection) return
-      ownProps.onRowSelection(dispatch, idArray)
+      ownProps.onRowSelection(idArray)
     }
   }
 
@@ -65,7 +64,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
   return {
     requestInitialData:() => {
-      ownProps.requestInitialData(dispatch)
+      ownProps.requestInitialData()
     },
     tableHandlers,
     toolbarHandlers

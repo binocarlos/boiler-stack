@@ -19,8 +19,8 @@ export class AppWrapperContainer extends Component {
     const AppBarComponent = this.props.appbarComponent
 
     if(!AppBarComponent) throw new Error('AppBarComponent prop needed')
-    const appbarContent = this.props.getAppbarContent(this.props.state, this.props.dispatch)
-    const menuContent = this.props.getMenuContent(this.props.state, this.props.dispatch)
+    const appbarContent = this.props.getAppbarContent()
+    const menuContent = this.props.getMenuContent()
 
     const appbar = (
       <AppBarComponent 
@@ -68,13 +68,13 @@ export class AppWrapperContainer extends Component {
 
 function mapStateToProps(state, ownProps) {
   const settings = ownProps.route.settings
+  const store = ownProps.route.store
   return {
-    state:state,
     appbarComponent:settings.appbarComponent,
     title:settings.getTitle(state),
     ready:settings.isReady(state),
-    getAppbarContent:settings.getAppbarContent,
-    getMenuContent:settings.getMenuContent,
+    getAppbarContent:settings.getAppbarContent(store),
+    getMenuContent:settings.getMenuContent(store),
     hasMenu:settings.hasMenu,
     isMenuOpen:isMenuOpen(state)
   }
@@ -83,7 +83,6 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch, ownProps) {
   const settings = ownProps.route.settings
   return {
-    dispatch:dispatch,
     changeLocation:(path) => {
       dispatch(routerActions.push(path))
     },
