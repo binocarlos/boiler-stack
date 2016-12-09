@@ -35,6 +35,7 @@ const MongoCrudFactory = (settings = {}) => {
 
   return Crud({
     title:TITLE,
+    icon:settings.icon,
     getTitle:(state, routeInfo) => {
       return routeInfo.widget == 'table' ?
         PLURAL_TITLE :

@@ -17,7 +17,7 @@ class Form extends Component {
 
   render() {
 
-    let library = Object.assign({}, muiLibrary, this.props.library)
+    const library = Object.assign({}, muiLibrary, this.props.library)
     
     return (
      

@@ -51,6 +51,12 @@ const CrudPlugin = (settings = {}) => {
     return settings.getTitle(state, routeInfo)
   }
 
+  const getIcon = () => {
+    return settings.icon ?
+     (<settings.icon />) :
+     null
+  }
+
   const widgets = {
     table:TableWidget({
       loadData:api.loadTableData,
@@ -58,6 +64,7 @@ const CrudPlugin = (settings = {}) => {
       selector:selector('table'),
       getTitle:getTitle('table'),
       getTableFields:settings.getTableFields,
+      getIcon:getIcon,
       getButtons:(state, store, routeInfo, actions) => {
         return [{
           title:'Add',
@@ -71,6 +78,7 @@ const CrudPlugin = (settings = {}) => {
       getTitle:getTitle('form'),
       getSchema:settings.getSchema,
       getInitialData:settings.getInitialData,
+      getIcon:getIcon,
       getButtons:(state, store, routeInfo, actions) => {
         return [{
           title:'Cancel',

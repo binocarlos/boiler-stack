@@ -94,6 +94,7 @@ const FormWidget = (settings = {}) => {
       const state = settings.selector(store.getState())
       return {
         toolbar:{
+          getIcon:settings.getIcon,
           buttons:settings.getButtons(state, store, routeInfo, actions)
         },
         content:{
