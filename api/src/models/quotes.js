@@ -1,6 +1,6 @@
 const async = require('async')
 const Storage = require('../storage')
-const Accounts = require('./accounts')
+const Installations = require('./installations')
 const Projects = require('./projects')
 const littleid = require('./littleid')
 const tools = require('../tools')
@@ -11,7 +11,7 @@ module.exports = function(opts){
     model:'quotes'
   })))
 
-  var accounts = Accounts()
+  var installations = Installations()
   var projects = Projects()
 
   /*
@@ -19,19 +19,19 @@ module.exports = function(opts){
     load all the quotes within one project
     
   */
-  function loadAccountQuotes(id, done){
-    accounts.processId(id, function(err, fullid){
+  function loadInstallationQuotes(id, done){
+    installations.processId(id, function(err, fullid){
       if(err) return done(err)
       quotes.loadModels(tools.encodeQuery({
         query:{
-          accountid:fullid
+          installationid:fullid
         }
       }), done)
     })
   }
 
   function loadProjectQuotes(id, done){
-    accounts.processId(id, function(err, fullid){
+    projects.processId(id, function(err, fullid){
       if(err) return done(err)
       quotes.loadModels(tools.encodeQuery({
         query:{
@@ -48,7 +48,7 @@ module.exports = function(opts){
       },
 
       function(project, next){
-        data.accountid = project.accountid
+        data.installationid = project.installationid
         data.projectid = project.id
         quotes.addModel(data, next)
       }
@@ -56,7 +56,7 @@ module.exports = function(opts){
   }
 
   return Object.assign({}, quotes, {
-    loadAccountQuotes:loadAccountQuotes,
+    loadInstallationQuotes:loadInstallationQuotes,
     loadProjectQuotes:loadProjectQuotes,
     addProjectQuote:addProjectQuote
   })

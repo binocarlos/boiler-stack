@@ -1,4 +1,4 @@
-var AccountStorage = require('../models/accounts')
+var InstallationStorage = require('../models/installations')
 var tools = require('../tools')
 var jsonRequestWrapper = tools.jsonRequestWrapper
 var jsonResponseWrapper = tools.jsonResponseWrapper
@@ -15,42 +15,42 @@ module.exports = function(router, opts){
   var auth = opts.auth
   if(!auth) throw new Error('auth required for accounts route')
 
-  var accounts = AccountStorage({
+  var installations = InstallationStorage({
     
   })
 
-  router.set(opts.url + '/accounts', {
+  router.set(opts.url + '/installations', {
     GET:auth({
       action:'list'
     }, function(req, res, opts){
-      accounts.loadUserAccounts(opts.user.id, jsonResponseWrapper(res))
+      installations.loadUserInstallations(opts.user.id, jsonResponseWrapper(res))
     }),
     POST:auth({
       action:'add'
     }, function(req, res, opts){
       jsonRequestWrapper(req, res, function(data){
-        accounts.addUserAccount(opts.user.id, data, jsonResponseWrapper(res))
+        installations.addUserInstallation(opts.user.id, data, jsonResponseWrapper(res))
       })
     })
   })
 
-  router.set(opts.url + '/accounts/:accountid', {
+  router.set(opts.url + '/installations/:installationid', {
     GET:auth({
       action:'read'
     }, function(req, res, opts){
-      accounts.loadModel(opts.params.accountid, jsonResponseWrapper(res))
+      installations.loadModel(opts.params.installationid, jsonResponseWrapper(res))
     }),
     PUT:auth({
       action:'save'
     }, function(req, res, opts){
       jsonRequestWrapper(req, res, function(data){
-        accounts.saveModel(opts.params.accountid, data, jsonResponseWrapper(res))
+        installations.saveModel(opts.params.installationid, data, jsonResponseWrapper(res))
       })
     }),
     DELETE:auth({
       action:'delete'
     }, function(req, res, opts){
-      accounts.deleteModel(opts.params.accountid, jsonResponseWrapper(res))
+      installations.deleteModel(opts.params.installationid, jsonResponseWrapper(res))
     })
   })
 

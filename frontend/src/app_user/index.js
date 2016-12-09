@@ -11,7 +11,7 @@ import Passport from '../passport-slim-ui/plugin'
 import Core from './plugins/core'
 import Menus from './plugins/menus'
 import Routes from './plugins/routes'
-import Accounts from './plugins/accounts'
+import Installations from './plugins/installations'
 
 
 const Root = AppFactory([
@@ -23,7 +23,11 @@ const Root = AppFactory([
   Passport({
     appURL:'/app'  
   }),
-  Accounts()
+  Installations({
+    route:'companies',
+    title:'Company',
+    plural_title:'Companies',
+  })
 ], {
   // cli override settings here
 })

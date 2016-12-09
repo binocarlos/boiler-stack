@@ -29,7 +29,7 @@ var CollaboratorSchema = new Schema({
   permission: { type: String, required: true }
 })
 
-var AccountSchema = new Schema({
+var InstallationSchema = new Schema({
   name: { type: String, required: true },
   littleid: { type: String, required: true }
 })
@@ -41,7 +41,7 @@ var AccountSchema = new Schema({
 */
 var ProjectSchema = new Schema({
   name: { type: String, required: true },
-  accountid: { type: Schema.Types.ObjectId, required: true },
+  installationid: { type: Schema.Types.ObjectId, required: true },
   littleid: { type: String, required: true }
 })
 
@@ -52,7 +52,7 @@ var ProjectSchema = new Schema({
 */
 var QuoteSchema = new Schema({
   name: { type: String, required: true },
-  accountid: { type: Schema.Types.ObjectId, required: true },
+  installationid: { type: Schema.Types.ObjectId, required: true },
   projectid: { type: Schema.Types.ObjectId, required: true },
   littleid: { type: String, required: true }
 })
@@ -64,7 +64,7 @@ var QuoteSchema = new Schema({
 */
 var ClientSchema = new Schema({
   name: { type: String, required: true },
-  accountid: { type: Schema.Types.ObjectId, required: true },
+  installationid: { type: Schema.Types.ObjectId, required: true },
   littleid: { type: String, required: true }
 })
 
@@ -73,7 +73,7 @@ module.exports = function(opts){
 
   return {
     user:mongoose.model('users', UserSchema),
-    account:mongoose.model('accounts', AccountSchema),
+    installation:mongoose.model('installation', InstallationSchema),
     project:mongoose.model('projects', ProjectSchema),
     collaborator:mongoose.model('collaborators', CollaboratorSchema),
     client:mongoose.model('clients', ClientSchema),

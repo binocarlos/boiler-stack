@@ -61,7 +61,7 @@ const TableWidget = (settings = {}) => {
 
         // table props
         toolbar:{
-          title:settings.getTitle(state),
+          title:settings.getTitle(state, routeInfo),
           buttons:settings.getButtons(state, store, routeInfo, actions)
         },
 

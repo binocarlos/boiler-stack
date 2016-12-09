@@ -23,11 +23,11 @@ import FormWidget from './widgets/form'
 import Ajax from '../api/ajax'
 
 const REQUIRED_SETTINGS = [
-  'title',
   'route',
   'reducerName',
   'actionPrefix',
   'api',
+  'getTitle',
   'getTableFields',
   'getSchema'
 ]
@@ -38,18 +38,25 @@ const CrudPlugin = (settings = {}) => {
     if(!settings[field]) throw new Error(field + ' setting needed')
   })
 
+  if(!settings.plural_title) settings.plural_title = settings.title + 's'
+
   const api = settings.api
   const route = settings.route
   const reducerName = settings.reducerName
   const actionPrefix = settings.actionPrefix
   const selector = (widget) => (state) => state[reducerName][widget]
 
+  const getTitle = (widget) => (state, routeInfo) => {
+    routeInfo.widget = widget
+    return settings.getTitle(state, routeInfo)
+  }
+
   const widgets = {
     table:TableWidget({
       loadData:api.loadTableData,
       actionPrefix,
       selector:selector('table'),
-      getTitle:(state) => 'Account',
+      getTitle:getTitle('table'),
       getTableFields:settings.getTableFields,
       getButtons:(state, store, routeInfo, actions) => {
         return [{
@@ -61,7 +68,7 @@ const CrudPlugin = (settings = {}) => {
     form:FormWidget({
       actionPrefix,
       selector:selector('form'),
-      getTitle:(state) => 'Account',
+      getTitle:getTitle('form'),
       getSchema:settings.getSchema,
       getButtons:(state, store, routeInfo, actions) => {
         return [{

@@ -22,19 +22,19 @@ module.exports = function(opts){
     }), done)
   }
 
-  function loadAccountCollaborations(accountid, done){
+  function loadInstallationCollaborations(installationid, done){
     collaborators.loadModels(tools.encodeQuery({
       query:{
-        accountid:accountid
+        installationid:installationid
       }
     }), done)
   }
 
-  function deleteAccountCollaborations(accountid, done){
+  function deleteInstallationCollaborations(installationid, done){
     async.waterfall([
 
       function(next){
-        loadAccountCollaborations(accountid, next)
+        loadInstallationCollaborations(installationid, next)
       },
 
       function(collaborations, next){
@@ -48,18 +48,18 @@ module.exports = function(opts){
     ], done)
   }
 
-  function createAccountOwner(accountid, userid, done){
+  function createInstallationOwner(installationid, userid, done){
     collaborators.addModel({
       userid:userid,
-      accountid:account._id,
+      installationid:installationid,
       permission:'owner'
     }, next)
   }
 
   return Object.assign({}, collaborators, {
     loadUserCollaborations:loadUserCollaborations,
-    loadAccountCollaborations:loadAccountCollaborations,
-    deleteAccountCollaborations:deleteAccountCollaborations,
-    createAccountOwner:createAccountOwner
+    loadInstallationCollaborations:loadInstallationCollaborations,
+    deleteInstallationCollaborations:deleteInstallationCollaborations,
+    createInstallationOwner:createInstallationOwner
   })
 }

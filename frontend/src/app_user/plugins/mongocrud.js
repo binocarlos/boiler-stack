@@ -5,14 +5,28 @@ import {
   ajaxFactory
 } from '../apis'
 
-const TYPE = 'account'
-const TITLE = 'Account'
-const API_URL = '/api/v1/accounts'
-const ROUTE = 'accounts'
-const REDUCER = 'accounts'
-const ACTION_PREFIX = 'ACCOUNTS'
+const REQUIRED_SETTINGS = [
+  'type',
+  'title',
+  'api_url',
+  'route',
+  'reducer',
+  'action_prefix'
+]
 
-const AccountsPlugin = (settings = {}) => {
+const MongoCrudFactory = (settings = {}) => {
+
+  REQUIRED_SETTINGS.forEach(field => {
+    if(!settings[field]) throw new Error(field + ' setting needed')
+  })
+
+  const TYPE = settings.type
+  const TITLE = settings.title
+  const PLURAL_TITLE = settings.plural_title || settings.title + 's'
+  const API_URL = settings.api_url
+  const ROUTE = settings.route
+  const REDUCER = settings.reducer
+  const ACTION_PREFIX = settings.action_prefix
 
   const api = ajaxFactory({
     name:TITLE
@@ -21,6 +35,14 @@ const AccountsPlugin = (settings = {}) => {
 
   return Crud({
     title:TITLE,
+    getTitle:(state, routeInfo) => {
+      return routeInfo.widget == 'table' ?
+        PLURAL_TITLE :
+        (routeInfo.mode == 'add' ?
+          'New ' + TITLE :
+          'Edit Title'
+        )
+    },
     route:ROUTE,
     reducerName:REDUCER,
     actionPrefix:ACTION_PREFIX,
@@ -51,4 +73,4 @@ const AccountsPlugin = (settings = {}) => {
 
 }
 
-export default AccountsPlugin
+export default MongoCrudFactory

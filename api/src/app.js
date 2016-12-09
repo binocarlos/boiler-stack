@@ -9,7 +9,7 @@ const Auth = require('./auth')
 const Digger = require('./routes/digger')
 const Version = require('./routes/version')
 const Users = require('./routes/users')
-const Accounts = require('./routes/accounts')
+const Installations = require('./routes/installations')
 const Projects = require('./routes/projects')
 const Quotes = require('./routes/quotes')
 const Clients = require('./routes/clients')
@@ -48,8 +48,8 @@ module.exports = function(opts){
     auth:auth('users')
   }))
 
-  Accounts(router, Object.assign({}, opts, {
-    auth:auth('accounts')
+  Installations(router, Object.assign({}, opts, {
+    auth:auth('installations')
   }))
 
   Projects(router, Object.assign({}, opts, {

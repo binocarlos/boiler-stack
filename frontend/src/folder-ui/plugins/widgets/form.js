@@ -54,6 +54,7 @@ const FormWidget = (settings = {}) => {
     ContentComponent:Form,
     initialize:(routeInfo) => {
       routeInfo = mapRouteInfo(routeInfo)
+      routeInfo.mode = mode
       // do we need to load the form data?
       if(mode == 'edit' && routeInfo.params.id){
         /*
@@ -65,12 +66,13 @@ const FormWidget = (settings = {}) => {
     },
     getProps:(routeInfo) => {
       routeInfo = mapRouteInfo(routeInfo)
+      routeInfo.mode = mode
       const state = settings.selector(store.getState())
       return {
 
         // table props
         toolbar:{
-          title:settings.getTitle(state),
+          title:settings.getTitle(state, routeInfo),
           buttons:settings.getButtons(state, store, routeInfo, actions)
         },
 

@@ -1,6 +1,6 @@
 const async = require('async')
 const Storage = require('../storage')
-const Accounts = require('./accounts')
+const Installations = require('./installations')
 const littleid = require('./littleid')
 const tools = require('../tools')
 
@@ -10,34 +10,34 @@ module.exports = function(opts){
     model:'projects'
   })))
 
-  var accounts = Accounts()
+  var installations = Installations()
 
   /*
   
     load all the quotes within one project
     
   */
-  function loadAccountProjects(id, done){
-    accounts.processId(id, function(err, fullid){
+  function loadInstallationProjects(id, done){
+    installations.processId(id, function(err, fullid){
       if(err) return done(err)
       projects.loadModels(tools.encodeQuery({
         query:{
-          accountid:fullid
+          installationid:fullid
         }
       }), done)
     })
   }
 
-  function addAccountProject(id, data, done){
-    accounts.processId(id, function(err, fullid){
+  function addInstallationProject(id, data, done){
+    installations.processId(id, function(err, fullid){
       if(err) return done(err)
-      data.accountid = fullid
+      data.installationid = fullid
       projects.addModel(data, done)
     })
   }
 
   return Object.assign({}, projects, {
-    loadAccountProjects:loadAccountProjects,
-    addAccountProject:addAccountProject
+    loadInstallationProjects:loadInstallationProjects,
+    addInstallationProject:addInstallationProject
   })
 }
