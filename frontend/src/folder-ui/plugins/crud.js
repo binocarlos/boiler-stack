@@ -70,6 +70,7 @@ const CrudPlugin = (settings = {}) => {
       selector:selector('form'),
       getTitle:getTitle('form'),
       getSchema:settings.getSchema,
+      getInitialData:settings.getInitialData,
       getButtons:(state, store, routeInfo, actions) => {
         return [{
           title:'Cancel',

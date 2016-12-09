@@ -55,39 +55,57 @@ const FormWidget = (settings = {}) => {
     initialize:(routeInfo) => {
       routeInfo = mapRouteInfo(routeInfo)
       routeInfo.mode = mode
+
       // do we need to load the form data?
-      if(mode == 'edit' && routeInfo.params.id){
-        /*
+      if(mode == 'edit'){
+        if(!routeInfo.params.id) throw new Error('no id param for edit form')
         store.dispatch(actions.load.request({
           id:routeInfo.params.id
-        }))*/
+        }))
       }
+      else if(mode == 'add'){
+        const initialData = settings.getInitialData ?
+          settings.getInitialData() :
+          {}
 
+        store.dispatch(actions.tools.initialize(initialData))
+      }
+      else{
+        throw new Error('unknown form mode ' + mode)
+      }
     },
     getProps:(routeInfo) => {
       routeInfo = mapRouteInfo(routeInfo)
       routeInfo.mode = mode
       const state = settings.selector(store.getState())
       return {
-
-        // table props
         toolbar:{
-          title:settings.getTitle(state, routeInfo),
-          buttons:settings.getButtons(state, store, routeInfo, actions)
+          title:settings.getTitle(state, routeInfo)
         },
-
         content:{
           data:state.tools.data,
-          meta:state.tools.meta,
+          meta:state.tools.meta
+        }
+      }
+    },
+    getInjectedProps:(routeInfo) => {
+      routeInfo = mapRouteInfo(routeInfo)
+      routeInfo.mode = mode
+      const state = settings.selector(store.getState())
+      return {
+        toolbar:{
+          buttons:settings.getButtons(state, store, routeInfo, actions)
+        },
+        content:{
           schema:settings.getSchema(state, store, routeInfo),
           update:(data, meta) => store.dispatch(actions.tools.update(data, meta))
         }
-        
       }
     }
   })
 
   const getSagas = (store) => {
+
     return [
       
     ]

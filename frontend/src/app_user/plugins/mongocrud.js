@@ -55,6 +55,11 @@ const MongoCrudFactory = (settings = {}) => {
           })
       }
     },
+    getInitialData:() => {
+      return {
+        name:'apples'
+      }
+    },
     getTableFields:(state, store, routeInfo) => {
       return [{
         name:'littleid',

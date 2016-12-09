@@ -58,21 +58,25 @@ const TableWidget = (settings = {}) => {
       routeInfo = mapRouteInfo(routeInfo)
       const state = settings.selector(store.getState())
       return {
-
-        // table props
         toolbar:{
-          title:settings.getTitle(state, routeInfo),
+          title:settings.getTitle(state, routeInfo)
+        },
+        content:{
+          data:state.load.data
+        }
+      }
+    },
+    getInjectedProps:(routeInfo) => {
+      routeInfo = mapRouteInfo(routeInfo)
+      const state = settings.selector(store.getState())
+      return {
+        toolbar:{
           buttons:settings.getButtons(state, store, routeInfo, actions)
         },
-
         content:{
-          data:state.load.data,
           fields:settings.getTableFields(state, store, routeInfo),
-          onRowSelection:(idArray) => {
-      
-          }
+          onRowSelection:(idArray) => {}
         }
-        
       }
     }
   })
