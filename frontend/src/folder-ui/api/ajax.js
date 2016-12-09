@@ -10,10 +10,10 @@ import bows from 'bows'
 
 export default function ajaxdb(opts = {}){
 
-  const logger = bows('folder-ui:' + (opts.name || 'ajax'))
+  const getLogger = (method, url) => bows('folderui:api:' + (opts.name || 'ajax') + ' ' + method + ' ' + url)
 
   const httpAPI = (req = {}) => {
-    logger(req.method.toUpperCase(), req.url)
+    const logger = getLogger(req.method.toUpperCase(), req.url)
 
     let reqOpts = {
       method: req.method,
@@ -22,7 +22,7 @@ export default function ajaxdb(opts = {}){
     }
 
     if(req.data){
-      logger(req.data)
+      logger('request data', req.data)
       reqOpts.responseType = 'json'
       reqOpts.transformRequest = [(data) => JSON.stringify(data)]
     }

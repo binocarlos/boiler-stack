@@ -8,7 +8,7 @@ const DEFAULT_STATE = {
 const tableReducerFactory = (types) => {
   return (state = DEFAULT_STATE, action) => {
     switch (action.type) {
-      case types.selected:
+      case types.TABLE_SELECTED:
         return update(state, {
           selected:{
             $set:action.selected

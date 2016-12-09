@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 import Biro from 'biro'
 import muiLibrary from 'biro-material-ui'
-import muiLayout from 'biro-material-ui/layout'
+import muiLayout from 'biro-material-ui/lib/layout'
 import Paper from 'material-ui/Paper'
 
 const STYLES = {
