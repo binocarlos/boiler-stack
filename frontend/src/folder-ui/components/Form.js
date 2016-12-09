@@ -28,7 +28,7 @@ class Form extends Component {
               data={this.props.data}
               meta={this.props.meta}
               schema={this.props.schema}
-              update={this.props.onUpdate} 
+              update={this.props.update} 
               getContext={this.props.getContext}
               library={library}
               layout={muiLayout} />
