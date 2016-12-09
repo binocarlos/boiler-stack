@@ -57,23 +57,19 @@ const MongoCrudFactory = (settings = {}) => {
       }
     },
     getInitialData:() => {
-      return {
-        name:'apples'
-      }
+      return settings.initialData ?
+        settings.initialData :
+        {}
     },
     getTableFields:(state, store, routeInfo) => {
-      return [{
-        name:'littleid',
-        title:'ID'
-      },{
-        name:'name',
-        title:'Name'
-      }]
+      return settings.tableFields ?
+        settings.tableFields :
+        []
     },
     getSchema:(state, store, routeInfo) => {
-      return [{
-        name:'name'
-      }]
+      return settings.schema ?
+        settings.schema :
+        []
     }
   })
 

@@ -1,6 +1,8 @@
 import update from 'immutability-helper'
 
 const DEFAULT_STATE = {
+  mode:null,
+  params:{},
   originalData:{},
   data:{},
   meta:{}
@@ -37,6 +39,15 @@ const formReducerFactory = (types) => {
           },
           meta:{
             $set:null
+          }
+        })
+      case types.FORM_REQUEST_DATA:
+        return update(state, {
+          mode:{
+            $set:action.mode
+          },
+          params:{
+            $set:action.params
           }
         })
       default:

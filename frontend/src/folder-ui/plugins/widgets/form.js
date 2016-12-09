@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { routerActions } from 'react-router-redux'
 import { combineReducers } from 'redux'
+import { takeLatest } from 'redux-saga'
 
 import ApiSaga from '../../sagas/api'
 
@@ -54,25 +55,7 @@ const FormWidget = (settings = {}) => {
     ContentComponent:Form,
     initialize:(routeInfo) => {
       routeInfo = mapRouteInfo(routeInfo)
-      routeInfo.mode = mode
-
-      // do we need to load the form data?
-      if(mode == 'edit'){
-        if(!routeInfo.params.id) throw new Error('no id param for edit form')
-        store.dispatch(actions.load.request({
-          id:routeInfo.params.id
-        }))
-      }
-      else if(mode == 'add'){
-        const initialData = settings.getInitialData ?
-          settings.getInitialData() :
-          {}
-
-        store.dispatch(actions.tools.initialize(initialData))
-      }
-      else{
-        throw new Error('unknown form mode ' + mode)
-      }
+      store.dispatch(actions.tools.requestData(mode, routeInfo.params))
     },
     getProps:(routeInfo) => {
       routeInfo = mapRouteInfo(routeInfo)
@@ -107,8 +90,30 @@ const FormWidget = (settings = {}) => {
 
   const getSagas = (store) => {
 
+    function* requestData(action) {
+      if(action.mode == 'edit'){
+        if(!action.params.id) throw new Error('no id param for form:edit -> requestData')
+        store.dispatch(actions.load.request({
+          id:action.params.id
+        }))
+      }
+      else if(action.mode == 'add'){
+        const initialData = settings.getInitialData ?
+          settings.getInitialData(action.params) :
+          {}
+        store.dispatch(actions.tools.initialize(initialData))
+      }
+      else{
+        throw new Error('unknown form mode ' + mode)
+      }
+    }
+
+    function* requestDataSaga() {
+      yield takeLatest(actions.tools.types.FORM_REQUEST_DATA, requestData)
+    }
+
     return [
-      
+      requestDataSaga
     ]
   }
 

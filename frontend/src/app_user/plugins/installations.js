@@ -9,7 +9,20 @@ const DEFAULT_SETTINGS = {
   route:'installations',
   reducer:'installations',
   action_prefix:'INSTALLATIONS',
-  icon:ICON
+  icon:ICON,
+  initialData:{
+    name:'apples'
+  },
+  tableFields:[{
+    name:'littleid',
+    title:'ID'
+  },{
+    name:'name',
+    title:'Name'
+  }],
+  schema:[{
+    name:'name'
+  }]
 }
 
 const InstallationsPlugin = (settings = {}) => {

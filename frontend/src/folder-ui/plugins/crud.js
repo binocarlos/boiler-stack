@@ -117,8 +117,8 @@ const CrudPlugin = (settings = {}) => {
     return (
       <Route path={route}>
         <IndexRoute component={TableContainer} />
-        <Route path="edit/:id" components={EditContainer} />
-        <Route path="add" components={AddContainer} />
+        <Route path="edit/:id" component={EditContainer} />
+        <Route path="add" component={AddContainer} />
       </Route>
     )
   }

@@ -79,10 +79,11 @@ export const TableActions = (base) => {
   
 */
 
-const FORM_UPDATE = 'FORM_UPDATE'
+const FORM_REQUEST_DATA = 'FORM_REQUEST_DATA'
 const FORM_INITIALIZE = 'FORM_INITIALIZE'
+const FORM_UPDATE = 'FORM_UPDATE'
 const FORM_REVERT = 'FORM_REVERT'
-const formTypes = [FORM_UPDATE, FORM_INITIALIZE, FORM_REVERT]
+const formTypes = [FORM_REQUEST_DATA, FORM_INITIALIZE, FORM_UPDATE, FORM_REVERT]
 
 const getFormTypes = (base) => {
   return getTypes(base, formTypes)
@@ -92,8 +93,9 @@ export const FormActions = (base) => {
   const types = getFormTypes(base)
   return {
     types,
-    update: (data, meta) => action(types.FORM_UPDATE, {data, meta}),
+    requestData: (mode, params) => action(types.FORM_REQUEST_DATA, {mode, params}),
     initialize: (data) => action(types.FORM_INITIALIZE, {data}),
+    update: (data, meta) => action(types.FORM_UPDATE, {data, meta}),
     revert: () => action(types.FORM_REVERT)
   }
 }
