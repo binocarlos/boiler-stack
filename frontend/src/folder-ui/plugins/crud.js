@@ -81,8 +81,9 @@ const CrudPlugin = (settings = {}) => {
       getIcon:getIcon,
       getButtons:(state, store, routeInfo, actions) => {
 
-        const formData = state.tools.data
-        const formMeta = state.tools.meta
+        const formData = state.tools.data || {}
+        const formMeta = state.tools.meta || {}
+        const saveDisabled = formMeta.changed && formMeta.valid ? false : true
 
         return [{
           title:'Cancel',
@@ -93,7 +94,8 @@ const CrudPlugin = (settings = {}) => {
         },{
           title:'Save',
           extraProps:{ 
-            primary:true
+            primary:true,
+            disabled:saveDisabled
           },
           handler:() => {
             if(!formMeta.valid) throw new Error('form is not valid - display errors')

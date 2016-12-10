@@ -2,7 +2,9 @@ import React, { PropTypes, Component } from 'react'
 import Biro from 'biro'
 import muiLibrary from 'biro-material-ui'
 import muiLayout from 'biro-material-ui/lib/layout'
+import ButtonRow from 'kettle-ui/lib/ButtonRow'
 import Paper from 'material-ui/Paper'
+import Divider from './Divider'
 
 const STYLES = {
   outerwrapper:{
@@ -10,6 +12,9 @@ const STYLES = {
   },
   innerwrapper:{
     padding:'30px'
+  },
+  marginTop:{
+    marginTop:'20px'
   }
 }
 

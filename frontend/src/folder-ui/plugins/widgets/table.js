@@ -54,30 +54,22 @@ const TableWidget = (settings = {}) => {
       routeInfo = mapRouteInfo(routeInfo)
       store.dispatch(actions.load.request())
     },
-    getProps:(routeInfo) => {
+    getState:(routeInfo) => {
       routeInfo = mapRouteInfo(routeInfo)
       const state = settings.selector(store.getState())
       return {
-        toolbar:{
-          title:settings.getTitle(state, routeInfo)
-        },
-        content:{
-          data:state.load.data
-        }
+        title:settings.getTitle(state, routeInfo),
+        data:state.load.data
       }
     },
     getInjectedProps:(routeInfo) => {
       routeInfo = mapRouteInfo(routeInfo)
       const state = settings.selector(store.getState())
       return {
-        toolbar:{
-          getIcon:settings.getIcon,
-          buttons:settings.getButtons(state, store, routeInfo, actions)
-        },
-        content:{
-          fields:settings.getTableFields(state, store, routeInfo),
-          onRowSelection:(idArray) => {}
-        }
+        getIcon:settings.getIcon,
+        buttons:settings.getButtons(state, store, routeInfo, actions),
+        fields:settings.getTableFields(state, store, routeInfo),
+        onRowSelection:(idArray) => {}
       }
     }
   })

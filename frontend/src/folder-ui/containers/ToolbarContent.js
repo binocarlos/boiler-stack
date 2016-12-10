@@ -14,7 +14,7 @@ const getRouteInfo = (props) => {
 export class CollectionContainer extends Component {
 
   componentDidMount() {
-    this.props.initialize()
+    this.props.runInitializeData()
   }
   
   componentWillReceiveProps(nextProps) {
@@ -31,16 +31,15 @@ export class CollectionContainer extends Component {
     // injected props passed in things like function handlers
     // we pass them here because it won't trigger a redux connect re-render
     const injectedProps = this.props.getInjectedProps ?
-      this.props.getInjectedProps(getRouteInfo(this.props)) :
+      this.props.getInjectedProps(getRouteInfo(this.props), this.props) :
       {}
 
-    const toolbarProps = Object.assign({}, this.props.toolbar, injectedProps.toolbar)
-    const contentProps = Object.assign({}, this.props.content, injectedProps.content)
+    const finalProps = Object.assign({}, this.props, injectedProps)
 
     return (
       <ToolbarWrapper
-        toolbar={<ToolbarComponent {...toolbarProps} />}>
-        <ContentComponent {...contentProps} />
+        toolbar={<ToolbarComponent {...finalProps} />}>
+        <ContentComponent {...finalProps} />
       </ToolbarWrapper>
     )
   }
@@ -49,16 +48,16 @@ export class CollectionContainer extends Component {
 const mapStateToProps = (state, ownProps) => {
   // get props returns the selected state
   // if this changes we will get a re-render
-  return ownProps.getProps ?
-    ownProps.getProps(getRouteInfo(ownProps)) :
+  return ownProps.getState ?
+    ownProps.getState(getRouteInfo(ownProps)) :
     {}
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  if(!ownProps.initialize) throw new Error('no initialize prop given to Collection container')
+  if(!ownProps.initializeData) throw new Error('no initializeData prop given to Collection container')
   return {
-    initialize:() => {
-      ownProps.initialize(getRouteInfo(ownProps))
+    runInitializeData:() => {
+      ownProps.initializeData(getRouteInfo(ownProps))
     }
   }
 
