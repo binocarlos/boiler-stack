@@ -1,1 +1,0 @@
-export const isMenuOpen = (state) => state.boiler.isMenuOpen
