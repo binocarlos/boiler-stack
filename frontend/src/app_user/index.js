@@ -5,8 +5,8 @@ import { Route, IndexRoute } from 'react-router'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 injectTapEventPlugin()
 
-import AppFactory from '../boiler-frontend/factory'
-import Passport from '../passport-slim-ui/plugin'
+import AppFactory from 'boiler-frontend/src/factory'
+import Passport from 'passport-slim-ui/src/plugin'
 
 import Core from './plugins/core'
 import Menus from './plugins/menus'

@@ -4,7 +4,7 @@ import AccountMenu from '../components/AccountMenu'
 
 import {
   getUserData
-} from '../../passport-slim-ui/selectors'
+} from 'passport-slim-ui/src/selectors'
 
 import {
   getAccounts

@@ -1,12 +1,12 @@
 import React, { Component, PropTypes } from 'react'
 import { routerActions } from 'react-router-redux'
 
-import { isUserLoggedIn } from '../../passport-slim-ui/selectors'
-import { logout } from '../../passport-slim-ui/actions'
-import { toggle_menu } from '../../boiler-frontend/actions'
+import { isUserLoggedIn } from 'passport-slim-ui/src/selectors'
+import { logout } from 'passport-slim-ui/src/actions'
+import { toggle_menu } from 'boiler-frontend/src/actions'
 
-import UserMenu from '../../boiler-frontend/components/UserMenu'
-import Menu from '../../boiler-frontend/components/Menu'
+import UserMenu from 'boiler-frontend/src/components/UserMenu'
+import Menu from 'boiler-frontend/src/components/Menu'
 
 import AccountMenu from '../containers/AccountMenu'
 

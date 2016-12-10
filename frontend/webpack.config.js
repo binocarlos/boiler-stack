@@ -10,7 +10,9 @@ var APP = process.env.APP || 'user'
 var APP_FOLDER = 'app_' + APP
 
 var includePaths = [
-  fs.realpathSync(__dirname + '/src')
+  fs.realpathSync(__dirname + '/src'),
+  fs.realpathSync(__dirname + '/node_modules/boiler-frontend'),
+  fs.realpathSync(__dirname + '/node_modules/passport-slim-ui')
 ];
 
 const config = {
@@ -50,7 +52,7 @@ const config = {
     loaders: [
       {
         test: /\.js$/,
-        exclude: /(node_modules)/,
+        //exclude: /(node_modules)/,
         loader: 'babel-loader',
         babelrc: false,
         include: includePaths,
