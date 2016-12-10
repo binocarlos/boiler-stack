@@ -80,6 +80,10 @@ const CrudPlugin = (settings = {}) => {
       getInitialData:settings.getInitialData,
       getIcon:getIcon,
       getButtons:(state, store, routeInfo, actions) => {
+
+        const formData = state.tools.data
+        const formMeta = state.tools.meta
+
         return [{
           title:'Cancel',
           handler:() => store.dispatch(routerActions.push(route))
@@ -92,8 +96,8 @@ const CrudPlugin = (settings = {}) => {
             primary:true
           },
           handler:() => {
-            console.log('-------------------------------------------');
-            console.log('save')
+            if(!formMeta.valid) throw new Error('form is not valid - display errors')
+            //store.dispatch(actions.p0d.)
           }
         }]
       }
