@@ -1,48 +1,61 @@
-import React, { Component, PropTypes } from 'react'
-//import DiggerDB from 'digger-folder-ui-db'
-import Ajax from '../folder-ui/api/ajax'
-import MongoCodec from '../folder-ui/api/mongocodec'
+import Ajax from './ajax'
+import MongoCodec from './mongocodec'
 
-export const mongoCodecFactory = (type) => MongoCodec({
+const mongoCodecFactory = (type) => MongoCodec({
   inject:{
     _type:type
   }
 })
 
-export const ajaxFactory = (opts) => Ajax(opts)
-
 const REQUIRED_SETTINGS = [
   'type',
   'title',
-  'api_url'
+  'apiUrl',
+  'initialFormData'
 ]
 
-export const mongoCrudAjaxFactory = (settings = {}) => {
+const mongoCrudAjaxFactory = (settings = {}) => {
 
   REQUIRED_SETTINGS.forEach(field => {
     if(!settings[field]) throw new Error(field + ' setting needed')
   })
   
-  const API_URL = settings.api_url
+  const API_URL = settings.apiUrl
   const TITLE = settings.title
   const TYPE = settings.type
 
-  const ajaxClient = ajaxFactory({
+  const ajaxClient = Ajax({
     name:TITLE
   })
   const codec = mongoCodecFactory(TYPE)
 
   return {
-    loadTableData:(action) => {
+    loadTableData:(query, data) => {
       return ajaxClient
         .get(API_URL)
-        .then(data => {
-          return data.map(codec.encode)
+        .then(result => {
+          return result.map(codec.encode)
         })
+    },
+    addFormItem:(query, data) => {
+      return new Proimse((resolve, reject) => {
+        resolve()
+      })
+    },
+    editFormItem:(query, data) => {
+      return new Proimse((resolve, reject) => {
+        resolve()
+      })
+    },
+    initialFormData:(query, data) => {
+      return new Proimse((resolve, reject) => {
+        resolve(settings.initialFormData)
+      })
     }
   }
 }
 
+export default mongoCrudAjaxFactory
 
 
 

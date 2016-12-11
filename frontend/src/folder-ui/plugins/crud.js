@@ -20,16 +20,21 @@ import Form from '../components/Form'
 import TableWidget from './widgets/table'
 import FormWidget from './widgets/form'
 
-import Ajax from '../api/ajax'
-
 const REQUIRED_SETTINGS = [
+  'title',
   'route',
   'reducerName',
   'actionPrefix',
-  'api',
-  'getTitle',
   'getTableFields',
-  'getSchema'
+  'getSchema',
+  'api'
+]
+
+const REQUIRED_API_SETTINGS = [
+  'loadTableData',
+  'addFormItem',
+  'editFormItem',
+  'initialFormData'
 ]
 
 const CrudPlugin = (settings = {}) => {
@@ -38,7 +43,11 @@ const CrudPlugin = (settings = {}) => {
     if(!settings[field]) throw new Error(field + ' setting needed')
   })
 
-  if(!settings.plural_title) settings.plural_title = settings.title + 's'
+  REQUIRED_API_SETTINGS.forEach(field => {
+    if(!settings.api[field]) throw new Error(field + ' api method needed')
+  })
+
+  if(!settings.pluralTitle) settings.pluralTitle = settings.title + 's'
 
   const api = settings.api
   const route = settings.route
@@ -46,25 +55,22 @@ const CrudPlugin = (settings = {}) => {
   const actionPrefix = settings.actionPrefix
   const selector = (widget) => (state) => state[reducerName][widget]
 
-  const getTitle = (widget) => (state, routeInfo) => {
-    routeInfo.widget = widget
-    return settings.getTitle(state, routeInfo)
-  }
-
   const getIcon = () => {
-    return settings.icon ?
-     (<settings.icon />) :
-     null
+    return settings.getIcon ?
+      settings.getIcon() :
+      null
   }
 
   const widgets = {
     table:TableWidget({
-      loadData:api.loadTableData,
+      api:{
+        loadData:api.loadTableData
+      },
       actionPrefix,
       selector:selector('table'),
-      getTitle:getTitle('table'),
       getTableFields:settings.getTableFields,
       getIcon:getIcon,
+      getTitle:(state, routeInfo) => settings.plural_title,
       getButtons:(state, store, routeInfo, actions) => {
         return [{
           title:'Add',
@@ -73,12 +79,21 @@ const CrudPlugin = (settings = {}) => {
       }
     }),
     form:FormWidget({
+      api:{
+        initialData:api.initialFormData,
+        addItem:api.addFormItem,
+        editItem:api.editFormItem
+      },
       actionPrefix,
       selector:selector('form'),
-      getTitle:getTitle('form'),
       getSchema:settings.getSchema,
       getInitialFormData:settings.getInitialFormData,
       getIcon:getIcon,
+      getTitle:(state, routeInfo) => {
+        return routeInfo.mode == 'add' ? 
+          'New ' + settings.title :
+          'Edit title'
+      },
       getButtons:(state, store, routeInfo, actions) => {
 
         const formData = state.tools.data || {}

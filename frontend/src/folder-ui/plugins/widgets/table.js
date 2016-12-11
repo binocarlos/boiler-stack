@@ -20,6 +20,10 @@ const REQUIRED_SETTINGS = [
   'getTitle',
   'getButtons',
   'getTableFields',
+  'api'
+]
+
+const REQUIRED_API_SETTINGS = [
   'loadData'
 ]
 
@@ -29,15 +33,20 @@ const TableWidget = (settings = {}) => {
     if(!settings[field]) throw new Error(field + ' setting needed')
   })
 
+  REQUIRED_API_SETTINGS.forEach(field => {
+    if(!settings.api[field]) throw new Error(field + ' api method needed')
+  })
+
+  const api = settings.api
   const actionPrefix = settings.actionPrefix
 
   const actions = {
-    load:ApiActions(actionPrefix + '_TABLE_LOAD'),
+    get:ApiActions(actionPrefix + '_TABLE_GET'),
     tools:TableActions(actionPrefix + '_TOOLS')
   }
 
   const reducer = combineReducers({
-    load:ApiReducer(actions.load.types),
+    get:ApiReducer(actions.get.types),
     tools:TableReducer(actions.tools.types)
   })
 
@@ -50,16 +59,16 @@ const TableWidget = (settings = {}) => {
   const getContainer = (store) => ContainerWrapper(ToolbarContent, {
     ContentComponent:Table,
     ToolbarComponent:settings.ToolbarComponent,
-    initialize:(routeInfo) => {
+    initializeData:(routeInfo) => {
       routeInfo = mapRouteInfo(routeInfo)
-      store.dispatch(actions.load.request())
+      store.dispatch(actions.get.request())
     },
     getState:(routeInfo) => {
       routeInfo = mapRouteInfo(routeInfo)
       const state = settings.selector(store.getState())
       return {
         title:settings.getTitle(state, routeInfo),
-        data:state.load.data
+        data:state.get.data
       }
     },
     getInjectedProps:(routeInfo) => {
@@ -78,9 +87,8 @@ const TableWidget = (settings = {}) => {
 
     // load the table data
     const tableApiSaga = ApiSaga({
-      actions:actions.load,
-      trigger:actions.load.types.REQUEST,
-      handler:(action) => settings.loadData(action)
+      actions:actions.get,
+      handler:api.loadData
     })
 
     return [

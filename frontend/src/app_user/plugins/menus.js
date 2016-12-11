@@ -29,6 +29,9 @@ const mapMenuItems = (items, dispatch, extrafn) => items.map(item => {
 
 const baseUserItems = (dispatch) => {
   return [{
+    label:'Home',
+    path:'/'
+  },{
     label:'Help',
     path:'help'
   },{
