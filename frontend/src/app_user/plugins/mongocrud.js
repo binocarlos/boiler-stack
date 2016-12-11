@@ -56,21 +56,9 @@ const MongoCrudFactory = (settings = {}) => {
           })
       }
     },
-    getInitialData:() => {
-      return settings.initialData ?
-        settings.initialData :
-        {}
-    },
-    getTableFields:(state, store, routeInfo) => {
-      return settings.tableFields ?
-        settings.tableFields :
-        []
-    },
-    getSchema:(state, store, routeInfo) => {
-      return settings.schema ?
-        settings.schema :
-        []
-    }
+    getInitialFormData:() => settings.initialFormData || {},
+    getTableFields:(state, store, routeInfo) => settings.tableFields || [],
+    getSchema:(state, store, routeInfo) => settings.schema || []
   })
 
 }

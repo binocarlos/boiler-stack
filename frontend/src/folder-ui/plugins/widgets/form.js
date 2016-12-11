@@ -34,14 +34,14 @@ const FormWidget = (settings = {}) => {
   const actions = {
     load:ApiActions(actionPrefix + '_FORM_LOAD'),
     add:ApiActions(actionPrefix + '_FORM_ADD'),
-    save:ApiActions(actionPrefix + '_FORM_SAVE'),
+    edit:ApiActions(actionPrefix + '_FORM_EDIT'),
     tools:FormActions(actionPrefix + '_TOOLS')
   }
 
   const reducer = combineReducers({
     load:ApiReducer(actions.load.types),
     add:ApiReducer(actions.add.types),
-    save:ApiReducer(actions.save.types),
+    edit:ApiReducer(actions.edit.types),
     tools:FormReducer(actions.tools.types)
   })
 
@@ -75,10 +75,10 @@ const FormWidget = (settings = {}) => {
       const state = settings.selector(store.getState())
       const buttons = settings.getButtons(state, store, routeInfo, actions)
       return {
+        buttons,
         getIcon:settings.getIcon,
         schema:settings.getSchema(state, store, routeInfo),
-        update:(data, meta) => store.dispatch(actions.tools.update(data, meta)),
-        buttons
+        update:(data, meta) => store.dispatch(actions.tools.update(data, meta))
       }
     }
   })
@@ -93,8 +93,8 @@ const FormWidget = (settings = {}) => {
         }))
       }
       else if(action.mode == 'add'){
-        const initialData = settings.getInitialData ?
-          settings.getInitialData(action.params) :
+        const initialData = settings.getInitialFormData ?
+          settings.getInitialFormData(action.params) :
           {}
         store.dispatch(actions.tools.initialize(initialData))
       }

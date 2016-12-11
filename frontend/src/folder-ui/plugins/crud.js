@@ -77,7 +77,7 @@ const CrudPlugin = (settings = {}) => {
       selector:selector('form'),
       getTitle:getTitle('form'),
       getSchema:settings.getSchema,
-      getInitialData:settings.getInitialData,
+      getInitialFormData:settings.getInitialFormData,
       getIcon:getIcon,
       getButtons:(state, store, routeInfo, actions) => {
 
@@ -99,7 +99,9 @@ const CrudPlugin = (settings = {}) => {
           },
           handler:() => {
             if(!formMeta.valid) throw new Error('form is not valid - display errors')
-            //store.dispatch(actions.p0d.)
+            const action = actions[routeInfo.mode]
+            if(!action) throw new Error('action for mode: ' + routeInfo.mode + ' not found')
+            store.dispatch(action.request(routeInfo.params, formData))
           }
         }]
       }

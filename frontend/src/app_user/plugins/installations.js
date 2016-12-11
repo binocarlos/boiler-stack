@@ -10,7 +10,7 @@ const DEFAULT_SETTINGS = {
   reducer:'installations',
   action_prefix:'INSTALLATIONS',
   icon:ICON,
-  initialData:{},
+  initialFormData:{},
   tableFields:[{
     name:'littleid',
     title:'ID'
