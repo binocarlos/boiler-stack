@@ -15,6 +15,7 @@ import ToolbarContent from '../../containers/ToolbarContent'
 import Table from '../../components/Table'
 
 const REQUIRED_SETTINGS = [
+  'title',
   'actionPrefix',
   'selector',
   'getTitle',
@@ -87,6 +88,7 @@ const TableWidget = (settings = {}) => {
 
     // load the table data
     const tableApiSaga = ApiSaga({
+      name:settings.title + ':get',
       actions:actions.get,
       handler:api.get
     })

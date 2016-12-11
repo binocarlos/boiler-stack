@@ -50,6 +50,7 @@ const CrudPlugin = (settings = {}) => {
 
   if(!settings.pluralTitle) settings.pluralTitle = settings.title + 's'
 
+  const title = settings.title
   const api = settings.api
   const route = settings.route
   const reducerName = settings.reducerName
@@ -64,6 +65,7 @@ const CrudPlugin = (settings = {}) => {
 
   const widgets = {
     table:TableWidget({
+      title:title + ':table',
       api:api.table,
       actionPrefix,
       selector:selector('table'),
@@ -75,6 +77,7 @@ const CrudPlugin = (settings = {}) => {
       })
     }),
     form:FormWidget({
+      title:title + ':form',
       api:api.form,
       actionPrefix,
       selector:selector('form'),

@@ -6,10 +6,6 @@ import {
   getUserData
 } from 'passport-slim-ui/src/selectors'
 
-import {
-  getAccounts
-} from '../selectors'
-
 export class AccountMenuContainer extends Component {
   render() {
     if(this.props.accounts.length <= 0) return this.props.children
@@ -21,7 +17,7 @@ export class AccountMenuContainer extends Component {
 
 function mapStateToProps(state, ownProps) {
   const userData = getUserData(state)
-  const accounts = getAccounts(state)
+  const accounts = []//getAccounts(state)
 
   return {
     accounts:[],

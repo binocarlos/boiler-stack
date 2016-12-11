@@ -1,7 +1,8 @@
 import Ajax from './ajax'
 import MongoCodec from './mongocodec'
 
-const mongoCodecFactory = (type) => MongoCodec({
+const mongoCodecFactory = (name, type) => MongoCodec({
+  name:name,
   inject:{
     _type:type
   }
@@ -10,7 +11,7 @@ const mongoCodecFactory = (type) => MongoCodec({
 const REQUIRED_SETTINGS = [
   'type',
   'title',
-  'apiUrl',
+  'url',
   'initialFormData'
 ]
 
@@ -20,20 +21,20 @@ const mongoCrudAjaxFactory = (settings = {}) => {
     if(!settings[field]) throw new Error(field + ' setting needed')
   })
   
-  const API_URL = settings.apiUrl
+  const URL = settings.url
   const TITLE = settings.title
   const TYPE = settings.type
 
   const ajaxClient = Ajax({
     name:TITLE
   })
-  const codec = mongoCodecFactory(TYPE)
+  const codec = mongoCodecFactory(TITLE, TYPE)
 
   return {
     table:{
       get:(query, data) => {
         return ajaxClient
-          .get(API_URL)
+          .get(URL)
           .then(result => {
             return result.map(codec.encode)
           })
@@ -41,19 +42,25 @@ const mongoCrudAjaxFactory = (settings = {}) => {
     },
     form:{
       get:(query, data) => {
-        return new Promise((resolve, reject) => {
-          resolve()
-        })
+        return ajaxClient
+          .get(URL + '/' + query.id)
+          .then(result => {
+            return codec.encode(result)
+          })
       },
       post:(query, data) => {
-        return new Promise((resolve, reject) => {
-          resolve()
-        })
+        return ajaxClient
+          .post(URL, data)
+          .then(result => {
+            return codec.encode(result)
+          })
       },
       put:(query, data) => {
-        return new Promise((resolve, reject) => {
-          resolve()
-        })
+        return ajaxClient
+          .put(URL + '/' + query.id, data)
+          .then(result => {
+            return codec.encode(result)
+          })
       },
       initialData:(query, data) => {
         return new Promise((resolve, reject) => {

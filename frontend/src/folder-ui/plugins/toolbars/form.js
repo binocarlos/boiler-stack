@@ -10,6 +10,8 @@ const FormToolbar = (settings = {}) => {
     if(!settings[field]) throw new Error(field + ' setting needed')
   })
 
+  const route = settings.route
+
   const getButtons = (state, store, routeInfo, actions) => {
     
     const formData = state.tools.data || {}

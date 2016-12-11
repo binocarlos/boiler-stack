@@ -10,7 +10,7 @@ import bows from 'bows'
 
 export default function ajaxdb(opts = {}){
 
-  const getLogger = (method, url) => bows('folderui:api:' + (opts.name || 'ajax') + ' ' + method + ' ' + url)
+  const getLogger = (method, url) => bows('folderui:api:ajax' + (opts.name ? ':' + opts.name : '') + ' ' + method + ' ' + url)
 
   const httpAPI = (req = {}) => {
     const logger = getLogger(req.method.toUpperCase(), req.url)
@@ -46,7 +46,7 @@ export default function ajaxdb(opts = {}){
     },
     post:(url, data) => {
       return httpAPI({
-        method:'get',
+        method:'post',
         url,
         data
       })

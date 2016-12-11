@@ -17,6 +17,7 @@ import ToolbarContent from '../../containers/ToolbarContent'
 import Form from '../../components/Form'
 
 const REQUIRED_SETTINGS = [
+  'title',
   'actionPrefix',
   'selector',
   'getTitle',
@@ -122,20 +123,22 @@ const FormWidget = (settings = {}) => {
       yield takeLatest(actions.tools.types.FORM_REQUEST_DATA, requestFormData)
     }
 
-    const addItemSaga = ApiSaga({
+    const postSaga = ApiSaga({
+      name:settings.title + ':post',
       actions:actions.post,
       handler:api.post
     })
 
-    const editItemSaga = ApiSaga({
+    const putSaga = ApiSaga({
+      name:settings.title + ':put',
       actions:actions.put,
       handler:api.put
     })
     
     return [
       requestFormDataSaga,
-      addItemSaga,
-      editItemSaga
+      postSaga,
+      putSaga
     ]
   }
 

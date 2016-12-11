@@ -1,20 +1,27 @@
+import bows from 'bows'
 import { takeLatest } from 'redux-saga'
 import { fork, put, call, take, select } from 'redux-saga/effects'
 
 const ApiSagaFactory = (opts = {}) => {
 
+  if(!opts.name) throw new Error('api saga factory needs name option')
   if(!opts.actions) throw new Error('api saga factory needs actions option')
   if(!opts.handler) throw new Error('api saga factory needs handler option')
+
+  const logger = bows('folderui:saga:' + opts.name)
 
   const actions = opts.actions
   const handler = opts.handler
   const trigger = actions.types.REQUEST
 
   function* apiRequest(action) {
+    logger('request', action)
     try {
       const data = yield handler(action.query, action.data)
+      logger('response', data)
       yield put(actions.success(data))
     } catch (e) {
+      logger('error', e.message)
       yield put(actions.failure(e.message))
     }
   }

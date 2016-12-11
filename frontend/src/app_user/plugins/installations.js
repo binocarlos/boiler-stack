@@ -20,7 +20,7 @@ const SCHEMA = [{
 const DEFAULT_SETTINGS = {
   type:'installation',
   title:'Installation',
-  apiUrl:'/api/v1/installations',
+  url:'/api/v1/installations',
   route:'installations',
   reducerName:'installations',
   actionPrefix:'INSTALLATIONS',
