@@ -20,6 +20,9 @@ import Form from '../components/Form'
 import TableWidget from './widgets/table'
 import FormWidget from './widgets/form'
 
+import TableToolbar from './toolbars/table'
+import FormToolbar from './toolbars/form'
+
 const REQUIRED_SETTINGS = [
   'title',
   'route',
@@ -67,12 +70,9 @@ const CrudPlugin = (settings = {}) => {
       getTableFields:settings.getTableFields,
       getIcon:getIcon,
       getTitle:(state, routeInfo) => settings.pluralTitle,
-      getButtons:(state, store, routeInfo, actions) => {
-        return [{
-          title:'Add',
-          handler:() => store.dispatch(routerActions.push(route + '/add'))
-        }]
-      }
+      getButtons:TableToolbar({
+        route
+      })
     }),
     form:FormWidget({
       api:api.form,
@@ -86,32 +86,9 @@ const CrudPlugin = (settings = {}) => {
           'New ' + settings.title :
           'Edit title'
       },
-      getButtons:(state, store, routeInfo, actions) => {
-
-        const formData = state.tools.data || {}
-        const formMeta = state.tools.meta || {}
-        const saveDisabled = formMeta.changed && formMeta.valid ? false : true
-
-        return [{
-          title:'Cancel',
-          handler:() => store.dispatch(routerActions.push(route))
-        },{
-          title:'Revert',
-          handler:() => store.dispatch(actions.tools.revert())
-        },{
-          title:'Save',
-          extraProps:{ 
-            primary:true,
-            disabled:saveDisabled
-          },
-          handler:() => {
-            if(!formMeta.valid) throw new Error('form is not valid - display errors')
-            const action = actions[routeInfo.mode]
-            if(!action) throw new Error('action for mode: ' + routeInfo.mode + ' not found')
-            store.dispatch(action.request(routeInfo.params, formData))
-          }
-        }]
-      }
+      getButtons:FormToolbar({
+        route
+      })
     })
   }
 
@@ -126,8 +103,8 @@ const CrudPlugin = (settings = {}) => {
 
   const getRoutes = (store, context) => {
     const TableContainer = widgets.table.getContainer(store)
-    const EditContainer = widgets.form.getContainer(store, 'edit')
-    const AddContainer = widgets.form.getContainer(store, 'add')
+    const EditContainer = widgets.form.getContainer(store, 'put')
+    const AddContainer = widgets.form.getContainer(store, 'post')
 
     return (
       <Route path={route}>

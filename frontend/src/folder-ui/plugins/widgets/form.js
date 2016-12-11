@@ -103,13 +103,13 @@ const FormWidget = (settings = {}) => {
     // add runs a sync local function
     // edit re-triggers an action for a saga to handle
     function* requestFormData(action) {
-      if(action.mode == 'edit'){
+      if(action.mode == 'put'){
         if(!action.params.id) throw new Error('no id param for form:edit -> requestData')
         yield put(actions.get.request({
           id:action.params.id
         }))
       }
-      else if(action.mode == 'add'){
+      else if(action.mode == 'post'){
         const initialData = yield call(api.initialData, action)
         yield put(actions.tools.initialize(initialData || {}))
       }
