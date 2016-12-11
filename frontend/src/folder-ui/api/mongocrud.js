@@ -30,28 +30,38 @@ const mongoCrudAjaxFactory = (settings = {}) => {
   const codec = mongoCodecFactory(TYPE)
 
   return {
-    loadTableData:(query, data) => {
-      return ajaxClient
-        .get(API_URL)
-        .then(result => {
-          return result.map(codec.encode)
+    table:{
+      get:(query, data) => {
+        return ajaxClient
+          .get(API_URL)
+          .then(result => {
+            return result.map(codec.encode)
+          })
+      }
+    },
+    form:{
+      get:(query, data) => {
+        return new Promise((resolve, reject) => {
+          resolve()
         })
-    },
-    addFormItem:(query, data) => {
-      return new Proimse((resolve, reject) => {
-        resolve()
-      })
-    },
-    editFormItem:(query, data) => {
-      return new Proimse((resolve, reject) => {
-        resolve()
-      })
-    },
-    initialFormData:(query, data) => {
-      return new Proimse((resolve, reject) => {
-        resolve(settings.initialFormData)
-      })
+      },
+      post:(query, data) => {
+        return new Promise((resolve, reject) => {
+          resolve()
+        })
+      },
+      put:(query, data) => {
+        return new Promise((resolve, reject) => {
+          resolve()
+        })
+      },
+      initialData:(query, data) => {
+        return new Promise((resolve, reject) => {
+          resolve(settings.initialFormData)
+        })
+      }
     }
+    
   }
 }
 

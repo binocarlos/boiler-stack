@@ -25,7 +25,9 @@ const DEFAULT_SETTINGS = {
   reducerName:'installations',
   actionPrefix:'INSTALLATIONS',
   icon:ICON,
-  initialFormData:{},
+  initialFormData:{
+    name:'apples'
+  },
   getIcon:() => (<ICON />),
   getTableFields:(state, store, routeInfo) => TABLE_FIELDS,
   getSchema:(state, store, routeInfo) => SCHEMA

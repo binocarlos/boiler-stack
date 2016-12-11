@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { routerActions } from 'react-router-redux'
 import { combineReducers } from 'redux'
 import { takeLatest } from 'redux-saga'
+import { call, put } from 'redux-saga/effects'
 
 import ApiSaga from '../../sagas/api'
 
@@ -25,8 +26,9 @@ const REQUIRED_SETTINGS = [
 ]
 
 const REQUIRED_API_SETTINGS = [
-  'addItem',
-  'editItem',
+  'get',
+  'post',
+  'put',
   'initialData'
 ]
 
@@ -103,13 +105,13 @@ const FormWidget = (settings = {}) => {
     function* requestFormData(action) {
       if(action.mode == 'edit'){
         if(!action.params.id) throw new Error('no id param for form:edit -> requestData')
-        store.dispatch(actions.get.request({
+        yield put(actions.get.request({
           id:action.params.id
         }))
       }
       else if(action.mode == 'add'){
-        const initialData = api.initialData(action) || {}
-        store.dispatch(actions.tools.initialize(initialData))
+        const initialData = yield call(api.initialData, action)
+        yield put(actions.tools.initialize(initialData || {}))
       }
       else{
         throw new Error('unknown form mode ' + mode)
@@ -122,12 +124,12 @@ const FormWidget = (settings = {}) => {
 
     const addItemSaga = ApiSaga({
       actions:actions.post,
-      handler:api.addItem
+      handler:api.post
     })
 
     const editItemSaga = ApiSaga({
       actions:actions.put,
-      handler:api.editItem
+      handler:api.put
     })
     
     return [

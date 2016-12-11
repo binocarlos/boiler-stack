@@ -24,7 +24,7 @@ const REQUIRED_SETTINGS = [
 ]
 
 const REQUIRED_API_SETTINGS = [
-  'loadData'
+  'get'
 ]
 
 const TableWidget = (settings = {}) => {
@@ -88,7 +88,7 @@ const TableWidget = (settings = {}) => {
     // load the table data
     const tableApiSaga = ApiSaga({
       actions:actions.get,
-      handler:api.loadData
+      handler:api.get
     })
 
     return [

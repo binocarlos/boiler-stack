@@ -31,10 +31,8 @@ const REQUIRED_SETTINGS = [
 ]
 
 const REQUIRED_API_SETTINGS = [
-  'loadTableData',
-  'addFormItem',
-  'editFormItem',
-  'initialFormData'
+  'table',
+  'form'
 ]
 
 const CrudPlugin = (settings = {}) => {
@@ -63,14 +61,12 @@ const CrudPlugin = (settings = {}) => {
 
   const widgets = {
     table:TableWidget({
-      api:{
-        loadData:api.loadTableData
-      },
+      api:api.table,
       actionPrefix,
       selector:selector('table'),
       getTableFields:settings.getTableFields,
       getIcon:getIcon,
-      getTitle:(state, routeInfo) => settings.plural_title,
+      getTitle:(state, routeInfo) => settings.pluralTitle,
       getButtons:(state, store, routeInfo, actions) => {
         return [{
           title:'Add',
@@ -79,11 +75,7 @@ const CrudPlugin = (settings = {}) => {
       }
     }),
     form:FormWidget({
-      api:{
-        initialData:api.initialFormData,
-        addItem:api.addFormItem,
-        editItem:api.editFormItem
-      },
+      api:api.form,
       actionPrefix,
       selector:selector('form'),
       getSchema:settings.getSchema,
