@@ -18,7 +18,7 @@ import Form from '../../components/Form'
 
 const REQUIRED_SETTINGS = [
   'label',
-  'route',
+  'routes',
   'actionPrefix',
   'selector',
   'getTitle',
@@ -34,6 +34,10 @@ const REQUIRED_API_SETTINGS = [
   'initialData'
 ]
 
+const REQUIRED_ROUTE_SETTINGS = [
+  'home'
+]
+
 const FormWidget = (settings = {}) => {
 
   REQUIRED_SETTINGS.forEach(field => {
@@ -44,7 +48,12 @@ const FormWidget = (settings = {}) => {
     if(!settings.api[field]) throw new Error(field + ' api method needed')
   })
 
+  REQUIRED_ROUTE_SETTINGS.forEach(field => {
+    if(!settings.routes[field]) throw new Error(field + ' route needed')
+  })
+
   const api = settings.api
+  const routes = settings.routes
   const actionPrefix = settings.actionPrefix
 
   const actions = {
@@ -126,11 +135,11 @@ const FormWidget = (settings = {}) => {
 
     // redirect once they have added an item
     function* afterPost(action) {
-
+      yield put(routerActions.push(routes.home))
     }
 
     function* afterPostSaga() {
-      yield takeLatest(actions.tools.types.FORM_REQUEST_DATA, requestFormData)
+      yield takeLatest(actions.post.types.SUCCESS, afterPost)
     }
 
     const postSaga = ApiSaga({
@@ -148,7 +157,8 @@ const FormWidget = (settings = {}) => {
     return [
       requestFormDataSaga,
       postSaga,
-      putSaga
+      putSaga,
+      afterPostSaga
     ]
   }
 

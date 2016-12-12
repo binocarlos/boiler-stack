@@ -79,7 +79,6 @@ const CrudPlugin = (settings = {}) => {
 
   const widgets = {
     table:TableWidget({
-      route:route,
       label:title + ':table',
       api:api.table,
       actionPrefix,
@@ -90,7 +89,6 @@ const CrudPlugin = (settings = {}) => {
       getButtons:toolbars.table.getButtons
     }),
     form:FormWidget({
-      route:route,
       label:title + ':form',
       api:api.form,
       actionPrefix,
@@ -99,7 +97,10 @@ const CrudPlugin = (settings = {}) => {
       getInitialFormData:settings.getInitialFormData,
       getIcon:getIcon,
       getTitle:toolbars.form.getTitle,
-      getButtons:toolbars.form.getButtons
+      getButtons:toolbars.form.getButtons,
+      routes:{
+        home:route
+      }
     })
   }
 
