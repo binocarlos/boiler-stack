@@ -10,6 +10,8 @@ import ApiReducer from '../../reducers/api'
 import TableReducer from '../../reducers/table'
 
 import { ContainerWrapper } from '../../tools'
+import { tableItems } from '../../reducers/injectors'
+import { getTableData } from '../../reducers/selectors'
 
 import ToolbarContent from '../../containers/ToolbarContent'
 import Table from '../../components/Table'
@@ -38,6 +40,8 @@ const TableWidget = (settings = {}) => {
     if(!settings.api[field]) throw new Error(field + ' api method needed')
   })
 
+  if(typeof(settings.multiSelectable) !== 'boolean') settings.multiSelectable = true
+
   const api = settings.api
   const actionPrefix = settings.actionPrefix
 
@@ -47,7 +51,7 @@ const TableWidget = (settings = {}) => {
   }
 
   const reducer = combineReducers({
-    get:ApiReducer(actions.get.types),
+    get:ApiReducer(actions.get.types, tableItems),
     tools:TableReducer(actions.tools.types)
   })
 
@@ -69,7 +73,7 @@ const TableWidget = (settings = {}) => {
       const state = settings.selector(store.getState())
       return {
         title:settings.getTitle(state, routeInfo),
-        data:state.get.data
+        data:getTableData(state)
       }
     },
     getInjectedProps:(routeInfo) => {
@@ -79,6 +83,7 @@ const TableWidget = (settings = {}) => {
         getIcon:settings.getIcon,
         buttons:settings.getButtons(state, store, routeInfo, actions),
         fields:settings.getTableFields(state, store, routeInfo),
+        multiSelectable:settings.multiSelectable,
         onRowSelection:(idArray) => {}
       }
     }
@@ -90,7 +95,8 @@ const TableWidget = (settings = {}) => {
     const tableApiSaga = ApiSaga({
       name:settings.title + ':get',
       actions:actions.get,
-      handler:api.get
+      handler:api.get,
+      injector:tableItems
     })
 
     return [

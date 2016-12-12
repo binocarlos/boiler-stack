@@ -12,14 +12,19 @@ const ApiSagaFactory = (opts = {}) => {
 
   const actions = opts.actions
   const handler = opts.handler
+  const injector = opts.injector
   const trigger = actions.types.REQUEST
 
   function* apiRequest(action) {
     logger('request', action)
     try {
       const data = yield handler(action.query, action.data)
+      const injected = injector ?
+        injector(data) :
+        data
       logger('response', data)
-      yield put(actions.success(data))
+      logger('injecteed', injected)
+      yield put(actions.success(injected))
     } catch (e) {
       logger('error', e.message)
       yield put(actions.failure(e.message))

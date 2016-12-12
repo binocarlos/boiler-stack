@@ -8,8 +8,11 @@ const DEFAULT_STATE = {
   data:null
 }
 
-const apiReducerFactory = (types) => {
-  const apiReducer = (state = DEFAULT_STATE, action) => {
+const apiReducerFactory = (types, injector) => {
+  const useDefaultState = Object.assign({}, DEFAULT_STATE, {
+    data:injector ? injector() : null
+  })
+  const apiReducer = (state = useDefaultState, action) => {
     switch (action.type) {
       case types.REQUEST:
         return update(state, {

@@ -13,6 +13,8 @@ const TableToolbar = (settings = {}) => {
   const route = settings.route
 
   const getButtons = (state, store, routeInfo, actions) => {
+    const selected = state.tools.selected || []
+
     return [{
       title:'Add',
       handler:() => store.dispatch(routerActions.push(route + '/add'))

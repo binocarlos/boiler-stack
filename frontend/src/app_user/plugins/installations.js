@@ -7,7 +7,10 @@ import ICON from 'material-ui/svg-icons/file/cloud'
 
 const TABLE_FIELDS = [{
   name:'littleid',
-  title:'ID'
+  title:'ID',
+  style:{
+    width:'100px'
+  }
 },{
   name:'name',
   title:'Name'
