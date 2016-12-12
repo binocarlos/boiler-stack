@@ -1,6 +1,8 @@
 import { routerActions } from 'react-router-redux'
 
 const REQUIRED_SETTINGS = [
+  'title',
+  'pluralTitle',
   'route'
 ]
 
@@ -11,6 +13,14 @@ const FormToolbar = (settings = {}) => {
   })
 
   const route = settings.route
+  const title = settings.title
+  const pluralTitle = settings.pluralTitle
+
+  const getTitle = (state, routeInfo) => {
+    return routeInfo.mode == 'add' ? 
+      'New ' + title :
+      'Edit title'
+  }
 
   const getButtons = (state, store, routeInfo, actions) => {
     
@@ -39,7 +49,10 @@ const FormToolbar = (settings = {}) => {
     }]
   }
 
-  return getButtons
+  return {
+    getTitle,
+    getButtons
+  }
 }
 
 export default FormToolbar

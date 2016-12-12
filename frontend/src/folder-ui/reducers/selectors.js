@@ -1,6 +1,10 @@
-export const getTableRaw = (state) => state.get.data
-export const getTableIds = (state) => getTableRaw(state).ids || []
-export const getTableSelectedIds = (state) => getTableRaw(state).ids || []
-export const getTableDb = (state) => getTableRaw(state).db || {}
-export const getTableData = (state) => getTableIds(state).map(id => getTableDb(state)[id])
-export const getSelectedTableItems = (state) => getTableSelectedIds(state).map(id => getTableDb(state)[id])
+export const virtualTable = (state) => {
+  const raw = state.get.data
+  const selected = state.tools.selected
+  return {
+    raw,
+    selected,
+    getItems:() => raw.ids.map(id => raw.db[id]),
+    getSelectedItems:() => selected.map(id => raw.db[id])
+  }
+}

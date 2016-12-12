@@ -11,13 +11,13 @@ import TableReducer from '../../reducers/table'
 
 import { ContainerWrapper } from '../../tools'
 import { tableItems } from '../../reducers/injectors'
-import { getTableData } from '../../reducers/selectors'
+import { virtualTable } from '../../reducers/selectors'
 
 import ToolbarContent from '../../containers/ToolbarContent'
 import Table from '../../components/Table'
 
 const REQUIRED_SETTINGS = [
-  'title',
+  'label',
   'actionPrefix',
   'selector',
   'getTitle',
@@ -71,9 +71,12 @@ const TableWidget = (settings = {}) => {
     getState:(routeInfo) => {
       routeInfo = mapRouteInfo(routeInfo)
       const state = settings.selector(store.getState())
+      const table = virtualTable(state)
       return {
         title:settings.getTitle(state, routeInfo),
-        data:getTableData(state)
+        data:table.getItems(),
+        selected:table.selected,
+        selectedItems:table.getSelectedItems()
       }
     },
     getInjectedProps:(routeInfo) => {
@@ -84,7 +87,9 @@ const TableWidget = (settings = {}) => {
         buttons:settings.getButtons(state, store, routeInfo, actions),
         fields:settings.getTableFields(state, store, routeInfo),
         multiSelectable:settings.multiSelectable,
-        onRowSelection:(idArray) => {}
+        onRowSelection:(idArray) => {
+          store.dispatch(actions.tools.selected(idArray))
+        }
       }
     }
   })
@@ -93,7 +98,7 @@ const TableWidget = (settings = {}) => {
 
     // load the table data
     const tableApiSaga = ApiSaga({
-      name:settings.title + ':get',
+      name:settings.label + ':get',
       actions:actions.get,
       handler:api.get,
       injector:tableItems

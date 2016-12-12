@@ -17,7 +17,7 @@ import ToolbarContent from '../../containers/ToolbarContent'
 import Form from '../../components/Form'
 
 const REQUIRED_SETTINGS = [
-  'title',
+  'label',
   'actionPrefix',
   'selector',
   'getTitle',
@@ -124,13 +124,13 @@ const FormWidget = (settings = {}) => {
     }
 
     const postSaga = ApiSaga({
-      name:settings.title + ':post',
+      name:settings.label + ':post',
       actions:actions.post,
       handler:api.post
     })
 
     const putSaga = ApiSaga({
-      name:settings.title + ':put',
+      name:settings.label + ':put',
       actions:actions.put,
       handler:api.put
     })

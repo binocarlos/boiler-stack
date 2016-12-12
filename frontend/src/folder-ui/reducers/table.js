@@ -11,7 +11,7 @@ const tableReducerFactory = (types) => {
       case types.TABLE_SELECTED:
         return update(state, {
           selected:{
-            $set:action.selected
+            $set:action.ids
           }
         })
       default:

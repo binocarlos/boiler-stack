@@ -20,7 +20,7 @@ import Form from '../components/Form'
 import TableWidget from './widgets/table'
 import FormWidget from './widgets/form'
 
-import TableToolbar from './toolbars/table'
+import CrudTableToolbar from './toolbars/crudtable'
 import FormToolbar from './toolbars/form'
 
 const REQUIRED_SETTINGS = [
@@ -51,6 +51,7 @@ const CrudPlugin = (settings = {}) => {
   if(!settings.pluralTitle) settings.pluralTitle = settings.title + 's'
 
   const title = settings.title
+  const pluralTitle = settings.pluralTitle || settings.title + 's'
   const api = settings.api
   const route = settings.route
   const reducerName = settings.reducerName
@@ -63,35 +64,40 @@ const CrudPlugin = (settings = {}) => {
       null
   }
 
+  const toolbars = {
+    table:CrudTableToolbar({
+      title,
+      pluralTitle,
+      route
+    }),
+    form:FormToolbar({
+      title,
+      pluralTitle,
+      route
+    })
+  }
+
   const widgets = {
     table:TableWidget({
-      title:title + ':table',
+      label:title + ':table',
       api:api.table,
       actionPrefix,
       selector:selector('table'),
       getTableFields:settings.getTableFields,
       getIcon:getIcon,
-      getTitle:(state, routeInfo) => settings.pluralTitle,
-      getButtons:TableToolbar({
-        route
-      })
+      getTitle:toolbars.table.getTitle,
+      getButtons:toolbars.table.getButtons
     }),
     form:FormWidget({
-      title:title + ':form',
+      label:title + ':form',
       api:api.form,
       actionPrefix,
       selector:selector('form'),
       getSchema:settings.getSchema,
       getInitialFormData:settings.getInitialFormData,
       getIcon:getIcon,
-      getTitle:(state, routeInfo) => {
-        return routeInfo.mode == 'add' ? 
-          'New ' + settings.title :
-          'Edit title'
-      },
-      getButtons:FormToolbar({
-        route
-      })
+      getTitle:toolbars.form.getTitle,
+      getButtons:toolbars.form.getButtons
     })
   }
 
