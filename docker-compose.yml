@@ -50,8 +50,8 @@ services:
     links:
       - redis:redis
       - userstorage:userstorage
-    volumes:
-      - ../passport-slim/src:/app/src
+    #volumes:
+    #  - ../passport-slim/src:/app/src
     #entrypoint: 
     #  - "sleep"
     #  - "10000000"
@@ -68,8 +68,8 @@ services:
     container_name: boiler_userstorage
     links:
       - storage:storage
-    volumes:
-      - ../passport-slim-instant-mongo/src:/app/src
+    #volumes:
+    #  - ../passport-slim-instant-mongo/src:/app/src
     #entrypoint: 
     #  - "sleep"
     #  - "10000000"

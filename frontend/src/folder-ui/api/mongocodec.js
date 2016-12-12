@@ -15,20 +15,12 @@ export default function MongoCodec(opts = {}){
       })
       delete(ret._id)
       delete(ret.__v)
-      logger('encode', {
-        pre:data,
-        post:ret
-      })
       return ret
     },
     decode:(data) => {
       let ret = Object.assign({}, data)
       ret._id = ret.id
       delete(ret.id)
-      logger('decode', {
-        pre:data,
-        post:ret
-      })
       return ret
     }
   }

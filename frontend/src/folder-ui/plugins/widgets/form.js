@@ -18,6 +18,7 @@ import Form from '../../components/Form'
 
 const REQUIRED_SETTINGS = [
   'label',
+  'route',
   'actionPrefix',
   'selector',
   'getTitle',
@@ -120,6 +121,15 @@ const FormWidget = (settings = {}) => {
     }
 
     function* requestFormDataSaga() {
+      yield takeLatest(actions.tools.types.FORM_REQUEST_DATA, requestFormData)
+    }
+
+    // redirect once they have added an item
+    function* afterPost(action) {
+
+    }
+
+    function* afterPostSaga() {
       yield takeLatest(actions.tools.types.FORM_REQUEST_DATA, requestFormData)
     }
 
