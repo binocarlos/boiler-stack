@@ -10,6 +10,11 @@ const ApiSagaFactory = (opts = {}) => {
 
   const logger = bows('folderui:saga:' + opts.name)
 
+  logger('creating api saga', {
+    opts,
+    actions
+  })
+
   const actions = opts.actions
   const handler = opts.handler
   const injector = opts.injector

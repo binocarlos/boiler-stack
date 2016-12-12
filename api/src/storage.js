@@ -56,7 +56,7 @@ function factory(opts){
       requestHandler(function(callback){
         bhttp.get(url, {
           headers:{
-            'X-TRACER-ID':logger.id
+            'x-tracer-id':logger.id
           }
         }, callback)
       }, {
@@ -71,7 +71,7 @@ function factory(opts){
       requestHandler(function(callback){
         bhttp.get(url, {
           headers:{
-            'X-TRACER-ID':logger.id
+            'x-tracer-id':logger.id
           }
         }, callback)
       }, {
@@ -87,7 +87,7 @@ function factory(opts){
         bhttp.post(url, data, {
           encodeJSON:true,
           headers:{
-            'X-TRACER-ID':logger.id
+            'x-tracer-id':logger.id
           }
         }, callback)
       }, {
@@ -103,7 +103,7 @@ function factory(opts){
         bhttp.patch(url, data, {
           encodeJSON:true,
           headers:{
-            'X-TRACER-ID':logger.id
+            'x-tracer-id':logger.id
           }
         }, callback)
       }, {
@@ -118,7 +118,7 @@ function factory(opts){
       requestHandler(function(callback){
         bhttp.delete(url, {
           headers:{
-            'X-TRACER-ID':logger.id
+            'x-tracer-id':logger.id
           }
         }, callback)
       }, {

@@ -56,6 +56,7 @@ services:
     #  - "sleep"
     #  - "10000000"
     environment:
+      LOGLEVEL: debug
       MOUNTPATH: /auth/v1
       REDIS_SERVICE_HOST: redis
       STORAGE_SERVICE_HOST: userstorage
@@ -73,6 +74,7 @@ services:
     #  - "sleep"
     #  - "10000000"
     environment:
+      LOGLEVEL: debug
       MOUNTPATH: /userstorage/v1
       STORAGE_SERVICE_HOST: storage
       STORAGE_SERVICE_PATH: /api/v1/users
@@ -87,6 +89,7 @@ services:
     volumes:
       - ./storage/src/models.js:/app/src/models.js
     environment:
+      LOGLEVEL: debug
       FILE: /app/src/models.js
       MONGO_SERVICE_HOST: mongo
       MONGO_SERVICE_DB: boiler_storage

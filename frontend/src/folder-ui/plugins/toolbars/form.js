@@ -17,7 +17,7 @@ const FormToolbar = (settings = {}) => {
   const pluralTitle = settings.pluralTitle
 
   const getTitle = (state, routeInfo) => {
-    return routeInfo.mode == 'add' ? 
+    return routeInfo.mode == 'post' ? 
       'New ' + title :
       'Edit title'
   }

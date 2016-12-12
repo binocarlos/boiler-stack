@@ -29,7 +29,7 @@ function sectionWrapper(name, assertion){
       }, 'load user')
 
       // we load the user so the auth function has some context
-      tools.loadUser(req.headers.cookie, errorWrapper(req.logger, res, function(user){
+      tools.loadUser(req.log, req.headers.cookie, errorWrapper(req.logger, res, function(user){
 
         req.log.debug({
           user:user

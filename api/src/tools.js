@@ -59,11 +59,17 @@ function storageUrl(path){
 
 var AUTH_PATH = '/auth/v1/status'
 
-function loadUser(cookie, done){
-  bhttp.get(authUrl(AUTH_PATH), {
+function loadUser(logger, cookie, done){
+  var url = authUrl(AUTH_PATH)
+  logger.debug({
+    url:url,
+    tracerid:logger.id
+  }, 'load user from auth service')
+  bhttp.get(url, {
     decodeJSON:true,
     headers:{
-      cookie:cookie
+      cookie:cookie,
+      'x-tracer-id':logger.id
     }
   }, function(err, authResp){
     if(err) return done(err)
