@@ -1,8 +1,8 @@
-const tools = require('../tools')
+var tools = require('../tools')
 
 module.exports = function(storage){
 
-  function processId(id, done){
+  function processId(id, logger, done){
     if(!id) return done('no id passed')
     if(tools.isLittleId(id)){
 
@@ -14,7 +14,7 @@ module.exports = function(storage){
         select:{
           _id:1
         }
-      }), function(err, data){
+      }), logger, function(err, data){
         if(err) return done(err)
         if(!data || data.length<=0) return done('no model found')
         done(null, data[0]._id)
@@ -27,26 +27,26 @@ module.exports = function(storage){
 
   return Object.assign({}, storage, {
     processId:processId,
-    addModel:function(data, done){
+    addModel:function(data, logger, done){
       data.littleid = tools.littleid()
-      storage.addModel(data, done)
+      storage.addModel(data, logger, done)
     },
-    loadModel:function(id, done){
-      processId(id, function(err, fullid){
+    loadModel:function(id, logger, done){
+      processId(id, logger, function(err, fullid){
         if(err) return done(err)
-        storage.loadModel(fullid, done)
+        storage.loadModel(fullid, logger, done)
       })
     },
     saveModel:function(id, data, done){
-      processId(id, function(err, fullid){
+      processId(id, logger, function(err, fullid){
         if(err) return done(err)
-        storage.saveModel(fullid, data, done)
+        storage.saveModel(fullid, data, logger, done)
       })
     },
     deleteModel:function(id, done){
-      processId(id, function(err, fullid){
+      processId(id, logger, function(err, fullid){
         if(err) return done(err)
-        storage.deleteModel(fullid, done)
+        storage.deleteModel(fullid, logger, done)
       })
     }
   })

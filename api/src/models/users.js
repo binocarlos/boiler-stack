@@ -1,5 +1,5 @@
-const Storage = require('../storage')
-const littleid = require('./littleid')
+var Storage = require('../storage')
+var littleid = require('./littleid')
 
 module.exports = function(opts){
 

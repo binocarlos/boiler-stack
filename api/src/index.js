@@ -16,6 +16,4 @@ var args = require('minimist')(process.argv, {
 var routes = App(args)
 
 var httpserver = http.createServer(routes)
-httpserver.listen(args.port, function(){
-  console.log('server listening on port ' + args.port)
-})
+httpserver.listen(args.port)

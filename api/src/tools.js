@@ -1,9 +1,49 @@
-const bhttp = require('bhttp')
-const hat = require('hat')
-const concat = require('concat-stream')
-const errorWrapper = require('digger-folder-ui/tools').errorWrapper
-const jsonRequestWrapper = require('digger-folder-ui/tools').jsonRequestWrapper
-const jsonResponseWrapper = require('digger-folder-ui/tools').jsonResponseWrapper
+var bhttp = require('bhttp')
+var hat = require('hat')
+var concat = require('concat-stream')
+
+function errorWrapper(logger, res, fn, errorCode){
+  errorCode = errorCode || 500
+  return function(err, data){
+    if(err){
+      console.log('-------------------------------------------');
+      console.log('-------------------------------------------');
+      console.log(err.toString())
+      logger.error(data, err)
+      res.statusCode = errorCode
+      res.end(err.toString())
+      return
+    }
+    fn(data)
+  }
+}
+
+function jsonRequestWrapper(req, res, done){
+  req.pipe(concat(function(data){
+    var stringData = data.toString()
+    var jsonData = null
+    try{
+      jsonData = JSON.parse(stringData)
+    } catch(err) {
+      req.log.error({
+        data:stringData
+      }, err.toString())
+      res.statusCode = 500
+      res.end(err.toString())
+      return
+    }
+    done(data)
+  }))
+}
+
+function jsonResponseWrapper(logger, res, opts){
+  opts = opts || {}
+  return errorWrapper(logger, res, function(data){
+    data = opts.filter ? opts.filter(data) : data
+    res.setHeader('Content-type', 'application/json')
+    res.end(JSON.stringify(data))  
+  }, opts.code)
+}
 
 function authUrl(path){
   var url = 'http://' + process.env.AUTH_SERVICE_HOST + ':' + process.env.AUTH_SERVICE_PORT

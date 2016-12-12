@@ -12,7 +12,8 @@
     "hat": "^0.0.3",
     "http-hash-router": "^1.1.0",
     "minimist": "^1.2.0",
-    "morgan": "^1.7.0"
+    "pino": "^3.0.5",
+    "pino-http": "^2.2.0"
   },
   "devDependencies": {}
 }

@@ -1,9 +1,9 @@
-const ProjectStorage = require('../models/projects')
-const tools = require('../tools')
+var ProjectStorage = require('../models/projects')
+var tools = require('../tools')
 
-const jsonRequestWrapper = tools.jsonRequestWrapper
-const jsonResponseWrapper = tools.jsonResponseWrapper
-const errorWrapper = tools.jsonErrorResponse
+var jsonRequestWrapper = tools.jsonRequestWrapper
+var jsonResponseWrapper = tools.jsonResponseWrapper
+var errorWrapper = tools.jsonErrorResponse
 
 /*
 
@@ -25,13 +25,17 @@ module.exports = function(router, opts){
     GET:auth({
       action:'list'
     }, function(req, res, opts){
-      projects.loadAccountProjects(opts.params.accountid, jsonResponseWrapper(res))
+      req.log.debug(opts, 'GET projects')
+      projects.loadAccountProjects(opts.params.accountid, jsonResponseWrapper(req.log, res))
     }),
     POST:auth({
       action:'add'
     }, function(req, res, opts){
       jsonRequestWrapper(req, res, function(data){
-        projects.addAccountProject(opts.params.accountid, data, jsonResponseWrapper(res))
+        req.log.debug(Object.assign({}, opts, {
+          data:data
+        }), 'POST projects')
+        projects.addAccountProject(opts.params.accountid, data, jsonResponseWrapper(req.log, res))
       })
     })
   })
@@ -40,19 +44,24 @@ module.exports = function(router, opts){
     GET:auth({
       action:'read'
     }, function(req, res, opts){
-      projects.loadModel(opts.params.projectid, jsonResponseWrapper(res))
+      req.log.debug(opts, 'GET project')
+      projects.loadModel(opts.params.projectid, jsonResponseWrapper(req.log, res))
     }),
     PUT:auth({
       action:'save'
     }, function(req, res, opts){
       jsonRequestWrapper(req, res, function(data){
-        projects.saveModel(opts.params.projectid, data, jsonResponseWrapper(res))
+        req.log.debug(Object.assign({}, opts, {
+          data:data
+        }), 'PUT project')
+        projects.saveModel(opts.params.projectid, data, jsonResponseWrapper(req.log, res))
       })
     }),
     DELETE:auth({
       action:'delete'
     }, function(req, res, opts){
-      projects.deleteModel(opts.params.projectid, jsonResponseWrapper(res))
+      req.log.debug(opts, 'DELETE project')
+      projects.deleteModel(opts.params.projectid, jsonResponseWrapper(req.log, res))
     })
   })
 

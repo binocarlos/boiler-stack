@@ -1,8 +1,8 @@
-const UserStorage = require('../models/users')
-const tools = require('../tools')
-const jsonRequestWrapper = tools.jsonRequestWrapper
-const jsonResponseWrapper = tools.jsonResponseWrapper
-const errorWrapper = tools.jsonErrorResponse
+var UserStorage = require('../models/users')
+var tools = require('../tools')
+var jsonRequestWrapper = tools.jsonRequestWrapper
+var jsonResponseWrapper = tools.jsonResponseWrapper
+var errorWrapper = tools.jsonErrorResponse
 
 module.exports = function(router, opts){
 
@@ -20,8 +20,9 @@ module.exports = function(router, opts){
     
   */
   router.set(opts.url + '/currentuser', {
-    GET:function(req, res){
-      tools.loadUser(req.headers.cookie, jsonResponseWrapper(res))
+    GET:function(req, res, opts){
+      req.log.debug(opts, 'GET currentuser')
+      tools.loadUser(req.headers.cookie, jsonResponseWrapper(req.log, res))
     }
   })
 
@@ -29,15 +30,19 @@ module.exports = function(router, opts){
     GET:auth({
       action:'list'
     }, function(req, res, opts){
+      req.log.debug(opts, 'GET users')
       users.loadModels({
 
-      }, jsonResponseWrapper(res))
+      }, req.log, jsonResponseWrapper(req.log, res))
     }),
     POST:auth({
       action:'add'
     }, function(req, res, opts){
       jsonRequestWrapper(req, res, function(data){
-        users.addModel(data, jsonResponseWrapper(res))
+        req.log.debug(Object.assign({}, opts, {
+          data:data
+        }), 'POST users')
+        users.addModel(data, req.log, jsonResponseWrapper(req.log, res))
       })
     })
   })
@@ -46,19 +51,24 @@ module.exports = function(router, opts){
     GET:auth({
       action:'read'
     }, function(req, res, opts){
-      users.loadModel(opts.params.userid, jsonResponseWrapper(res))
+      req.log.debug(opts, 'GET user')
+      users.loadModel(opts.params.userid, req.log, jsonResponseWrapper(req.log, res))
     }),
     PUT:auth({
       action:'save'
     }, function(req, res, opts){
       jsonRequestWrapper(req, res, function(data){
-        users.saveModel(opts.params.userid, data, jsonResponseWrapper(res))
+        req.log.debug(Object.assign({}, opts, {
+          data:data
+        }), 'PUT user')
+        users.saveModel(opts.params.userid, data, req.log, jsonResponseWrapper(req.log, res))
       })
     }),
     DELETE:auth({
       action:'delete'
     }, function(req, res, opts){
-      users.deleteModel(opts.params.userid, jsonResponseWrapper(res))
+      req.log.debug(opts, 'DELETE user')
+      users.deleteModel(opts.params.userid, req.log, jsonResponseWrapper(req.log, res))
     })
   })
 }

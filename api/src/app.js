@@ -1,24 +1,22 @@
-const url = require('url')
-const morgan = require('morgan')
-const HttpHashRouter = require('http-hash-router')
+var url = require('url')
 
-const logger = morgan('combined')
+var HttpHashRouter = require('http-hash-router')
+var Logger = require('./logger')
+var Auth = require('./auth')
 
-const Auth = require('./auth')
-
-const Digger = require('./routes/digger')
-const Version = require('./routes/version')
-const Users = require('./routes/users')
-const Installations = require('./routes/installations')
-const Projects = require('./routes/projects')
-const Quotes = require('./routes/quotes')
-const Clients = require('./routes/clients')
+var Digger = require('./routes/digger')
+var Version = require('./routes/version')
+var Users = require('./routes/users')
+var Installations = require('./routes/installations')
+var Projects = require('./routes/projects')
+var Quotes = require('./routes/quotes')
+var Clients = require('./routes/clients')
 
 module.exports = function(opts){
 
   opts = opts || {}
 
-  if(!opts.url) throw new Error('routes needs a url option')
+  if(!opts.url) logger.error(new Error('routes needs a url option'))
 
   var router = HttpHashRouter()
 
@@ -64,19 +62,21 @@ module.exports = function(opts){
     auth:auth('clients')
   }))
 
-  function handler(req, res) {
+  var logger = Logger({
+    name:'api'
+  })
 
+  function handler(req, res) {
+    logger(req, res)
+    
     function onError(err) {
       if (err) {
+        req.log.error({}, err)
         res.statusCode = err.statusCode || 500;
         res.end(err.message);
       }
     }
-
-    logger(req, res, function (err) {
-      if(err) return onError(err)
-      router(req, res, {}, onError)
-    })
+    router(req, res, {}, onError)
   }
 
   return handler

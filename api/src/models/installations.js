@@ -1,8 +1,8 @@
-const async = require('async')
-const Storage = require('../storage')
-const Collaborators = require('./collaborators')
-const tools = require('../tools')
-const littleid = require('./littleid')
+var async = require('async')
+var Storage = require('../storage')
+var Collaborators = require('./collaborators')
+var tools = require('../tools')
+var littleid = require('./littleid')
 
 module.exports = function(opts){
 
@@ -18,18 +18,18 @@ module.exports = function(opts){
     then load each project mapping it's id onto data
     
   */
-  function loadUserInstallations(userid, done){
+  function loadUserInstallations(userid, logger, done){
 
     async.waterfall([
 
       function(next){
-        collaborators.loadUserCollaborations(userid, next)
+        collaborators.loadUserCollaborations(userid, logger, next)
       },
 
       function(collaborations, next){
         async.parallel(collaborations.map(function(collaboration){
           return function(nextinstallation){
-            installations.loadModel(collaboration.installationid, function(err, installation){
+            installations.loadModel(collaboration.installationid, logger, function(err, installation){
               if(err) return nextinstallation(err)
               installation.permission = collaboration.permission
               return nextinstallation(null, installation)
@@ -47,15 +47,15 @@ module.exports = function(opts){
     then create an association in the collaborators table
     
   */
-  function addUserInstallation(userid, data, done){
+  function addUserInstallation(userid, data, logger, done){
     async.waterfall([
 
       function(next){
-        installations.addModel(data, next)
+        installations.addModel(data, logger, next)
       },
 
       function(installation, next){
-        collaborators.createInstallationOwner(installation.id, userid, next)
+        collaborators.createInstallationOwner(installation.id, userid, logger, next)
       }
 
     ], done)
@@ -67,15 +67,15 @@ module.exports = function(opts){
     then remove any collaborators with that installationid
     
   */
-  function deleteInstallation(installationid, done){
+  function deleteInstallation(installationid, logger, done){
 
     async.series([
       function(next){
-        collaborators.deleteInstallationCollaborations(installationid, next)
+        collaborators.deleteInstallationCollaborations(installationid, logger, next)
       },
 
       function(next){
-        installations.deleteModel(installationid, next)
+        installations.deleteModel(installationid, logger, next)
       }
 
     ], done)

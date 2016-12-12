@@ -1,5 +1,5 @@
-const diggerFolderUI = require('digger-folder-ui')
-const tools = require('../tools')
+var diggerFolderUI = require('digger-folder-ui')
+var tools = require('../tools')
 
 module.exports = function(router, opts){
 
@@ -38,8 +38,6 @@ module.exports = function(router, opts){
   var paramFields = [frontendPrefix].concat(opts.paramFields.map(function(field){
     return ':' + field
   })).join('/')
-
-  console.log('digger mountpoint: ' + opts.url + '/' + paramFields)
 
   diggerFolderUI({
     // we extract the item id from this part of the path

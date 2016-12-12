@@ -1,6 +1,6 @@
-const bhttp = require("bhttp")
-const querystring = require('querystring');
-const tools = require('./tools')
+var bhttp = require("bhttp")
+var querystring = require('querystring');
+var tools = require('./tools')
 
 /*
 
@@ -32,29 +32,29 @@ function factory(opts){
   }
   
   return {
-    loadModels:function(query, done){
+    loadModels:function(query, logger, done){
       bhttp.get(getURL('', query), {
         decodeJSON:true
       }, resHandler(done))
     },
-    loadModel:function(id, done){
+    loadModel:function(id, logger, done){
       bhttp.get(getURL('/' + id), {
         decodeJSON:true
       }, resHandler(done))
     },
-    addModel:function(data, done){
+    addModel:function(data, logger, done){
       bhttp.post(getURL(), data, {
         encodeJSON:true,
         decodeJSON:true
       }, resHandler(done))
     },
-    saveModel:function(id, data, done){
+    saveModel:function(id, data, logger, done){
       bhttp.patch(getURL('/' + id), data, {
         encodeJSON:true,
         decodeJSON:true
       }, resHandler(done))
     },
-    deleteModel:function(id, done){
+    deleteModel:function(id, logger, done){
       bhttp.delete(getURL('/' + id), {
         
       }, resHandler(done))

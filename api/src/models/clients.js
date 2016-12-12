@@ -1,7 +1,7 @@
-const Storage = require('../storage')
-const Installations = require('./installations')
-const littleid = require('./littleid')
-const tools = require('../tools')
+var Storage = require('../storage')
+var Installations = require('./installations')
+var littleid = require('./littleid')
+var tools = require('../tools')
 
 module.exports = function(opts){
 
@@ -16,23 +16,23 @@ module.exports = function(opts){
     load all the clients within one project
     
   */
-  function loadInstallationClients(id, done){
-    installations.processId(id, function(err, fullid){
+  function loadInstallationClients(id, logger, done){
+    installations.processId(id, logger, function(err, fullid){
       if(err) return done(err)
       var query = tools.encodeQuery({
         query:{
           installationid:fullid
         }
       })
-      clients.loadModels(query, done)
+      clients.loadModels(query, logger, done)
     })
   }
 
-  function addInstallationClient(id, data, done){
-    installations.processId(id, function(err, fullid){
+  function addInstallationClient(id, data, logger, done){
+    installations.processId(id, logger, function(err, fullid){
       if(err) return done(err)
       data.installationid = fullid
-      clients.addModel(data, done)
+      clients.addModel(data, logger, done)
     })
   }
 

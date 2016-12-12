@@ -1,9 +1,9 @@
-const async = require('async')
-const Storage = require('../storage')
-const Installations = require('./installations')
-const Projects = require('./projects')
-const littleid = require('./littleid')
-const tools = require('../tools')
+var async = require('async')
+var Storage = require('../storage')
+var Installations = require('./installations')
+var Projects = require('./projects')
+var littleid = require('./littleid')
+var tools = require('../tools')
 
 module.exports = function(opts){
 
@@ -19,38 +19,38 @@ module.exports = function(opts){
     load all the quotes within one project
     
   */
-  function loadInstallationQuotes(id, done){
-    installations.processId(id, function(err, fullid){
+  function loadInstallationQuotes(id, logger, done){
+    installations.processId(id, logger, function(err, fullid){
       if(err) return done(err)
       quotes.loadModels(tools.encodeQuery({
         query:{
           installationid:fullid
         }
-      }), done)
+      }), logger, done)
     })
   }
 
-  function loadProjectQuotes(id, done){
-    projects.processId(id, function(err, fullid){
+  function loadProjectQuotes(id, logger, done){
+    projects.processId(id, logger, function(err, fullid){
       if(err) return done(err)
       quotes.loadModels(tools.encodeQuery({
         query:{
           projectid:fullid
         }
-      }), done)
+      }), logger, done)
     })
   }
 
-  function addProjectQuote(projectid, data, done){
+  function addProjectQuote(projectid, data, logger, done){
     async.waterfall([
       function(next){
-        projects.loadModel(projectid, next)
+        projects.loadModel(projectid, logger, next)
       },
 
       function(project, next){
         data.installationid = project.installationid
         data.projectid = project.id
-        quotes.addModel(data, next)
+        quotes.addModel(data, logger, next)
       }
     ], done)
   }
