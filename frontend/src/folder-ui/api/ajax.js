@@ -23,8 +23,11 @@ export default function ajaxdb(opts = {}){
 
     if(req.data){
       logger('request data', req.data)
-      reqOpts.responseType = 'json'
       reqOpts.transformRequest = [(data) => JSON.stringify(data)]
+      reqOpts.data = req.data
+      reqOpts.headers = {
+        'Content-Type': 'application/json'
+      }
     }
 
     return axios(reqOpts)

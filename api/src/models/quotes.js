@@ -49,7 +49,7 @@ module.exports = function(opts){
 
       function(project, next){
         data.installationid = project.installationid
-        data.projectid = project.id
+        data.projectid = project._id
         quotes.addModel(data, logger, next)
       }
     ], done)

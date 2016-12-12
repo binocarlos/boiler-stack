@@ -24,7 +24,7 @@ module.exports = function(router, opts){
       action:'list'
     }, function(req, res, opts){
       req.log.debug(opts, 'GET quotes')
-      quotes.loadProjectQuotes(opts.params.projectid, jsonResponseWrapper(req.log, res))
+      quotes.loadProjectQuotes(opts.params.projectid, req.log, jsonResponseWrapper(req.log, res))
     }),
     POST:auth({
       action:'add'
@@ -33,7 +33,7 @@ module.exports = function(router, opts){
         req.log.debug(Object.assign({}, opts, {
           data:data
         }), 'POST quotes')
-        quotes.addProjectQuote(opts.params.projectid, data, jsonResponseWrapper(req.log, res))
+        quotes.addProjectQuote(opts.params.projectid, data, req.log, jsonResponseWrapper(req.log, res))
       })
     })
   })
@@ -43,7 +43,7 @@ module.exports = function(router, opts){
       action:'read'
     }, function(req, res, opts){
       req.log.debug(opts, 'GET quote')
-      quotes.loadModel(opts.params.quoteid, jsonResponseWrapper(req.log, res))
+      quotes.loadModel(opts.params.quoteid, req.log, jsonResponseWrapper(req.log, res))
     }),
     PUT:auth({
       action:'save'
@@ -52,14 +52,14 @@ module.exports = function(router, opts){
         req.log.debug(Object.assign({}, opts, {
           data:data
         }), 'PUT quote')
-        quotes.saveModel(opts.params.quoteid, data, jsonResponseWrapper(req.log, res))
+        quotes.saveModel(opts.params.quoteid, data, req.log, jsonResponseWrapper(req.log, res))
       })
     }),
     DELETE:auth({
       action:'delete'
     }, function(req, res, opts){
       req.log.debug(opts, 'DELETE quote')
-      quotes.deleteModel(opts.params.quoteid, jsonResponseWrapper(req.log, res))
+      quotes.deleteModel(opts.params.quoteid, req.log, jsonResponseWrapper(req.log, res))
     })
   })
 }

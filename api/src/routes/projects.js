@@ -26,7 +26,7 @@ module.exports = function(router, opts){
       action:'list'
     }, function(req, res, opts){
       req.log.debug(opts, 'GET projects')
-      projects.loadAccountProjects(opts.params.accountid, jsonResponseWrapper(req.log, res))
+      projects.loadAccountProjects(opts.params.accountid, req.log, jsonResponseWrapper(req.log, res))
     }),
     POST:auth({
       action:'add'
@@ -35,7 +35,7 @@ module.exports = function(router, opts){
         req.log.debug(Object.assign({}, opts, {
           data:data
         }), 'POST projects')
-        projects.addAccountProject(opts.params.accountid, data, jsonResponseWrapper(req.log, res))
+        projects.addAccountProject(opts.params.accountid, data, req.log, jsonResponseWrapper(req.log, res))
       })
     })
   })
@@ -45,7 +45,7 @@ module.exports = function(router, opts){
       action:'read'
     }, function(req, res, opts){
       req.log.debug(opts, 'GET project')
-      projects.loadModel(opts.params.projectid, jsonResponseWrapper(req.log, res))
+      projects.loadModel(opts.params.projectid, req.log, jsonResponseWrapper(req.log, res))
     }),
     PUT:auth({
       action:'save'
@@ -54,14 +54,14 @@ module.exports = function(router, opts){
         req.log.debug(Object.assign({}, opts, {
           data:data
         }), 'PUT project')
-        projects.saveModel(opts.params.projectid, data, jsonResponseWrapper(req.log, res))
+        projects.saveModel(opts.params.projectid, data, req.log, jsonResponseWrapper(req.log, res))
       })
     }),
     DELETE:auth({
       action:'delete'
     }, function(req, res, opts){
       req.log.debug(opts, 'DELETE project')
-      projects.deleteModel(opts.params.projectid, jsonResponseWrapper(req.log, res))
+      projects.deleteModel(opts.params.projectid, req.log, jsonResponseWrapper(req.log, res))
     })
   })
 

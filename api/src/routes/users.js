@@ -22,7 +22,7 @@ module.exports = function(router, opts){
   router.set(opts.url + '/currentuser', {
     GET:function(req, res, opts){
       req.log.debug(opts, 'GET currentuser')
-      tools.loadUser(req.headers.cookie, jsonResponseWrapper(req.log, res))
+      tools.loadUser(req.headers.cookie, req.log, jsonResponseWrapper(req.log, res))
     }
   })
 

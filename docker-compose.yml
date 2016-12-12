@@ -102,10 +102,11 @@ services:
       - storage:storage
     volumes:
       - ./api/src:/app/src
-    entrypoint: 
-      - "sleep"
-      - "10000000"
+    #entrypoint: 
+    #  - "sleep"
+    #  - "10000000"
     environment:
+      LOGLEVEL: debug
       AUTH_SERVICE_HOST: auth
       AUTH_SERVICE_PORT: 80
       DIGGER_SERVICE_HOST: digger

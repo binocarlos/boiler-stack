@@ -24,7 +24,7 @@ var UserSchema = new Schema({
   
 */
 var CollaboratorSchema = new Schema({
-  accountid: { type: Schema.Types.ObjectId, required: true },
+  installationid: { type: Schema.Types.ObjectId, required: true },
   userid: { type: Schema.Types.ObjectId, required: true },
   permission: { type: String, required: true }
 })
@@ -73,7 +73,7 @@ module.exports = function(opts){
 
   return {
     user:mongoose.model('users', UserSchema),
-    installation:mongoose.model('installation', InstallationSchema),
+    installation:mongoose.model('installations', InstallationSchema),
     project:mongoose.model('projects', ProjectSchema),
     collaborator:mongoose.model('collaborators', CollaboratorSchema),
     client:mongoose.model('clients', ClientSchema),

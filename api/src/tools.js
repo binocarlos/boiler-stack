@@ -6,9 +6,6 @@ function errorWrapper(logger, res, fn, errorCode){
   errorCode = errorCode || 500
   return function(err, data){
     if(err){
-      console.log('-------------------------------------------');
-      console.log('-------------------------------------------');
-      console.log(err.toString())
       logger.error(data, err)
       res.statusCode = errorCode
       res.end(err.toString())
@@ -32,7 +29,7 @@ function jsonRequestWrapper(req, res, done){
       res.end(err.toString())
       return
     }
-    done(data)
+    done(jsonData)
   }))
 }
 

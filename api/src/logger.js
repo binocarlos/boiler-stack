@@ -22,14 +22,16 @@ module.exports = function(opts){
   var httplogger = pinohttp(getLogOptions(opts))
   var logger = pino(getLogOptions(opts))
   return function(req, res){
-    if(!req.headers['X-TRACER-ID']) req.headers['X-TRACER-ID'] = hat()
+    var id = req.headers['X-TRACER-ID'] ? req.headers['X-TRACER-ID'] : req.headers['X-TRACER-ID'] = hat()
     httplogger(req, res)
+    req.log.debug({}, 'api request: ' + req.method + ' ' + req.url)
     req.log = logger.child({
       req:{
-        id:req.headers['X-TRACER-ID'],
+        id:id,
         method:req.method,
         url:req.url
       }
     })
+    req.log.id = id
   }
 }

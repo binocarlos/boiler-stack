@@ -24,7 +24,7 @@ module.exports = function(router, opts){
       action:'list'
     }, function(req, res, opts){
       req.log.debug(opts, 'GET clients')
-      clients.loadProjectClients(opts.params.projectid, jsonResponseWrapper(req.log, res))
+      clients.loadProjectClients(opts.params.projectid, req.log, jsonResponseWrapper(req.log, res))
     }),
     POST:auth({
       action:'add'
@@ -33,7 +33,7 @@ module.exports = function(router, opts){
         req.log.debug(Object.assign({}, opts, {
           data:data
         }), 'POST client')
-        clients.addProjectClient(opts.params.projectid, data, jsonResponseWrapper(req.log, res))
+        clients.addProjectClient(opts.params.projectid, data, req.log, jsonResponseWrapper(req.log, res))
       })
     })
   })
@@ -43,7 +43,7 @@ module.exports = function(router, opts){
       action:'read'
     }, function(req, res, opts){
       req.log.debug(opts, 'GET client')
-      clients.loadModel(opts.params.quoteid, jsonResponseWrapper(req.log, res))
+      clients.loadModel(opts.params.quoteid, req.log, jsonResponseWrapper(req.log, res))
     }),
     PUT:auth({
       action:'save'
@@ -52,14 +52,14 @@ module.exports = function(router, opts){
         req.log.debug(Object.assign({}, opts, {
           data:data
         }), 'PUT client')
-        clients.saveModel(opts.params.quoteid, data, jsonResponseWrapper(req.log, res))
+        clients.saveModel(opts.params.quoteid, data, req.log, jsonResponseWrapper(req.log, res))
       })
     }),
     DELETE:auth({
       action:'delete'
     }, function(req, res, opts){
       req.log.debug(opts, 'DELETE client')
-      clients.deleteModel(opts.params.quoteid, jsonResponseWrapper(req.log, res))
+      clients.deleteModel(opts.params.quoteid, req.log, jsonResponseWrapper(req.log, res))
     })
   })
 }

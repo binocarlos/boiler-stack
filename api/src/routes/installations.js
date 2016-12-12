@@ -24,7 +24,7 @@ module.exports = function(router, opts){
       action:'list'
     }, function(req, res, opts){
       req.log.debug(opts, 'GET installations')
-      installations.loadUserInstallations(opts.user.id, jsonResponseWrapper(req.log, res))
+      installations.loadUserInstallations(opts.user.id, req.log, jsonResponseWrapper(req.log, res))
     }),
     POST:auth({
       action:'add'
@@ -33,7 +33,7 @@ module.exports = function(router, opts){
         req.log.debug(Object.assign({}, opts, {
           data:data
         }), 'POST installations')
-        installations.addUserInstallation(opts.user.id, data, jsonResponseWrapper(req.log, res))
+        installations.addUserInstallation(opts.user.id, data, req.log, jsonResponseWrapper(req.log, res))
       })
     })
   })
@@ -43,7 +43,7 @@ module.exports = function(router, opts){
       action:'read'
     }, function(req, res, opts){
       req.log.debug(opts, 'GET installation')
-      installations.loadModel(opts.params.installationid, jsonResponseWrapper(req.log, res))
+      installations.loadModel(opts.params.installationid, req.log, jsonResponseWrapper(req.log, res))
     }),
     PUT:auth({
       action:'save'
@@ -52,14 +52,14 @@ module.exports = function(router, opts){
         req.log.debug(Object.assign({}, opts, {
           data:data
         }), 'PUT installation')
-        installations.saveModel(opts.params.installationid, data, jsonResponseWrapper(req.log, res))
+        installations.saveModel(opts.params.installationid, data, req.log, jsonResponseWrapper(req.log, res))
       })
     }),
     DELETE:auth({
       action:'delete'
     }, function(req, res, opts){
       req.log.debug(opts, 'DELETE installation')
-      installations.deleteModel(opts.params.installationid, jsonResponseWrapper(req.log, res))
+      installations.deleteModel(opts.params.installationid, req.log, jsonResponseWrapper(req.log, res))
     })
   })
 

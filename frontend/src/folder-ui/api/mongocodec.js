@@ -10,21 +10,25 @@ export default function MongoCodec(opts = {}){
   const logger = bows('folderui:api:mongocodec' + (opts.name ? ':' + opts.name : ''))
   return {
     encode:(data) => {
-      let ret = Object.assign({}, data, opts.inject, {
+      let ret = Object.assign({}, data, {
         id:data._id
       })
-      ret = opts.encode ? opts.encode(ret) : ret
-      logger('encode', data, ret)
+      delete(ret._id)
+      delete(ret.__v)
+      logger('encode', {
+        pre:data,
+        post:ret
+      })
       return ret
     },
     decode:(data) => {
       let ret = Object.assign({}, data)
+      ret._id = ret.id
       delete(ret.id)
-      Object.keys(opts.inject || {}).forEach((key) => {
-        delete(ret[key])
+      logger('decode', {
+        pre:data,
+        post:ret
       })
-      ret = opts.decode ? opts.decode(ret) : ret
-      logger('decode', data, ret)
       return ret
     }
   }

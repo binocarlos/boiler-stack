@@ -55,7 +55,7 @@ module.exports = function(opts){
       },
 
       function(installation, next){
-        collaborators.createInstallationOwner(installation.id, userid, logger, next)
+        collaborators.createInstallationOwner(installation._id, userid, logger, next)
       }
 
     ], done)
