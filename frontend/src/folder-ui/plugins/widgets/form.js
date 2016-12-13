@@ -116,6 +116,8 @@ const FormWidget = (settings = {}) => {
     function* requestFormData(action) {
       if(action.mode == 'put'){
         if(!action.params.id) throw new Error('no id param for form:edit -> requestData')
+        // clear the data whilst we are loading
+        yield put(actions.tools.initialize({}))
         yield put(actions.get.request({
           id:action.params.id
         }))
@@ -142,6 +144,21 @@ const FormWidget = (settings = {}) => {
       yield takeLatest(actions.post.types.SUCCESS, afterPost)
     }
 
+    // copy the loaded data into the form
+    function* afterGet(action) {
+      yield put(actions.tools.initialize(action.data))
+    }
+
+    function* afterGetSaga() {
+      yield takeLatest(actions.get.types.SUCCESS, afterGet)
+    }
+
+    const getSaga = ApiSaga({
+      name:settings.label + ':get',
+      actions:actions.get,
+      handler:api.get
+    })
+
     const postSaga = ApiSaga({
       name:settings.label + ':post',
       actions:actions.post,
@@ -156,9 +173,11 @@ const FormWidget = (settings = {}) => {
     
     return [
       requestFormDataSaga,
+      getSaga,
       postSaga,
       putSaga,
-      afterPostSaga
+      afterPostSaga,
+      afterGetSaga
     ]
   }
 
