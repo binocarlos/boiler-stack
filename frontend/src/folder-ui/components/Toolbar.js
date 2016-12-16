@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import muiThemeable from 'material-ui/styles/muiThemeable'
-import KettleToolbar from 'kettle-ui/lib/Toolbar'
+//import KettleToolbar from 'kettle-ui/lib/Toolbar'
+import KettleToolbar from '../../kettle-ui/Toolbar'
 
 class Toolbar extends Component {
 
