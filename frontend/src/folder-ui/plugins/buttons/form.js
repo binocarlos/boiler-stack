@@ -1,5 +1,3 @@
-import { routerActions } from 'react-router-redux'
-
 const REQUIRED_SETTINGS = [
   'route',
   'actions'
@@ -8,7 +6,8 @@ const REQUIRED_SETTINGS = [
 const REQUIRED_ACTIONS = [
   'revert',
   'put',
-  'post'
+  'post',
+  'redirect'
 ]
 
 const FormButtons = (settings = {}) => {
@@ -26,13 +25,13 @@ const FormButtons = (settings = {}) => {
   
   return (state, store, routeInfo) => {
     
-    const formData = state.tools.data || {}
-    const formMeta = state.tools.meta || {}
+    const formData = state.data || {}
+    const formMeta = state.meta || {}
     const saveDisabled = formMeta.changed && formMeta.valid ? false : true
 
     return [{
       title:'Cancel',
-      handler:() => store.dispatch(routerActions.push(route))
+      handler:() => store.dispatch(actions.redirect(route))
     },{
       title:'Revert',
       handler:() => store.dispatch(actions.revert())
@@ -44,9 +43,15 @@ const FormButtons = (settings = {}) => {
       },
       handler:() => {
         if(!formMeta.valid) throw new Error('form is not valid - display errors')
-        const action = actions[routeInfo.mode]
-        if(!action) throw new Error('action for mode: ' + routeInfo.mode + ' not found')
-        store.dispatch(action(routeInfo.params, formData))
+        if(routeInfo.mode == 'put'){
+          store.dispatch(actions.put(routeInfo.params, formData))
+        }
+        else if (routeInfo.mode == 'post'){
+          store.dispatch(actions.post(routeInfo.params, formData))
+        }
+        else{
+          throw new Error('action for mode: ' + routeInfo.mode + ' not found')
+        }
       }
     }]
   }

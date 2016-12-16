@@ -1,17 +1,25 @@
 import React, { Component, PropTypes } from 'react'
+import { Route, IndexRoute } from 'react-router'
 import { routerActions } from 'react-router-redux'
 import { combineReducers } from 'redux'
 import { takeLatest } from 'redux-saga'
-import { call, put } from 'redux-saga/effects'
+import { fork, put, call, take, select } from 'redux-saga/effects'
+
+import { getLabel } from '../../tools'
 
 import ApiSaga from '../../sagas/api'
-import { ApiActions, FormActions } from '../../actions'
+
+import ApiActions from '../../actions/api'
+import FormActions from '../../actions/form'
+import { redirect } from '../../actions/router'
+
 import ApiReducer from '../../reducers/api'
 import FormReducer from '../../reducers/form'
 
 const REQUIRED_SETTINGS = [
-  'label',
-  'routes',
+  'title',
+  'route',
+  'reducerName',
   'actionPrefix',
   'api'
 ]
@@ -20,11 +28,7 @@ const REQUIRED_API_SETTINGS = [
   'get',
   'post',
   'put',
-  'initialData'
-]
-
-const REQUIRED_ROUTE_SETTINGS = [
-  'home'
+  'getInitialData'
 ]
 
 const FormController = (settings = {}) => {
@@ -37,12 +41,10 @@ const FormController = (settings = {}) => {
     if(!settings.api[field]) throw new Error(field + ' api method needed')
   })
 
-  REQUIRED_ROUTE_SETTINGS.forEach(field => {
-    if(!settings.routes[field]) throw new Error(field + ' route needed')
-  })
-
+  const title = settings.title
   const api = settings.api
-  const routes = settings.routes
+  const route = settings.route
+  const reducerName = settings.reducerName
   const actionPrefix = settings.actionPrefix
 
   const actions = {
@@ -52,43 +54,43 @@ const FormController = (settings = {}) => {
     tools:FormActions(actionPrefix + '_TOOLS')
   }
 
-  const reducer = combineReducers({
+  const reducers = {
     get:ApiReducer(actions.get.types),
     post:ApiReducer(actions.post.types),
     put:ApiReducer(actions.put.types),
     tools:FormReducer(actions.tools.types)
-  })
+  }
 
-  const getSagas = (store) => {
+  const sagas = (store) => {
 
     // the initial trigger to load some form data
     // add runs a sync local function
     // edit re-triggers an action for a saga to handle
-    function* requestFormData(action) {
+    function* requestInitialFormData(action) {
       if(action.mode == 'put'){
         if(!action.params.id) throw new Error('no id param for form:edit -> requestData')
         // clear the data whilst we are loading
-        yield put(actions.tools.initialize({}))
+        yield put(actions.tools.initializeData({}))
         yield put(actions.get.request({
           id:action.params.id
         }))
       }
       else if(action.mode == 'post'){
         const initialData = yield call(api.initialData, action)
-        yield put(actions.tools.initialize(initialData || {}))
+        yield put(actions.tools.initializeData(initialData || {}))
       }
       else{
         throw new Error('unknown form mode ' + mode)
       }
     }
 
-    function* requestFormDataSaga() {
-      yield takeLatest(actions.tools.types.FORM_REQUEST_DATA, requestFormData)
+    function* requestInitialFormDataSaga() {
+      yield takeLatest(actions.tools.types.FORM_REQUEST_INITIAL_DATA, requestInitialFormData)
     }
 
     // redirect once they have added an item
     function* afterPost(action) {
-      yield put(routerActions.push(routes.home))
+      yield put(redirect(routes.home))
     }
 
     function* afterPostSaga() {
@@ -97,7 +99,7 @@ const FormController = (settings = {}) => {
 
     // copy the loaded data into the form
     function* afterGet(action) {
-      yield put(actions.tools.initialize(action.data))
+      yield put(actions.tools.initializeData(action.data))
     }
 
     function* afterGetSaga() {
@@ -105,28 +107,31 @@ const FormController = (settings = {}) => {
     }
 
     const getSaga = ApiSaga({
-      name:settings.label + ':get',
+      label:getLabel(title) + ':get',
+      handler:api.get,
       actions:actions.get,
-      handler:api.get
+      trigger:actions.get.types.REQUEST
     })
 
     const postSaga = ApiSaga({
-      name:settings.label + ':post',
+      label:getLabel(title) + ':post',
+      handler:api.post,
       actions:actions.post,
-      handler:api.post
+      trigger:actions.post.types.REQUEST
     })
 
     const putSaga = ApiSaga({
-      name:settings.label + ':put',
+      label:getLabel(title) + ':put',
+      handler:api.put,
       actions:actions.put,
-      handler:api.put
+      trigger:actions.put.types.REQUEST
     })
-    
+
     return [
-      requestFormDataSaga,
       getSaga,
       postSaga,
       putSaga,
+      requestInitialFormDataSaga,
       afterPostSaga,
       afterGetSaga
     ]
@@ -134,8 +139,8 @@ const FormController = (settings = {}) => {
 
   return {
     actions,
-    reducer,
-    getSagas
+    reducers,
+    sagas
   }
 }
 

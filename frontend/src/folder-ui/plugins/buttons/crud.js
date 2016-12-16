@@ -1,8 +1,10 @@
-import { routerActions } from 'react-router-redux'
-import { virtualTable } from '../../reducers/selectors'
-
 const REQUIRED_SETTINGS = [
-  'route'
+  'route',
+  'actions'
+]
+
+const REQUIRED_ACTIONS = [
+  'redirect'
 ]
 
 const CrudButtons = (settings = {}) => {
@@ -11,36 +13,38 @@ const CrudButtons = (settings = {}) => {
     if(!settings[field]) throw new Error(field + ' setting needed')
   })
 
+  REQUIRED_ACTIONS.forEach(field => {
+    if(!settings.actions[field]) throw new Error(field + ' action needed')
+  })
+
   const route = settings.route
+  const actions = settings.actions
 
   return (state, store, routeInfo) => {
 
-    const table = virtualTable(state)
-    const selected = table.getSelectedItems()
+    const selected = state.selectedItems
 
     let buttons = []
 
     if(selected.length<=0){
       buttons = buttons.concat([{
         title:'Add',
-        handler:() => store.dispatch(routerActions.push(route + '/add'))
+        handler:() => store.dispatch(actions.redirect(route + '/add'))
       }])
     }
     else if(selected.length==1){
       buttons = buttons.concat([{
         title:'Edit',
-        handler:() => store.dispatch(routerActions.push(route + '/edit/' + selected[0].id))
+        handler:() => store.dispatch(actions.redirect(route + '/edit/' + selected[0].id))
       }])
     }
 
     if(selected.length>0){
       buttons = buttons.concat([{
         title:'Delete',
-        handler:() => store.dispatch(routerActions.push(route + '/edit/' + selected[0].id))
+        handler:() => store.dispatch(actions.redirect(route + '/edit/' + selected[0].id))
       }])
     }
-
-    return buttons
   }
 }
 

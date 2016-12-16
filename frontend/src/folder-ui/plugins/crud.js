@@ -3,36 +3,29 @@ import { Route, IndexRoute } from 'react-router'
 import { routerActions } from 'react-router-redux'
 import { combineReducers } from 'redux'
 
-import ApiSaga from '../sagas/api'
-
-import { ApiActions, TableActions, FormActions } from '../actions'
-
-import ApiReducer from '../reducers/api'
-import TableReducer from '../reducers/table'
-import FormReducer from '../reducers/form'
-
 import { ContainerWrapper } from '../tools'
-
 import ToolbarContent from '../containers/ToolbarContent'
 
-import TableController from './controller/table'
-import FormController from './controller/form'
+import RouterController from './controllers/router'
+import FormController from './controllers/form'
+import TableController from './controllers/table'
 
 import TableWidget from './widgets/table'
 import FormWidget from './widgets/form'
 
+import { CombineButtons } from './buttons/tools'
 import CrudButtons from './buttons/crud'
 import SelectButtons from './buttons/select'
 import FormButtons from './buttons/form'
 
 import {
-  TableTitle,
-  FormTitle
-} from './tools/titles'
+  tableItems
+} from '../reducers/injectors'
 
 import {
-  CombineButtons
-} from './buttons/tools'
+  TableTitle,
+  FormTitle
+} from './titles'
 
 const REQUIRED_SETTINGS = [
   'title',
@@ -45,8 +38,10 @@ const REQUIRED_SETTINGS = [
 ]
 
 const REQUIRED_API_SETTINGS = [
-  'table',
-  'form'
+  'list',
+  'get',
+  'post',
+  'put'
 ]
 
 const CrudPlugin = (settings = {}) => {
@@ -68,106 +63,128 @@ const CrudPlugin = (settings = {}) => {
   const reducerName = settings.reducerName
   const actionPrefix = settings.actionPrefix
   const selector = (widget) => (state) => state[reducerName][widget]
-
-  const getIcon = () => {
-    return settings.getIcon ?
-      settings.getIcon() :
-      null
-  }
-
-  // these have the sagas, actions and reducers
-  const controllers = {
-    table:TableController({
-      label:title + ':table',
-      api:api.table,
-      actionPrefix
-    }),
-    form:FormController({
-      label:title + ':form',
-      api:api.form,
-      actionPrefix,
-      routes:{
-        home:route
-      }
+  const getIcon = () => settings.getIcon ? settings.getIcon() : null
+  const getInitialData = () => {
+    return new Promise((resolve, reject) => {
+      resolve(settings.initialFormData || {})
     })
   }
 
-  const tableActions = controllers.table.actions
-  const formActions = controllers.form.actions
+  /*
+  
+    controllers
+    
+  */
+  const router = RouterController()
 
+  const table = TableController({
+    title,
+    route,
+    reducerName,
+    actionPrefix,
+    injector:tableItems,
+    api:{
+      list:api.list
+    }
+  })
+
+  const form = FormController({
+    title,
+    route,
+    reducerName,
+    actionPrefix,
+    api:{
+      get:api.get,
+      post:api.post,
+      put:api.put,
+      getInitialData:getInitialData
+    }
+  })
+
+  /*
+  
+    buttons
+    
+  */
   // we pass actions into these buttons factories
   // because then their action types will line up
   // with the reducers in the controllers above
+
   const buttons = {
-    table:CombineButtons({
+    crud:CrudButtons({
+      route,
+      actions:{
+        redirect:router.actions.redirect
+      }
+    }),
+    select:SelectButtons({
+      actions:{
+        redirect:router.actions.redirect,
+        selected:table.actions.list.selected
+      }
+    }),
+    form:FormButtons({
+      route,
+      actions:{
+        redirect:router.actions.redirect,
+        revert:form.actions.tools.revert,
+        put:form.actions.put.request,
+        post:form.actions.post.request
+      }
+    })
+  }
+
+  /*
+  
+    widgets
+    
+  */
+  const tableWidget = TableWidget({
+    selector:selector('table'),
+    getTableFields:settings.getTableFields,
+    getIcon:getIcon,
+    getTitle:TableTitle(settings.pluralTitle),
+    actions:{
+      requestInitialData:table.actions.get.request,
+      selected:table.actions.list.selected
+    },
+    getButtons:CombineButtons({
       type:'dropdown',
       title:'Actions',
       items:[
-        CrudButtons({
-          route
-        }),
-        SelectButtons({
-          actions:{
-            selected:tableActions.tools.selected
-          }
-        })
+        buttons.crud,
+        buttons.select
       ]
-    }),
-    table:CombineButtons({
+    })
+  })
+
+  const formWidget = FormWidget({
+    selector:selector('form'),
+    getSchema:settings.getSchema,
+    getInitialFormData:settings.getInitialFormData,
+    getIcon:getIcon,
+    getTitle:FormTitle(settings.title),
+    actions:{
+      requestInitialData:form.actions.tools.requestInitialData,
+      update:form.actions.tools.update
+    },
+    getButtons:CombineButtons({
       type:'buttons',
       items:[
-        FormButtons({
-          route,
-          actions:{
-            revert:formActions.tools.revert,
-            put:formActions.put.request,
-            post:formActions.post.request
-          }
-        })
+        buttons.form
       ]
     })
-  }
+  })
 
-  // these have the containers and components
-  const widgets = {
-    table:TableWidget({
-      selector:selector('table'),
-      getTableFields:settings.getTableFields,
-      getIcon:getIcon,
-      getTitle:TableTitle(settings.pluralTitle),
-      getButtons:buttons.table,
-      actions:{
-        requestData:tableActions.get.request,
-        selected:tableActions.tools.selected
-      }
-    }),
-    form:FormWidget({
-      selector:selector('form'),
-      getSchema:settings.getSchema,
-      getInitialFormData:settings.getInitialFormData,
-      getIcon:getIcon,
-      getTitle:FormTitle(settings.title),
-      getButtons:buttons.form,
-      actions:{
-        requestData:formActions.get.request,
-        selected:tableActions.tools.selected
-      }
-    })
-  }
-
-  const getReducers = () => {
-    return {
-      [settings.reducerName]:combineReducers({
-        table:controllers.table.reducer,
-        form:controllers.form.reducer
-      })
-    }
-  }
-
+  /*
+  
+    routes
+    
+  */
   const getRoutes = (store, context) => {
-    const TableContainer = widgets.table.getContainer(store)
-    const EditContainer = widgets.form.getContainer(store, 'put')
-    const AddContainer = widgets.form.getContainer(store, 'post')
+    const TableContainer = tableWidget(store)
+    const EditContainer = formWidget(store, 'put')
+    const AddContainer = formWidget(store, 'post')
 
     return (
       <Route path={route}>
@@ -178,9 +195,26 @@ const CrudPlugin = (settings = {}) => {
     )
   }
 
+  /*
+  
+    factories
+    
+  */
+  const getReducers = () => {
+    return {
+      [settings.reducerName]:combineReducers({
+        table:combineReducers(table.reducers),
+        form:combineReducers(form.reducers)
+      })
+    }
+  }
+
   const getSagas = (store) => {
-    return Object.keys(controllers || {}).reduce(function(sagas, key){
-      return sagas.concat(controllers[key].getSagas(store) || [])
+    return ([
+      table.sagas,
+      form.sagas
+    ]).reduce(function(sagas, factory){
+      return sagas.concat(factory(store) || [])
     }, [])
   }
 

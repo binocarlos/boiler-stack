@@ -1,4 +1,4 @@
-import { virtualTable } from '../../reducers/selectors'
+import { virtualTable } from '../reducers/selectors'
 
 export const TableTitle = (pluralTitle = 'Items') => {
   return (state) => {

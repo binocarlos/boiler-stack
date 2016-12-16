@@ -1,22 +1,35 @@
 import React, { Component, PropTypes } from 'react'
+import { Route, IndexRoute } from 'react-router'
 import { routerActions } from 'react-router-redux'
 import { combineReducers } from 'redux'
+import { takeLatest } from 'redux-saga'
+import { fork, put, call, take, select } from 'redux-saga/effects'
+
+import { getLabel } from '../../tools'
 
 import ApiSaga from '../../sagas/api'
-import { ApiActions, TableActions } from '../../actions'
-import ApiReducer from '../../reducers/api'
-import TableReducer from '../../reducers/table'
 
-import { tableItems } from '../../reducers/injectors'
+import ApiActions from '../../actions/api'
+import ListActions from '../../actions/list'
+import { redirect } from '../../actions/router'
+
+import ApiReducer from '../../reducers/api'
+import ListReducer from '../../reducers/list'
+
+import {
+  tableItems
+} from '../../reducers/injectors'
 
 const REQUIRED_SETTINGS = [
-  'label',
+  'title',
+  'route',
+  'reducerName',
   'actionPrefix',
   'api'
 ]
 
 const REQUIRED_API_SETTINGS = [
-  'get'
+  'list'
 ]
 
 const TableController = (settings = {}) => {
@@ -29,39 +42,42 @@ const TableController = (settings = {}) => {
     if(!settings.api[field]) throw new Error(field + ' api method needed')
   })
 
+  const title = settings.title
   const api = settings.api
+  const route = settings.route
+  const reducerName = settings.reducerName
   const actionPrefix = settings.actionPrefix
 
   const actions = {
     get:ApiActions(actionPrefix + '_TABLE_GET'),
-    tools:TableActions(actionPrefix + '_TOOLS')
+    list:ListActions(actionPrefix + '_LIST')
   }
 
-  const reducer = combineReducers({
+  const reducers = {
     get:ApiReducer(actions.get.types, tableItems),
-    tools:TableReducer(actions.tools.types)
-  })
+    list:ListReducer(actions.list.types)
+  }
 
-  const getSagas = (store) => {
+  const sagas = (store) => {
 
     // load the table data
-    const tableApiSaga = ApiSaga({
-      name:settings.label + ':get',
+    const listApiSaga = ApiSaga({
+      label:getLabel(title) + ':list',
+      handler:api.list,
       actions:actions.get,
-      handler:api.get,
-      injector:tableItems
+      trigger:actions.get.types.REQUEST,
+      injector:settings.injector
     })
 
     return [
-      tableApiSaga
+      listApiSaga
     ]
   }
 
-
   return {
     actions,
-    reducer,
-    getSagas
+    reducers,
+    sagas
   }
 }
 

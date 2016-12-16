@@ -16,7 +16,7 @@ const SelectButtons = (settings = {}) => {
     if(!settings.actions[field]) throw new Error(field + ' action needed')
   })
 
-  return (state, store, routeInfo, actions) => {
+  return (state, store, routeInfo) => {
 
     return [{
       title:'Select All',

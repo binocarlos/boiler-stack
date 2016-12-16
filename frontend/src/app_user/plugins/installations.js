@@ -20,7 +20,7 @@ const SCHEMA = [{
   name:'name'
 }]
 
-const DEFAULT_SETTINGS = {
+const SETTINGS = {
   type:'installation',
   title:'Installation',
   url:'/api/v1/installations',
@@ -35,8 +35,17 @@ const DEFAULT_SETTINGS = {
 }
 
 const InstallationsPlugin = (settings = {}) => {
-  settings = Object.assign({}, DEFAULT_SETTINGS, settings)
-  settings.api = mongoCrudAjaxFactory(settings)
+  settings = Object.assign({}, SETTINGS, settings)
+
+  const ajaxApi = mongoCrudAjaxFactory({
+    type:settings.type,
+    title:settings.title,
+    url:settings.url,
+
+  })
+
+  settings.api = ajaxApi
+
   return Crud(settings)
 }
 

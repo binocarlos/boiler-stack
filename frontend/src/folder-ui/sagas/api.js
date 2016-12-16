@@ -4,21 +4,20 @@ import { fork, put, call, take, select } from 'redux-saga/effects'
 
 const ApiSagaFactory = (opts = {}) => {
 
-  if(!opts.name) throw new Error('api saga factory needs name option')
+  if(!opts.label) throw new Error('api saga factory needs label option')
   if(!opts.actions) throw new Error('api saga factory needs actions option')
   if(!opts.handler) throw new Error('api saga factory needs handler option')
 
-  const logger = bows('folderui:saga:' + opts.name)
+  const logger = bows('folderui:saga:' + opts.label)
 
-  logger('creating api saga', {
-    opts,
-    actions
+  logger('creating api saga: ' + opts.label, {
+    opts
   })
 
-  const actions = opts.actions
   const handler = opts.handler
+  const actions = opts.actions
   const injector = opts.injector
-  const trigger = actions.types.REQUEST
+  const trigger = opts.trigger
 
   function* apiRequest(action) {
     logger('request', action)

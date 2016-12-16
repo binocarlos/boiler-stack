@@ -1,9 +1,9 @@
 export const CombineButtons = (opts = {}) => {
   const type = opts.type || 'dropdown'
   const items = opts.items || []
-  return (state, store, routeInfo, actions) => {
+  return (state, store, routeInfo) => {
     const allButtons = items.reduce((buttons, factory) => {
-      return buttons.concat(factory(state, store, routeInfo, actions))
+      return buttons.concat(factory(state, store, routeInfo))
     }, [])
     if(type == 'dropdown'){
       return allButtons.length > 0 ?

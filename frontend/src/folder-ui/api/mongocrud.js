@@ -11,8 +11,7 @@ const mongoCodecFactory = (name, type) => MongoCodec({
 const REQUIRED_SETTINGS = [
   'type',
   'title',
-  'url',
-  'initialFormData'
+  'url'
 ]
 
 const mongoCrudAjaxFactory = (settings = {}) => {
@@ -21,54 +20,44 @@ const mongoCrudAjaxFactory = (settings = {}) => {
     if(!settings[field]) throw new Error(field + ' setting needed')
   })
   
-  const URL = settings.url
-  const TITLE = settings.title
-  const TYPE = settings.type
+  const url = settings.url
+  const title = settings.title
+  const type = settings.type
 
   const ajaxClient = Ajax({
-    name:TITLE
+    name:title
   })
-  const codec = mongoCodecFactory(TITLE, TYPE)
+  const codec = mongoCodecFactory(title, type)
 
   return {
-    table:{
-      get:(query, data) => {
-        return ajaxClient
-          .get(URL)
-          .then(result => {
-            return result.map(codec.encode)
-          })
-      }
-    },
-    form:{
-      get:(query, data) => {
-        return ajaxClient
-          .get(URL + '/' + query.id)
-          .then(result => {
-            return codec.encode(result)
-          })
-      },
-      post:(query, data) => {
-        return ajaxClient
-          .post(URL, data)
-          .then(result => {
-            return codec.encode(result)
-          })
-      },
-      put:(query, data) => {
-        return ajaxClient
-          .put(URL + '/' + query.id, data)
-          .then(result => {
-            return codec.encode(result)
-          })
-      },
-      initialData:(query, data) => {
-        return new Promise((resolve, reject) => {
-          resolve(settings.initialFormData)
+    list:(query, data) => {
+      return ajaxClient
+        .get(url)
+        .then(result => {
+          return result.map(codec.encode)
         })
-      }
+    },
+    get:(query, data) => {
+      return ajaxClient
+        .get(url + '/' + query.id)
+        .then(result => {
+          return codec.encode(result)
+        })
+    },
+    post:(query, data) => {
+      return ajaxClient
+        .post(url, data)
+        .then(result => {
+          return codec.encode(result)
+        })
+    },
+    put:(query, data) => {
+      return ajaxClient
+        .put(url + '/' + query.id, data)
+        .then(result => {
+          return codec.encode(result)
+        })
     }
-    
   }
 }
 

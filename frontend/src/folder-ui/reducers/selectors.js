@@ -1,10 +1,6 @@
-export const virtualTable = (state) => {
-  const raw = state.get.data
-  const selected = state.tools.selected
+export const virtualTable = (ids = [], db = {}) => {
   return {
-    raw,
-    selected,
-    getItems:() => raw.ids.map(id => raw.db[id]),
-    getSelectedItems:() => selected.map(id => raw.db[id])
+    getItems:() => ids.map(id => db[id]),
+    getSelectedItems:(selected = []) => selected.map(id => db[id])
   }
 }

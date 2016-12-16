@@ -20,7 +20,7 @@ const formReducerFactory = (types) => {
             $set:action.meta
           }
         })
-      case types.FORM_INITIALIZE:
+      case types.FORM_INITIALIZE_DATA:
         return update(state, {
           data:{
             $set:action.data
