@@ -20,8 +20,18 @@ import Form from '../components/Form'
 import TableWidget from './widgets/table'
 import FormWidget from './widgets/form'
 
-import CrudTableToolbar from './toolbars/crudtable'
-import FormToolbar from './toolbars/form'
+import CrudButtons from './buttons/crud'
+import SelectButtons from './buttons/select'
+import FormButtons from './buttons/form'
+
+import {
+  TableTitle,
+  FormTitle
+} from './tools/titles'
+
+import {
+  CombineButtons
+} from './buttons/tools'
 
 const REQUIRED_SETTINGS = [
   'title',
@@ -64,19 +74,6 @@ const CrudPlugin = (settings = {}) => {
       null
   }
 
-  const toolbars = {
-    table:CrudTableToolbar({
-      title,
-      pluralTitle,
-      route
-    }),
-    form:FormToolbar({
-      title,
-      pluralTitle,
-      route
-    })
-  }
-
   const widgets = {
     table:TableWidget({
       label:title + ':table',
@@ -85,8 +82,18 @@ const CrudPlugin = (settings = {}) => {
       selector:selector('table'),
       getTableFields:settings.getTableFields,
       getIcon:getIcon,
-      getTitle:toolbars.table.getTitle,
-      getButtons:toolbars.table.getButtons
+      getTitle:TableTitle(settings.pluralTitle),
+      getButtons:CombineButtons({
+        type:'dropdown',
+        title:'Actions'
+      }, [
+        CrudButtons({
+          route
+        }),
+        SelectButtons({
+          route
+        })
+      ])
     }),
     form:FormWidget({
       label:title + ':form',
@@ -96,11 +103,17 @@ const CrudPlugin = (settings = {}) => {
       getSchema:settings.getSchema,
       getInitialFormData:settings.getInitialFormData,
       getIcon:getIcon,
-      getTitle:toolbars.form.getTitle,
-      getButtons:toolbars.form.getButtons,
+      getTitle:FormTitle(settings.title),
       routes:{
         home:route
-      }
+      },
+      getButtons:CombineButtons({
+        type:'buttons'
+      }, [
+        FormButtons({
+          route
+        })
+      ])
     })
   }
 

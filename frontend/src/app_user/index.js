@@ -26,7 +26,7 @@ const Root = AppFactory([
   Installations({
     route:'companies',
     title:'Company',
-    pluralTitle:'Companies',
+    pluralTitle:'Companies'
   })
 ], {
   // cli override settings here

@@ -43,8 +43,6 @@ class KettleToolbar extends Component {
 
           <div style={STYLES.leftSeperator}></div>
 
-          <div>HELLO</div>
-
           <ButtonRow buttons={this.props.leftbuttons} />
           
           {this.props.children}

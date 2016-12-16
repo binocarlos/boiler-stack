@@ -1,28 +1,18 @@
 import { routerActions } from 'react-router-redux'
 
 const REQUIRED_SETTINGS = [
-  'title',
-  'pluralTitle',
   'route'
 ]
 
-const FormToolbar = (settings = {}) => {
+const FormButtons = (settings = {}) => {
 
   REQUIRED_SETTINGS.forEach(field => {
     if(!settings[field]) throw new Error(field + ' setting needed')
   })
 
   const route = settings.route
-  const title = settings.title
-  const pluralTitle = settings.pluralTitle
-
-  const getTitle = (state, routeInfo) => {
-    return routeInfo.mode == 'post' ? 
-      'New ' + title :
-      'Edit title'
-  }
-
-  const getButtons = (state, store, routeInfo, actions) => {
+  
+  return (state, store, routeInfo, actions) => {
     
     const formData = state.tools.data || {}
     const formMeta = state.tools.meta || {}
@@ -48,11 +38,6 @@ const FormToolbar = (settings = {}) => {
       }
     }]
   }
-
-  return {
-    getTitle,
-    getButtons
-  }
 }
 
-export default FormToolbar
+export default FormButtons
