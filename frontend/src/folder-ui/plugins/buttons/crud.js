@@ -45,6 +45,8 @@ const CrudButtons = (settings = {}) => {
         handler:() => store.dispatch(actions.redirect(route + '/edit/' + selected[0].id))
       }])
     }
+
+    return buttons
   }
 }
 

@@ -37,13 +37,13 @@ module.exports = function(storage){
         storage.loadModel(fullid, logger, done)
       })
     },
-    saveModel:function(id, data, done){
+    saveModel:function(id, data, logger, done){
       processId(id, logger, function(err, fullid){
         if(err) return done(err)
         storage.saveModel(fullid, data, logger, done)
       })
     },
-    deleteModel:function(id, done){
+    deleteModel:function(id, logger, done){
       processId(id, logger, function(err, fullid){
         if(err) return done(err)
         storage.deleteModel(fullid, logger, done)

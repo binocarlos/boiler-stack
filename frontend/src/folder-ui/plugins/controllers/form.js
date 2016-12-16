@@ -19,6 +19,7 @@ import FormReducer from '../../reducers/form'
 const REQUIRED_SETTINGS = [
   'title',
   'route',
+  'redirects',
   'reducerName',
   'actionPrefix',
   'api'
@@ -44,6 +45,7 @@ const FormController = (settings = {}) => {
   const title = settings.title
   const api = settings.api
   const route = settings.route
+  const redirects = settings.redirects
   const reducerName = settings.reducerName
   const actionPrefix = settings.actionPrefix
 
@@ -76,7 +78,7 @@ const FormController = (settings = {}) => {
         }))
       }
       else if(action.mode == 'post'){
-        const initialData = yield call(api.initialData, action)
+        const initialData = yield call(api.getInitialData, action)
         yield put(actions.tools.initializeData(initialData || {}))
       }
       else{
@@ -90,7 +92,7 @@ const FormController = (settings = {}) => {
 
     // redirect once they have added an item
     function* afterPost(action) {
-      yield put(redirect(routes.home))
+      yield put(redirect(redirects.home))
     }
 
     function* afterPostSaga() {

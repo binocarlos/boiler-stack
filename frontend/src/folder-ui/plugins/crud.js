@@ -93,6 +93,9 @@ const CrudPlugin = (settings = {}) => {
     route,
     reducerName,
     actionPrefix,
+    redirects:{
+      home:route
+    },
     api:{
       get:api.get,
       post:api.post,

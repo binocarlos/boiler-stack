@@ -68,7 +68,7 @@ const TableWidget = (settings = {}) => {
         const state = getState(routeInfo)
         return {
           getIcon:settings.getIcon,
-          buttons:[],//settings.getButtons(state, store, routeInfo),
+          buttons:settings.getButtons(state, store, routeInfo),
           fields:settings.getTableFields(state, store, routeInfo),
           multiSelectable:settings.multiSelectable,
           onRowSelection:(idArray) => store.dispatch(actions.selected(idArray))
