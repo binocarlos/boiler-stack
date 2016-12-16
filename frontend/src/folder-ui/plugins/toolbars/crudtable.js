@@ -39,7 +39,21 @@ const CrudTableToolbar = (settings = {}) => {
     const selected = table.getSelectedItems()
 
     let buttons = []
+    let actionButtons = []
 
+    actionButtons = [{
+      title:'Select All',
+      handler:() => store.dispatch(actions.tools.selected())
+    },{
+      title:'Select None',
+      handler:() => store.dispatch(actions.tools.selected([]))
+    }]
+
+    buttons.push({
+      title:'Actions',
+      type:'dropdown',
+      items:actionButtons
+    })
     if(selected.length<=0){
       buttons = buttons.concat([{
         title:'Add',
