@@ -14,8 +14,9 @@ import FormReducer from '../reducers/form'
 import { ContainerWrapper } from '../tools'
 
 import ToolbarContent from '../containers/ToolbarContent'
-import Table from '../components/Table'
-import Form from '../components/Form'
+
+import TableController from './controller/table'
+import FormController from './controller/form'
 
 import TableWidget from './widgets/table'
 import FormWidget from './widgets/form'
@@ -74,54 +75,91 @@ const CrudPlugin = (settings = {}) => {
       null
   }
 
-  const widgets = {
-    table:TableWidget({
+  // these have the sagas, actions and reducers
+  const controllers = {
+    table:TableController({
       label:title + ':table',
       api:api.table,
+      actionPrefix
+    }),
+    form:FormController({
+      label:title + ':form',
+      api:api.form,
       actionPrefix,
-      selector:selector('table'),
-      getTableFields:settings.getTableFields,
-      getIcon:getIcon,
-      getTitle:TableTitle(settings.pluralTitle),
-      getButtons:CombineButtons({
-        type:'dropdown',
-        title:'Actions'
-      }, [
+      routes:{
+        home:route
+      }
+    })
+  }
+
+  const tableActions = controllers.table.actions
+  const formActions = controllers.form.actions
+
+  // we pass actions into these buttons factories
+  // because then their action types will line up
+  // with the reducers in the controllers above
+  const buttons = {
+    table:CombineButtons({
+      type:'dropdown',
+      title:'Actions',
+      items:[
         CrudButtons({
           route
         }),
         SelectButtons({
-          route
+          actions:{
+            selected:tableActions.tools.selected
+          }
         })
-      ])
+      ]
+    }),
+    table:CombineButtons({
+      type:'buttons',
+      items:[
+        FormButtons({
+          route,
+          actions:{
+            revert:formActions.tools.revert,
+            put:formActions.put.request,
+            post:formActions.post.request
+          }
+        })
+      ]
+    })
+  }
+
+  // these have the containers and components
+  const widgets = {
+    table:TableWidget({
+      selector:selector('table'),
+      getTableFields:settings.getTableFields,
+      getIcon:getIcon,
+      getTitle:TableTitle(settings.pluralTitle),
+      getButtons:buttons.table,
+      actions:{
+        requestData:tableActions.get.request,
+        selected:tableActions.tools.selected
+      }
     }),
     form:FormWidget({
-      label:title + ':form',
-      api:api.form,
-      actionPrefix,
       selector:selector('form'),
       getSchema:settings.getSchema,
       getInitialFormData:settings.getInitialFormData,
       getIcon:getIcon,
       getTitle:FormTitle(settings.title),
-      routes:{
-        home:route
-      },
-      getButtons:CombineButtons({
-        type:'buttons'
-      }, [
-        FormButtons({
-          route
-        })
-      ])
+      getButtons:buttons.form,
+      actions:{
+        requestData:formActions.get.request,
+        selected:tableActions.tools.selected
+      }
     })
   }
 
   const getReducers = () => {
     return {
       [settings.reducerName]:combineReducers({
-        table:widgets.table.reducer,
-        form:widgets.form.reducer
+        table:controllers.table.reducer,
+        form:controllers.form.reducer
       })
     }
   }
@@ -141,8 +179,8 @@ const CrudPlugin = (settings = {}) => {
   }
 
   const getSagas = (store) => {
-    return Object.keys(widgets || {}).reduce(function(sagas, key){
-      return sagas.concat(widgets[key].getSagas(store) || [])
+    return Object.keys(controllers || {}).reduce(function(sagas, key){
+      return sagas.concat(controllers[key].getSagas(store) || [])
     }, [])
   }
 

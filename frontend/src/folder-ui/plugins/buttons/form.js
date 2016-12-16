@@ -1,7 +1,14 @@
 import { routerActions } from 'react-router-redux'
 
 const REQUIRED_SETTINGS = [
-  'route'
+  'route',
+  'actions'
+]
+
+const REQUIRED_ACTIONS = [
+  'revert',
+  'put',
+  'post'
 ]
 
 const FormButtons = (settings = {}) => {
@@ -10,9 +17,14 @@ const FormButtons = (settings = {}) => {
     if(!settings[field]) throw new Error(field + ' setting needed')
   })
 
+  REQUIRED_ACTIONS.forEach(field => {
+    if(!settings.actions[field]) throw new Error(field + ' action needed')
+  })
+
   const route = settings.route
+  const actions = settings.actions
   
-  return (state, store, routeInfo, actions) => {
+  return (state, store, routeInfo) => {
     
     const formData = state.tools.data || {}
     const formMeta = state.tools.meta || {}
@@ -23,7 +35,7 @@ const FormButtons = (settings = {}) => {
       handler:() => store.dispatch(routerActions.push(route))
     },{
       title:'Revert',
-      handler:() => store.dispatch(actions.tools.revert())
+      handler:() => store.dispatch(actions.revert())
     },{
       title:'Save',
       extraProps:{ 
@@ -34,7 +46,7 @@ const FormButtons = (settings = {}) => {
         if(!formMeta.valid) throw new Error('form is not valid - display errors')
         const action = actions[routeInfo.mode]
         if(!action) throw new Error('action for mode: ' + routeInfo.mode + ' not found')
-        store.dispatch(action.request(routeInfo.params, formData))
+        store.dispatch(action(routeInfo.params, formData))
       }
     }]
   }

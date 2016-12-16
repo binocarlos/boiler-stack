@@ -1,6 +1,9 @@
-
 const REQUIRED_SETTINGS = [
-  
+  'actions'
+]
+
+const REQUIRED_ACTIONS = [
+  'selected'
 ]
 
 const SelectButtons = (settings = {}) => {
@@ -9,14 +12,18 @@ const SelectButtons = (settings = {}) => {
     if(!settings[field]) throw new Error(field + ' setting needed')
   })
 
+  REQUIRED_ACTIONS.forEach(field => {
+    if(!settings.actions[field]) throw new Error(field + ' action needed')
+  })
+
   return (state, store, routeInfo, actions) => {
 
     return [{
       title:'Select All',
-      handler:() => store.dispatch(actions.tools.selected())
+      handler:() => store.dispatch(actions.selected([]))
     },{
       title:'Select None',
-      handler:() => store.dispatch(actions.tools.selected([]))
+      handler:() => store.dispatch(actions.selected([]))
     }]
 
   }

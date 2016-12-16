@@ -13,7 +13,7 @@ const CrudButtons = (settings = {}) => {
 
   const route = settings.route
 
-  return (state, store, routeInfo, actions) => {
+  return (state, store, routeInfo) => {
 
     const table = virtualTable(state)
     const selected = table.getSelectedItems()
