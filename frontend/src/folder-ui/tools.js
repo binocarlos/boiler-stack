@@ -65,4 +65,25 @@ export const nameSort = (a, b) => {
   return 0;
 }
 
+/*
+
+  for digger items use the tag
+  for storage items the mongo db will inject a _type property
+  
+*/
+export const getItemType = (item = {}) => {
+  const type = item._digger ?
+    item._digger.tag :
+    item._type
+  return (type || item.type).toLowerCase()
+}
+
+export const typeSort = (a, b) => {
+  if (getItemType(a) < getItemType(b)) return -1;
+  if (getItemType(a) > getItemType(b)) return 1;
+  if (getItemName(a) < getItemName(b)) return -1;
+  if (getItemName(a) > getItemName(b)) return 1;
+  return 0;
+}
+
 export const getLabel = (st = '') => st.replace(/\W/g, '').toLowerCase()
