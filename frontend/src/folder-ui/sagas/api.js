@@ -26,8 +26,7 @@ const ApiSagaFactory = (opts = {}) => {
       const injected = injector ?
         injector(data) :
         data
-      logger('response', data)
-      logger('injecteed', injected)
+      logger('response', injected)
       yield put(actions.success(injected))
     } catch (e) {
       logger('error', e.message)

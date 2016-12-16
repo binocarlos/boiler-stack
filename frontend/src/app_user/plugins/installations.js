@@ -7,14 +7,14 @@ import ICON from 'material-ui/svg-icons/file/cloud'
 import bows from 'bows'
 
 const TABLE_FIELDS = [{
+  name:'name',
+  title:'Name'
+},{
   name:'littleid',
   title:'ID',
   style:{
     width:'100px'
   }
-},{
-  name:'name',
-  title:'Name'
 }]
 
 const SCHEMA = [{
@@ -31,11 +31,13 @@ const SETTINGS = {
   reducerName:'installations',
   actionPrefix:'INSTALLATIONS',
   icon:ICON,
-  initialFormData:{},
+  initialFormData:{
+    name:'apples'
+  },
   getIcon:() => (<ICON />),
   getTableFields:(state, store, routeInfo) => TABLE_FIELDS,
   getSchema:(state, store, routeInfo) => SCHEMA,
-  // react to core user events by showing a snackbar
+  // react to core user events
   userEventHandler:(store, userEvent) => {
     logger('user event', userEvent)
     store.dispatch(open_snackbar(userEvent.message))

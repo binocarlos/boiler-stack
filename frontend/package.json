@@ -30,7 +30,7 @@
     "axios": "^0.15.3",
     "biro": "^3.3.4",
     "biro-material-ui": "^2.3.2",
-    "boiler-frontend": "^4.0.3",
+    "boiler-frontend": "^4.1.0",
     "bows": "^1.6.0",
     "hat": "^0.0.3",
     "immutability-helper": "^2.0.0",

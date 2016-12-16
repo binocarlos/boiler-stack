@@ -87,16 +87,10 @@ const FormController = (settings = {}) => {
       if(action.mode == 'put'){
         if(!action.params.id) throw new Error('no id param for form:edit -> requestData')
         // clear the data whilst we are loading
-        console.log('-------------------------------------------');
-        console.log('put action')
-        console.dir(actions.tools.initializeData({}))
-        
-        yield [
-          put(actions.tools.initializeData({})),
-          put(actions.get.request({
-            id:action.params.id
-          }))
-        ]
+        yield put(actions.tools.initializeData({}))
+        yield put(actions.get.request({
+          id:action.params.id
+        }))
       }
       else if(action.mode == 'post'){
         const initialData = yield call(api.getInitialData, action)
@@ -111,12 +105,8 @@ const FormController = (settings = {}) => {
       yield takeLatest(actions.tools.types.FORM_REQUEST_INITIAL_DATA, doRequestInitialFormData)
     }
 
-    /*
-    
-      get
-      
-    */
-    const get = ApiSaga({
+    // get
+    const getApi = ApiSaga({
       label:getLabel(title) + ':get',
       handler:api.get,
       actions:actions.get,
@@ -125,10 +115,6 @@ const FormController = (settings = {}) => {
 
     // copy the loaded data into the form
     function* doAfterGet(action) {
-      console.log('-------------------------------------------');
-      console.log('-------------------------------------------');
-      console.log('HAVE DATA')
-      console.dir(action)
       yield put(actions.tools.initializeData(action.data))
     }
 
@@ -136,12 +122,9 @@ const FormController = (settings = {}) => {
       yield takeLatest(actions.get.types.SUCCESS, doAfterGet)
     }
 
-    /*
-    
-      post
-      
-    */
-    const post = ApiSaga({
+
+    // post
+    const postApi = ApiSaga({
       label:getLabel(title) + ':post',
       handler:api.post,
       actions:actions.post,
@@ -152,6 +135,7 @@ const FormController = (settings = {}) => {
     // redirect to home
     function* doAfterPost(action) {
       yield call(userEventHandler, store, {
+        message:'Created ' + action.data.name,
         name:'post',
         action
       })
@@ -162,12 +146,9 @@ const FormController = (settings = {}) => {
       yield takeLatest(actions.post.types.SUCCESS, doAfterPost)
     }
 
-    /*
-    
-      put
-      
-    */
-    const put = ApiSaga({
+
+    // put
+    const putApi = ApiSaga({
       label:getLabel(title) + ':put',
       handler:api.put,
       actions:actions.put,
@@ -177,6 +158,7 @@ const FormController = (settings = {}) => {
     // run user eventHandler
     function* doAfterPut(action) {
       yield call(userEventHandler, store, {
+        message:'Saved ' + action.data.name,
         name:'put',
         action
       })
@@ -189,13 +171,14 @@ const FormController = (settings = {}) => {
 
     return [
       requestInitialFormData,
-      get,
-      post,
-      put,
+      getApi,
       afterGet,
+      postApi,
       afterPost,
+      putApi,
       afterPut
     ]
+
   }
 
   return {
