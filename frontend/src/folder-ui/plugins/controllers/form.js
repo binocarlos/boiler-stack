@@ -18,6 +18,7 @@ import FormReducer from '../../reducers/form'
 
 const REQUIRED_SETTINGS = [
   'title',
+  'selector',
   'route',
   'redirects',
   'reducerName',
@@ -61,6 +62,18 @@ const FormController = (settings = {}) => {
     post:ApiReducer(actions.post.types),
     put:ApiReducer(actions.put.types),
     tools:FormReducer(actions.tools.types)
+  }
+
+  const getState = (store, routeInfo) => {
+    const state = settings.selector(store.getState())
+    const title = routeInfo.mode == 'post' ? 
+      'New ' + settings.title :
+      'Edit title'
+    return {
+      title,
+      data:state.tools.data,
+      meta:state.tools.meta       
+    }
   }
 
   const sagas = (store) => {
@@ -142,6 +155,7 @@ const FormController = (settings = {}) => {
   return {
     actions,
     reducers,
+    getState,
     sagas
   }
 }

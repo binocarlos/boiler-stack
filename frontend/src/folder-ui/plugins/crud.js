@@ -18,15 +18,6 @@ import CrudButtons from './buttons/crud'
 import SelectButtons from './buttons/select'
 import FormButtons from './buttons/form'
 
-import {
-  tableItems
-} from '../reducers/injectors'
-
-import {
-  TableTitle,
-  FormTitle
-} from './titles'
-
 const REQUIRED_SETTINGS = [
   'title',
   'route',
@@ -79,10 +70,11 @@ const CrudPlugin = (settings = {}) => {
 
   const table = TableController({
     title,
+    pluralTitle,
     route,
     reducerName,
+    selector:selector('table'),
     actionPrefix,
-    injector:tableItems,
     api:{
       list:api.list
     }
@@ -92,6 +84,7 @@ const CrudPlugin = (settings = {}) => {
     title,
     route,
     reducerName,
+    selector:selector('form'),
     actionPrefix,
     redirects:{
       home:route
@@ -143,10 +136,9 @@ const CrudPlugin = (settings = {}) => {
     
   */
   const tableWidget = TableWidget({
-    selector:selector('table'),
+    getState:table.getState,
     getTableFields:settings.getTableFields,
     getIcon:getIcon,
-    getTitle:TableTitle(settings.pluralTitle),
     actions:{
       requestInitialData:table.actions.get.request,
       selected:table.actions.list.selected
@@ -162,11 +154,10 @@ const CrudPlugin = (settings = {}) => {
   })
 
   const formWidget = FormWidget({
-    selector:selector('form'),
+    getState:form.getState,
     getSchema:settings.getSchema,
     getInitialFormData:settings.getInitialFormData,
     getIcon:getIcon,
-    getTitle:FormTitle(settings.title),
     actions:{
       requestInitialData:form.actions.tools.requestInitialData,
       update:form.actions.tools.update

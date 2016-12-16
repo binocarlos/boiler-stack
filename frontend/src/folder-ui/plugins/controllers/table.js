@@ -15,6 +15,7 @@ import { redirect } from '../../actions/router'
 
 import ApiReducer from '../../reducers/api'
 import ListReducer from '../../reducers/list'
+import { virtualTable } from '../../reducers/selectors'
 
 import {
   tableItems
@@ -22,6 +23,8 @@ import {
 
 const REQUIRED_SETTINGS = [
   'title',
+  'selector',
+  'pluralTitle',
   'route',
   'reducerName',
   'actionPrefix',
@@ -43,6 +46,7 @@ const TableController = (settings = {}) => {
   })
 
   const title = settings.title
+  const pluralTitle = settings.pluralTitle
   const api = settings.api
   const route = settings.route
   const reducerName = settings.reducerName
@@ -58,6 +62,33 @@ const TableController = (settings = {}) => {
     list:ListReducer(actions.list.types)
   }
 
+  const getTitle = (selected) => {
+    if(selected.length<=0){
+      return pluralTitle
+    }
+    else if(selected.length==1){
+      return selected[0].name
+    }
+    else {
+      return selected.length + ' ' + pluralTitle.toLowerCase()
+    }
+  }
+
+  const getState = (store, routeInfo) => {
+    const state = settings.selector(store.getState())
+    const selected = state.list.selected
+    const data = state.get.data || {}
+    const table = virtualTable(data.ids, data.db)
+    const selectedItems = table.getSelectedItems(selected)
+    const title = getTitle(selectedItems)
+    return {
+      title,
+      selected,
+      selectedItems,
+      data:table.getItems()
+    }
+  }
+
   const sagas = (store) => {
 
     // load the table data
@@ -66,7 +97,7 @@ const TableController = (settings = {}) => {
       handler:api.list,
       actions:actions.get,
       trigger:actions.get.types.REQUEST,
-      injector:settings.injector
+      injector:tableItems
     })
 
     return [
@@ -77,6 +108,7 @@ const TableController = (settings = {}) => {
   return {
     actions,
     reducers,
+    getState,
     sagas
   }
 }

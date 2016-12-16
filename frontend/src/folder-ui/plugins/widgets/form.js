@@ -7,8 +7,7 @@ import Form from '../../components/Form'
 
 const REQUIRED_SETTINGS = [
   'actions',
-  'selector',
-  'getTitle',
+  'getState',
   'getButtons',
   'getSchema'
 ]
@@ -30,38 +29,20 @@ const FormWidget = (settings = {}) => {
 
   const actions = settings.actions
 
-  const mapRouteInfo = (routeInfo) => {
-    return settings.mapRouteInfo ?
-      settings.mapRouteInfo(routeInfo) :
-      routeInfo
-  }
-
   return (store, mode) => {
-
-    const getState = (routeInfo) => {
-      routeInfo = mapRouteInfo(routeInfo)
-      routeInfo.mode = mode
-      const state = settings.selector(store.getState())
-      return {
-        title:settings.getTitle(state, routeInfo),
-        data:state.tools.data,
-        meta:state.tools.meta       
-      }
-    }
-    
     return ContainerWrapper(ToolbarContent, {
       ContentComponent:Form,
       // the trigger to load the data for this widget
       initializeData:(routeInfo) => {
-        routeInfo = mapRouteInfo(routeInfo)
         store.dispatch(actions.requestInitialData(mode, routeInfo.params))
       },
-      // state that would trigger a re-render
-      getState:getState,
-      getInjectedProps:(routeInfo) => {
-        routeInfo = mapRouteInfo(routeInfo)
+      getState:(routeInfo) => {
         routeInfo.mode = mode
-        const state = getState(routeInfo)
+        return settings.getState(store, routeInfo)
+      },
+      getInjectedProps:(routeInfo) => {
+        routeInfo.mode = mode
+        const state = settings.getState(store, routeInfo)
         return {
           getIcon:settings.getIcon,
           buttons:settings.getButtons(state, store, routeInfo),

@@ -8,8 +8,7 @@ import Table from '../../components/Table'
 
 const REQUIRED_SETTINGS = [
   'actions',
-  'selector',
-  'getTitle',
+  'getState',
   'getButtons',
   'getTableFields'
 ]
@@ -33,39 +32,16 @@ const TableWidget = (settings = {}) => {
 
   const actions = settings.actions
 
-  const mapRouteInfo = (routeInfo) => {
-    return settings.mapRouteInfo ?
-      settings.mapRouteInfo(routeInfo) :
-      routeInfo
-  }
-
   return (store) => {
-
-    const getState = (routeInfo) => {
-      routeInfo = mapRouteInfo(routeInfo)
-      const state = settings.selector(store.getState())
-      const selected = state.list.selected
-      const data = state.get.data || {}
-      const table = virtualTable(data.ids, data.db)
-      return {
-        title:settings.getTitle(state, routeInfo),
-        data:table.getItems(),
-        selected,
-        selectedItems:table.getSelectedItems(selected)
-      }
-    }
-
     return ContainerWrapper(ToolbarContent, {
       ContentComponent:Table,
       ToolbarComponent:settings.ToolbarComponent,
       initializeData:(routeInfo) => {
-        routeInfo = mapRouteInfo(routeInfo)
         store.dispatch(actions.requestInitialData())
       },
-      getState:getState,
+      getState:(routeInfo) => settings.getState(store, routeInfo),
       getInjectedProps:(routeInfo) => {
-        routeInfo = mapRouteInfo(routeInfo)
-        const state = getState(routeInfo)
+        const state = settings.getState(store, routeInfo)
         return {
           getIcon:settings.getIcon,
           buttons:settings.getButtons(state, store, routeInfo),
