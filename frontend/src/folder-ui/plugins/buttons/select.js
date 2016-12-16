@@ -19,10 +19,9 @@ const SelectButtons = (settings = {}) => {
   const actions = settings.actions
 
   return (state, store, routeInfo) => {
-
     return [{
       title:'Select All',
-      handler:() => store.dispatch(actions.selected([]))
+      handler:() => store.dispatch(actions.selected(state.data.map(item => item.id)))
     },{
       title:'Select None',
       handler:() => store.dispatch(actions.selected([]))
