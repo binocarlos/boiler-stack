@@ -92,7 +92,7 @@ const TableController = (settings = {}) => {
   const sagas = (store) => {
 
     // load the table data
-    const listApiSaga = ApiSaga({
+    const listSaga = ApiSaga({
       label:getLabel(title) + ':list',
       handler:api.list,
       actions:actions.get,
@@ -101,8 +101,9 @@ const TableController = (settings = {}) => {
     })
 
     return [
-      listApiSaga
+      listSaga
     ]
+
   }
 
   return {

@@ -6,13 +6,14 @@ import injectTapEventPlugin from 'react-tap-event-plugin'
 injectTapEventPlugin()
 
 import AppFactory from 'boiler-frontend/src/factory'
+
 import Passport from 'passport-slim-ui/src/plugin'
+import Snackbar from 'boiler-frontend/src/plugins/snackbar'
 
 import Core from './plugins/core'
 import Menus from './plugins/menus'
 import Routes from './plugins/routes'
 import Installations from './plugins/installations'
-
 
 const Root = AppFactory([
   Core({
@@ -20,6 +21,7 @@ const Root = AppFactory([
   }),
   Menus(),
   Routes(),
+  Snackbar(),
   Passport({
     appURL:'/app'  
   }),

@@ -1,3 +1,5 @@
+import React, { Component, PropTypes } from 'react'
+
 const CorePlugin = (settings = {}) => {
 
   const getSettings = () => {

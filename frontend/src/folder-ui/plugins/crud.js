@@ -53,13 +53,21 @@ const CrudPlugin = (settings = {}) => {
   const route = settings.route
   const reducerName = settings.reducerName
   const actionPrefix = settings.actionPrefix
+
   const selector = (widget) => (state) => state[reducerName][widget]
   const getIcon = () => settings.getIcon ? settings.getIcon() : null
+
+  // wrap the initial data for the form in a promise so it's a like an api call
   const getInitialData = () => {
     return new Promise((resolve, reject) => {
       resolve(settings.initialFormData || {})
     })
   }
+
+  // an action function to display user confirmations (e.g. a Snackbar)
+  const userEventHandler = settings.userEventHandler ? 
+    settings.userEventHandler :
+    (store, userEvent) => {}
 
   /*
   
@@ -73,6 +81,7 @@ const CrudPlugin = (settings = {}) => {
     pluralTitle,
     route,
     reducerName,
+    userEventHandler,
     selector:selector('table'),
     actionPrefix,
     api:{
@@ -84,6 +93,7 @@ const CrudPlugin = (settings = {}) => {
     title,
     route,
     reducerName,
+    userEventHandler,
     selector:selector('form'),
     actionPrefix,
     redirects:{

@@ -23,6 +23,7 @@ const REQUIRED_SETTINGS = [
   'redirects',
   'reducerName',
   'actionPrefix',
+  'userEventHandler',
   'api'
 ]
 
@@ -49,6 +50,7 @@ const FormController = (settings = {}) => {
   const redirects = settings.redirects
   const reducerName = settings.reducerName
   const actionPrefix = settings.actionPrefix
+  const userEventHandler = settings.userEventHandler
 
   const actions = {
     get:ApiActions(actionPrefix + '_FORM_GET'),
@@ -81,14 +83,20 @@ const FormController = (settings = {}) => {
     // the initial trigger to load some form data
     // add runs a sync local function
     // edit re-triggers an action for a saga to handle
-    function* requestInitialFormData(action) {
+    function* doRequestInitialFormData(action) {
       if(action.mode == 'put'){
         if(!action.params.id) throw new Error('no id param for form:edit -> requestData')
         // clear the data whilst we are loading
-        yield put(actions.tools.initializeData({}))
-        yield put(actions.get.request({
-          id:action.params.id
-        }))
+        console.log('-------------------------------------------');
+        console.log('put action')
+        console.dir(actions.tools.initializeData({}))
+        
+        yield [
+          put(actions.tools.initializeData({})),
+          put(actions.get.request({
+            id:action.params.id
+          }))
+        ]
       }
       else if(action.mode == 'post'){
         const initialData = yield call(api.getInitialData, action)
@@ -99,56 +107,94 @@ const FormController = (settings = {}) => {
       }
     }
 
-    function* requestInitialFormDataSaga() {
-      yield takeLatest(actions.tools.types.FORM_REQUEST_INITIAL_DATA, requestInitialFormData)
+    function* requestInitialFormData() {
+      yield takeLatest(actions.tools.types.FORM_REQUEST_INITIAL_DATA, doRequestInitialFormData)
     }
 
-    // redirect once they have added an item
-    function* afterPost(action) {
-      yield put(redirect(redirects.home))
-    }
-
-    function* afterPostSaga() {
-      yield takeLatest(actions.post.types.SUCCESS, afterPost)
-    }
-
-    // copy the loaded data into the form
-    function* afterGet(action) {
-      yield put(actions.tools.initializeData(action.data))
-    }
-
-    function* afterGetSaga() {
-      yield takeLatest(actions.get.types.SUCCESS, afterGet)
-    }
-
-    const getSaga = ApiSaga({
+    /*
+    
+      get
+      
+    */
+    const get = ApiSaga({
       label:getLabel(title) + ':get',
       handler:api.get,
       actions:actions.get,
       trigger:actions.get.types.REQUEST
     })
 
-    const postSaga = ApiSaga({
+    // copy the loaded data into the form
+    function* doAfterGet(action) {
+      console.log('-------------------------------------------');
+      console.log('-------------------------------------------');
+      console.log('HAVE DATA')
+      console.dir(action)
+      yield put(actions.tools.initializeData(action.data))
+    }
+
+    function* afterGet() {
+      yield takeLatest(actions.get.types.SUCCESS, doAfterGet)
+    }
+
+    /*
+    
+      post
+      
+    */
+    const post = ApiSaga({
       label:getLabel(title) + ':post',
       handler:api.post,
       actions:actions.post,
       trigger:actions.post.types.REQUEST
     })
 
-    const putSaga = ApiSaga({
+    // run user eventHandler
+    // redirect to home
+    function* doAfterPost(action) {
+      yield call(userEventHandler, store, {
+        name:'post',
+        action
+      })
+      yield put(redirect(redirects.home))
+    }
+
+    function* afterPost() {
+      yield takeLatest(actions.post.types.SUCCESS, doAfterPost)
+    }
+
+    /*
+    
+      put
+      
+    */
+    const put = ApiSaga({
       label:getLabel(title) + ':put',
       handler:api.put,
       actions:actions.put,
       trigger:actions.put.types.REQUEST
     })
 
+    // run user eventHandler
+    function* doAfterPut(action) {
+      yield call(userEventHandler, store, {
+        name:'put',
+        action
+      })
+      yield put(redirect(redirects.home))
+    }
+
+    function* afterPut() {
+      yield takeLatest(actions.put.types.SUCCESS, doAfterPut)
+    }
+
     return [
-      getSaga,
-      postSaga,
-      putSaga,
-      requestInitialFormDataSaga,
-      afterPostSaga,
-      afterGetSaga
+      requestInitialFormData,
+      get,
+      post,
+      put,
+      afterGet,
+      afterPost,
+      afterPut
     ]
   }
 

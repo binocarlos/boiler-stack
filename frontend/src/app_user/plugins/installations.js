@@ -2,8 +2,9 @@ import React, { Component, PropTypes } from 'react'
 
 import Crud from '../../folder-ui/plugins/crud'
 import mongoCrudAjaxFactory from '../../folder-ui/api/mongocrud'
-
+import { open_snackbar } from 'boiler-frontend/src/actions'
 import ICON from 'material-ui/svg-icons/file/cloud'
+import bows from 'bows'
 
 const TABLE_FIELDS = [{
   name:'littleid',
@@ -20,6 +21,8 @@ const SCHEMA = [{
   name:'name'
 }]
 
+const logger = bows('installations')
+
 const SETTINGS = {
   type:'installation',
   title:'Installation',
@@ -31,7 +34,12 @@ const SETTINGS = {
   initialFormData:{},
   getIcon:() => (<ICON />),
   getTableFields:(state, store, routeInfo) => TABLE_FIELDS,
-  getSchema:(state, store, routeInfo) => SCHEMA
+  getSchema:(state, store, routeInfo) => SCHEMA,
+  // react to core user events by showing a snackbar
+  userEventHandler:(store, userEvent) => {
+    logger('user event', userEvent)
+    store.dispatch(open_snackbar(userEvent.message))
+  }
 }
 
 const InstallationsPlugin = (settings = {}) => {
