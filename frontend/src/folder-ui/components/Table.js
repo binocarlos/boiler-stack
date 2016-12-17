@@ -54,7 +54,7 @@ class TableComponent extends Component {
           <TableRow>
             {fields.map( (field, index) => {
               return (
-                <TableHeaderColumn key={index} style={field.headerStyle}>
+                <TableHeaderColumn key={index} style={field.headerStyle || field.style}>
                   <div>
                     {getFieldTitle(field)}
                   </div>

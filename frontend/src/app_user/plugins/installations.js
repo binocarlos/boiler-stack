@@ -48,8 +48,7 @@ const InstallationsPlugin = (settings = {}) => {
   const ajaxApi = mongoCrudAjaxFactory({
     type:settings.type,
     title:settings.title,
-    url:settings.url,
-
+    url:settings.url
   })
 
   settings.api = ajaxApi

@@ -20,10 +20,22 @@ module.exports = function(router, opts){
     
   */
   router.set(opts.url + '/currentuser', {
-    GET:function(req, res, opts){
+    GET:auth({
+      action:'currentuser'
+    }, function(req, res, opts){
       req.log.debug(opts, 'GET currentuser')
-      tools.loadUser(req.headers.cookie, req.log, jsonResponseWrapper(req.log, res))
-    }
+      tools.loadUser(req.log, req.headers.cookie, jsonResponseWrapper(req.log, res))
+    }),
+    PUT:auth({
+      action:'savecurrentuser'
+    }, function(req, res, opts){
+      jsonRequestWrapper(req, res, function(data){
+        req.log.debug(Object.assign({}, opts, {
+          data:data
+        }), 'PUT currentuser')
+        users.saveModel(opts.user.id, data, req.log, jsonResponseWrapper(req.log, res))
+      })
+    })
   })
 
   router.set(opts.url + '/users', {

@@ -51,6 +51,7 @@ const TableWidget = (settings = {}) => {
           buttons:settings.getButtons(state, store, routeInfo),
           fields:settings.getTableFields(state, store, routeInfo),
           multiSelectable:settings.multiSelectable,
+          showHeader:true,
           onRowSelection:(idArray) => store.dispatch(actions.selected(idArray)),
           statics:getStatics(state, store)
         }
