@@ -53,17 +53,17 @@ const FormController = (settings = {}) => {
   const userEventHandler = settings.userEventHandler
 
   const actions = {
-    get:ApiActions(actionPrefix + '_FORM_GET'),
-    post:ApiActions(actionPrefix + '_FORM_POST'),
-    put:ApiActions(actionPrefix + '_FORM_PUT'),
-    tools:FormActions(actionPrefix + '_TOOLS')
+    get:ApiActions(actionPrefix + '_GET'),
+    post:ApiActions(actionPrefix + '_POST'),
+    put:ApiActions(actionPrefix + '_PUT'),
+    meta:FormActions(actionPrefix + '_META')
   }
 
   const reducers = {
     get:ApiReducer(actions.get.types),
     post:ApiReducer(actions.post.types),
     put:ApiReducer(actions.put.types),
-    tools:FormReducer(actions.tools.types)
+    meta:FormReducer(actions.meta.types)
   }
 
   const getState = (state, routeInfo) => {
@@ -73,8 +73,8 @@ const FormController = (settings = {}) => {
       'Edit title'
     return {
       title,
-      data:state.tools.data,
-      meta:state.tools.meta       
+      data:state.meta.data,
+      meta:state.meta.meta       
     }
   }
 
@@ -87,14 +87,14 @@ const FormController = (settings = {}) => {
       if(action.mode == 'put'){
         if(!action.params.id) throw new Error('no id param for form:edit -> requestData')
         // clear the data whilst we are loading
-        yield put(actions.tools.initializeData({}))
+        yield put(actions.meta.initializeData({}))
         yield put(actions.get.request({
           id:action.params.id
         }))
       }
       else if(action.mode == 'post'){
         const initialData = yield call(api.getInitialData, action)
-        yield put(actions.tools.initializeData(initialData || {}))
+        yield put(actions.meta.initializeData(initialData || {}))
       }
       else{
         throw new Error('unknown form mode ' + mode)
@@ -102,7 +102,7 @@ const FormController = (settings = {}) => {
     }
 
     function* requestInitialFormData() {
-      yield takeLatest(actions.tools.types.FORM_REQUEST_INITIAL_DATA, doRequestInitialFormData)
+      yield takeLatest(actions.meta.types.REQUEST_INITIAL_DATA, doRequestInitialFormData)
     }
 
     // get
@@ -115,7 +115,7 @@ const FormController = (settings = {}) => {
 
     // copy the loaded data into the form
     function* doAfterGet(action) {
-      yield put(actions.tools.initializeData(action.data))
+      yield put(actions.meta.initializeData(action.data))
     }
 
     function* afterGet() {

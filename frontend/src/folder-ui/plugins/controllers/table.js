@@ -59,14 +59,14 @@ const TableController = (settings = {}) => {
   const userEventHandler = settings.userEventHandler
 
   const actions = {
-    get:ApiActions(actionPrefix + '_TABLE_GET'),
-    list:ListActions(actionPrefix + '_LIST'),
+    get:ApiActions(actionPrefix + '_GET'),
+    meta:ListActions(actionPrefix + '_META'),
     confirmDelete:ConfirmDialogActions(actionPrefix + '_CONFIRM_DELETE')
   }
 
   const reducers = {
     get:ApiReducer(actions.get.types, tableItems),
-    list:ListReducer(actions.list.types),
+    meta:ListReducer(actions.meta.types),
     confirmDelete:ConfirmDialogReducer(actions.confirmDelete.types)
   }
 
@@ -84,7 +84,7 @@ const TableController = (settings = {}) => {
 
   const getState = (state) => {
     state = settings.selector(state)
-    const selected = state.list.selected
+    const selected = state.meta.selected
     const data = state.get.data || {}
     const table = virtualTable(data.ids, data.db)
     const selectedItems = table.getSelectedItems(selected)
@@ -120,7 +120,7 @@ const TableController = (settings = {}) => {
         }
       }))
       yield put(actions.confirmDelete.close())
-      yield put(actions.list.selected([]))
+      yield put(actions.meta.selected([]))
       yield put(actions.get.request())
       yield call(userEventHandler, store, {
         message:'Deleted ' + ids.length + ' item' + (ids.length == 1 ? '' : 's'),

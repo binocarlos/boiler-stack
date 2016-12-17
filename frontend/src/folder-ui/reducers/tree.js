@@ -8,7 +8,7 @@ const DEFAULT_STATE = {
 const treeReducerFactory = (types) => {
   return (state = DEFAULT_STATE, action) => {
     switch (action.type) {
-      case types.toggle:
+      case types.TOGGLE:
         return update(state, {
           open:{
             [action.id]:{

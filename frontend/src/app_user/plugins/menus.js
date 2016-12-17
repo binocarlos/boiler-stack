@@ -27,7 +27,7 @@ const mapMenuItems = (items, dispatch, extrafn) => items.map(item => {
 })
 
 
-const baseUserItems = (dispatch) => {
+const baseUserItems = (store) => {
   return [{
     label:'Home',
     path:'/'
@@ -39,11 +39,11 @@ const baseUserItems = (dispatch) => {
     path:'about'
   },{
     label:'Logout',
-    handler:() => dispatch(logout())
+    handler:() => store.dispatch(logout())
   }]
 }
 
-const baseGuestItems = (dispatch) => {
+const baseGuestItems = (store) => {
   return [{
     label:'Login',
     path:'login'
@@ -59,32 +59,32 @@ const baseGuestItems = (dispatch) => {
   }]
 }
 
-const userAppbarMenu = (dispatch) => {
-  return mapMenuItems(baseUserItems(dispatch), dispatch)
+const userAppbarMenu = (store) => {
+  return mapMenuItems(baseUserItems(store), store.dispatch)
 }
 
-const guestAppbarMenu = (dispatch) => {
-  return mapMenuItems(baseGuestItems(dispatch), dispatch)
+const guestAppbarMenu = (store) => {
+  return mapMenuItems(baseGuestItems(store), store.dispatch)
 }
 
-const userMenu = (dispatch) => {
-  return mapMenuItems(baseUserItems(dispatch), dispatch, () => {
-    dispatch(toggle_menu(false))
+const userMenu = (store) => {
+  return mapMenuItems(baseUserItems(store), store.dispatch, () => {
+    store.dispatch(toggle_menu(false))
   })
 }
 
-const guestMenu = (dispatch) => {
-  return mapMenuItems(baseGuestItems(dispatch), dispatch, () => {
-    dispatch(toggle_menu(false))
+const guestMenu = (store) => {
+  return mapMenuItems(baseGuestItems(store), store.dispatch, () => {
+    store.dispatch(toggle_menu(false))
   })
 }
 
 // the content on the right-hand side of the appbar
-const getAppbarContent = (store) => () => {
+const getAppbarContent = settings => store => () => {
   const userLoggedIn = isUserLoggedIn(store.getState())
   const menuItems = userLoggedIn ?
-    userAppbarMenu(store.dispatch) :
-    guestAppbarMenu(store.dispatch)
+    userAppbarMenu(store) :
+    guestAppbarMenu(store)
 
   const userMenu = (
     <UserMenu
@@ -100,10 +100,10 @@ const getAppbarContent = (store) => () => {
 }
 
 // the menu options we show on the right
-const getMenuContent = (store) => () => {
+const getMenuContent = settings => store => () => {
   const menuItems = isUserLoggedIn(store.getState()) ?
-    userMenu(store.dispatch) :
-    guestMenu(store.dispatch)
+    userMenu(store) :
+    guestMenu(store)
 
   return (
     <Menu
@@ -117,8 +117,8 @@ const MenuPlugin = (settings = {}) => {
   const getSettings = () => {
     return {
       hasMenu:true,
-      getAppbarContent,
-      getMenuContent
+      getAppbarContent:getAppbarContent(settings),
+      getMenuContent:getMenuContent(settings)
     }
   }
 

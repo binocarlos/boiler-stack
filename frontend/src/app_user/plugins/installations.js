@@ -4,7 +4,6 @@ import Crud from '../../folder-ui/plugins/crud'
 
 import { open_snackbar } from 'boiler-frontend/src/actions'
 import ICON from 'material-ui/svg-icons/file/cloud'
-import bows from 'bows'
 
 const TABLE_FIELDS = [{
   name:'name',
@@ -20,8 +19,6 @@ const TABLE_FIELDS = [{
 const SCHEMA = [{
   name:'name'
 }]
-
-const logger = bows('installations')
 
 export const SETTINGS = {
   type:'installation',

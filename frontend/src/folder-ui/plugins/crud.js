@@ -85,7 +85,7 @@ const CrudPlugin = (settings = {}) => {
     reducerName,
     userEventHandler,
     selector:selector('table'),
-    actionPrefix,
+    actionPrefix:actionPrefix + '_TABLE',
     api:{
       list:api.list,
       delete:api.delete
@@ -98,7 +98,7 @@ const CrudPlugin = (settings = {}) => {
     reducerName,
     userEventHandler,
     selector:selector('form'),
-    actionPrefix,
+    actionPrefix:actionPrefix + '_FORM',
     redirects:{
       home:route
     },
@@ -130,14 +130,14 @@ const CrudPlugin = (settings = {}) => {
     select:SelectButtons({
       actions:{
         redirect:router.actions.redirect,
-        selected:table.actions.list.selected
+        selected:table.actions.meta.selected
       }
     }),
     form:FormButtons({
       route,
       actions:{
         redirect:router.actions.redirect,
-        revert:form.actions.tools.revert,
+        revert:form.actions.meta.revert,
         put:form.actions.put.request,
         post:form.actions.post.request
       }
@@ -174,7 +174,7 @@ const CrudPlugin = (settings = {}) => {
     getIcon:getIcon,
     actions:{
       requestInitialData:table.actions.get.request,
-      selected:table.actions.list.selected
+      selected:table.actions.meta.selected
     },
     getButtons:CombineButtons({
       type:'dropdown',
@@ -199,8 +199,8 @@ const CrudPlugin = (settings = {}) => {
     getInitialFormData:settings.getInitialFormData,
     getIcon:getIcon,
     actions:{
-      requestInitialData:form.actions.tools.requestInitialData,
-      update:form.actions.tools.update
+      requestInitialData:form.actions.meta.requestInitialData,
+      update:form.actions.meta.update
     },
     getButtons:CombineButtons({
       type:'buttons',

@@ -11,7 +11,7 @@ const DEFAULT_STATE = {
 const formReducerFactory = (types) => {
   return (state = DEFAULT_STATE, action) => {
     switch (action.type) {
-      case types.FORM_UPDATE:
+      case types.UPDATE:
         return update(state, {
           data:{
             $set:action.data
@@ -20,7 +20,7 @@ const formReducerFactory = (types) => {
             $set:action.meta
           }
         })
-      case types.FORM_INITIALIZE_DATA:
+      case types.INITIALIZE_DATA:
         return update(state, {
           data:{
             $set:action.data
@@ -32,7 +32,7 @@ const formReducerFactory = (types) => {
             $set:null
           }
         })
-      case types.FORM_REVERT:
+      case types.REVERT:
         return update(state, {
           data:{
             $set:state.originalData
@@ -41,7 +41,7 @@ const formReducerFactory = (types) => {
             $set:null
           }
         })
-      case types.FORM_REQUEST_DATA:
+      case types.REQUEST_DATA:
         return update(state, {
           mode:{
             $set:action.mode

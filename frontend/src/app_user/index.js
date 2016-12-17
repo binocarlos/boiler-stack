@@ -5,6 +5,7 @@ import { Route, IndexRoute } from 'react-router'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 injectTapEventPlugin()
 
+import bows from 'bows'
 import AppFactory from 'boiler-frontend/src/factory'
 
 import Passport from 'passport-slim-ui/src/plugin'
@@ -17,23 +18,29 @@ import Menus from './plugins/menus'
 import Routes from './plugins/routes'
 
 import InstallationApi from './api/installations'
-import InstallationPlugin from './plugins/installations'
+import Installations from './plugins/installations'
+import InstallationMenu from './plugins/installationmenu'
 
-const userEventHandler = (store, userEvent) => {
-  logger('user event', userEvent)
-  if(userEvent.snackbar) store.dispatch(open_snackbar(userEvent.message))
+const userEventHandler = (section) => {
+  const logger = bows(section + ':events')
+  return (store, userEvent) => {
+    logger('user event', userEvent)
+    if(userEvent.snackbar) store.dispatch(open_snackbar(userEvent.message))
+  }
 }
 
-const installationApi = InstallationApi({
-  title:'Company'
-})
+const apis = {
+  installations:InstallationApi({
+    title:'Company'
+  })
+}
 
-const installationPlugin = InstallationPlugin({
-  api:installationApi,
+const installations = Installations({
+  api:apis.installations,
   route:'companies',
   title:'Company',
   pluralTitle:'Companies',
-  userEventHandler
+  userEventHandler:userEventHandler('installations')
 })
 
 const Root = AppFactory([
@@ -46,7 +53,11 @@ const Root = AppFactory([
   Passport({
     appURL:'/app'  
   }),
-  installationPlugin
+  installations,
+  InstallationMenu({
+    action:installations.controllers.table.actions.get.request,
+    selector:(state) => installations.controllers.table.getState(state)
+  })
 ], {
   // cli override settings here
 })
