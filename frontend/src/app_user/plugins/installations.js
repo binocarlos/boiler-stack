@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 
 import Crud from '../../folder-ui/plugins/crud'
-import mongoCrudAjaxFactory from '../../folder-ui/api/mongocrud'
+
 import { open_snackbar } from 'boiler-frontend/src/actions'
 import ICON from 'material-ui/svg-icons/file/cloud'
 import bows from 'bows'
@@ -23,7 +23,7 @@ const SCHEMA = [{
 
 const logger = bows('installations')
 
-const SETTINGS = {
+export const SETTINGS = {
   type:'installation',
   title:'Installation',
   url:'/api/v1/installations',
@@ -34,25 +34,11 @@ const SETTINGS = {
   initialFormData:{},
   getIcon:() => (<ICON />),
   getTableFields:(state, store, routeInfo) => TABLE_FIELDS,
-  getSchema:(state, store, routeInfo) => SCHEMA,
-  // react to core user events
-  userEventHandler:(store, userEvent) => {
-    logger('user event', userEvent)
-    if(userEvent.snackbar) store.dispatch(open_snackbar(userEvent.message))
-  }
+  getSchema:(state, store, routeInfo) => SCHEMA
 }
 
 const InstallationsPlugin = (settings = {}) => {
   settings = Object.assign({}, SETTINGS, settings)
-
-  const ajaxApi = mongoCrudAjaxFactory({
-    type:settings.type,
-    title:settings.title,
-    url:settings.url
-  })
-
-  settings.api = ajaxApi
-
   return Crud(settings)
 }
 

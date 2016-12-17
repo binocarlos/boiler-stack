@@ -253,6 +253,11 @@ const CrudPlugin = (settings = {}) => {
   }
 
   return {
+    settings,
+    controllers:{
+      table,
+      form
+    },
     getRoutes,
     getReducers,
     getSagas

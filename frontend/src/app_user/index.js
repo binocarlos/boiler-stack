@@ -10,10 +10,31 @@ import AppFactory from 'boiler-frontend/src/factory'
 import Passport from 'passport-slim-ui/src/plugin'
 import Snackbar from 'boiler-frontend/src/plugins/snackbar'
 
+import { open_snackbar } from 'boiler-frontend/src/actions'
+
 import Core from './plugins/core'
 import Menus from './plugins/menus'
 import Routes from './plugins/routes'
-import Installations from './plugins/installations'
+
+import InstallationApi from './api/installations'
+import InstallationPlugin from './plugins/installations'
+
+const userEventHandler = (store, userEvent) => {
+  logger('user event', userEvent)
+  if(userEvent.snackbar) store.dispatch(open_snackbar(userEvent.message))
+}
+
+const installationApi = InstallationApi({
+  title:'Company'
+})
+
+const installationPlugin = InstallationPlugin({
+  api:installationApi,
+  route:'companies',
+  title:'Company',
+  pluralTitle:'Companies',
+  userEventHandler
+})
 
 const Root = AppFactory([
   Core({
@@ -25,11 +46,7 @@ const Root = AppFactory([
   Passport({
     appURL:'/app'  
   }),
-  Installations({
-    route:'companies',
-    title:'Company',
-    pluralTitle:'Companies'
-  })
+  installationPlugin
 ], {
   // cli override settings here
 })

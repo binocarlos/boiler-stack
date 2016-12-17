@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import AccountMenu from '../components/AccountMenu'
+import InstallationMenu from '../components/InstallationMenu'
 
 import {
   getUserData

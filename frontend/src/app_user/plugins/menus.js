@@ -8,7 +8,7 @@ import { toggle_menu } from 'boiler-frontend/src/actions'
 import UserMenu from 'boiler-frontend/src/components/UserMenu'
 import Menu from 'boiler-frontend/src/components/Menu'
 
-import AccountMenu from '../containers/AccountMenu'
+import InstallationMenu from '../containers/InstallationMenu'
 
 const mapMenuItems = (items, dispatch, extrafn) => items.map(item => {
   if(item.path){
@@ -93,9 +93,9 @@ const getAppbarContent = (store) => () => {
   )
 
   return userLoggedIn ? (
-    <AccountMenu>
+    <InstallationMenu>
       {userMenu}
-    </AccountMenu>
+    </InstallationMenu>
   ) : userMenu
 }
 
