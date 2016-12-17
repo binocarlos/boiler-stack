@@ -21,10 +21,6 @@ class KettleToolbar extends Component {
           {
             this.props.icon ? (
               <IconButton 
-                // a small adjustment so the icon lines up with the ToolbarTitle
-                style={{
-                  marginTop:3
-                }}
                 disabled={true}>
                 {this.props.icon}
               </IconButton>
@@ -42,8 +38,6 @@ class KettleToolbar extends Component {
           }
 
           <div style={STYLES.leftSeperator}></div>
-
-          <div>HELLO</div>
 
           <ButtonRow buttons={this.props.leftbuttons} />
           
