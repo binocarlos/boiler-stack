@@ -134,10 +134,6 @@ const FormController = (settings = {}) => {
     // run user eventHandler
     // redirect to home
     function* doAfterPost(action) {
-      console.log('-------------------------------------------');
-      console.log('-------------------------------------------');
-      console.log('doAfterPost')
-      console.dir(action)
       yield call(userEventHandler, store, {
         message:'Created ' + action.data.name,
         snackbar:true,
