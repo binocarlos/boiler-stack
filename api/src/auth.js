@@ -29,7 +29,7 @@ function sectionWrapper(name, assertion){
       }, 'load user')
 
       // we load the user so the auth function has some context
-      tools.loadUser(req.log, req.headers.cookie, errorWrapper(req.logger, res, function(user){
+      tools.loadUser(req.log, req.headers.cookie, errorWrapper(req.log, res, function(user){
 
         req.log.debug({
           user:user
@@ -47,7 +47,7 @@ function sectionWrapper(name, assertion){
 
         // run the assertion passing it the context
         // we wrap with a 403 error handler
-        assertion(authContext, errorWrapper(req.logger, res, function(info){
+        assertion(authContext, errorWrapper(req.log, res, function(info){
 
           req.log.debug({
             info:info

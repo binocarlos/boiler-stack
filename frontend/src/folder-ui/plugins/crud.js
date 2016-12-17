@@ -3,6 +3,8 @@ import { Route, IndexRoute } from 'react-router'
 import { routerActions } from 'react-router-redux'
 import { combineReducers } from 'redux'
 
+import ConfirmDialog from '../../kettle-ui/ConfirmDialog'
+
 import { ContainerWrapper } from '../tools'
 import ToolbarContent from '../containers/ToolbarContent'
 
@@ -85,7 +87,8 @@ const CrudPlugin = (settings = {}) => {
     selector:selector('table'),
     actionPrefix,
     api:{
-      list:api.list
+      list:api.list,
+      delete:api.delete
     }
   })
 
@@ -120,7 +123,8 @@ const CrudPlugin = (settings = {}) => {
     crud:CrudButtons({
       route,
       actions:{
-        redirect:router.actions.redirect
+        redirect:router.actions.redirect,
+        delete:table.actions.confirmDelete.open
       }
     }),
     select:SelectButtons({
@@ -138,6 +142,25 @@ const CrudPlugin = (settings = {}) => {
         post:form.actions.post.request
       }
     })
+  }
+
+  /*
+  
+    statics
+    
+  */
+  const deleteDialog = (state, store) => {
+    const count = state.selectedItems.length
+    return (
+      <ConfirmDialog
+        onClose={() => store.dispatch(table.actions.confirmDelete.close())}
+        onConfirm={() => store.dispatch(table.actions.confirmDelete.confirm(state.selected))}
+        isModal={true}
+        isOpen={state.dialogOpen}
+      >
+        Are you sure you want to delete { count } { count == 1 ? title : pluralTitle }?
+      </ConfirmDialog>
+    )
   }
 
   /*
@@ -160,7 +183,14 @@ const CrudPlugin = (settings = {}) => {
         buttons.crud,
         buttons.select
       ]
-    })
+    }),
+    getStatics:(state, store) => {
+      return (
+        <div>
+          {deleteDialog(state, store)}
+        </div>
+      )
+    }
   })
 
   const formWidget = FormWidget({

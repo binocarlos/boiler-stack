@@ -4,7 +4,8 @@ const REQUIRED_SETTINGS = [
 ]
 
 const REQUIRED_ACTIONS = [
-  'redirect'
+  'redirect',
+  'delete'
 ]
 
 const CrudButtons = (settings = {}) => {
@@ -42,7 +43,7 @@ const CrudButtons = (settings = {}) => {
     if(selected.length>0){
       buttons = buttons.concat([{
         title:'Delete',
-        handler:() => store.dispatch(actions.redirect(route + '/edit/' + selected[0].id))
+        handler:() => store.dispatch(actions.delete())
       }])
     }
 

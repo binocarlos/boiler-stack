@@ -1,5 +1,5 @@
 import Ajax from './ajax'
-import MongoCodec from './mongocodec'
+import { MongoCodec } from './codecs'
 
 const mongoCodecFactory = (name, type) => MongoCodec({
   name:name,
@@ -30,41 +30,42 @@ const mongoCrudAjaxFactory = (settings = {}) => {
   const codec = mongoCodecFactory(title, type)
 
   return {
-    list:(query, data) => {
+    list:(query = {}) => {
       return ajaxClient
         .get(url)
         .then(result => {
           return result.map(codec.encode)
         })
     },
-    get:(query, data) => {
+    get:(query = {}) => {
       return ajaxClient
         .get(url + '/' + query.id)
         .then(result => {
           return codec.encode(result)
         })
     },
-    post:(query, data) => {
+    post:(query = {}, data) => {
       return ajaxClient
         .post(url, data)
         .then(result => {
           return codec.encode(result)
         })
     },
-    put:(query, data) => {
+    put:(query = {}, data) => {
       return ajaxClient
         .put(url + '/' + query.id, data)
         .then(result => {
           return codec.encode(result)
         })
+    },
+    delete:(query = {}) => {
+      return ajaxClient
+        .delete(url + '/' + query.id)
     }
   }
 }
 
 export default mongoCrudAjaxFactory
-
-
-
 
 // the raw apis for each database
 /*

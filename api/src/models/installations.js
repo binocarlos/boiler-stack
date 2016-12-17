@@ -30,7 +30,9 @@ module.exports = function(opts){
         async.parallel(collaborations.map(function(collaboration){
           return function(nextinstallation){
             installations.loadModel(collaboration.installationid, logger, function(err, installation){
-              if(err) return nextinstallation(err)
+              if(err){
+                return nextinstallation('installation not found: ' + collaboration.installationid)
+              } 
               installation.permission = collaboration.permission
               return nextinstallation(null, installation)
             })
@@ -55,7 +57,10 @@ module.exports = function(opts){
       },
 
       function(installation, next){
-        collaborators.createInstallationOwner(installation._id, userid, logger, next)
+        collaborators.createInstallationOwner(installation._id, userid, logger, function(err, collaborator){
+          if(err) return next(err)
+          return next(null, installation)
+        })
       }
 
     ], done)

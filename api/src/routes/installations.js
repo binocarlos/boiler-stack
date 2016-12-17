@@ -59,7 +59,7 @@ module.exports = function(router, opts){
       action:'delete'
     }, function(req, res, opts){
       req.log.debug(opts, 'DELETE installation')
-      installations.deleteModel(opts.params.installationid, req.log, jsonResponseWrapper(req.log, res))
+      installations.deleteInstallation(opts.params.installationid, req.log, jsonResponseWrapper(req.log, res))
     })
   })
 

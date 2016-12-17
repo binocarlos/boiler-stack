@@ -7,14 +7,17 @@ import { fork, put, call, take, select } from 'redux-saga/effects'
 
 import { getLabel } from '../../tools'
 
+import { multiApi } from './tools'
 import ApiSaga from '../../sagas/api'
 
 import ApiActions from '../../actions/api'
 import ListActions from '../../actions/list'
+import ConfirmDialogActions from '../../actions/confirmdialog'
 import { redirect } from '../../actions/router'
 
 import ApiReducer from '../../reducers/api'
 import ListReducer from '../../reducers/list'
+import ConfirmDialogReducer from '../../reducers/confirmdialog'
 import { virtualTable } from '../../reducers/selectors'
 
 import {
@@ -28,11 +31,13 @@ const REQUIRED_SETTINGS = [
   'route',
   'reducerName',
   'actionPrefix',
+  'userEventHandler',
   'api'
 ]
 
 const REQUIRED_API_SETTINGS = [
-  'list'
+  'list',
+  'delete'
 ]
 
 const TableController = (settings = {}) => {
@@ -51,15 +56,18 @@ const TableController = (settings = {}) => {
   const route = settings.route
   const reducerName = settings.reducerName
   const actionPrefix = settings.actionPrefix
+  const userEventHandler = settings.userEventHandler
 
   const actions = {
     get:ApiActions(actionPrefix + '_TABLE_GET'),
-    list:ListActions(actionPrefix + '_LIST')
+    list:ListActions(actionPrefix + '_LIST'),
+    confirmDelete:ConfirmDialogActions(actionPrefix + '_CONFIRM_DELETE')
   }
 
   const reducers = {
     get:ApiReducer(actions.get.types, tableItems),
-    list:ListReducer(actions.list.types)
+    list:ListReducer(actions.list.types),
+    confirmDelete:ConfirmDialogReducer(actions.confirmDelete.types)
   }
 
   const getTitle = (selected) => {
@@ -74,25 +82,27 @@ const TableController = (settings = {}) => {
     }
   }
 
-  const getState = (store, routeInfo) => {
-    const state = settings.selector(store.getState())
+  const getState = (state) => {
+    state = settings.selector(state)
     const selected = state.list.selected
     const data = state.get.data || {}
     const table = virtualTable(data.ids, data.db)
     const selectedItems = table.getSelectedItems(selected)
     const title = getTitle(selectedItems)
+    const dialogOpen = state.confirmDelete.open
     return {
       title,
       selected,
       selectedItems,
-      data:table.getItems()
+      data:table.getItems(),
+      dialogOpen:dialogOpen
     }
   }
 
   const sagas = (store) => {
 
     // load the table data
-    const listSaga = ApiSaga({
+    const listApi = ApiSaga({
       label:getLabel(title) + ':list',
       handler:api.list,
       actions:actions.get,
@@ -100,8 +110,33 @@ const TableController = (settings = {}) => {
       injector:tableItems
     })
 
+    function* doConfirmDelete(action) {
+      const ids = action.data || []
+      const deleteResults = yield call(multiApi, api.delete, ids.map(id => {
+        return {
+          query:{
+            id
+          }
+        }
+      }))
+      yield put(actions.confirmDelete.close())
+      yield put(actions.list.selected([]))
+      yield put(actions.get.request())
+      yield call(userEventHandler, store, {
+        message:'Deleted ' + ids.length + ' item' + (ids.length == 1 ? '' : 's'),
+        snackbar:true,
+        name:'delete',
+        action
+      })
+    }
+
+    function* confirmDelete() {
+      yield takeLatest(actions.confirmDelete.types.CONFIRM, doConfirmDelete)
+    }
+
     return [
-      listSaga
+      listApi,
+      confirmDelete
     ]
 
   }

@@ -39,7 +39,12 @@ export class CollectionContainer extends Component {
     return (
       <ToolbarWrapper
         toolbar={<ToolbarComponent {...finalProps} />}>
-        <ContentComponent {...finalProps} />
+        <div>
+          <ContentComponent {...finalProps} />
+          <div>
+            {injectedProps.statics}
+          </div>
+        </div>
       </ToolbarWrapper>
     )
   }

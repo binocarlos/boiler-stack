@@ -31,16 +31,14 @@ const SETTINGS = {
   reducerName:'installations',
   actionPrefix:'INSTALLATIONS',
   icon:ICON,
-  initialFormData:{
-    name:'apples'
-  },
+  initialFormData:{},
   getIcon:() => (<ICON />),
   getTableFields:(state, store, routeInfo) => TABLE_FIELDS,
   getSchema:(state, store, routeInfo) => SCHEMA,
   // react to core user events
   userEventHandler:(store, userEvent) => {
     logger('user event', userEvent)
-    store.dispatch(open_snackbar(userEvent.message))
+    if(userEvent.snackbar) store.dispatch(open_snackbar(userEvent.message))
   }
 }
 

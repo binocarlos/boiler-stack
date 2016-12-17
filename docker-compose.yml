@@ -5,17 +5,17 @@ services:
     image: redis
     container_name: boiler_redis
     volumes:
-      - ./.boilerstack/redis:/data
+      - ./.data/redis:/data
   mongo:
     image: mongo
     container_name: boiler_mongo
     volumes:
-      - ./.boilerstack/mongo:/data/db
+      - ./.data/mongo:/data/db
   digger:
     image: binocarlos/digger-rest
     container_name: boiler_digger
     volumes:
-      - ./.boilerstack/digger:/data/db
+      - ./.data/digger:/data/db
   # edge router
   router:
     image: binocarlos/noxy
@@ -105,9 +105,9 @@ services:
       - storage:storage
     volumes:
       - ./api/src:/app/src
-    #entrypoint: 
-    #  - "sleep"
-    #  - "10000000"
+    entrypoint: 
+      - "sleep"
+      - "10000000"
     environment:
       LOGLEVEL: debug
       AUTH_SERVICE_HOST: auth

@@ -37,9 +37,9 @@ function factory(opts){
         logger.error({
           statusCode:resp.statusCode,
           headers:resp.headers,
-          body:resp.body.toString()
+          body:resp.body
         }, 'bad status code - ' + resp.statusCode + ' - ' + logInfo.method + ' ' + logInfo.url)
-        return done(resp.body.toString())
+        return done(resp.body.message)
       }
       var jsonBody = resp.body
       logger.debug({

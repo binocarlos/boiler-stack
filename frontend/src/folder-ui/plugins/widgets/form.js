@@ -33,16 +33,16 @@ const FormWidget = (settings = {}) => {
     return ContainerWrapper(ToolbarContent, {
       ContentComponent:Form,
       // the trigger to load the data for this widget
-      initializeData:(routeInfo) => {
+      initializeData:(routeInfo = {}) => {
         store.dispatch(actions.requestInitialData(mode, routeInfo.params))
       },
-      getState:(routeInfo) => {
+      getState:(routeInfo = {}) => {
         routeInfo.mode = mode
-        return settings.getState(store, routeInfo)
+        return settings.getState(store.getState(), routeInfo)
       },
-      getInjectedProps:(routeInfo) => {
+      getInjectedProps:(routeInfo = {}) => {
         routeInfo.mode = mode
-        const state = settings.getState(store, routeInfo)
+        const state = settings.getState(store.getState(), routeInfo)
         return {
           getIcon:settings.getIcon,
           buttons:settings.getButtons(state, store, routeInfo),

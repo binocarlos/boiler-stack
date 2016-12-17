@@ -66,8 +66,8 @@ const FormController = (settings = {}) => {
     tools:FormReducer(actions.tools.types)
   }
 
-  const getState = (store, routeInfo) => {
-    const state = settings.selector(store.getState())
+  const getState = (state, routeInfo) => {
+    state = settings.selector(state)
     const title = routeInfo.mode == 'post' ? 
       'New ' + settings.title :
       'Edit title'
@@ -134,8 +134,13 @@ const FormController = (settings = {}) => {
     // run user eventHandler
     // redirect to home
     function* doAfterPost(action) {
+      console.log('-------------------------------------------');
+      console.log('-------------------------------------------');
+      console.log('doAfterPost')
+      console.dir(action)
       yield call(userEventHandler, store, {
         message:'Created ' + action.data.name,
+        snackbar:true,
         name:'post',
         action
       })
@@ -159,6 +164,7 @@ const FormController = (settings = {}) => {
     function* doAfterPut(action) {
       yield call(userEventHandler, store, {
         message:'Saved ' + action.data.name,
+        snackbar:true,
         name:'put',
         action
       })

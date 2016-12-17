@@ -6,7 +6,7 @@
 
 import bows from 'bows'
 
-export default function MongoCodec(opts = {}){
+export function MongoCodec(opts = {}){
   const logger = bows('folderui:api:mongocodec' + (opts.name ? ':' + opts.name : ''))
   return {
     encode:(data) => {
