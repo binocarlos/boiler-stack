@@ -27,10 +27,10 @@ const ApiSagaFactory = (opts = {}) => {
         injector(data) :
         data
       logger('response', injected)
-      yield put(actions.success(injected))
+      yield put(actions.success(injected, action.query))
     } catch (e) {
       logger('error', e.message)
-      yield put(actions.failure(e.message))
+      yield put(actions.failure(e.message, action.query))
     }
   }
 

@@ -2,21 +2,15 @@ import React, { Component, PropTypes } from 'react'
 import { takeLatest } from 'redux-saga'
 import { fork, put, call, take, select } from 'redux-saga/effects'
 
-//import ApiSaga from '../../sagas/api'
-//import ApiActions from '../../actions/api'
-//import ApiReducer from '../../reducers/api'
-//import { virtualTable } from '../../reducers/selectors'
-
-//import {
-//  tableItems
-//} from '../../reducers/injectors'
+import {
+  getUserData
+} from 'passport-slim-ui/src/selectors'
 
 const REQUIRED_SETTINGS = [
-  'action',
-  'selector'
+  'saveUser'
 ]
 
-const InstallationMenuSaga = (settings = {}) => {
+const InstallationMenuPlugin = (settings = {}) => {
 
   REQUIRED_SETTINGS.forEach(field => {
     if(!settings[field]) throw new Error(field + ' setting needed')
@@ -25,22 +19,45 @@ const InstallationMenuSaga = (settings = {}) => {
   const action = settings.action
   const selector = settings.selector
 
-  function *initialLoad() {
-    //yield put(actions.status.request())
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.log('doing initial load for installation menu')
+  const actions = {
+    types:{
+      SWITCH_INSTALLATION:'SWITCH_INSTALLATION'
+    },
+    switch:(id) => {
+      return {
+        type:'SWITCH_INSTALLATION',
+        id
+      }
+    }
   }
-  
-  const getSagas = () => {
+
+  const getSagas = (store) => {
+
+    function* doSwitchInstallation(action) {
+      const user = yield select(getUserData)
+      const data = Object.assign({}, user.data)
+      data.currentInstallation = action.id
+      yield put(settings.saveUser({
+        id:action.id,
+        message:settings.message
+      }, {
+        data
+      }))
+    }
+
+    function* switchInstallation() {
+      yield takeLatest(actions.types.SWITCH_INSTALLATION, doSwitchInstallation)
+    }
+
     return [
-      initialLoad
+      switchInstallation
     ]
   }
 
   return {
+    actions,
     getSagas
   }
 }
 
-export default InstallationMenuSaga
+export default InstallationMenuPlugin

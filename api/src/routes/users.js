@@ -40,6 +40,7 @@ module.exports = function(router, opts){
 
   router.set(opts.url + '/users', {
     GET:auth({
+      superadmin:true,
       action:'list'
     }, function(req, res, opts){
       req.log.debug(opts, 'GET users')
@@ -48,6 +49,7 @@ module.exports = function(router, opts){
       }, req.log, jsonResponseWrapper(req.log, res))
     }),
     POST:auth({
+      superadmin:true,
       action:'add'
     }, function(req, res, opts){
       jsonRequestWrapper(req, res, function(data){
@@ -61,12 +63,14 @@ module.exports = function(router, opts){
 
   router.set(opts.url + '/users/:userid', {
     GET:auth({
+      superadmin:true,
       action:'read'
     }, function(req, res, opts){
       req.log.debug(opts, 'GET user')
       users.loadModel(opts.params.userid, req.log, jsonResponseWrapper(req.log, res))
     }),
     PUT:auth({
+      superadmin:true,
       action:'save'
     }, function(req, res, opts){
       jsonRequestWrapper(req, res, function(data){
@@ -77,6 +81,7 @@ module.exports = function(router, opts){
       })
     }),
     DELETE:auth({
+      superadmin:true,
       action:'delete'
     }, function(req, res, opts){
       req.log.debug(opts, 'DELETE user')

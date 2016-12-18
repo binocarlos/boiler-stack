@@ -21,12 +21,12 @@ module.exports = function(router, opts){
     
   })
 
-  router.set(opts.url + '/projects/:accountid', {
+  router.set(opts.url + '/projects/:installationid', {
     GET:auth({
       action:'list'
     }, function(req, res, opts){
       req.log.debug(opts, 'GET projects')
-      projects.loadAccountProjects(opts.params.accountid, req.log, jsonResponseWrapper(req.log, res))
+      projects.loadInstallationProjects(opts.params.installationid, req.log, jsonResponseWrapper(req.log, res))
     }),
     POST:auth({
       action:'add'
@@ -35,12 +35,12 @@ module.exports = function(router, opts){
         req.log.debug(Object.assign({}, opts, {
           data:data
         }), 'POST projects')
-        projects.addAccountProject(opts.params.accountid, data, req.log, jsonResponseWrapper(req.log, res))
+        projects.addInstallationProject(opts.params.installationid, data, req.log, jsonResponseWrapper(req.log, res))
       })
     })
   })
 
-  router.set(opts.url + '/projects/:accountid/:projectid', {
+  router.set(opts.url + '/projects/:installationid/:projectid', {
     GET:auth({
       action:'read'
     }, function(req, res, opts){

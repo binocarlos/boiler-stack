@@ -4,8 +4,10 @@ import icons from './icons'
 import tables from './tables'
 import schemas from './schemas'
 
+const BASE_API_URL = '/api/v1'
+
 const URLS = {
-  installation:'/api/v1/installations'
+  installation:BASE_API_URL + '/installations'
 }
 
 const ICONS = {
@@ -14,7 +16,8 @@ const ICONS = {
 
 const CORE = {
   title:'Boiler App',
-  appURL:'/app'
+  appURL:'/app',
+  currentUserURL:BASE_API_URL + '/currentuser'
 }
 
 const INSTALLATION = {

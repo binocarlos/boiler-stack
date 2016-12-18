@@ -19,12 +19,12 @@ module.exports = function(router, opts){
     
   })
 
-  router.set(opts.url + '/clients/:projectid', {
+  router.set(opts.url + '/clients/:installationid', {
     GET:auth({
       action:'list'
     }, function(req, res, opts){
       req.log.debug(opts, 'GET clients')
-      clients.loadProjectClients(opts.params.projectid, req.log, jsonResponseWrapper(req.log, res))
+      clients.loadInstallationClients(opts.params.installationid, req.log, jsonResponseWrapper(req.log, res))
     }),
     POST:auth({
       action:'add'
@@ -33,17 +33,17 @@ module.exports = function(router, opts){
         req.log.debug(Object.assign({}, opts, {
           data:data
         }), 'POST client')
-        clients.addProjectClient(opts.params.projectid, data, req.log, jsonResponseWrapper(req.log, res))
+        clients.addInstallationClient(opts.params.installationid, data, req.log, jsonResponseWrapper(req.log, res))
       })
     })
   })
 
-  router.set(opts.url + '/clients/:projectid/:clientid', {
+  router.set(opts.url + '/clients/:installationid/:clientid', {
     GET:auth({
       action:'read'
     }, function(req, res, opts){
       req.log.debug(opts, 'GET client')
-      clients.loadModel(opts.params.quoteid, req.log, jsonResponseWrapper(req.log, res))
+      clients.loadModel(opts.params.clientid, req.log, jsonResponseWrapper(req.log, res))
     }),
     PUT:auth({
       action:'save'
@@ -52,14 +52,14 @@ module.exports = function(router, opts){
         req.log.debug(Object.assign({}, opts, {
           data:data
         }), 'PUT client')
-        clients.saveModel(opts.params.quoteid, data, req.log, jsonResponseWrapper(req.log, res))
+        clients.saveModel(opts.params.clientid, data, req.log, jsonResponseWrapper(req.log, res))
       })
     }),
     DELETE:auth({
       action:'delete'
     }, function(req, res, opts){
       req.log.debug(opts, 'DELETE client')
-      clients.deleteModel(opts.params.quoteid, req.log, jsonResponseWrapper(req.log, res))
+      clients.deleteModel(opts.params.clientid, req.log, jsonResponseWrapper(req.log, res))
     })
   })
 }

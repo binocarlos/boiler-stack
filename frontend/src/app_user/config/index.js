@@ -25,6 +25,7 @@ const sections = [{
 }]
 
 const config = {
+  settings,
   core:settings.core,
   menus,
   routes,

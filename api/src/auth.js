@@ -107,7 +107,7 @@ const assertionFactory = function(opts){
     standard:normalUser,
     users:function(context, done){
       if(!context.user) return done('requires login')
-      if(context.user.accesslevel!='superadmin') return done('superadmin access needed for users')
+      if(context.superadmin && context.user.accesslevel!='superadmin') return done('superadmin access needed for users')
       done()
     }
   }
