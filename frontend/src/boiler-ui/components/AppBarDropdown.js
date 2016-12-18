@@ -8,8 +8,6 @@ import MenuItem from 'material-ui/MenuItem'
 import ExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more'
 import ButtonDropdown from 'kettle-ui/lib/ButtonDropdown'
 
-import { nameSort } from '../../folder-ui/tools'
-
 const STYLES = {
   button:{
     backgroundColor: 'transparent',
@@ -26,40 +24,48 @@ const STYLES = {
   }
 }
 
-class AccountMenu extends Component {
+class AppBarDropdown extends Component {
 
-  getButtonTitle() {
-    const currentAccount = this.props.accounts.filter(account => account.littleid == this.props.currentAccount)[0]
-    return currentAccount ?
-      (currentAccount.name || currentAccount.littleid).toLowerCase() :
-      'choose account'
+  getItemId(item = {}) {
+    const field = this.props.idField || 'id'
+    return item[field]
   }
 
-  getAccountMenuItems(closeMenuHandler) {
+  getItemName(item = {}) {
+    return (item.name || this.getItemId(item)).toLowerCase()
+  }
 
-    let accountList = [].concat(this.props.accounts || [])
-    accountList.sort(nameSort)
+  getButtonTitle() {
+    const currentItem = this.props.items.filter(item => this.getItemId(item) == this.props.currentItem)[0]
+    return currentItem ?
+      this.getItemName(currentItem) :
+      (this.props.chooseTitle || 'choose item')
+  }
 
-    return accountList.map((account, i) => {
+  getMenuItems(closeMenuHandler) {
+
+    const itemList = this.props.items || []
+
+    return itemList.map((item, i) => {
       return (
         <MenuItem 
           key={i}
           onTouchTap={() => {
             closeMenuHandler && closeMenuHandler()
-            this.props.changeAccount(account.littleid)
+            this.props.changeItem(this.getItemId(item))
           }}
-          value={account.littleid} 
-          primaryText={account.name} />
+          value={this.getItemId(item)} 
+          primaryText={this.getItemName(item)} />
       )
     })
   }
 
-  getAccountButton() {
+  getButton() {
 
     const getDropdownChildren = (closeMenuHandler) => {
       return (
         <Menu>
-          {this.getAccountMenuItems(closeMenuHandler)}
+          {this.getMenuItems(closeMenuHandler)}
         </Menu>
       )
     }
@@ -85,7 +91,7 @@ class AccountMenu extends Component {
       <div>
         <div style={STYLES.leftContainer}>
           <div style={STYLES.padding}>
-            {this.getAccountButton()}
+            {this.getButton()}
           </div>
         </div>
         <div style={STYLES.rightContainer}>
@@ -100,4 +106,4 @@ class AccountMenu extends Component {
 
 }
 
-export default AccountMenu
+export default AppBarDropdown

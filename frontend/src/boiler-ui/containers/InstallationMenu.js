@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import InstallationMenu from '../components/InstallationMenu'
+import AppBarDropdown from '../components/AppBarDropdown'
 
 import {
   getUserData
@@ -8,9 +8,9 @@ import {
 
 export class AccountMenuContainer extends Component {
   render() {
-    if(this.props.accounts.length <= 0) return this.props.children
+    if(this.props.items.length <= 0) return this.props.children
     return (
-      <AccountMenu {...this.props} />
+      <AppBarDropdown {...this.props} />
     )
   }
 }
@@ -20,16 +20,16 @@ function mapStateToProps(state, ownProps) {
   const accounts = []//getAccounts(state)
 
   return {
-    accounts:[],
-    currentAccount:null
+    items:[],
+    currentItem:null
   }
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
   return {
-    changeAccount:(id) => {
+    changeItem:(id) => {
       console.log('-------------------------------------------');
-      console.log('change project: ' + id)
+      console.log('change installation: ' + id)
       //dispatch(requestUpdateUserProject(id))
     }
   }
