@@ -1,17 +1,12 @@
 import React, { Component, PropTypes } from 'react'
 
-import sections from './sections'
+import core from './core'
 import menus from './menus'
 import routes from './routes'
-
-const CORE = {
-  title:'Boiler App',
-  appURL:'/app',
-  currentUserURL:'/api/v1/currentuser'
-}
+import sections from './sections'
 
 const config = {
-  core:CORE,
+  core,
   menus,
   routes,
   sections,

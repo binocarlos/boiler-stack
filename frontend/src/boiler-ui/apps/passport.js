@@ -12,31 +12,32 @@ import InstallationMenu from '../containers/InstallationMenu'
 
 import { ContainerWrapper } from '../../folder-ui/tools'
 import { currentInstallation } from '../selectors'
-
-import {
-  SectionsFactory,
-  ApiFactory,
-  userEventHandler
-} from '../tools'
+import { userEventHandler } from '../tools'
 
 const REQUIRED_SETTINGS = [
   'menus',
-  'sections',
+  'plugins',
+  'core',
+  'installationController',
+  'installationConfig',
   'routes'
 ]
 
-const PassportAppTemplate = (config = {}) => {
+const PassportAppTemplate = (settings = {}) => {
 
   REQUIRED_SETTINGS.forEach(field => {
-    if(!config[field]) throw new Error(field + ' setting needed')
+    if(!settings[field]) throw new Error(field + ' setting needed')
   })
 
-  const sections = SectionsFactory(config.sections)
-  const installationTable = sections.controllers.installation.table
-  const installationConfig = config.sections.installation
+  const installationController = settings.installationController
+  const installationConfig = settings.installationConfig
+  const core = settings.core
+
+
+  const installationTable = installationController.table
 
   const currentUserPlugin = CurrentUser({
-    url:config.core.currentUserURL,
+    url:core.currentUserURL,
     userEventHandler:userEventHandler('updateuser')
   })
 
@@ -59,7 +60,7 @@ const PassportAppTemplate = (config = {}) => {
     })
   })
 
-  const basePlugins = [
+  return [
     Core(config.core),
     Menus(menuConfig),
     Routes(config.routes),
@@ -69,19 +70,7 @@ const PassportAppTemplate = (config = {}) => {
     Snackbar(),
     currentUserPlugin,
     installationMenuPlugin
-  ]
-
-  const extraPlugins = config.getPlugins ?
-    config.getPlugins(userEventHandler) :
-    []
-
-  return [
-    basePlugins,
-    sections.pluginList,
-    extraPlugins
-  ].reduce((allPlugins, list) => {
-    return allPlugins.concat(list)
-  }, [])
+  ].concat(settings.plugins)
 }
 
 export default PassportAppTemplate
