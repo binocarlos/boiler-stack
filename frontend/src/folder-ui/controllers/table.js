@@ -1,37 +1,31 @@
 import React, { Component, PropTypes } from 'react'
-import { Route, IndexRoute } from 'react-router'
-import { routerActions } from 'react-router-redux'
 import { combineReducers } from 'redux'
 import { takeLatest } from 'redux-saga'
 import { fork, put, call, take, select } from 'redux-saga/effects'
 
-import { getLabel } from '../../tools'
+import { getLabel } from '../tools'
 
-import { multiApi } from './tools'
-import ApiSaga from '../../sagas/api'
+import ApiSaga from '../sagas/api'
 
-import ApiActions from '../../actions/api'
-import ListActions from '../../actions/list'
-import ConfirmDialogActions from '../../actions/confirmdialog'
-import { redirect } from '../../actions/router'
+import ApiActions from '../actions/api'
+import ListActions from '../actions/list'
+import ConfirmDialogActions from '../actions/confirmdialog'
 
-import ApiReducer from '../../reducers/api'
-import ListReducer from '../../reducers/list'
-import ConfirmDialogReducer from '../../reducers/confirmdialog'
-import { virtualTable } from '../../reducers/selectors'
+import ApiReducer from '../reducers/api'
+import ListReducer from '../reducers/list'
+import ConfirmDialogReducer from '../reducers/confirmdialog'
+import { virtualTable } from '../reducers/selectors'
 
 import {
   tableItems
-} from '../../reducers/injectors'
+} from '../reducers/injectors'
 
 const REQUIRED_SETTINGS = [
+  'id',
   'title',
   'selector',
   'pluralTitle',
-  'route',
-  'reducerName',
   'actionPrefix',
-  'userEventHandler',
   'api'
 ]
 
@@ -50,13 +44,16 @@ const TableController = (settings = {}) => {
     if(!settings.api[field]) throw new Error(field + ' api method needed')
   })
 
+  const id = settings.id
   const title = settings.title
   const pluralTitle = settings.pluralTitle
   const api = settings.api
-  const route = settings.route
   const reducerName = settings.reducerName
   const actionPrefix = settings.actionPrefix
-  const userEventHandler = settings.userEventHandler
+
+  const userEventHandler = settings.userEventHandler ? 
+    settings.userEventHandler :
+    (store, userEvent) => {}
 
   const actions = {
     get:ApiActions(actionPrefix + '_GET'),
@@ -82,6 +79,10 @@ const TableController = (settings = {}) => {
     }
   }
 
+  const getReducer = () => {
+    return combineReducers(reducers)
+  }
+
   const getState = (state) => {
     state = settings.selector(state)
     const selected = state.meta.selected
@@ -99,7 +100,7 @@ const TableController = (settings = {}) => {
     }
   }
 
-  const sagas = (store) => {
+  const getSagas = (store) => {
 
     // load the table data
     const listApi = ApiSaga({
@@ -112,13 +113,14 @@ const TableController = (settings = {}) => {
 
     function* doConfirmDelete(action) {
       const ids = action.data || []
-      const deleteResults = yield call(multiApi, api.delete, ids.map(id => {
-        return {
-          query:{
-            id
-          }
-        }
-      }))
+
+      // run the deletes in parallel
+      yield ids.map(delete_id => {
+        return api.delete({
+          id:delete_id
+        })
+      })
+      
       yield put(actions.confirmDelete.close())
       yield put(actions.meta.selected([]))
       yield put(actions.get.request())
@@ -142,10 +144,12 @@ const TableController = (settings = {}) => {
   }
 
   return {
+    id,
+    api,
     actions,
-    reducers,
+    getReducer,
     getState,
-    sagas
+    getSagas
   }
 }
 

@@ -25,13 +25,10 @@ const CurrentUserPlugin = (settings = {}) => {
     if(!settings[field]) throw new Error(field + ' setting needed')
   })
 
-  const api = ApiFactory({
-    type:'mongoendpoint',
-    settings:{
-      type:'user',
-      title:'Current User',
-      url:settings.url
-    }
+  const api = ApiFactory('mongoendpoint', {
+    type:'user',
+    title:'Current User',
+    url:settings.url
   })
 
   const userEventHandler = settings.userEventHandler

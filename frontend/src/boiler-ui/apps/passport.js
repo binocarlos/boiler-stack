@@ -15,13 +15,12 @@ import { ContainerWrapper } from '../../folder-ui/tools'
 import { getUserData } from 'passport-slim-ui/src/selectors'
 
 import {
-  PluginsFactory,
+  SectionsFactory,
   ApiFactory,
   userEventHandler
 } from '../tools'
 
 const REQUIRED_SETTINGS = [
-  'core',
   'menus',
   'sections',
   'routes'
@@ -33,14 +32,9 @@ const PassportAppTemplate = (config = {}) => {
     if(!config[field]) throw new Error(field + ' setting needed')
   })
 
-  const sectionPlugins = PluginsFactory(config.sections)
-  const sections = {}
-  sectionPlugins.forEach(plugin => {
-    sections[plugin.settings.id] = plugin
-  })
-
-  const installationTable = sections.installation.controllers.table
-  const installationConfig = config.settings.installation
+  const sections = SectionsFactory(config.sections)
+  const installationTable = sections.controllers.installation.table
+  const installationConfig = config.sections.installation
 
   const currentUserPlugin = CurrentUser({
     url:config.core.currentUserURL,
@@ -79,15 +73,12 @@ const PassportAppTemplate = (config = {}) => {
   ]
 
   const extraPlugins = config.getPlugins ?
-    config.getPlugins({
-      userEventHandler,
-      sections
-    }) :
+    config.getPlugins(userEventHandler) :
     []
 
   return [
     basePlugins,
-    sectionPlugins,
+    sections.pluginList,
     extraPlugins
   ].reduce((allPlugins, list) => {
     return allPlugins.concat(list)

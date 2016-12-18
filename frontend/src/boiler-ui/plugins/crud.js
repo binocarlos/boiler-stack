@@ -3,16 +3,17 @@ import React, { Component, PropTypes } from 'react'
 import Crud from '../../folder-ui/plugins/crud'
 
 const REQUIRED_SETTINGS = [
+  'id',
   'type',
   'title',
   'url',
   'route',
-  'reducerName',
   'actionPrefix',
   'icon',
   'initialFormData',
   'tableFields',
-  'schema'
+  'schema',
+  'controller'
 ]
 
 const CrudPlugin = (settings = {}) => {

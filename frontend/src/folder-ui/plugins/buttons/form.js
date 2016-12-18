@@ -4,7 +4,6 @@ const REQUIRED_SETTINGS = [
 ]
 
 const REQUIRED_ACTIONS = [
-  'revert',
   'put',
   'post',
   'redirect'
@@ -29,14 +28,24 @@ const FormButtons = (settings = {}) => {
     const formMeta = state.meta || {}
     const saveDisabled = formMeta.changed && formMeta.valid ? false : true
 
-    return [{
-      title:'Cancel',
-      handler:() => store.dispatch(actions.redirect(route))
-    },{
-      title:'Revert',
-      handler:() => store.dispatch(actions.revert())
-    },{
-      title:'Save',
+    let buttons = []
+
+    if(!settings.noCancel){
+      buttons.push({
+        title:settings.cancelTitle || 'Cancel',
+        handler:() => store.dispatch(actions.redirect(route))
+      })
+    }
+
+    if(!settings.noRevert){
+      buttons.push({
+        title:settings.revertTitle || 'Revert',
+        handler:() => store.dispatch(actions.revert())
+      })
+    }
+
+    buttons.push({
+      title:settings.saveTitle || 'Save',
       extraProps:{ 
         primary:true,
         disabled:saveDisabled
@@ -53,7 +62,9 @@ const FormButtons = (settings = {}) => {
           throw new Error('action for mode: ' + routeInfo.mode + ' not found')
         }
       }
-    }]
+    })
+
+    return buttons
   }
 }
 

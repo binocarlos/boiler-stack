@@ -1,37 +1,36 @@
 import React, { Component, PropTypes } from 'react'
-import { Route, IndexRoute } from 'react-router'
-import { routerActions } from 'react-router-redux'
 import { combineReducers } from 'redux'
 import { takeLatest } from 'redux-saga'
 import { fork, put, call, take, select } from 'redux-saga/effects'
 
-import { getLabel } from '../../tools'
+import { getLabel } from '../tools'
 
-import ApiSaga from '../../sagas/api'
+import ApiSaga from '../sagas/api'
 
-import ApiActions from '../../actions/api'
-import FormActions from '../../actions/form'
-import { redirect } from '../../actions/router'
+import ApiActions from '../actions/api'
+import FormActions from '../actions/form'
 
-import ApiReducer from '../../reducers/api'
-import FormReducer from '../../reducers/form'
+import ApiReducer from '../reducers/api'
+import FormReducer from '../reducers/form'
+
+import {
+  redirect
+} from '../actions/router'
 
 const REQUIRED_SETTINGS = [
+  'id',
   'title',
   'selector',
-  'route',
   'redirects',
-  'reducerName',
   'actionPrefix',
-  'userEventHandler',
+  'initialFormData',
   'api'
 ]
 
 const REQUIRED_API_SETTINGS = [
   'get',
   'post',
-  'put',
-  'getInitialData'
+  'put'
 ]
 
 const FormController = (settings = {}) => {
@@ -44,13 +43,22 @@ const FormController = (settings = {}) => {
     if(!settings.api[field]) throw new Error(field + ' api method needed')
   })
 
+  const id = settings.id
   const title = settings.title
   const api = settings.api
-  const route = settings.route
   const redirects = settings.redirects
-  const reducerName = settings.reducerName
   const actionPrefix = settings.actionPrefix
-  const userEventHandler = settings.userEventHandler
+
+  const userEventHandler = settings.userEventHandler ? 
+    settings.userEventHandler :
+    (store, userEvent) => {}
+
+  // wrap the initial data for the form in a promise so it's a like an api call
+  const getInitialData = () => {
+    return new Promise((resolve, reject) => {
+      resolve(settings.initialFormData || {})
+    })
+  }
 
   const actions = {
     get:ApiActions(actionPrefix + '_GET'),
@@ -66,19 +74,26 @@ const FormController = (settings = {}) => {
     meta:FormReducer(actions.meta.types)
   }
 
-  const getState = (state, routeInfo) => {
-    state = settings.selector(state)
-    const title = routeInfo.mode == 'post' ? 
+  const getTitle = (mode) => {
+    const title = mode == 'post' ? 
       'New ' + settings.title :
       'Edit title'
+  }
+
+  const getReducer = () => {
+    return combineReducers(reducers)
+  }
+
+  const getState = (state, routeInfo) => {
+    state = settings.selector(state)
     return {
-      title,
+      title:getTitle(routeInfo.mode),
       data:state.meta.data,
       meta:state.meta.meta       
     }
   }
 
-  const sagas = (store) => {
+  const getSagas = (store) => {
 
     // the initial trigger to load some form data
     // add runs a sync local function
@@ -93,7 +108,7 @@ const FormController = (settings = {}) => {
         }))
       }
       else if(action.mode == 'post'){
-        const initialData = yield call(api.getInitialData, action)
+        const initialData = yield call(getInitialData, action)
         yield put(actions.meta.initializeData(initialData || {}))
       }
       else{
@@ -184,10 +199,12 @@ const FormController = (settings = {}) => {
   }
 
   return {
+    id,
+    api,
     actions,
-    reducers,
+    getReducer,
     getState,
-    sagas
+    getSagas
   }
 }
 
