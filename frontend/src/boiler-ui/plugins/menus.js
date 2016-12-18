@@ -25,7 +25,7 @@ const mapMenuItems = (items, dispatch, extrafn) => items.map(item => {
 })
 
 const appbarMenu = (store, getItems) => {
-  return mapMenuItems(getItems(store), store.dispatch)
+  return mapMenuItems(getItems(store, true), store.dispatch)
 }
 
 const menu = (store, getItems) => {
