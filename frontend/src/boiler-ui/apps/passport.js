@@ -11,8 +11,7 @@ import InstallationMenuPlugin from '../plugins/installationmenu'
 import InstallationMenu from '../containers/InstallationMenu'
 
 import { ContainerWrapper } from '../../folder-ui/tools'
-
-import { getUserData } from 'passport-slim-ui/src/selectors'
+import { currentInstallation } from '../selectors'
 
 import {
   SectionsFactory,
@@ -52,7 +51,7 @@ const PassportAppTemplate = (config = {}) => {
       chooseTitle:'choose company',
       editTitle:'edit companies',
       dataSelector:installationTable.getState,
-      userSelector:getUserData,
+      currentSelector:currentInstallation,
       switchInstallation:installationMenuPlugin.actions.switch,
       installationRoute:installationConfig.route,
       editInstallations:() => routerActions.push(installationConfig.route),
