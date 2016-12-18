@@ -10,8 +10,7 @@ const mongoCodecFactory = (name, type) => MongoCodec({
 
 const REQUIRED_SETTINGS = [
   'type',
-  'title',
-  'url'
+  'title'
 ]
 
 const mongoCrudAjaxFactory = (settings = {}) => {
@@ -19,10 +18,15 @@ const mongoCrudAjaxFactory = (settings = {}) => {
   REQUIRED_SETTINGS.forEach(field => {
     if(!settings[field]) throw new Error(field + ' setting needed')
   })
-  
-  const url = settings.url
+
   const title = settings.title
   const type = settings.type
+
+  const getUrl = () => {
+    return settings.getUrl ?
+      settings.getUrl() :
+      settings.url
+  }
 
   const ajaxClient = Ajax({
     name:title
@@ -32,35 +36,35 @@ const mongoCrudAjaxFactory = (settings = {}) => {
   return {
     list:(query = {}) => {
       return ajaxClient
-        .get(url)
+        .get(getUrl())
         .then(result => {
           return result.map(codec.encode)
         })
     },
     get:(query = {}) => {
       return ajaxClient
-        .get(url + '/' + query.id)
+        .get(getUrl() + '/' + query.id)
         .then(result => {
           return codec.encode(result)
         })
     },
     post:(query = {}, data) => {
       return ajaxClient
-        .post(url, data)
+        .post(getUrl(), data)
         .then(result => {
           return codec.encode(result)
         })
     },
     put:(query = {}, data) => {
       return ajaxClient
-        .put(url + '/' + query.id, data)
+        .put(getUrl() + '/' + query.id, data)
         .then(result => {
           return codec.encode(result)
         })
     },
     delete:(query = {}) => {
       return ajaxClient
-        .delete(url + '/' + query.id)
+        .delete(getUrl() + '/' + query.id)
     }
   }
 }

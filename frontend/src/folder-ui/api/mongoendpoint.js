@@ -10,8 +10,7 @@ const mongoCodecFactory = (name, type) => MongoCodec({
 
 const REQUIRED_SETTINGS = [
   'type',
-  'title',
-  'url'
+  'title'
 ]
 
 const mongoEndpointFactory = (settings = {}) => {
@@ -20,9 +19,14 @@ const mongoEndpointFactory = (settings = {}) => {
     if(!settings[field]) throw new Error(field + ' setting needed')
   })
   
-  const url = settings.url
   const title = settings.title
   const type = settings.type
+
+  const getUrl = () => {
+    return settings.getUrl ?
+      settings.getUrl() :
+      settings.url
+  }
 
   const ajaxClient = Ajax({
     name:title
@@ -32,28 +36,28 @@ const mongoEndpointFactory = (settings = {}) => {
   return {
     get:(query = {}) => {
       return ajaxClient
-        .get(url)
+        .get(getUrl())
         .then(result => {
           return codec.encode(result)
         })
     },
     post:(query = {}, data) => {
       return ajaxClient
-        .post(url, data)
+        .post(getUrl(), data)
         .then(result => {
           return codec.encode(result)
         })
     },
     put:(query = {}, data) => {
       return ajaxClient
-        .put(url, data)
+        .put(getUrl(), data)
         .then(result => {
           return codec.encode(result)
         })
     },
     delete:(query = {}) => {
       return ajaxClient
-        .delete(url)
+        .delete(getUrl())
     }
   }
 }
