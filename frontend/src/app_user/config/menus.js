@@ -1,4 +1,3 @@
-import React, { Component, PropTypes } from 'react'
 import { routerActions } from 'react-router-redux'
 
 import { logout } from 'passport-slim-ui/src/actions'

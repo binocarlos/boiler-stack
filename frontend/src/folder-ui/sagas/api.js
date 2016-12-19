@@ -1,44 +1,43 @@
 import bows from 'bows'
+import deepCheck from 'deep-check-error'
 import { takeLatest } from 'redux-saga'
 import { fork, put, call, take, select } from 'redux-saga/effects'
 
-const ApiSagaFactory = (opts = {}) => {
+const REQUIRED_SETTINGS = [
+  'handler',
+  'actions.types',
+  'actions.request',
+  'actions.success',
+  'actions.failure',
+]
 
-  if(!opts.label) throw new Error('api saga factory needs label option')
-  if(!opts.actions) throw new Error('api saga factory needs actions option')
-  if(!opts.handler) throw new Error('api saga factory needs handler option')
+const ApiSagaFactory = (settings = {}) => {
 
-  const logger = bows('folderui:saga:' + opts.label)
+  deepCheck(settings, REQUIRED_SETTINGS)
 
-  logger('creating api saga: ' + opts.label, {
-    opts
-  })
-
-  const handler = opts.handler
-  const actions = opts.actions
-  const injector = opts.injector
-  const trigger = opts.trigger
+  const actions = settings.actions
+  const handler = settings.handler
+  const trigger = actions.types.request
+  
+  const logger = bows('folderui:saga:api:' + trigger)
 
   function* apiRequest(action) {
     logger('request', action)
     try {
       const data = yield handler(action.query, action.data)
-      const injected = injector ?
-        injector(data) :
-        data
-      logger('response', injected)
-      yield put(actions.success(injected, action.query))
+      logger('response', data)
+      yield put(actions.success(data, action.query))
     } catch (e) {
       logger('error', e.message)
       yield put(actions.failure(e.message, action.query))
     }
   }
 
-  function* apiSaga() {
+  function* listener() {
     yield takeLatest(trigger, apiRequest)
   }
 
-  return apiSaga
+  return listener
 }
 
 export default ApiSagaFactory

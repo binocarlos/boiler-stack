@@ -1,31 +1,21 @@
 import React, { Component, PropTypes } from 'react'
-
+import deepCheck from 'deep-check-error'
 import { ContainerWrapper } from '../../tools'
 
 import ToolbarContent from '../../containers/ToolbarContent'
 import Form from '../../components/Form'
 
 const REQUIRED_SETTINGS = [
-  'actions',
   'getState',
   'getButtons',
-  'getSchema'
-]
-
-const REQUIRED_ACTIONS = [
-  'requestInitialData',
-  'update'
+  'getSchema',
+  'actions.requestInitialData',
+  'actions.update'
 ]
 
 const FormWidget = (settings = {}) => {
 
-  REQUIRED_SETTINGS.forEach(field => {
-    if(!settings[field]) throw new Error(field + ' setting needed')
-  })
-
-  REQUIRED_ACTIONS.forEach(field => {
-    if(!settings.actions[field]) throw new Error(field + ' action needed')
-  })
+  deepCheck(settings, REQUIRED_SETTINGS)
 
   const actions = settings.actions
 

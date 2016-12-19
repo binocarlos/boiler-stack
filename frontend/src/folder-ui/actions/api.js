@@ -3,21 +3,17 @@ import {
   getTypes
 } from './tools'
 
-const REQUEST = 'REQUEST'
-const SUCCESS = 'SUCCESS'
-const FAILURE = 'FAILURE'
-const requestTypes = [REQUEST, SUCCESS, FAILURE]
-const apiTypes = (base) => {
-  return getTypes(base, requestTypes)
-}
-
 const ApiActions = (base) => {
-  const types = apiTypes(base)
+  const types = getTypes(base, [
+    'REQUEST',
+    'SUCCESS',
+    'FAILURE'
+  ])
   return {
     types,
-    request: (query = {}, data) => action(types.REQUEST, {query, data}),
-    success: (data, query = {}) => action(types.SUCCESS, {data, query}),
-    failure: (error, query = {}) => action(types.FAILURE, {error, query})
+    request: (query = {}, data) => action(types.request, {query, data}),
+    success: (data, query = {}) => action(types.success, {data, query}),
+    failure: (error, query = {}) => action(types.failure, {error, query})
   }
 }
 

@@ -1,17 +1,28 @@
 import update from 'immutability-helper'
+import deepCheck from 'deep-check-error'
 
 const DEFAULT_STATE = {
-  mode:null,
-  params:{},
   originalData:{},
   data:{},
   meta:{}
 }
 
-const formReducerFactory = (types) => {
+const REQUIRED_SETTINGS = [
+  'types.update',
+  'types.initialize',
+  'types.revert'
+]
+
+const Form = (settings = {}) => {
+
+  deepCheck(settings, REQUIRED_SETTINGS)
+  const types = settings.types
+
   return (state = DEFAULT_STATE, action) => {
     switch (action.type) {
-      case types.UPDATE:
+
+      // used when the user changes form state
+      case types.update:
         return update(state, {
           data:{
             $set:action.data
@@ -20,7 +31,9 @@ const formReducerFactory = (types) => {
             $set:action.meta
           }
         })
-      case types.INITIALIZE_DATA:
+
+      // used to write initial form state
+      case types.initialize:
         return update(state, {
           data:{
             $set:action.data
@@ -32,7 +45,9 @@ const formReducerFactory = (types) => {
             $set:null
           }
         })
-      case types.REVERT:
+
+      // revert to the previous initialize state
+      case types.revert:
         return update(state, {
           data:{
             $set:state.originalData
@@ -41,19 +56,11 @@ const formReducerFactory = (types) => {
             $set:null
           }
         })
-      case types.REQUEST_DATA:
-        return update(state, {
-          mode:{
-            $set:action.mode
-          },
-          params:{
-            $set:action.params
-          }
-        })
+      
       default:
         return state
     }
   }
 }
 
-export default formReducerFactory
+export default Form

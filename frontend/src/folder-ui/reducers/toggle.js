@@ -1,20 +1,20 @@
-/*
-
-  keep track of an array of selected items
-  
-*/
-
 import update from 'immutability-helper'
-import { combineReducers } from 'redux'
+import deepCheck from 'deep-check-error'
 
 const DEFAULT_STATE = {
   open:false
 }
 
-const ConfirmDialogReducerFactory = (types) => {
+const REQUIRED_SETTINGS = [
+  'types.toggle'
+]
+
+const Toggle = (settings = {}) => {
+  deepCheck(settings, REQUIRED_SETTINGS)
+  const types = settings.types
   return (state = DEFAULT_STATE, action) => {
     switch (action.type) {
-      case types.TOGGLE:
+      case types.toggle:
         return update(state, {
           open:{
             $set:action.open
@@ -26,4 +26,4 @@ const ConfirmDialogReducerFactory = (types) => {
   }
 }
 
-export default ConfirmDialogReducerFactory
+export default Toggle

@@ -5,22 +5,15 @@ import KettleToolbar from '../../kettle-ui/Toolbar'
 
 class Toolbar extends Component {
 
-  getIcon() {
-    return this.props.getIcon ?
-      this.props.getIcon() :
-      null
-  }
-
   render() {
-    const newProps = Object.assign({}, this.props, {
-      leftbuttons:this.props.buttons || [],
-      icon:this.getIcon()
-    })
+    const injectProps = this.props.injectProps ?
+      this.props.injectProps() :
+      {}
+
+    const newProps = Object.assign({}, this.props, injectProps)
 
     return (
-      <KettleToolbar {...newProps}>
-        {this.props.children}
-      </KettleToolbar>
+      <KettleToolbar {...newProps} />
     )
   }
 }

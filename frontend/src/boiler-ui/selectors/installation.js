@@ -1,7 +1,4 @@
-import {
-  getUserData
-} from 'passport-slim-ui/src/selectors'
-
+import { getUserData } from './user'
 export const currentInstallation = (state) => {
   const userData = getUserData(state)
   if(!userData) return null

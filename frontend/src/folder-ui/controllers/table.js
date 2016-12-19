@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { combineReducers } from 'redux'
+import deepCheck from 'deep-check-error'
 import { takeLatest } from 'redux-saga'
 import { fork, put, call, take, select } from 'redux-saga/effects'
 
@@ -26,23 +27,13 @@ const REQUIRED_SETTINGS = [
   'selector',
   'pluralTitle',
   'actionPrefix',
-  'api'
-]
-
-const REQUIRED_API_SETTINGS = [
-  'list',
-  'delete'
+  'api.list',
+  'api.delete'
 ]
 
 const TableController = (settings = {}) => {
 
-  REQUIRED_SETTINGS.forEach(field => {
-    if(!settings[field]) throw new Error(field + ' setting needed')
-  })
-
-  REQUIRED_API_SETTINGS.forEach(field => {
-    if(!settings.api[field]) throw new Error(field + ' api method needed')
-  })
+  deepCheck(settings, REQUIRED_SETTINGS)
 
   const id = settings.id
   const title = settings.title
@@ -57,14 +48,14 @@ const TableController = (settings = {}) => {
 
   const actions = {
     get:ApiActions(actionPrefix + '_GET'),
-    meta:ListActions(actionPrefix + '_META'),
-    confirmDelete:ConfirmDialogActions(actionPrefix + '_CONFIRM_DELETE')
+    list:ListActions(actionPrefix + '_META'),
+    delete:ConfirmDialogActions(actionPrefix + '_CONFIRM_DELETE')
   }
 
   const reducers = {
     get:ApiReducer(actions.get.types, tableItems),
-    meta:ListReducer(actions.meta.types),
-    confirmDelete:ConfirmDialogReducer(actions.confirmDelete.types)
+    list:ListReducer(actions.list.types),
+    delete:ConfirmDialogReducer(actions.delete.types)
   }
 
   const getTitle = (selected) => {

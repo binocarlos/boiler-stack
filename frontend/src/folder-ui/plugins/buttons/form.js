@@ -1,23 +1,15 @@
+import deepCheck from 'deep-check-error'
+
 const REQUIRED_SETTINGS = [
   'route',
-  'actions'
-]
-
-const REQUIRED_ACTIONS = [
-  'put',
-  'post',
-  'redirect'
+  'actions.put',
+  'actions.post',
+  'actions.redirect'
 ]
 
 const FormButtons = (settings = {}) => {
 
-  REQUIRED_SETTINGS.forEach(field => {
-    if(!settings[field]) throw new Error(field + ' setting needed')
-  })
-
-  REQUIRED_ACTIONS.forEach(field => {
-    if(!settings.actions[field]) throw new Error(field + ' action needed')
-  })
+  deepCheck(settings, REQUIRED_SETTINGS)
 
   const route = settings.route
   const actions = settings.actions

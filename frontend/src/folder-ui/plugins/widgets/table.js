@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-
+import deepCheck from 'deep-check-error'
 import { ContainerWrapper } from '../../tools'
 import { virtualTable } from '../../reducers/selectors'
 
@@ -8,26 +8,17 @@ import ToolbarContent from '../../containers/ToolbarContent'
 import Table from '../../components/Table'
 
 const REQUIRED_SETTINGS = [
-  'actions',
+  
   'getState',
   'getButtons',
-  'getTableFields'
-]
-
-const REQUIRED_ACTIONS = [
-  'requestInitialData',
-  'selected'
+  'getTableFields',
+  'actions.requestInitialData',
+  'actions.selected'
 ]
 
 const TableWidget = (settings = {}) => {
 
-  REQUIRED_SETTINGS.forEach(field => {
-    if(!settings[field]) throw new Error(field + ' setting needed')
-  })
-
-  REQUIRED_ACTIONS.forEach(field => {
-    if(!settings.actions[field]) throw new Error(field + ' action needed')
-  })
+  deepCheck(settings, REQUIRED_SETTINGS)
 
   if(typeof(settings.multiSelectable) !== 'boolean') settings.multiSelectable = true
 

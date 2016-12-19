@@ -1,63 +1,43 @@
 import React, { Component, PropTypes } from 'react'
-import { takeLatest } from 'redux-saga'
-import { fork, put, call, take, select } from 'redux-saga/effects'
-
-import {
-  getUserData
-} from 'passport-slim-ui/src/selectors'
+import deepCheck from 'deep-check-error'
+import InstallationMenu from '../containers/InstallationMenu'
+import Menus from './Menus'
 
 const REQUIRED_SETTINGS = [
-  'saveUser'
+  'title',
+  'selector',
+  'installationsRoute',
+  'menuConfig',
+  'actions.switch',
+  'actions.redirect',
+  'actions.requestData'
 ]
 
 const InstallationMenuPlugin = (settings = {}) => {
 
-  REQUIRED_SETTINGS.forEach(field => {
-    if(!settings[field]) throw new Error(field + ' setting needed')
+  deepCheck(settings, REQUIRED_SETTINGS)
+
+  const title = settings.title
+  const pluralTitle = settings.pluralTitle || settings.title + 's'
+  const menuConfig = settings.menuConfig
+  const installationsRoute = settings.installationsRoute
+  const selector = settings.selector
+  const actions = settings.actions
+
+  // inject appbarWrapper
+  menuConfig = Object.assign({}, menuConfig, {
+    appbarWrapper:ContainerWrapper(InstallationMenu, {
+      chooseTitle:'choose ' + title.toLowerCase(),
+      editTitle:'edit ' + pluralTitle.toLowerCase(),
+      selector:selector,
+      switchInstallation:actions.switch,
+      installationRoute:installationsRoute,
+      editInstallations:() => actions.redirect(installationsRoute),
+      loadInititalData:actions.requestData
+    })
   })
 
-  const action = settings.action
-  const selector = settings.selector
-
-  const actions = {
-    types:{
-      SWITCH_INSTALLATION:'SWITCH_INSTALLATION'
-    },
-    switch:(id) => {
-      return {
-        type:'SWITCH_INSTALLATION',
-        id
-      }
-    }
-  }
-
-  const getSagas = (store) => {
-
-    function* doSwitchInstallation(action) {
-      const user = yield select(getUserData)
-      const data = Object.assign({}, user.data)
-      data.currentInstallation = action.id
-      yield put(settings.saveUser({
-        id:action.id,
-        message:settings.message
-      }, {
-        data
-      }))
-    }
-
-    function* switchInstallation() {
-      yield takeLatest(actions.types.SWITCH_INSTALLATION, doSwitchInstallation)
-    }
-
-    return [
-      switchInstallation
-    ]
-  }
-
-  return {
-    actions,
-    getSagas
-  }
+  return Menus(menuConfig)
 }
 
 export default InstallationMenuPlugin

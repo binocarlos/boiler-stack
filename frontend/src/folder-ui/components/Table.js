@@ -29,7 +29,7 @@ class TableComponent extends Component {
   render() {
   
     const fields = this.props.fields || []
-    const data = this.props.data || []
+    const items = this.props.items || []
     const selected = {};
     (this.props.selected || []).forEach(id => selected[id] = true)
 
@@ -41,7 +41,7 @@ class TableComponent extends Component {
         onRowSelection={(indexes) => {
           // return an array of ids not indexes
           this.props.onRowSelection(indexes.map(index => {
-            return this.props.data[index].id
+            return items[index].id
           }))
         }}
       >
@@ -96,6 +96,24 @@ class TableComponent extends Component {
       </Table>
     )
   }
+}
+
+TableComponent.propTypes = {
+  fields: PropTypes.array.isRequired,
+  items: PropTypes.array.isRequired,
+  selected: PropTypes.array.isRequired,
+  height: PropTypes.number,
+  selectable: PropTypes.boolean,
+  multiSelectable: PropTypes.boolean,
+  showHeader: PropTypes.boolean,
+  showCheckboxes: PropTypes.boolean,
+  onRowSelection: PropTypes.func.isRequired,
+}
+
+TableComponent.defaultProps = {
+  fields: [],
+  items: [],
+  selected: []
 }
 
 export default muiThemeable()(TableComponent)

@@ -34,8 +34,10 @@ export class AccountMenuContainer extends Component {
 
 function mapStateToProps(state, ownProps) {
 
-  const currentItem = ownProps.currentSelector(state)
-  const items = ownProps.dataSelector(state).data || []
+  state = ownProps.selector(state)
+
+  const currentItem = state.currentItem
+  const items = state.items || []
   
   items.push({
     name:ownProps.editTitle || 'edit installations',

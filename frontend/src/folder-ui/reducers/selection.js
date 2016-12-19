@@ -1,23 +1,23 @@
-/*
-
-  keep track of an array of selected items
-  
-*/
-
 import update from 'immutability-helper'
-import { combineReducers } from 'redux'
+import deepCheck from 'deep-check-error'
 
 const DEFAULT_STATE = {
   selected:[]
 }
 
-const ListReducerFactory = (types) => {
+const REQUIRED_SETTINGS = [
+  'types.select'
+]
+
+const Selection = (settings = {}) => {
+  deepCheck(types, REQUIRED_SETTINGS)
+  const types = settings.types
   return (state = DEFAULT_STATE, action) => {
     switch (action.type) {
-      case types.SELECTED:
+      case types.select:
         return update(state, {
           selected:{
-            $set:action.ids
+            $set:action.selected
           }
         })
       default:
@@ -26,4 +26,4 @@ const ListReducerFactory = (types) => {
   }
 }
 
-export default ListReducerFactory
+export default Selection

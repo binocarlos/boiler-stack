@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import deepCheck from 'deep-check-error'
 import { Route, IndexRoute } from 'react-router'
 import { routerActions } from 'react-router-redux'
 
@@ -25,9 +26,7 @@ const REQUIRED_SETTINGS = [
 
 const CrudPlugin = (settings = {}) => {
 
-  REQUIRED_SETTINGS.forEach(field => {
-    if(!settings[field]) throw new Error(field + ' setting needed')
-  })
+  deepCheck(settings, REQUIRED_SETTINGS)
 
   const controller = settings.controller
   const title = settings.title

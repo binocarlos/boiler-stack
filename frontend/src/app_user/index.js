@@ -4,13 +4,10 @@ import ReactDOM from 'react-dom'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 injectTapEventPlugin()
 
-import PassportApp from '../boiler-ui/apps/passport'
 import AppFactory from 'boiler-frontend/src/factory'
+import app from './app'
 
-import Config from './config'
-
-const plugins = PassportApp(Config())
-const Root = AppFactory(plugins, {
+const Root = AppFactory(app, {
   // cli overrides here
 })
 

@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import { routerActions } from 'react-router-redux'
+import deepCheck from 'deep-check-error'
 import Passport from 'passport-slim-ui/src/plugin'
 import Snackbar from 'boiler-frontend/src/plugins/snackbar'
+
 import Core from '../plugins/core'
 import Menus from '../plugins/menus'
 import Routes from '../plugins/routes'
@@ -15,7 +17,7 @@ import { currentInstallation } from '../selectors'
 import { userEventHandler } from '../tools'
 
 const REQUIRED_SETTINGS = [
-  'sections',
+  'sectionConfig',
   'menus',
   'core',
   'routes'
@@ -41,15 +43,12 @@ const getPlugins = (sections = []) => {
   return sections.map(section => section.plugin)
 }
 
-const PassportAppTemplate = (settings = {}) => {
+const PassportAppTemplate = (settings = {}, sections = []) => {
 
-  REQUIRED_SETTINGS.forEach(field => {
-    if(!settings[field]) throw new Error(field + ' setting needed')
-  })
+  deepCheck(settings, REQUIRED_SETTINGS)
 
   const core = settings.core
   const routes = settings.routes
-  const sections = settings.sections
   
   const plugins = getPlugins(sections)
   const controllers = getControllers(sections)
