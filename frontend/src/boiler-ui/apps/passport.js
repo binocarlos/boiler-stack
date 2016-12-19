@@ -15,13 +15,31 @@ import { currentInstallation } from '../selectors'
 import { userEventHandler } from '../tools'
 
 const REQUIRED_SETTINGS = [
+  'sections',
   'menus',
-  'plugins',
   'core',
-  'installationController',
-  'installationConfig',
   'routes'
 ]
+
+const reduceSections = (sections = [], field) => {
+  return sections.reduce((ret, section) => {
+    return Object.assign({}, ret, {
+      [section.id]:section[field]
+    }, {})
+  })
+}
+
+const getControllers = (sections = []) => {
+  return reduceSections(sections, 'controller')
+}
+
+const getConfigs = (sections = []) => {
+  return reduceSections(sections, 'config')
+}
+
+const getPlugins = (sections = []) => {
+  return sections.map(section => section.plugin)
+}
 
 const PassportAppTemplate = (settings = {}) => {
 
@@ -29,11 +47,19 @@ const PassportAppTemplate = (settings = {}) => {
     if(!settings[field]) throw new Error(field + ' setting needed')
   })
 
-  const installationController = settings.installationController
-  const installationConfig = settings.installationConfig
   const core = settings.core
+  const routes = settings.routes
+  const sections = settings.sections
+  
+  const plugins = getPlugins(sections)
+  const controllers = getControllers(sections)
+  const configs = getConfigs(sections)
 
+  if(!configs.installation) throw new Error('installation config needed')
+  if(!controllers.installation) throw new Error('installation controller needed')
 
+  const installationConfig = configs.installation
+  const installationController = controllers.installation
   const installationTable = installationController.table
 
   const currentUserPlugin = CurrentUser({
@@ -61,16 +87,16 @@ const PassportAppTemplate = (settings = {}) => {
   })
 
   return [
-    Core(config.core),
+    Core(core),
     Menus(menuConfig),
-    Routes(config.routes),
+    Routes(routes),
     Passport({
-      appURL:config.core.appURL
+      appURL:core.appURL
     }),
     Snackbar(),
     currentUserPlugin,
     installationMenuPlugin
-  ].concat(settings.plugins)
+  ].concat(plugins)
 }
 
 export default PassportAppTemplate

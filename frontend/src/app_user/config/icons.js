@@ -1,13 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 
-import cloud from 'material-ui/svg-icons/file/cloud'
+import CLOUD from 'material-ui/svg-icons/file/cloud'
 
 const icons = {
-  cloud
+  installation:CLOUD
 }
 
-const mappedIcons = {
-  installation:icons.cloud
-}
-
-export default mappedIcons
+export default icons
