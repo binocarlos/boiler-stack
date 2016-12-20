@@ -82,7 +82,7 @@ export const form = (opts = {}) => {
 
 export const divider = () => {
   return [{
-    type:'divider'
+    divider:true
   }]
 }
 

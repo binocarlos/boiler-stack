@@ -60,8 +60,8 @@ export const ContainerWrapper = (ComponentClass = Component, opts = {}) => {
       if(opts.initialize) opts.initialize(this.props, this.props.dispatch)
     }
     render() {
-      const injectedProps = this.props.injectProps ?
-        this.props.injectProps(this.props, this.props.dispatch) :
+      const injectedProps = opts.injectProps ?
+        opts.injectProps(this.props, this.props.dispatch) :
         {}
       const finalProps = Object.assign({}, this.props, injectedProps)
       return <ComponentClass {...finalProps} />

@@ -3,9 +3,9 @@ import React, { Component, PropTypes } from 'react'
 import {
   text,
   small
-} from '../folder-ui/config/tables'
+} from '../../folder-ui/config/tables'
 
-import * as selectors from './selectors'
+import selectors from '../selectors'
 
 const TABLES = {
 
