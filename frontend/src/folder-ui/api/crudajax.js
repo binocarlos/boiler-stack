@@ -9,7 +9,7 @@ const crudAjaxFactory = (settings = {}) => {
   }
 
   const ajaxClient = Ajax({
-    name:title
+    name:settings.name
   })
   
   const encode = settings.encode ?

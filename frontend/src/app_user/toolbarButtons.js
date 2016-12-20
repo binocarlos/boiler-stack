@@ -8,43 +8,41 @@ const route = (page = '', path = '') => pages[page].route + path
 
 const Buttons = (store) => {
 
-  const tools = ButtonTools(store)
-
   return {
 
     installation: {
 
-      table: (ownProps) => {
+      table: (dispatch, ownProps) => {
         const selectedIds = selectors.installation.selected(store.getState())
         const allIds = selectors.installation.list(store.getState()).ids
         return []
           .concat(buttonTools.crud({
             selected: selectedIds,
             actions:{
-              add: () => store.dispatch(actions.router.redirect(route('installation', '/add'))),
-              edit: () => store.dispatch(actions.router.redirect(route('installation', '/edit/' + selectedIds[0]))),
-              delete: () => store.dispatch(actions.installation.confirmDelete.open())  
+              add: () => dispatch(actions.router.redirect(route('installation', '/add'))),
+              edit: () => dispatch(actions.router.redirect(route('installation', '/edit/' + selectedIds[0]))),
+              delete: () => dispatch(actions.installation.deleteWindow.open())  
             }
           }))
           .concat(buttonTools.divider())
           .concat(buttonTools.selection({
             actions:{
-              selectAll: () => store.dispatch(actions.installation.selection.select(allIds)),
-              selectNone: () => store.dispatch(actions.installation.selection.select([]))
+              selectAll: () => dispatch(actions.installation.table.select(allIds)),
+              selectNone: () => dispatch(actions.installation.table.select([]))
             }
           }))
       },
 
-      form: (ownProps) => {
+      form: (dispatch, ownProps) => {
         
         const selectedIds = state.selectedIds
         return []
           .concat(buttonTools.form({
             selected: state.selected,
             actions:{
-              cancel: () => store.dispatch(actions.router.redirect(route('installation'))),
-              revert: () => store.dispatch(actions.installation.form.revert()),
-              save: () => store.dispatch(actions.installation.confirmDelete.open(selectedIds))  
+              cancel: () => dispatch(actions.router.redirect(route('installation'))),
+              revert: () => dispatch(actions.installation.form.revert()),
+              save: () => dispatch(actions.installation.deleteWindow.open())  
             }
           }))
       }

@@ -1,7 +1,6 @@
 import {
-  getUserData,
-  currentInstallation
-} from '../boiler-ui/selectors'
+  getUserData
+} from 'passport-slim-ui/src/selectors'
 
 import {
   list as tableList,
@@ -11,7 +10,8 @@ import {
 import pages from './config/pages'
 
 const user = {
-  data: getUserData
+  id: (state) => getUserData(state).id,
+  data: (state) => getUserData(state).data || {}
 }
 
 const installation = {
@@ -27,12 +27,14 @@ const installation = {
   items: (state) => tableList(installation.list(state)),
   selectedItems: (state) => tableList(installation.list(state), installation.selected(state)),
   selectedTitle: (state) => selectedTitle(installation.selectedItems(state), pages.installation.pluralTitle),
-  current: (state) => currentInstallation(state),
+  current: (state) => user.data(state).currentInstallation,
 
   // collections
   dropdown: (state) => {
-    currentItem:installation.current(state),
-    items:installation.items(state)
+    return {
+      currentItem:installation.current(state),
+      items:installation.items(state)
+    }
   }
 }
 

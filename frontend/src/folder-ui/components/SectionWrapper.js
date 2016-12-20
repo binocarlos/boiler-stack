@@ -5,7 +5,7 @@ import {
   compareRouteInfo
 } from '../tools'
 
-export class SectionWrapper extends Component {
+class SectionWrapper extends Component {
 
   componentDidMount() {
     if(!this.props.initialize) return
@@ -56,3 +56,5 @@ export class SectionWrapper extends Component {
     )
   }
 }
+
+export default SectionWrapper

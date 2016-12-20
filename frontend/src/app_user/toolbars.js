@@ -7,11 +7,10 @@ import {
 
 import Toolbar from '../kettle-ui/Toolbar'
 
-import actions from './actions'
 import selectors from './selectors'
 import icons from './config/icons'
 
-import Buttons from './buttons'
+import Buttons from './toolbarButtons'
 
 const toolbar = (opts = {}) => {
   return ContainerWrapper(Toolbar, opts)
@@ -37,11 +36,11 @@ const Toolbars = (store) => {
             selectedItems: selectors.installation.selectedItems(state)
           }
         },
-        injectProps: (ownProps) => {
+        injectProps: (dispatch, ownProps) => {
           const icon = (
             <icons.installation />
           )
-          const buttons = buttons.installation.table(ownProps)
+          const buttons = buttons.installation.table(dispatch, ownProps)
           return {
             icon,
             leftbuttons:[

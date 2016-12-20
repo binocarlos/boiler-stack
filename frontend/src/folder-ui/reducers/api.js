@@ -16,7 +16,8 @@ const REQUIRED_SETTINGS = [
 ]
 
 const Api = (settings = {}) => {
-  deepCheck(types, REQUIRED_SETTINGS)
+
+  deepCheck(settings, REQUIRED_SETTINGS)
 
   const types = settings.types
   const injector = settings.injector

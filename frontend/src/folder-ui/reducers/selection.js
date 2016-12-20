@@ -10,7 +10,7 @@ const REQUIRED_SETTINGS = [
 ]
 
 const Selection = (settings = {}) => {
-  deepCheck(types, REQUIRED_SETTINGS)
+  deepCheck(settings, REQUIRED_SETTINGS)
   const types = settings.types
   return (state = DEFAULT_STATE, action) => {
     switch (action.type) {

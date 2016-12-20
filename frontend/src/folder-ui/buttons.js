@@ -14,13 +14,13 @@ export const crud = (opts = {}) => {
     items.push({
       title: 'Add',
       handler: opts.actions.add
-    ))
+    })
   }
   else if(selected.length==1){
     items.push({
       title: 'Edit',
       handler: opts.actions.edit
-    ))
+    })
   }
   if(selected.length>0 && deleteAction){
     items.push({
@@ -91,11 +91,9 @@ export const actionDropdown = (opts = {}) => {
     'title',
     'items'
   ])
-  return {
-    type:'dropdown',
-    opts.title,
-    opts.items
-  }
+  return Object.assign({}, opts, {
+    type:'dropdown'
+  })
 }
 
 export const buttonList = (items = []) => {

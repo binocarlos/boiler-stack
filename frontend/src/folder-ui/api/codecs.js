@@ -1,4 +1,4 @@
-const MongoCodec = {
+export const MongoCodec = {
   encode:(data) => {
     let ret = Object.assign({}, data, {
       id:data._id
@@ -14,5 +14,3 @@ const MongoCodec = {
     return ret
   }
 }
-
-export default MongoCodec

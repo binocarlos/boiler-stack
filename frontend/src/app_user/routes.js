@@ -6,13 +6,13 @@ import Dashboard from './components/Dashboard'
 import Help from './components/Help'
 import About from './components/About'
 
-import Sections from './sections'
+import Screens from './screens'
 import pages from './config/pages'
 
 const getRoutes = (store, context = {}) => {
   const auth = context.auth
 
-  const sections = Sections(store)
+  const screens = Screens(store)
   
   return (
     <Route>
@@ -21,7 +21,7 @@ const getRoutes = (store, context = {}) => {
       <Route path="about" component={About} />
       <Route onEnter={auth.ensureUser('/login')}>
         <Route path={pages.installation.route}>
-          <IndexRoute component={sections.installation.table} />
+          <IndexRoute component={screens.installation.table} />
         </Route>
       </Route>
     </Route>

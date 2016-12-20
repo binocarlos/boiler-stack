@@ -2,7 +2,7 @@
 import { combineReducers } from 'redux'
 import ApiReducer from '../folder-ui/reducers/api'
 import FormReducer from '../folder-ui/reducers/form'
-import SelectReducer from '../folder-ui/reducers/select'
+import SelectionReducer from '../folder-ui/reducers/selection'
 import ToggleReducer from '../folder-ui/reducers/toggle'
 
 import * as injectors from '../folder-ui/injectors'
@@ -13,13 +13,13 @@ const reducers = {
 
     // data to drive the table
     list:ApiReducer({
-      types: actions.installation.load.types,
+      types: actions.installation.api.list.types,
       injector: injectors.list
     }),
 
     // selected table ids
-    selection:SelectReducer({
-      types: actions.installation.selection.types
+    selection:SelectionReducer({
+      types: actions.installation.table.types
     }),
 
     // the data that appears in the add/edit form

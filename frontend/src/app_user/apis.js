@@ -10,10 +10,12 @@ import urls from './config/urls'
 // apis
 const apis = {
   currentuser: CrudAjax({
+    name: 'currentuser',
     getUrl: () => urls.currentuser,
     encode: MongoCodec.encode
   }),
   installation: CrudAjax({
+    name: 'installation',
     getUrl: () => urls.installation,
     encode: MongoCodec.encode
   })

@@ -32,13 +32,11 @@ const Statics = (store) => {
               count: selectors.installation.selected(state).length
             }
           },
-          injectProps: (ownProps) => {
+          injectProps: (dispatch, ownProps) => {
             const selectedIds = selectors.installation.selected(store.getState())
             return {
-              onClose: () => store.dispatch(actions.installation.deleteWindow.close()),
-              onConfirm: () => store.dispatch(actions.installation.delete.request({
-                ids: selectedIds
-              }))
+              onClose: () => dispatch(actions.installation.deleteWindow.close()),
+              onConfirm: () => dispatch(actions.installation.deleteWindow.confirm())
             }
           }
         })
@@ -47,4 +45,4 @@ const Statics = (store) => {
   }
 }
 
-export default Pages
+export default Statics

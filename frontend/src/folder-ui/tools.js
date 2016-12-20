@@ -1,7 +1,17 @@
 import React, { Component, PropTypes } from 'react'
 import deepCheck from 'deep-check-error'
+import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 import { routerActions } from 'react-router-redux'
+
+import SectionWrapperComponent from './components/SectionWrapper'
+
+export const getRouteInfo = (props) => {
+  return {
+    path:props.route ? props.route.path : null,
+    params:props.routeParams
+  }
+}
 
 export const ComponentWrapper = (ComponentClass = Component, opts = {}) => {
   class ComponentClassWrapper extends Component {
@@ -12,6 +22,25 @@ export const ComponentWrapper = (ComponentClass = Component, opts = {}) => {
   }
 
   return ComponentClassWrapper
+}
+
+export const RouteLoader = ({ compare, loader, props }) => {
+  class RouteLoaderWrapper extends Component {
+    load() {
+      loader(getRouteInfo(this.props), this.props.route)
+    }
+    componentDidMount() {
+      this.load()
+    }
+    componentWillReceiveProps(nextProps) {
+      if(compare(getRouteInfo(nextProps), getRouteInfo(this.props))) this.load()
+    }
+    render() {
+      const finalProps = Object.assign({}, this.props, props)
+      return <SectionWrapperComponent {...finalProps} />
+    }
+  }
+  return withRouter(RouteLoaderWrapper)
 }
 
 export const ComponentInjector = (ComponentClass = Component, injector) => {
@@ -26,29 +55,26 @@ export const ComponentInjector = (ComponentClass = Component, injector) => {
 }
 
 export const ContainerWrapper = (ComponentClass = Component, opts = {}) => {
-  return class ContainerClassWrapper extends Component {
+  class ContainerClassWrapper extends Component {
     componentDidMount() {
-      if(opts.initialize) opts.initialize(this.props)
+      if(opts.initialize) opts.initialize(this.props, this.props.dispatch)
     }
     render() {
       const injectedProps = this.props.injectProps ?
-        this.props.injectProps(this.props) :
+        this.props.injectProps(this.props, this.props.dispatch) :
         {}
       const finalProps = Object.assign({}, this.props, injectedProps)
       return <ComponentClass {...finalProps} />
     }
   }
-  export default connect(
+  return connect(
     opts.getState,
-    null
+    (dispatch, ownProps) => {
+      return {
+        dispatch
+      }
+    }
   )(ContainerClassWrapper)
-}
-
-export const getRouteInfo = (props) => {
-  return {
-    path:props.route ? props.route.path : null,
-    params:props.routeParams
-  }
 }
 
 // used to see if we need to run `initialize` again because

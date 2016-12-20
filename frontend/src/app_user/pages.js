@@ -8,8 +8,9 @@ import {
 import actions from './actions'
 import selectors from './selectors'
 
-import tables from './config/tables'
-import schemas from './config/schemas'
+import tables from './tables'
+import schemas from './schemas'
+
 import Table from '../folder-ui/components/Table'
 
 const Pages = (store) => {
@@ -25,12 +26,11 @@ const Pages = (store) => {
         getState: (state) => {
           return {
             items: selectors.installation.items(state),
-            selected: selectors.installation.items(selected)
+            selected: selectors.installation.selected(state)
           }
         },
-        injectProps: (ownProps) => {
-          const state = selectors.installation.tableToolbar(store.getState())
-          const fields = tables.installation
+        injectProps: (dispatch, ownProps) => {
+          const fields = tables.installation(store)
           
           return {
             fields,

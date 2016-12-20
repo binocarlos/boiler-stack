@@ -45,7 +45,7 @@ const actions = {
 
     table: mergeActions('INSTALLATION_TABLE', [
       // select
-      SelectActions
+      SelectionActions
     ]),
 
     form: mergeActions('INSTALLATION_FORM', [

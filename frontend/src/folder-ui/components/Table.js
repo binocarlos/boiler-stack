@@ -30,8 +30,10 @@ class TableComponent extends Component {
   
     const fields = this.props.fields || []
     const items = this.props.items || []
-    const selected = {}
-    (this.props.selected || []).forEach(id => selected[id] = true)
+    const selected = this.props.selected || []
+    const selectedMap = selected.reduce((map, id) => {
+      map[id] = true
+    }, {})
 
     return (
       <Table
@@ -69,7 +71,7 @@ class TableComponent extends Component {
           deselectOnClickaway={false}
         >
           {items.map( (row, index) => (
-            <TableRow key={index} selected={selected[row.id]}>
+            <TableRow key={index} selected={selectedMap[row.id]}>
               {fields.map( (field, index) => {
 
                 const render = getRenderFunction(field)
@@ -96,24 +98,6 @@ class TableComponent extends Component {
       </Table>
     )
   }
-}
-
-TableComponent.propTypes = {
-  fields: PropTypes.array.isRequired,
-  items: PropTypes.array.isRequired,
-  selected: PropTypes.array.isRequired,
-  height: PropTypes.number,
-  selectable: PropTypes.boolean,
-  multiSelectable: PropTypes.boolean,
-  showHeader: PropTypes.boolean,
-  showCheckboxes: PropTypes.boolean,
-  onRowSelection: PropTypes.func.isRequired,
-}
-
-TableComponent.defaultProps = {
-  fields: [],
-  items: [],
-  selected: []
 }
 
 export default muiThemeable()(TableComponent)

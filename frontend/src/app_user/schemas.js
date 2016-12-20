@@ -8,12 +8,17 @@ const text = (opts = {}) => {
 }
 
 const SCHEMAS = {
-  installation:[
-    text({
-      name:'name',
-      title:'Name'
-    })
-  ]
+  installation: (store) => {
+    return [
+
+      text({
+        name: 'name',
+        title: 'Name'
+      })
+      
+    ]
+    
+  }
 }
 
 export default SCHEMAS
