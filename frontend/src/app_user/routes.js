@@ -6,20 +6,11 @@ import Dashboard from './components/Dashboard'
 import Help from './components/Help'
 import About from './components/About'
 
+import Toolbars from './toolbars'
+
 const getRoutes = (store, context = {}) => {
   const auth = context.auth
-
-  const toolbarButtons = {
-    installation:{
-      table:{
-
-      },
-      form:{
-
-      }
-    }
-  }
-
+  const toolbars = Toolbars(store)
   
   return (
     <Route>

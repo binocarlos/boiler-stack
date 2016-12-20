@@ -1,3 +1,9 @@
+/*
+
+  the list injectors turns an array into an object
+  and a list of ids - this does the opposite
+  
+*/
 export const list = (data = {}) => {
   return data.ids.map(id => data.db[id])
 }

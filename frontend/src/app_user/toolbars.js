@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 
 import {
-  ComponentInjector
+  ContainerWrapper
 } from '../folder-ui/tools'
 
 import Toolbar from '../kettle-ui/Toolbar'
@@ -9,57 +9,81 @@ import Toolbar from '../kettle-ui/Toolbar'
 import actions from './actions'
 import selectors from './selectors'
 import pages from './config/pages'
+import icons from './config/icons'
 
-import Buttons from './buttons'
+import * as buttonTools from '../folder-ui/buttons' 
 
-const toolbar = (injector) => {
-  return ComponentInjector(Toolbar, injector)
+const toolbar = ({ state, inject }) => {
+  return ContainerWrapper(Toolbar, injector)
 }
 
-const toolbars = (store) => {
+const route = (page = '', path = '') => pages[page].route + path
+const routeAction = (page = '', path = '') => () => pages[page].route + path
 
-  const buttons = Buttons(store)
+const Buttons = (store) => {
+
+  const tools = ButtonTools(store)
 
   return {
-    installation:{
-      table:toolbar(() => {
-        const state = selectors.installation.table(store.getState())
-        
-        return {
-          title:
-        }
-      }),
-      form:ComponentInjector(Toolbar, () => {
 
-      })
+    installation: {
 
-      () => {
-        const state = selectors.installation.table(store.getState())
-        const selected = state.selected
-
-        const items = []
-          .concat(crudButtons({
-            selected:state.selected,
-            routes:{
-              add:routes.installation('/add'),
-              edit:routes.installation('/edit')
+      table: (state) => {
+        const selectedIds = state.selectedIds
+        return []
+          .concat(buttonTools.crud({
+            selected: state.selected,
+            routes: {
+              add:route('installation', '/add'),
+              edit:route('installation' '/edit')
             },
-            deleteAction:actions.installation.confirmDelete.open
+            deleteAction: () => actions.installation.confirmDelete.open(selectedIds)
           }))
-          .concat(selectButtons({
-            ids:selected,
-            selectAction:actions.installation.selection.select
+          .concat(buttonTools.selection({
+            selectAllAction: () => actions.installation.selection.select(selectedIds),
+            selectNoneAction: () => actions.installation.selection.select([])
           }))
-
-        return [
-          actionDropdown(items)
-        ]
-      },
-      form:(state) => {
-
       }
     }
   }
 }
 
-export default buttons
+const Toolbars = (store) => {
+
+  const buttons = Buttons(store)
+  
+  return {
+
+    installation: {
+
+      table: toolbar({
+        getState: selectors.installation.tableToolbar,
+        injectProps: () => {
+          const state = selectors.installation.tableToolbar(store.getState())
+          const icon = (
+            <icons.installation />
+          )
+          const buttons = buttons.installation.table(state)
+          
+          return {
+            title:state.title,
+            icon,
+            leftbuttons:[
+              tools.actionDropdown({
+                title:'Actions',
+                items:buttons.installation.table(state)
+              })
+            ]
+          }
+        }
+      }),
+
+      form: toolbar(() => {
+
+      })
+
+    }
+  }
+}
+
+export default Toolbars
