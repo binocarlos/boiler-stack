@@ -10,9 +10,7 @@ var APP = process.env.APP || 'user'
 var APP_FOLDER = 'app_' + APP
 
 var includePaths = [
-  fs.realpathSync(__dirname + '/src'),
-  fs.realpathSync(__dirname + '/node_modules/boiler-frontend'),
-  fs.realpathSync(__dirname + '/node_modules/passport-slim-ui')
+  fs.realpathSync(__dirname + '/src')
 ];
 
 const config = {

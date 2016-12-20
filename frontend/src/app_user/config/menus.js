@@ -1,6 +1,6 @@
 import { routerActions } from 'react-router-redux'
 
-import { logout } from 'passport-slim-ui/src/actions'
+import { logout } from '../../passport-slim-ui/lib/actions'
 
 const sections = (store) => {
   return [{

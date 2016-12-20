@@ -1,11 +1,11 @@
 // reducer imports
 import { combineReducers } from 'redux'
-import ApiReducer from '../folder-ui/reducers/api'
-import FormReducer from '../folder-ui/reducers/form'
-import SelectionReducer from '../folder-ui/reducers/selection'
-import ToggleReducer from '../folder-ui/reducers/toggle'
+import ApiReducer from '../folder-ui/lib/reducers/api'
+import FormReducer from '../folder-ui/lib/reducers/form'
+import SelectionReducer from '../folder-ui/lib/reducers/selection'
+import ToggleReducer from '../folder-ui/lib/reducers/toggle'
 
-import * as injectors from '../folder-ui/injectors'
+import * as injectors from '../folder-ui/lib/injectors'
 import actions from './actions'
 
 const reducers = {

@@ -3,14 +3,14 @@ import React, { Component, PropTypes } from 'react'
 
 import {
   ContainerWrapper
-} from '../../folder-ui/tools'
+} from '../../folder-ui/lib/tools'
 
 import actions from '../actions'
 import selectors from '../selectors'
 
 import schemas from '../config/schemas'
 
-import Form from '../../folder-ui/components/Form'
+import Form from '../../folder-ui/lib/components/Form'
 
 const InstallationForm = (store) => {
 

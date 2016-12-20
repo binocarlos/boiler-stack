@@ -1,22 +1,21 @@
-// action imports
-import {
-  status
-} from 'passport-slim-ui/src/actions'
-
 import { routerActions } from 'react-router-redux'
 
-import * as boilerActions from 'boiler-frontend/src/actions'
+import {
+  status
+} from '../passport-slim-ui/lib/actions'
 
-import ApiActions from '../folder-ui/actions/api'
-import FormActions from '../folder-ui/actions/form'
-import SelectionActions from '../folder-ui/actions/selection'
-import ToggleActions from '../folder-ui/actions/toggle'
-import TriggerActions from '../folder-ui/actions/trigger'
+import * as boilerActions from '../boiler-frontend/lib/actions'
+
+import ApiActions from '../folder-ui/lib/actions/api'
+import FormActions from '../folder-ui/lib/actions/form'
+import SelectionActions from '../folder-ui/lib/actions/selection'
+import ToggleActions from '../folder-ui/lib/actions/toggle'
+import TriggerActions from '../folder-ui/lib/actions/trigger'
 
 import {
   mergeActions,
   createActions
-} from '../folder-ui/actions/tools'
+} from '../folder-ui/lib/actions/tools'
 
 // actions
 const actions = {

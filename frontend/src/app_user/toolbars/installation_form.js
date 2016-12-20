@@ -2,10 +2,10 @@ import React, { Component, PropTypes } from 'react'
 
 import {
   ContainerWrapper
-} from '../../folder-ui/tools'
+} from '../../folder-ui/lib/tools'
 
-import Toolbar from '../../kettle-ui/Toolbar'
-import * as buttonTools from '../../folder-ui/buttons'
+import Toolbar from '../../kettle-ui/lib/Toolbar'
+import * as buttonTools from '../../folder-ui/lib/buttons'
 
 import selectors from '../selectors'
 import icons from '../config/icons'

@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react'
 import {
   text,
   small
-} from '../../folder-ui/config/tables'
+} from '../../folder-ui/lib/config/tables'
 
 import selectors from '../selectors'
 

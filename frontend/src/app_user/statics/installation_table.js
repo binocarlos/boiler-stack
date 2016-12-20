@@ -3,13 +3,13 @@ import React, { Component, PropTypes } from 'react'
 
 import {
   ContainerWrapper
-} from '../../folder-ui/tools'
+} from '../../folder-ui/lib/tools'
 
 import pages from '../config/pages'
 import actions from '../actions'
 import selectors from '../selectors'
 
-import ConfirmDelete from '../../folder-ui/components/ConfirmDelete'
+import ConfirmDelete from '../../folder-ui/lib/components/ConfirmDelete'
 
 const InstallationTableStatics = (store) => {
 

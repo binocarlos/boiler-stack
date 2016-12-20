@@ -3,14 +3,14 @@ import React, { Component, PropTypes } from 'react'
 
 import {
   ContainerWrapper
-} from '../../folder-ui/tools'
+} from '../../folder-ui/lib/tools'
 
 import actions from '../actions'
 import selectors from '../selectors'
 
 import tables from '../config/tables'
 
-import Table from '../../folder-ui/components/Table'
+import Table from '../../folder-ui/lib/components/Table'
 
 const InstallationTable = (store) => {
 

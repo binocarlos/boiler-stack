@@ -1,11 +1,11 @@
 import {
   getUserData
-} from 'passport-slim-ui/src/selectors'
+} from '../passport-slim-ui/lib/selectors'
 
 import {
   list as tableList,
   selectedTitle
-} from '../folder-ui/selectors'
+} from '../folder-ui/lib/selectors'
 
 import pages from './config/pages'
 

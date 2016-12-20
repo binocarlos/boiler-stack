@@ -2,9 +2,9 @@
 import React, { Component, PropTypes } from 'react'
 import {
   RouteLoader
-} from '../folder-ui/tools'
+} from '../folder-ui/lib/tools'
 
-import SectionWrapper from '../folder-ui/components/SectionWrapper'
+import SectionWrapper from '../folder-ui/lib/components/SectionWrapper'
 
 import actions from './actions'
 import selectors from './selectors'

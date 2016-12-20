@@ -1,9 +1,9 @@
 // api imports
-import Ajax from '../folder-ui/api/ajax'
-import CrudAjax from '../folder-ui/api/crudajax'
+import Ajax from '../folder-ui/lib/api/ajax'
+import CrudAjax from '../folder-ui/lib/api/crudajax'
 import {
   MongoCodec
-} from '../folder-ui/api/codecs'
+} from '../folder-ui/lib/api/codecs'
 
 import urls from './config/urls'
 

@@ -1,7 +1,7 @@
 // saga imports
-import Api from '../folder-ui/sagas/api'
-import SwitchInstallation from '../boiler-ui/sagas/switchInstallation'
-import RefreshUser from '../boiler-ui/sagas/refreshUser'
+import Api from '../folder-ui/lib/sagas/api'
+import SwitchInstallation from '../boiler-ui/lib/sagas/switchInstallation'
+import RefreshUser from '../boiler-ui/lib/sagas/refreshUser'
 
 import selectors from './selectors'
 import actions from './actions'
