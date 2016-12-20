@@ -3,42 +3,14 @@ import Api from '../folder-ui/sagas/api'
 import SwitchInstallation from '../boiler-ui/sagas/switchInstallation'
 import RefreshUser from '../boiler-ui/sagas/refreshUser'
 
-import {
-  getUserData
-} from '../passport-slim-ui/src/selectors'
-
+import selectors from './selectors'
 import actions from './actions'
 import apis from './apis'
 
-const getCrudApiSagas = (api, actions) => {
-  return [
-    // get
-    Api({
-      handler: api.get,
-      actions: actions.get
-    }),
-
-    // post
-    Api({
-      handler: api.post,
-      actions: actions.post
-    }),
-
-    // put
-    Api({
-      handler: api.post,
-      actions: actions.put
-    }),
-
-    // delete
-    Api({
-      handler: api.delete,
-      actions: actions.delete
-    })
-  ]
-}
-
+// user
 const userSagas = [
+
+/*
   // save the current user data
   Api({
     handler: apis.currentuser.put,
@@ -49,29 +21,47 @@ const userSagas = [
   RefreshUser({
     trigger: actions.user.update.types.success
   })
+*/
 ]
 
+// installation
 const installationSagas = [
-  // load the installation table list
+  
   Api({
     handler: apis.installation.get,
-    actions: actions.installation.list
+    actions: actions.installation.api.list
+  })
+/*
+  Api({
+    handler: apis.installation.get,
+    actions: actions.installation.api.get
   }),
 
-  // update the user when the installation is changed
+  Api({
+    handler: apis.installation.post,
+    actions: actions.installation.api.post
+  }),
+
+  Api({
+    handler: apis.installation.post,
+    actions: actions.installation.api.put
+  }),
+
+  Api({
+    handler: apis.installation.delete,
+    actions: actions.installation.api.delete
+  }),
+
   SwitchInstallation({
     selectors: {
-      user: getUserData
+      user: selectors.user.data
     },
     actions:{
       saveUser: actions.user.update.request
     },
-    trigger: actions.installation.active.types.switch
-  })
-].concat(getCrudApiSagas(
-  apis.installation,
-  actions.installation
-))
+    trigger: actions.installation.switch.types.trigger
+  })*/
+]
 
 const sagas = []
   .concat(userSagas)

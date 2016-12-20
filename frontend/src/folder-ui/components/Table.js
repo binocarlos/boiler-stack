@@ -30,7 +30,7 @@ class TableComponent extends Component {
   
     const fields = this.props.fields || []
     const items = this.props.items || []
-    const selected = {};
+    const selected = {}
     (this.props.selected || []).forEach(id => selected[id] = true)
 
     return (
@@ -68,7 +68,7 @@ class TableComponent extends Component {
           displayRowCheckbox={this.props.showCheckboxes}
           deselectOnClickaway={false}
         >
-          {data.map( (row, index) => (
+          {items.map( (row, index) => (
             <TableRow key={index} selected={selected[row.id]}>
               {fields.map( (field, index) => {
 

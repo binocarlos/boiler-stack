@@ -45,9 +45,9 @@ const crudAjaxFactory = (settings = {}) => {
         })
     },
     delete:(query = {}) => {
-      if(!query.id) throw new Error('no id query given')
-      if(query.id === Array){
-        return query.id.map(id => {
+      if(!query.id && !query.ids) throw new Error('no id or ids query given')
+      if(query.ids){
+        return query.ids.map(id => {
           return ajaxClient
             .delete(getUrl() + '/' + id)
         })

@@ -1,3 +1,4 @@
+// the toolbars above the content in each section
 import React, { Component, PropTypes } from 'react'
 
 import {
@@ -8,70 +9,45 @@ import Toolbar from '../kettle-ui/Toolbar'
 
 import actions from './actions'
 import selectors from './selectors'
-import pages from './config/pages'
 import icons from './config/icons'
 
-import * as buttonTools from '../folder-ui/buttons' 
+import Buttons from './buttons'
 
-const toolbar = ({ state, inject }) => {
-  return ContainerWrapper(Toolbar, injector)
-}
-
-const route = (page = '', path = '') => pages[page].route + path
-const routeAction = (page = '', path = '') => () => pages[page].route + path
-
-const Buttons = (store) => {
-
-  const tools = ButtonTools(store)
-
-  return {
-
-    installation: {
-
-      table: (state) => {
-        const selectedIds = state.selectedIds
-        return []
-          .concat(buttonTools.crud({
-            selected: state.selected,
-            routes: {
-              add:route('installation', '/add'),
-              edit:route('installation' '/edit')
-            },
-            deleteAction: () => actions.installation.confirmDelete.open(selectedIds)
-          }))
-          .concat(buttonTools.selection({
-            selectAllAction: () => actions.installation.selection.select(selectedIds),
-            selectNoneAction: () => actions.installation.selection.select([])
-          }))
-      }
-    }
-  }
+const toolbar = (opts = {}) => {
+  return ContainerWrapper(Toolbar, opts)
 }
 
 const Toolbars = (store) => {
 
   const buttons = Buttons(store)
-  
+
   return {
 
     installation: {
 
       table: toolbar({
-        getState: selectors.installation.tableToolbar,
-        injectProps: () => {
-          const state = selectors.installation.tableToolbar(store.getState())
+
+        // * title
+        // * selectedIds
+        // * selectedItems
+        getState: (state) => {
+          return {
+            title: selectors.installation.selectedTitle(state),
+            selectedIds: selectors.installation.items(state),
+            selectedItems: selectors.installation.selectedItems(state)
+          }
+        },
+        injectProps: (ownProps) => {
           const icon = (
             <icons.installation />
           )
-          const buttons = buttons.installation.table(state)
-          
+          const buttons = buttons.installation.table(ownProps)
           return {
-            title:state.title,
             icon,
             leftbuttons:[
               tools.actionDropdown({
                 title:'Actions',
-                items:buttons.installation.table(state)
+                items:buttons
               })
             ]
           }

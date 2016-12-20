@@ -4,8 +4,10 @@
   and a list of ids - this does the opposite
   
 */
-export const list = (data = {}) => {
-  return data.ids.map(id => data.db[id])
+export const list = (data = {}, selected) => {
+  return selected ?
+    selected.map(id => data.db[id]) :
+    data.ids.map(id => data.db[id])
 }
 
 export const selectedTitle = (selected = [], title = 'Items') => {

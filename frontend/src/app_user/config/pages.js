@@ -2,7 +2,7 @@ const installation = {
   title:'Company',
   pluralTitle:'Companies',
   type:'company',
-  route:'comapnies',
+  route:'companies',
   initialFormData:{}
 }
 

@@ -6,17 +6,24 @@ import Dashboard from './components/Dashboard'
 import Help from './components/Help'
 import About from './components/About'
 
-import Toolbars from './toolbars'
+import Sections from './sections'
+import pages from './config/pages'
 
 const getRoutes = (store, context = {}) => {
   const auth = context.auth
-  const toolbars = Toolbars(store)
+
+  const sections = Sections(store)
   
   return (
     <Route>
-      <IndexRoute components={Dashboard} onEnter={auth.ensureUser('/login')} />
+      <IndexRoute component={Dashboard} onEnter={auth.ensureUser('/login')} />
       <Route path="help" component={Help} />
       <Route path="about" component={About} />
+      <Route onEnter={auth.ensureUser('/login')}>
+        <Route path={pages.installation.route}>
+          <IndexRoute component={sections.installation.table} />
+        </Route>
+      </Route>
     </Route>
   )
 }

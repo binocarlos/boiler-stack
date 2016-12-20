@@ -38,7 +38,7 @@ const FormButtons = (settings = {}) => {
 
     buttons.push({
       title:settings.saveTitle || 'Save',
-      extraProps:{ 
+      extraProps:{
         primary:true,
         disabled:saveDisabled
       },
