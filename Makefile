@@ -11,7 +11,6 @@ mongo.cli:
 storage.post:
 	curl -H "Content-Type: application/json" -X POST -d '{"name":"Test","projectid":"58226cab426437000123ac8b"}' http://localhost:8089/api/v1/quotes
 
-.PHONY: copy_frontend_files
-copy_frontend_files:
-	cp -rf ~/projects/boiler-frontend/src/* frontend/node_modules/boiler-frontend/src
-	cp -rf ~/projects/passport-slim-ui/src/* frontend/node_modules/passport-slim-ui/src
+.PHONY: frontend.analyze
+frontend.analyze:
+	docker exec -t boiler_frontend npm run analyze

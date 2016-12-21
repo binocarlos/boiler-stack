@@ -1,10 +1,8 @@
 import 'babel-polyfill'
 import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
-import injectTapEventPlugin from 'react-tap-event-plugin'
-injectTapEventPlugin()
 
-import AppFactory from '../boiler-frontend/lib/factory'
+import AppFactory from '../boiler-ui/lib/app'
 import app from './app'
 
 const Root = AppFactory(app, {

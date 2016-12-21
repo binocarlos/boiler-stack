@@ -1,15 +1,13 @@
+import 'babel-polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Button } from 'react-toolbox/lib/button'
-
-import About from './components/About'
+import { Provider } from 'react-redux'
+import Layout from './components/layout'
+import Router from 'redux-saga-tower/src/react/Router'
 
 const rootElement = (
   <div>
     <Button label="Hello World2!" />
-    <div>
-      <About />
-    </div>
   </div>
 )
 
