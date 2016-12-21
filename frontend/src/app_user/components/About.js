@@ -9,7 +9,7 @@ class About extends Component {
     return (
       <Page>
         <p>
-          This is the about page 2 boom
+          This is the about page boom
         </p>
         <p>
           <Link to="/">Go Home</Link>

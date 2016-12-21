@@ -1,6 +1,5 @@
 version: '2'
 services:
-  # databases
   redis:
     image: redis
     container_name: boiler_redis
@@ -16,7 +15,6 @@ services:
     container_name: boiler_digger
     volumes:
       - ./.data/digger:/data/db
-  # edge router
   router:
     image: binocarlos/noxy
     container_name: boiler_router
@@ -36,13 +34,18 @@ services:
       NOXY_API_FRONT: /api/v1
       NOXY_API_HOST: api
       NOXY_DEFAULT_HOST: frontend
-  # static web server
   frontend:
     build:
       context: ./frontend
     container_name: boiler_frontend
     volumes:
-      - ./frontend/dist:/usr/share/nginx/html
+      - ./frontend/src:/app/src
+  #frontend_production:
+  #  build:
+  #    context: ./frontend
+  #  container_name: boiler_frontend
+  #  volumes:
+  #    - ./frontend/dist:/usr/share/nginx/html
   # stateless services
   auth:
     image: binocarlos/passport-slim
@@ -50,8 +53,6 @@ services:
     links:
       - redis:redis
       - userstorage:userstorage
-    #volumes:
-    #  - ../passport-slim/src:/app/src
     #entrypoint: 
     #  - "sleep"
     #  - "10000000"
@@ -68,8 +69,6 @@ services:
     container_name: boiler_userstorage
     links:
       - storage:storage
-    #volumes:
-    #  - ../passport-slim-instant-mongo/src:/app/src
     #entrypoint: 
     #  - "sleep"
     #  - "10000000"
@@ -81,8 +80,6 @@ services:
   storage:
     build:
       context: ./storage
-    ports:
-      - "8081:80"
     container_name: boiler_storage
     links:
       - mongo:mongo
@@ -97,8 +94,6 @@ services:
     build:
       context: ./api
     container_name: boiler_api
-    ports:
-      - "8082:80"
     links:
       - auth:auth
       - digger:digger
