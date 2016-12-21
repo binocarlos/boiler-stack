@@ -4,7 +4,7 @@ import { Button } from 'react-toolbox/lib/button'
 
 const rootElement = (
   <div>
-    <Button label="Hello World2!" />
+    <Button label="Hello Admin World2!" />
   </div>
 )
 
