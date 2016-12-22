@@ -37,8 +37,6 @@ export default function configureStore(rootReducer, middleware, initialState) {
     console.log(' > delete localStorage.debug')
     console.log('-------------------------------------------')
     console.log('-------------------------------------------')
-    console.log('settings:')
-    console.dir(settings)
   }
 
   return store

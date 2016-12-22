@@ -2,12 +2,10 @@ import 'babel-polyfill'
 import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 
-import AppFactory from '../boiler-ui/lib/app'
-import app from './app'
+import AppFactory from '../boiler-ui/lib/factory'
+//import app from './app'
 
-const Root = AppFactory(app, {
-  // cli overrides here
-})
+const Root = AppFactory([])
 ReactDOM.render(
   Root,
   document.getElementById('mount')

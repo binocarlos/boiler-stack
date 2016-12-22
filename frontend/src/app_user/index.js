@@ -1,18 +1,12 @@
 import 'babel-polyfill'
-import React from 'react'
+import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
-import Layout from './components/layout'
-import Router from 'redux-saga-tower/src/react/Router'
 
-const rootElement = (
-  <div>
-    <Button label="Hello World2!" />
-  </div>
-)
+import AppFactory from '../boiler-ui/lib/factory'
+//import app from './app'
 
-
+const Root = AppFactory([])
 ReactDOM.render(
-  rootElement,
+  Root,
   document.getElementById('mount')
-);
+)
