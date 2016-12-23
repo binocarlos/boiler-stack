@@ -1,20 +1,16 @@
 import createLogger from 'redux-logger'
-import factory from './factory'
+import factory from './storefactory'
 
-const configureStore = ({ initialState = {}, reducer, middleware = [], routes = {} }) => {
-  return factory({
-    initialState,
-    reducer,
-    routes,
-    middleware: middleware.concat([
-      createLogger({
-        collapsed:true
-      })
-    ]),
-    extraComposeArgs: [
-      window.devToolsExtension ? window.devToolsExtension() : f => f
-    ]
-  })
+const configureStore = (opts = {}) => {
+  opts.middleware = opts.middleware.concat([
+    createLogger({
+      collapsed:true
+    })
+  ])
+  opts.extraComposeArgs = [
+    window.devToolsExtension ? window.devToolsExtension() : f => f
+  ]
+  return factory(opts)
 }
 
 export default configureStore

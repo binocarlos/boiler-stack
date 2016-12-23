@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
+import { Link } from 'redux-little-router'
 
 class Dashboard extends Component {
 
@@ -7,6 +8,12 @@ class Dashboard extends Component {
     return (
       <div>
         this is the dashboard page
+        <p>
+          <Link href="/app/help">Help</Link>
+        </p>
+        <p>
+          <Link href="/app/about">About</Link>
+        </p>
       </div>
     )
   }

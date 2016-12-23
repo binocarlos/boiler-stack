@@ -25,33 +25,19 @@ const boilerapp = (settings = {}) => {
 
   const reducer = settings.reducer
   const routes = settings.routes
+  const basepath = settings.basepath
   const sagas = settings.sagas
   const middleware = settings.middleware || []
+  const initialState = settings.initialState
 
   messages.boot()
 
-  // combine the reducer and middleware
-  const getStore = ({ reducer, middleware, routes }) => {
-    return Store({
-      initialState: window.__INITIAL_STATE__,
-      reducer,
-      middleware,
-      routes
-    })
-  }
-
-  // actually run the sagas
-  const runSagas = ({ store, sagas }) => {
-    function *rootSaga() {
-      yield sagas.map(fork)
-    }
-    store.runSaga(rootSaga)
-  }
-
-  const store = getStore({
+  const store = Store({
+    basepath,
     reducer,
+    routes,
     middleware,
-    routes
+    initialState
   })
 
   function *rootSaga() {

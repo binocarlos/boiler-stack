@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { routerActions } from 'react-router-redux'
 
@@ -36,10 +36,10 @@ function mapDispatchToProps(dispatch, ownProps) {
 }
 
 SnackbarContainer.propTypes = {
-  open: React.PropTypes.bool,
-  message: React.PropTypes.string,
-  duration: React.PropTypes.number,
-  onClose: React.func.isRequired
+  open: PropTypes.bool,
+  message: PropTypes.string,
+  duration: PropTypes.number,
+  onClose: PropTypes.func.isRequired
 }
 
 SnackbarContainer.defaultProps = {
