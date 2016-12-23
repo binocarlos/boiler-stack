@@ -18,44 +18,42 @@ const boilerapp = (plugins = []) => {
   messages.boot()
 
   plugins.forEach(plugin => {
-    if(!plugin.name) throw new Error('plugin requires a name')
+    if(!plugin.id) throw new Error('plugin requires an id')
   })
 
   // each plugin yields an object with named reducer functions
   // we call combineReducers on a merged object from all plugins
   const getReducers = () => {
-    const logger = bows('reducer:factory')
+    const logger = bows('reducer')
     return plugins
       .filter(plugin => plugin.getReducers)
       .reduce((ret, plugin) => {
         const pluginReducers = plugin.getReducers()
-        Object.keys(pluginReducers).forEach(key => logger('created: ' + plugin.id + ' -> ' + key))
+        Object.keys(pluginReducers).forEach(key => logger(plugin.id + ' -> ' + key))
         return Object.assign({}, ret, pluginReducers)
-      }, {
-        test:(state = {}) => state
-      })
+      }, {})
   }
 
   // gives a plugin the chance to inject middleware
   const getMiddleware = () => {
-    const logger = bows('middleware:factory')
+    const logger = bows('middleware')
     return plugins
       .filter(plugin => plugin.getMiddleware)
       .reduce((ret, plugin) => {
         const pluginMiddleware = plugin.getMiddleware()
-        pluginMiddleware.forEach(middleware => logger('created: ' + plugin.id + ' -> ' + getFunctionName(middleware)))
+        pluginMiddleware.forEach(middleware => logger(plugin.id + ' -> ' + getFunctionName(middleware)))
         return all.concat(pluginMiddleware)
       }, [])
   }
 
   // the redux-little-router route descriptors
   const getRoutes = (store) => {
-    const logger = bows('route:factory')
+    const logger = bows('route')
     return plugins
       .filter(plugin => plugin.getRoutes)
       .reduce((ret, plugin) => {
         const pluginRoutes = plugin.getRoutes(store)
-        Object.keys(pluginRoutes || {}).forEach(route => logger('created: ' + plugin.id + ' -> ' + route))
+        Object.keys(pluginRoutes || {}).forEach(route => logger(plugin.id + ' -> ' + route))
         return Object.assign({}, ret, pluginRoutes)
       }, {})
   }
@@ -73,12 +71,12 @@ const boilerapp = (plugins = []) => {
   // get a merge of the plugin statics
   // (things that are on the screen regardless of the route)
   const getStatics = () => {
-    const logger = bows('statics:factory')
+    const logger = bows('statics')
     return plugins
       .filter(plugin => plugin.getStatics)
       .reduce((ret, plugin) => {
         const pluginStatics = plugin.getStatics(store)
-        pluginStatics.forEach(pluginStatic => logger('created: ' + plugin.id + ' -> ' + pluginStatic.name))
+        pluginStatics.forEach(pluginStatic => logger(plugin.id + ' -> ' + pluginStatic.name))
         return all.concat(pluginStatics)
       }, [])
   }
@@ -86,19 +84,18 @@ const boilerapp = (plugins = []) => {
   // loop over an array of saga generator functions and fork each of them
   // this is the 'root' saga that knows nothing about it's children
   const getSagas = () => {
-    const logger = bows('saga:factory')
+    const logger = bows('saga')
     return plugins
       .filter(plugin => plugin.getSagas)
       .reduce((ret, plugin) => {
         const pluginSagas = plugin.getSagas()
-        pluginSagas.forEach(saga => logger('created: ' + plugin.id + ' -> ' + getFunctionName(saga)))
+        pluginSagas.forEach(saga => logger(plugin.id + ' -> ' + getFunctionName(saga)))
         return all.concat(pluginSagas)
       }, [])
   }
 
   const runSagas = ({ store, sagas }) => {
     function *rootSaga() {
-      console.log('running root saga')
       yield sagas.map(fork)
     }
     store.runSaga(rootSaga)
