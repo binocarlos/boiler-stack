@@ -5,18 +5,21 @@ import {
   MongoCodec
 } from '../folder-ui/lib/api/codecs'
 
-import urls from './config/urls'
+const URLS = {
+  currentuser: '/api/v1/currentuser',
+  installation: '/api/v1/installation'
+}
 
 // apis
 const apis = {
   currentuser: CrudAjax({
     name: 'currentuser',
-    getUrl: () => urls.currentuser,
+    getUrl: () => URLS.currentuser,
     encode: MongoCodec.encode
   }),
   installation: CrudAjax({
     name: 'installation',
-    getUrl: () => urls.installation,
+    getUrl: () => URLS.installation,
     encode: MongoCodec.encode
   })
 }

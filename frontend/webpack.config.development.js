@@ -24,10 +24,6 @@ module.exports = {
     publicPath: '/'
   },
   resolve: {
-    alias: {
-      'react': 'react-lite',
-      'react-dom': 'react-lite'
-    },
     extensions: ['', '.scss', '.js', '.json', '.md'],
     packageMains: ['browser', 'web', 'browserify', 'main', 'style'],
     modulesDirectories: [

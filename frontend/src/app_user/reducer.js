@@ -1,15 +1,38 @@
 // reducer imports
 import { combineReducers } from 'redux'
+
+import ApiReducer from '../boiler-ui/lib/reducers/api'
+import ListReducer from '../boiler-ui/lib/reducers/list'
+
+/*
 import ApiReducer from '../folder-ui/lib/reducers/api'
 import FormReducer from '../folder-ui/lib/reducers/form'
 import SelectionReducer from '../folder-ui/lib/reducers/selection'
 import ToggleReducer from '../folder-ui/lib/reducers/toggle'
+*/
 
-import * as injectors from '../folder-ui/lib/injectors'
 import actions from './actions'
 
-const reducers = {
-  installation:combineReducers({
+const reducer = combineReducers({
+
+  installation: combineReducers({
+
+    table: combineReducers({
+      api: ApiReducer(actions.installation.table.api),
+      list: ListReducer(actions.installation.table.list)
+    })
+
+  })
+
+/*
+  installation: combineReducers({
+
+    table: combineReducers({
+
+      api: ApiReducer({
+        types: actions.installation.table.api.types,
+        injector: injectors.list
+      })
 
     // data to drive the table
     list:ApiReducer({
@@ -33,6 +56,7 @@ const reducers = {
     })
 
   })
-}
+*/
+})
 
-export default reducers
+export default reducer

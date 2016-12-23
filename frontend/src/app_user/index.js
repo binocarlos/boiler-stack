@@ -3,17 +3,26 @@ import ReactDOM from 'react-dom'
 
 import AppFactory from '../boiler-ui/lib/factory'
 
-import AppBar from '../boiler-ui/lib/plugins/appbar'
+import reducer from './reducer'
+import sagas from './sagas'
+import {
+  routes,
+  Routes
+} from './containers/Routes'
 
-const plugins = [
-  AppBar({
-    title: 'My Test App'
-  })
-]
+import Wrapper from './containers/Wrapper'
 
-const render = AppFactory(plugins)
+const render = AppFactory({
+  reducer,
+  routes,
+  sagas
+})
 
 ReactDOM.render(
-  render(),
+  render(
+    <Wrapper>
+      <Routes />
+    </Wrapper>
+  ),
   document.getElementById('mount')
 )

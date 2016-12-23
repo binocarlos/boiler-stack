@@ -1,23 +1,19 @@
 import {
-  getUserData
-} from '../passport-slim-ui/lib/selectors'
-
-import {
   list as tableList,
   selectedTitle
-} from '../folder-ui/lib/selectors'
+} from '../boiler-ui/lib/selectors'
 
-import pages from './config/pages'
+import screens from './config/screens'
 
 const user = {
-  id: (state) => getUserData(state).id,
-  data: (state) => getUserData(state).data || {}
+  raw: (state) => state.user,
+  data: (state) => (user.raw(state) || {}).data
 }
 
 const installation = {
 
   // raw
-  raw: (state, key) => key ? state.installation[key] : state.installation,
+  raw: (state) => key ? state.installation[key] : state.installation,
   list: (state) => installation.raw(state, 'list').data,
   form: (state) => installation.raw(state, 'form'),
   selected: (state) => installation.raw(state, 'selection').selected,
@@ -26,7 +22,7 @@ const installation = {
   // derived
   items: (state) => tableList(installation.list(state)),
   selectedItems: (state) => tableList(installation.list(state), installation.selected(state)),
-  selectedTitle: (state) => selectedTitle(installation.selectedItems(state), pages.installation.pluralTitle),
+  selectedTitle: (state) => selectedTitle(installation.selectedItems(state), screens.installation.pluralTitle),
   current: (state) => user.data(state).currentInstallation,
 
   // collections

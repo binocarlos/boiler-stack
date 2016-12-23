@@ -19,7 +19,7 @@ export class SnackbarContainer extends Component {
         open={this.props.open}
         message={this.props.message}
         autoHideDuration={this.props.duration || 4000}
-        onRequestClose={this.hide}
+        onRequestClose={this.onClose}
       />
     )
   }

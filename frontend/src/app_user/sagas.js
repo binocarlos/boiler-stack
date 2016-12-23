@@ -1,7 +1,7 @@
 // saga imports
-import Api from '../folder-ui/lib/sagas/api'
-import SwitchInstallation from '../boiler-ui/lib/sagas/switchInstallation'
-import RefreshUser from '../boiler-ui/lib/sagas/refreshUser'
+import ApiSaga from '../folder-ui/lib/sagas/api'
+/*import SwitchInstallation from '../boiler-ui/lib/sagas/switchInstallation'
+import RefreshUser from '../boiler-ui/lib/sagas/refreshUser'*/
 
 import selectors from './selectors'
 import actions from './actions'
@@ -27,9 +27,9 @@ const userSagas = [
 // installation
 const installationSagas = [
   
-  Api({
+  ApiSaga({
     handler: apis.installation.get,
-    actions: actions.installation.api.list
+    actions: actions.installation.table.api
   })
 /*
   Api({

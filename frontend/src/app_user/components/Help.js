@@ -1,23 +1,16 @@
-import React, { Component, PropTypes } from 'react'
-import { Link } from 'react-router'
-import Page from '../../kettle-ui/lib/Page'
+import React, { Component } from 'react'
 
-class Dashboard extends Component {
+class Help extends Component {
 
   render() {
 
     return (
-      <Page>
-        <p>
-          This is the help page
-        </p>
-        <p>
-          <Link to="/">Go Home</Link>
-        </p>
-      </Page>
+      <div>
+        this is the help page
+      </div>
     )
   }
 
 }
 
-export default Dashboard
+export default Help
