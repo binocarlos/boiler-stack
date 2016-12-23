@@ -3,13 +3,23 @@ import Snackbar from '../containers/Snackbar'
 
 const SnackbarPlugin = (settings = {}) => {
 
+  const reducerName = settings.reducerName || 'snackbar'
+  const getReducers = () => {
+    return {
+      [reducerName]: ToggleReducer()
+    }
+  }
+
   const getStatics = () => {
-    return [
-      <Snackbar {...settings} />
-    ]    
+    return [{
+      component: (
+        <Snackbar {...settings} />
+      )
+    }]
   }
 
   return {
+    getReducers,
     getStatics
   }
 }

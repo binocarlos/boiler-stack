@@ -2,7 +2,8 @@ import update from 'immutability-helper'
 import deepCheck from 'deep-check-error'
 
 const DEFAULT_STATE = {
-  open:false
+  open: false,
+  payload: null
 }
 
 const REQUIRED_SETTINGS = [
@@ -18,6 +19,9 @@ const Toggle = (settings = {}) => {
         return update(state, {
           open:{
             $set:action.open
+          },
+          payload:{
+            $set:action.payload
           }
         })
       default:

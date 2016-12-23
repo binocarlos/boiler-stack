@@ -1,22 +1,16 @@
-export const BOILER_TOGGLE_MENU = 'BOILER_TOGGLE_MENU'
-export const toggle_menu = (open = true) => {
-  return {
-    type: BOILER_TOGGLE_MENU,
-    open
-  }
-}
+import ToggleActions from '../folder-ui/lib/actions/toggle'
 
-export const BOILER_OPEN_SNACKBAR = 'BOILER_OPEN_SNACKBAR'
-export const open_snackbar = (message = '') => {
-  return {
-    type: BOILER_OPEN_SNACKBAR,
-    message
-  }
-}
+import {
+  action
+} from '../folder-ui/lib/actions/tools'
 
-export const BOILER_CLOSE_SNACKBAR = 'BOILER_CLOSE_SNACKBAR'
-export const close_snackbar = () => {
-  return {
-    type: BOILER_CLOSE_SNACKBAR
-  }
+import { PUSH } from 'redux-little-router'
+
+export const menu = ToggleActions('BOILER_MENU')
+export const snackbar = ToggleActions('BOILER_SNACKBAR')
+export const router = {
+  types:{
+    push: PUSH,
+  },
+  push: (payload) => action(PUSH, { payload })
 }

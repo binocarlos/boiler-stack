@@ -94,6 +94,18 @@ const boilerapp = (plugins = []) => {
       }, [])
   }
 
+  const getScreens = () => {
+    const logger = bows('screen')
+    return plugins
+      .filter(plugin => plugin.getScreens)
+      .reduce((ret, plugin) => {
+        const pluginScreens = plugin.getScreens()
+        pluginScreens.forEach(screen => logger(plugin.id + ' -> ' + getFunctionName(screen)))
+        return all.concat(pluginScreens)
+      }, [])
+  }
+
+  // actually run the sagas
   const runSagas = ({ store, sagas }) => {
     function *rootSaga() {
       yield sagas.map(fork)
@@ -113,20 +125,28 @@ const boilerapp = (plugins = []) => {
   })
   const statics = getStatics()
   const sagas = getSagas()
-  runSagas({
-    store,
-    sagas
-  })
+  const screens = getScreens()
   
-  return (
-    <Provider store={store}>
-      <RouterProvider store={store}>
-        <div>
-          hello world
-        </div>
-      </RouterProvider>
-    </Provider>
-  )
+
+  // the function we export to the app so it can have the opinion about
+  // React components we want to render
+  return (wrapper) => {
+
+    runSagas({
+      store,
+      sagas
+    })
+    
+    return (
+      <Provider store={store}>
+        <RouterProvider store={store}>
+          <wrapper statics={statics}>
+            {screens}
+          </wrapper>
+        </RouterProvider>
+      </Provider>
+    )
+  }
 }
 
 export default boilerapp

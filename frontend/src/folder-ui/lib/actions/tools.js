@@ -14,7 +14,7 @@ export const createActions = (types = []) => (base) => {
   const actionTypes = getTypes(base, types)
   return types.reduce((fns, type) => {
     const typeKey = type.toLowerCase()
-    fns[typeKey] = (data) => action(types[typeKey], {data})
+    fns[typeKey] = (payload) => action(types[typeKey], {payload})
   }, {
     types: actionTypes
   })
