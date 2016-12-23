@@ -1,13 +1,13 @@
 import React from 'react'
 import { combineReducers } from 'redux'
 import { Provider } from 'react-redux'
+import { RouterProvider } from 'redux-little-router'
 import { fork } from 'redux-saga/effects'
 import bows from 'bows'
 
 import Store from './store'
 import messages from './messages'
-import AppWrapper from './containers/AppWrapper'
-import { RouterProvider } from 'redux-little-router'
+import Wrapper from './components/Wrapper'
 
 import {
   getFunctionName
@@ -25,13 +25,16 @@ const boilerapp = (plugins = []) => {
   // we call combineReducers on a merged object from all plugins
   const getReducers = () => {
     const logger = bows('reducer')
-    return plugins
+    const reducers = plugins
       .filter(plugin => plugin.getReducers)
       .reduce((ret, plugin) => {
         const pluginReducers = plugin.getReducers()
         Object.keys(pluginReducers).forEach(key => logger(plugin.id + ' -> ' + key))
         return Object.assign({}, ret, pluginReducers)
       }, {})
+    if(Object.keys(reducers).length <= 0){
+      throw new Error('no reducers found')
+    }
   }
 
   // gives a plugin the chance to inject middleware
@@ -68,19 +71,6 @@ const boilerapp = (plugins = []) => {
     })
   }
 
-  // get a merge of the plugin statics
-  // (things that are on the screen regardless of the route)
-  const getStatics = () => {
-    const logger = bows('statics')
-    return plugins
-      .filter(plugin => plugin.getStatics)
-      .reduce((ret, plugin) => {
-        const pluginStatics = plugin.getStatics(store)
-        pluginStatics.forEach(pluginStatic => logger(plugin.id + ' -> ' + pluginStatic.name))
-        return all.concat(pluginStatics)
-      }, [])
-  }
-
   // loop over an array of saga generator functions and fork each of them
   // this is the 'root' saga that knows nothing about it's children
   const getSagas = () => {
@@ -94,14 +84,15 @@ const boilerapp = (plugins = []) => {
       }, [])
   }
 
-  const getScreens = () => {
-    const logger = bows('screen')
+  // containers we render into the root view
+  const getContainers = () => {
+    const logger = bows('containers')
     return plugins
-      .filter(plugin => plugin.getScreens)
+      .filter(plugin => plugin.getContainers)
       .reduce((ret, plugin) => {
-        const pluginScreens = plugin.getScreens()
-        pluginScreens.forEach(screen => logger(plugin.id + ' -> ' + getFunctionName(screen)))
-        return all.concat(pluginScreens)
+        const pluginContainers = plugin.getContainers(store)
+        pluginContainers.forEach(pluginContainer => logger(plugin.id + ' -> ' + pluginContainer.name))
+        return all.concat(pluginContainers)
       }, [])
   }
 
@@ -123,25 +114,29 @@ const boilerapp = (plugins = []) => {
     middleware,
     routes
   })
-  const statics = getStatics()
   const sagas = getSagas()
-  const screens = getScreens()
-  
+  const containers = getContainers()
+
+  runSagas({
+    store,
+    sagas
+  })
 
   // the function we export to the app so it can have the opinion about
   // React components we want to render
-  return (wrapper) => {
+  return (wrapper = Wrapper) => {
 
-    runSagas({
-      store,
-      sagas
-    })
-    
     return (
       <Provider store={store}>
         <RouterProvider store={store}>
-          <wrapper statics={statics}>
-            {screens}
+          <wrapper>
+            {containers.map((container, i) => {
+              return (
+                <div key={i}>
+                  {container}
+                </div>
+              )
+            })}
           </wrapper>
         </RouterProvider>
       </Provider>

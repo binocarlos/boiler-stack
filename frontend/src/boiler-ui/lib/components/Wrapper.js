@@ -6,7 +6,7 @@ class Wrapper extends Component {
 
     return (
       <div>
-        Hello world
+        {this.props.children}
       </div>
     )
   }
