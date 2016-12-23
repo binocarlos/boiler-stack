@@ -44,7 +44,7 @@ module.exports = {
   },
   postcss: [autoprefixer],
   sassLoader: {
-    data: '@import "./src/app_user/theme/_config.scss";',
+    data: '@import "./src/theme/_config.scss";',
     includePaths: [path.resolve(__dirname, './src')]
   },
   plugins: [
