@@ -10,7 +10,7 @@ const REQUIRED_SETTINGS = [
   'types.toggle'
 ]
 
-const Toggle = (settings = {}) => {
+const ToggleReducer = (settings = {}) => {
   deepCheck(settings, REQUIRED_SETTINGS)
   const types = settings.types
   return (state = DEFAULT_STATE, action) => {
@@ -30,4 +30,4 @@ const Toggle = (settings = {}) => {
   }
 }
 
-export default Toggle
+export default ToggleReducer

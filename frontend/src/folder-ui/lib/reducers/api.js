@@ -15,7 +15,7 @@ const REQUIRED_SETTINGS = [
   'types.failure'
 ]
 
-const Api = (settings = {}) => {
+const ApiReducer = (settings = {}) => {
 
   deepCheck(settings, REQUIRED_SETTINGS)
 
@@ -71,4 +71,4 @@ const Api = (settings = {}) => {
   return apiReducer
 }
 
-export default Api
+export default ApiReducer

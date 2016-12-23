@@ -28,7 +28,7 @@ const boilerapp = (plugins = []) => {
     const reducers = plugins
       .filter(plugin => plugin.getReducers)
       .reduce((ret, plugin) => {
-        const pluginReducers = plugin.getReducers()
+        const pluginReducers = gplugin.getReducers()
         Object.keys(pluginReducers).forEach(key => logger(plugin.id + ' -> ' + key))
         return Object.assign({}, ret, pluginReducers)
       }, {})

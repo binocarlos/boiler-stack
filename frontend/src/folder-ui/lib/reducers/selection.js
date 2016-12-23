@@ -9,7 +9,7 @@ const REQUIRED_SETTINGS = [
   'types.select'
 ]
 
-const Selection = (settings = {}) => {
+const SelectionReducer = (settings = {}) => {
   deepCheck(settings, REQUIRED_SETTINGS)
   const types = settings.types
   return (state = DEFAULT_STATE, action) => {
@@ -26,4 +26,4 @@ const Selection = (settings = {}) => {
   }
 }
 
-export default Selection
+export default SelectionReducer

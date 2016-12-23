@@ -13,7 +13,7 @@ const REQUIRED_SETTINGS = [
   'types.revert'
 ]
 
-const Form = (settings = {}) => {
+const FormReducer = (settings = {}) => {
 
   deepCheck(settings, REQUIRED_SETTINGS)
   const types = settings.types
@@ -63,4 +63,4 @@ const Form = (settings = {}) => {
   }
 }
 
-export default Form
+export default FormReducer
