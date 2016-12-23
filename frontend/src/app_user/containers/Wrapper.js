@@ -1,10 +1,14 @@
 import React, { Component } from 'react'
+import AppBar from '../../boiler-ui/lib/components/AppBar'
 
 class Wrapper extends Component {
   render() {
     return (
       <div>
-      this is the wrapper 2
+        <AppBar
+          title="My Apples"
+          leftIcon="menu"
+        />        
         {this.props.children}
       </div>
     )

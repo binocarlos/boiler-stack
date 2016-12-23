@@ -48,9 +48,11 @@ module.exports = {
   },
   postcss: [autoprefixer],
   sassLoader: {
-    data: '@import "' + path.resolve(__dirname, 'src/theme/_theme.scss') + '";'
+    data: '@import "theme/_config.scss";',
+    includePaths: [path.resolve(__dirname, './src')]
   },
   plugins: [
+    new ExtractTextPlugin('app.css', { allChunks: true }),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
@@ -58,7 +60,6 @@ module.exports = {
         return isExternal(module)
       }
     }),
-    new ExtractTextPlugin('app.css', { allChunks: true }),
     new webpack.optimize.UglifyJsPlugin({
       compress: { warnings: false }
     }),
@@ -66,7 +67,6 @@ module.exports = {
       from: 'www',
       to: ''
     }], path.resolve(__dirname, './')),
-    
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production')
     })

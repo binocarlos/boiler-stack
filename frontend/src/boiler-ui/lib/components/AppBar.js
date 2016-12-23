@@ -1,27 +1,25 @@
-import React from 'react'
+import React, { Component, PropTypes } from 'react'
 import { AppBar } from 'react-toolbox/lib/app_bar'
 
-const MainAppBar = (props) => {
-  return (
-    <AppBar 
-      title={this.props.title} 
-      leftIcon='menu'
-      flat 
-      fixed
-    >
-      {this.props.children}
-    </AppBar>
-  )
+class MainAppBar extends Component {
+  render() {
+    return (
+      <AppBar 
+        title={this.props.title}
+        leftIcon={this.props.leftIcon}
+        theme={this.props.theme}
+        flat 
+        fixed
+      >
+        {this.props.children}
+      </AppBar>
+    )
+  }
 }
 
 MainAppBar.propTypes = {
-  title: React.PropTypes.string,
-  className: React.PropTypes.string
-}
-
-MainAppBar.defaultProps = {
-  title: '',
-  className: ''
+  title: PropTypes.string.isRequired,
+  leftIcon: PropTypes.string
 }
 
 export default MainAppBar
