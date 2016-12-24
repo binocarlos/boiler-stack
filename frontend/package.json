@@ -8,7 +8,9 @@
     "release": "cross-env NODE_ENV=production UV_THREADPOOL_SIZE=100 webpack --config ./webpack.config.production --colors --profile --progress",
     "watch": "cross-env NODE_ENV=development UV_THREADPOOL_SIZE=100 node ./server",
     "analyze": "cross-env NODE_ENV=production UV_THREADPOOL_SIZE=100 webpack  --config ./webpack.config.production --json | webpack-bundle-size-analyzer",
-    "test:boiler": "babel-tape-runner src/boiler-ui/test/index.js"
+    "test:boiler": "babel-tape-runner src/boiler-ui/test/index.js",
+    "test:boiler:pretty": "npm run test:boiler | npm run test:pretty",
+    "test:pretty": "tap-spec"
   },
   "dependencies": {
     "async": "^2.1.2",
@@ -63,6 +65,7 @@
     "require-directory": "^2.1.1",
     "sass-loader": "^4.0.0",
     "style-loader": "^0.13.1",
+    "tap-spec": "^4.1.1",
     "tape": "^4.6.3",
     "transfer-webpack-plugin": "^0.1.4",
     "webpack": "^1.14.0",

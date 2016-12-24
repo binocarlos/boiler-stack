@@ -51,7 +51,7 @@ const runTests = (opts = {}) => {
         })
       return all.concat(testSuites)
     }, [])
-    .forEach(suite => {
+    .forEach(suite => {      
       suite.runner(opts)
     })
 }
