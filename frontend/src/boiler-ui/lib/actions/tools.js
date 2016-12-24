@@ -15,7 +15,7 @@ export const createActions = (types = []) => (base) => {
   const actionFunctions = Object.keys(actionTypes)
     .reduce((all, type) => {
       return Object.assign({}, all, {
-        [type]: (payload) => action(actionTypes[type], {payload})
+        [type]: (payload = null) => action(actionTypes[type], {payload})
       })
     }, {})
 

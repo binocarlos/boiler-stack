@@ -2,70 +2,51 @@ import Tape from 'tape'
 import ApiReducer from '../../../src/reducers/api'
 import ApiActions from '../../../src/actions/api'
 
-const tape = (name, handler) => Tape('unit -> reducer -> api -> ' + name, handler)
+const tape = (name, handler) => Tape('unit -> reducer -> api' + name, handler)
 
 
 const apiReducerTests = (opts = {}) => {
 
   const actions = ApiActions('BASE')
   
-  tape('initial state', t => {
+  tape('', t => {
     const reducer = ApiReducer(actions.types)
+
     t.deepEqual(reducer(undefined, {}), {
       loading: false,
       loaded: false,
       query: null,
       error: null
-    })
-    t.end()
-  })
+    }, 'initial state')
 
-  tape('request', t => {
-    const reducer = ApiReducer(actions.types)
     t.deepEqual(reducer(undefined, actions.request({a:10}, {b:3})), {
       loading: true,
       loaded: false,
       query: {a:10},
       error: null
-    })
-    t.end()
-  })
+    }, 'request')
 
-  tape('null query', t => {
-    const reducer = ApiReducer(actions.types)
     t.deepEqual(reducer(undefined, actions.request()), {
       loading: true,
       loaded: false,
       query: null,
       error: null
-    })
-    t.end()
-  })
+    }, 'null query')
 
-  tape('success', t => {
-    const reducer = ApiReducer(actions.types)
     t.deepEqual(reducer(undefined, actions.success({a:10}, {b:3})), {
       loading: false,
       loaded: true,
       query: {a:10},
       error: null
-    })
-    t.end()
-  })
+    }, 'success')
 
-  tape('failure', t => {
-    const reducer = ApiReducer(actions.types)
     t.deepEqual(reducer(undefined, actions.failure({a:10}, 'network problem')), {
       loading: false,
       loaded: true,
       query: {a:10},
       error: 'network problem'
-    })
-    t.end()
-  })
-
-  tape('request resets loading', t => {
-    const reducer = ApiReducer(actions.types)
+    }, 'failure')
+    
     t.deepEqual(reducer({
       loading: false,
       loaded: true,
@@ -76,9 +57,10 @@ const apiReducerTests = (opts = {}) => {
       loaded: false,
       query: {a:10},
       error: null
-    })
+    }, 'request resets loading')
     t.end()
   })
+
 
 }
 

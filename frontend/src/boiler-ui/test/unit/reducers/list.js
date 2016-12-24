@@ -2,7 +2,7 @@ import Tape from 'tape'
 import ListReducer from '../../../src/reducers/list'
 import TriggerActions from '../../../src/actions/trigger'
 
-const tape = (name, handler) => Tape('unit -> reducer -> list -> ' + name, handler)
+const tape = (name, handler) => Tape('unit -> reducer -> list' + name, handler)
 
 const listReducerTests = (opts = {}) => {
 
@@ -12,36 +12,24 @@ const listReducerTests = (opts = {}) => {
     update: actions.types.trigger
   })
 
-  tape('initial state', t => {
+  tape('', t => {
     const reducer = getReducer()
+
     t.deepEqual(reducer(undefined, {}), {
       db: {},
       ids: []
-    })
-    t.end()
-  })
+    }, 'initial state')
 
-  tape('update -> null list', t => {
-    const reducer = getReducer()
-    const result = reducer(undefined, actions.trigger())
-    t.deepEqual(result, {
+    t.deepEqual(reducer(undefined, actions.trigger()), {
       db: {},
       ids: []
-    })
-    t.end()
-  })
+    }, 'null list')
 
-  tape('update -> empty list', t => {
-    const reducer = getReducer()
     t.deepEqual(reducer(undefined, actions.trigger([])), {
       db: {},
       ids: []
-    })
-    t.end()
-  })
-
-  tape('update -> with data', t => {
-    const reducer = getReducer()
+    }, 'empty list')
+    
     t.deepEqual(reducer(undefined, actions.trigger([{
       id: 10,
       name: 'a'
@@ -60,7 +48,7 @@ const listReducerTests = (opts = {}) => {
         }
       },
       ids: [10, 11]
-    })
+    }, 'with data')
     t.end()
   })
 

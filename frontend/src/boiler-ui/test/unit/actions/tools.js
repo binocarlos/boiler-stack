@@ -1,88 +1,86 @@
 import Tape from 'tape'
 import * as tools from '../../../src/actions/tools'
 
-const tape = (name, handler) => Tape('unit -> actions -> tools -> ' + name, handler)
+const tape = (name, handler) => Tape('unit -> actions -> tools' + name, handler)
 
 const actionToolsTests = (opts = {}) => {
   
-  tape('action', t => {
+  tape('', t => {
+
     t.deepEqual(
       tools.action('APPLES', {count:10}), 
       {
         type: 'APPLES',
         count: 10
-      }
+      },
+      'action'
     )
-    t.end()
-  })
 
-  tape('getTypes', t => {
-    const actionTypes = tools.getTypes('BASE', ['CLICK', 'TOGGLE'])
     t.deepEqual(
-      actionTypes, 
-      {
-        click: 'BASE_CLICK',
-        toggle: 'BASE_TOGGLE'
-      }
-    )
-    t.end()
-  })
-
-
-  tape('createActions', t => {
-    const actions = tools.createActions(['CLICK', 'TOGGLE'])('BASE')
-    t.deepEqual(
-      actions.types, 
+      tools.getTypes('BASE', ['CLICK', 'TOGGLE']), 
       {
         click: 'BASE_CLICK',
         toggle: 'BASE_TOGGLE'
       },
-      'types'
+      'getTypes'
     )
+
     t.deepEqual(
-      actions.click(), 
+      tools.createActions(['CLICK', 'TOGGLE'])('BASE').types, 
+      {
+        click: 'BASE_CLICK',
+        toggle: 'BASE_TOGGLE'
+      },
+      'createActions -> types'
+    )
+
+    t.deepEqual(
+      tools.createActions(['CLICK', 'TOGGLE'])('BASE').click(),
       {
         type: 'BASE_CLICK',
-        payload: undefined
+        payload: null
       },
       'run function -> no payload'
     )
+
     t.deepEqual(
-      actions.click(10), 
+      tools.createActions(['CLICK', 'TOGGLE'])('BASE').click(10),
       {
         type: 'BASE_CLICK',
         payload: 10
       },
       'run function -> with payload'
     )
-    t.end()
-  })
 
-  tape('mergeActions', t => {
     const toggleActions = tools.createActions(['TOGGLE'])
     const clickActions = tools.createActions(['CLICK'])
-    const actions = tools.mergeActions('BASE', [
+    const mergedActions = tools.mergeActions('BASE', [
       toggleActions,
       clickActions
     ])
+
     t.deepEqual(
-      actions.types, 
+      mergedActions.types, 
       {
         click: 'BASE_CLICK',
         toggle: 'BASE_TOGGLE'
       },
-      'types'
+      'mergeActions -> types'
     )
     t.deepEqual(
-      actions.click(10), 
+      mergedActions.click(10), 
       {
         type: 'BASE_CLICK',
         payload: 10
       },
-      'function'
+      'mergeActions -> function'
     )
+
+
     t.end()
+    
   })
+
 }
 
 export default actionToolsTests

@@ -1,9 +1,9 @@
 import Tape from 'tape'
 import ApiActions from '../../../src/actions/api'
 
-const tape = (name, handler) => Tape('unit -> actions -> api -> ' + name, handler)
+const tape = (name, handler) => Tape('unit -> actions -> api' + name, handler)
 
-const testQueryCombinations = (t, action, type) => {
+const testQueryCombinations = (t, action, type, name) => {
   t.deepEqual(
     action({size:10}, {apples:20}), 
     {
@@ -11,7 +11,7 @@ const testQueryCombinations = (t, action, type) => {
       query: {size:10},
       payload: {apples:20}
     },
-    'with query and data'
+    name + ': with query and data'
   )
   t.deepEqual(
     action(null, {apples:20}), 
@@ -20,7 +20,7 @@ const testQueryCombinations = (t, action, type) => {
       query: null,
       payload: {apples:20}
     },
-    'no query'
+    name + ': no query'
   )
   t.deepEqual(
     action({a:9}), 
@@ -29,7 +29,7 @@ const testQueryCombinations = (t, action, type) => {
       query: {a:9},
       payload: null
     },
-    'no data'
+    name + ': no data'
   )
   t.deepEqual(
     action(), 
@@ -38,13 +38,13 @@ const testQueryCombinations = (t, action, type) => {
       query: null,
       payload: null
     },
-    'no query or data'
+    name + ': no query or data'
   )
 }
 
 const apiActionTests = (opts = {}) => {
   
-  tape('types', t => {
+  tape('', t => {
     const actions = ApiActions('BASE')
     t.deepEqual(
       actions.types,
@@ -52,26 +52,12 @@ const apiActionTests = (opts = {}) => {
         request: 'BASE_REQUEST',
         success: 'BASE_SUCCESS',
         failure: 'BASE_FAILURE'
-      }
+      },
+      'types'
     )
-    t.end()
-  })
-
-  tape('request', t => {
-    const actions = ApiActions('BASE')
-    testQueryCombinations(t, actions.request, 'BASE_REQUEST')
-    t.end()
-  })
-
-  tape('success', t => {
-    const actions = ApiActions('BASE')
-    testQueryCombinations(t, actions.success, 'BASE_SUCCESS')
-    t.end()
-  })
-
-  tape('failure', t => {
-    const actions = ApiActions('BASE')
-    testQueryCombinations(t, actions.failure, 'BASE_FAILURE')
+    testQueryCombinations(t, actions.request, 'BASE_REQUEST', 'request')
+    testQueryCombinations(t, actions.success, 'BASE_SUCCESS', 'success')
+    testQueryCombinations(t, actions.failure, 'BASE_FAILURE', 'failure')
     t.end()
   })
 }

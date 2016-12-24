@@ -2,33 +2,32 @@ import Tape from 'tape'
 import RouterActions from '../../../src/actions/router'
 import { PUSH } from 'redux-little-router'
 
-const tape = (name, handler) => Tape('unit -> actions -> router -> ' + name, handler)
+const tape = (name, handler) => Tape('unit -> actions -> router' + name, handler)
 
 const routerActionTests = (opts = {}) => {
   
-  tape('types', t => {
+  tape('', t => {
     const actions = RouterActions()
+
     t.deepEqual(
       actions.types,
       {
         push: PUSH
-      }
+      },
+      'types'
     )
-    t.end()
-  })
 
-  tape('push', t => {
-    const actions = RouterActions()
     t.deepEqual(
       actions.push('/apples'),
       {
         type: PUSH,
         payload: '/apples'
-      }
+      },
+      'push'
     )
+
     t.end()
   })
-
 }
 
 export default routerActionTests
