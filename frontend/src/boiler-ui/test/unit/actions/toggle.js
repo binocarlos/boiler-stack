@@ -55,6 +55,19 @@ const toggleActionTests = (opts = {}) => {
     t.end()
   })
 
+  tape('open no payload', t => {
+    const actions = ToggleActions('BASE')
+    t.deepEqual(
+      actions.open(),
+      {
+        type: 'BASE_TOGGLE',
+        open: true,
+        payload: null
+      }
+    )
+    t.end()
+  })
+
 }
 
 export default toggleActionTests
