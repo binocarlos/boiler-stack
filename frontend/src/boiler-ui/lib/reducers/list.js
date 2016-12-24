@@ -28,7 +28,7 @@ const ListReducer = (types = {}) => {
           return Object.assign({}, all, {
             [obj.id]: obj
           })
-        })
+        }, {})
         const ids = data.map(item => item.id)
         return update(state, {
           db: {
