@@ -3,7 +3,8 @@ import runner from './runner'
 
 const args = minimist(process.argv, {
   alias:{
-    f:'filter'
+    d:'dir',
+    b:'base'
   },
   default:{
     
