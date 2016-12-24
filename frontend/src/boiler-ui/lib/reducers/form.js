@@ -7,17 +7,16 @@ const DEFAULT_STATE = {
   meta:{}
 }
 
-const REQUIRED_SETTINGS = [
-  'types.update',
-  'types.initialize',
-  'types.revert'
+const REQUIRED_TYPES = [
+  'update',
+  'initialize',
+  'revert'
 ]
 
-const FormReducer = (settings = {}) => {
+const FormReducer = (types = {}) => {
 
-  deepCheck(settings, REQUIRED_SETTINGS)
-  const types = settings.types
-
+  deepCheck(types, REQUIRED_TYPES)
+  
   return (state = DEFAULT_STATE, action) => {
     switch (action.type) {
 

@@ -1,7 +1,6 @@
 import { routerActions } from 'react-router-redux'
 
 import ApiActions from '../boiler-ui/lib/actions/api'
-import ListActions from '../boiler-ui/lib/actions/list'
 import RouterActions from '../boiler-ui/lib/actions/router'
 import ToggleActions from '../folder-ui/lib/actions/toggle'
 /*import FormActions from '../folder-ui/lib/actions/form'
@@ -18,10 +17,14 @@ const actions = {
 
   router: RouterActions('ROUTER'),
   menu: ToggleActions('MENU'),
+
+  user: {
+    load: ApiActions('USER_LOAD')
+  },
+
   installation: {
     table: {
-      api: ApiActions('INSTALLATION_API'),
-      list: ListActions('INSTALLATION_LIST')
+      load: ApiActions('INSTALLATION_TABLE_LOAD')
     }
   }
 }

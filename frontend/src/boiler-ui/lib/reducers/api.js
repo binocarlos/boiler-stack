@@ -14,17 +14,15 @@ const DEFAULT_STATE = {
   error:null
 }
 
-const REQUIRED_SETTINGS = [
-  'types.request',
-  'types.success',
-  'types.failure'
+const REQUIRED_TYPES = [
+  'request',
+  'success',
+  'failure'
 ]
 
-const ApiReducer = (settings = {}) => {
+const ApiReducer = (types = {}) => {
 
-  deepCheck(settings, REQUIRED_SETTINGS)
-
-  const types = settings.types
+  deepCheck(types, REQUIRED_TYPES)
 
   const apiReducer = (state = DEFAULT_STATE, action) => {
     switch (action.type) {

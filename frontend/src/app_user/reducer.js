@@ -4,6 +4,7 @@ import { combineReducers } from 'redux'
 import ApiReducer from '../boiler-ui/lib/reducers/api'
 import ListReducer from '../boiler-ui/lib/reducers/list'
 import ToggleReducer from '../folder-ui/lib/reducers/toggle'
+import UserReducer from '../folder-ui/lib/reducers/user'
 
 /*
 import ApiReducer from '../folder-ui/lib/reducers/api'
@@ -17,11 +18,20 @@ import actions from './actions'
 const reducer = combineReducers({
 
   menu: ToggleReducer(actions.menu),
+
+  user: combineReducers({
+    load: ApiReducer(actions.user.load.types),
+    data: UserReducer({
+      update: actions.user.load.types.success
+    })
+  }),
+
   installation: combineReducers({
 
     table: combineReducers({
-      api: ApiReducer(actions.installation.table.api),
-      list: ListReducer(actions.installation.table.list)
+      load: ApiReducer(actions.installation.table.load.types),
+      list: ListReducer({
+        update: actions.installation.table.load.types.successlist)
     })
 
   })

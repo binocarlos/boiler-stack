@@ -28,11 +28,8 @@ class Wrapper extends Component {
             leftIcon="menu"
             onLeftIconClick={ this.props.openMenu }
           />
-          <div>
+          <div style={{ flex: 1, overflowY: 'auto' }}>
             { this.props.children }
-          </div>
-          <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
-            
           </div>
         </Panel>
       </Layout>

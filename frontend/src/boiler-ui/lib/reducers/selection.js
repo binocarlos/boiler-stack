@@ -5,13 +5,12 @@ const DEFAULT_STATE = {
   selected:[]
 }
 
-const REQUIRED_SETTINGS = [
-  'types.select'
+const REQUIRED_TYPES = [
+  'select'
 ]
 
-const SelectionReducer = (settings = {}) => {
-  deepCheck(settings, REQUIRED_SETTINGS)
-  const types = settings.types
+const SelectionReducer = (types = {}) => {
+  deepCheck(types, REQUIRED_TYPES)
   return (state = DEFAULT_STATE, action) => {
     switch (action.type) {
       case types.select:

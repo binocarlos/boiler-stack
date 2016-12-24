@@ -5,66 +5,35 @@ import RefreshUser from '../boiler-ui/lib/sagas/refreshUser'*/
 
 import selectors from './selectors'
 import actions from './actions'
-import apis from './apis'
 
-// user
-const userSagas = [
+const getSagas = (apis) => {
+  // user
+  const userSagas = [
 
-/*
-  // save the current user data
-  Api({
-    handler: apis.currentuser.put,
-    actions: actions.user.update
-  }),
+    // GET /auth/v1/status
+    ApiSaga({
+      handler: apis.user.status,
+      actions: actions.installation.table.api
+    })
 
-  // reload the user after put /currentuser
-  RefreshUser({
-    trigger: actions.user.update.types.success
-  })
-*/
-]
+  ]
 
-// installation
-const installationSagas = [
-  
-  ApiSaga({
-    handler: apis.installation.get,
-    actions: actions.installation.table.api
-  })
-/*
-  Api({
-    handler: apis.installation.get,
-    actions: actions.installation.api.get
-  }),
+  // installation
+  const installationSagas = [
+    
+    // GET /api/v1/installations
+    ApiSaga({
+      handler: apis.installation.get,
+      actions: actions.installation.table.api
+    })
 
-  Api({
-    handler: apis.installation.post,
-    actions: actions.installation.api.post
-  }),
+  ]
 
-  Api({
-    handler: apis.installation.post,
-    actions: actions.installation.api.put
-  }),
+  const sagas = []
+    .concat(userSagas)
+    .concat(installationSagas)
 
-  Api({
-    handler: apis.installation.delete,
-    actions: actions.installation.api.delete
-  }),
+  return sagas
+}
 
-  SwitchInstallation({
-    selectors: {
-      user: selectors.user.data
-    },
-    actions:{
-      saveUser: actions.user.update.request
-    },
-    trigger: actions.installation.switch.types.trigger
-  })*/
-]
-
-const sagas = []
-  .concat(userSagas)
-  .concat(installationSagas)
-
-export default sagas
+export default getSagas

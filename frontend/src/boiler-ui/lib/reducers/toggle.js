@@ -6,13 +6,12 @@ const DEFAULT_STATE = {
   payload: null
 }
 
-const REQUIRED_SETTINGS = [
-  'types.toggle'
+const REQUIRED_TYPES = [
+  'toggle'
 ]
 
-const ToggleReducer = (settings = {}) => {
-  deepCheck(settings, REQUIRED_SETTINGS)
-  const types = settings.types
+const ToggleReducer = (types = {}) => {
+  deepCheck(types, REQUIRED_TYPES)
   return (state = DEFAULT_STATE, action) => {
     switch (action.type) {
       case types.toggle:

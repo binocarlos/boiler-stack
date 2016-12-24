@@ -4,21 +4,19 @@
 import update from 'immutability-helper'
 import deepCheck from 'deep-check-error'
 
-const REQUIRED_SETTINGS = [
-  'value',
-  'types.set',
-  'types.reset'
+const REQUIRED_TYPES = [
+  'set',
+  'reset'
 ]
 
-const ValueReducer = (settings = {}) => {
-  deepCheck(settings, REQUIRED_SETTINGS)
+const ValueReducer = (types = {}, defaultValue) => {
+  deepCheck(types, REQUIRED_TYPES)
 
   const DEFAULT_STATE = {
-    originalValue: settings.value,
-    value: settings.value
+    originalValue: defaultValue,
+    value: defaultValue
   }
 
-  const types = settings.types
   return (state = DEFAULT_STATE, action) => {
     switch (action.type) {
       

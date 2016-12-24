@@ -9,15 +9,13 @@ const DEFAULT_STATE = {
   ids: []
 }
 
-const REQUIRED_SETTINGS = [
-  'types.update'
+const REQUIRED_TYPES = [
+  'update'
 ]
 
-const ListReducer = (settings = {}) => {
+const ListReducer = (types = {}) => {
 
-  deepCheck(settings, REQUIRED_SETTINGS)
-
-  const types = settings.types
+  deepCheck(types, REQUIRED_TYPES)
 
   const apiReducer = (state = DEFAULT_STATE, action) => {
     switch (action.type) {
