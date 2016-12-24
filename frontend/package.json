@@ -24,6 +24,7 @@
     "deep-check-error": "^1.0.1",
     "history": "^2.1.1",
     "immutability-helper": "^2.0.0",
+    "object-path-immutable": "^0.5.1",
     "pluralise": "^1.0.0",
     "react": "^15.2.0",
     "react-addons-css-transition-group": "^15.4.1",

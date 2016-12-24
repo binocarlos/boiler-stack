@@ -9,7 +9,7 @@ const TriggerActions = (base) => {
   ])
   return {
     types,
-    trigger: (data) => action(types.trigger, {data})
+    trigger: (payload) => action(types.trigger, {payload})
   }
 }
 
