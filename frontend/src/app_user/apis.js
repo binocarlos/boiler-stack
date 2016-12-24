@@ -19,20 +19,33 @@ const URLS = {
 
 // apis
 const apis = {
-  auth: CrudAjax({
-    name: 'auth',
-    getUrl: () => URLS.auth
-  }),
-  currentuser: CrudAjax({
-    name: 'currentuser',
-    getUrl: () => URLS.currentuser,
-    encode: MongoCodec.encode
-  }),
-  installation: CrudAjax({
-    name: 'installation',
-    getUrl: () => URLS.installation,
-    encode: MongoCodec.encode
-  })
+  user: {
+    status: CrudAjax({
+      name: 'auth_status',
+      getUrl: () => URLS.auth.status
+    }),
+    login: CrudAjax({
+      name: 'auth_login',
+      getUrl: () => URLS.auth.login
+    }),
+    register: CrudAjax({
+      name: 'auth_register',
+      getUrl: () => URLS.auth.register
+    }),
+    update: CrudAjax({
+      name: 'auth_update',
+      getUrl: () => URLS.auth.update
+    })
+  },
+  installation: {
+    table: {
+      load: CrudAjax({
+        name: 'installation_table_load',
+        getUrl: () => URLS.installation.table,
+        encode: MongoCodec.encode
+      })
+    }
+  }
 }
 
 export default apis

@@ -19,7 +19,7 @@ const actions = {
   menu: ToggleActions('MENU'),
 
   user: {
-    load: ApiActions('USER_LOAD')
+    status: ApiActions('USER_STATUS')
   },
 
   installation: {

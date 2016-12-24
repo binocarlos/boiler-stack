@@ -6,14 +6,15 @@ import RefreshUser from '../boiler-ui/lib/sagas/refreshUser'*/
 import selectors from './selectors'
 import actions from './actions'
 
-const getSagas = (apis) => {
+const getSagas = (apis = {}) => {
+
   // user
   const userSagas = [
 
     // GET /auth/v1/status
     ApiSaga({
-      handler: apis.user.status,
-      actions: actions.installation.table.api
+      handler: apis.user.status.get,
+      actions: actions.user.status
     })
 
   ]
@@ -23,8 +24,8 @@ const getSagas = (apis) => {
     
     // GET /api/v1/installations
     ApiSaga({
-      handler: apis.installation.get,
-      actions: actions.installation.table.api
+      handler: apis.installation.table.load.get,
+      actions: actions.installation.table.load
     })
 
   ]
