@@ -1,14 +1,11 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { AppBar } from 'react-toolbox/lib/app_bar'
 
-class Wrapper extends Component {
+class LocationFilter extends Component {
   render() {
-    return (
-      <div>
-        {this.props.children}
-      </div>
-    )
+    return this.props.filter(this.props.router.pathname) ?
+      this.props.children :
+      null
   }
 }
 
@@ -22,24 +19,15 @@ const mapDispatchToProps = (state, ownProps) => {
   return {}
 }
 
-Wrapper.propTypes = {
-  
+LocationFilter.propTypes = {
+  filter: PropTypes.func.isRequired
 }
 
-Wrapper.defaultProps = {
+LocationFilter.defaultProps = {
   
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Wrapper)
-
-/*
-
-  <AppBar
-          title="My Apples"
-          leftIcon="menu"
-        />
-  
-*/
+)(LocationFilter)

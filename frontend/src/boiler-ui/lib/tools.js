@@ -29,3 +29,11 @@ export const getFunctionName = (fun) => {
   ret = ret.substr(0, ret.indexOf('('))
   return ret
 }
+
+export const absolutePath = (basepath) => (pathname) => basepath + pathname
+export const relativePath = (basepath) => (pathname = '') => {
+  const ret = pathname.substr(basepath.length)
+  return ret && ret.length > 0 ?
+    ret :
+    '/'
+}

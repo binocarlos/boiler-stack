@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware, { END } from 'redux-saga'
 import { routerForBrowser, initializeCurrentLocation } from 'redux-little-router'
+import { relativePath } from '../tools'
 
 const configureStore = (opts = {}) => {
   if(!opts.reducer) throw new Error('reducer required')
@@ -34,9 +35,14 @@ const configureStore = (opts = {}) => {
     ].concat(extraComposeArgs))
   )
 
+  
   const initialLocation = store.getState().router
   if (initialLocation) {
-    store.dispatch(initializeCurrentLocation(initialLocation))
+    const relative = relativePath(initialLocation.basename)
+    const adjustedLocation = Object.assign({}, initialLocation, {
+      pathname: relative(initialLocation.pathname)
+    })
+    store.dispatch(initializeCurrentLocation(adjustedLocation))
   }
 
   store.runSaga = sagaMiddleware.run

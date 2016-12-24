@@ -9,10 +9,10 @@ class Dashboard extends Component {
       <div>
         this is the dashboard page
         <p>
-          <Link href="/app/help">Help</Link>
+          <Link href="/help">Help</Link>
         </p>
         <p>
-          <Link href="/app/about">About</Link>
+          <Link href="/about">About</Link>
         </p>
       </div>
     )

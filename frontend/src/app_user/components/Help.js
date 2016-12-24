@@ -9,7 +9,7 @@ class Help extends Component {
       <div>
         this is the help page
         <p>
-          <Link href="/app">Dashboard</Link>
+          <Link href="/">Dashboard</Link>
         </p>
       </div>
     )
