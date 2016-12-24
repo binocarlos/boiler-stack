@@ -1,4 +1,4 @@
-import objectPath = from 'object-path'
+import objectPath from 'object-path'
 
 export const ucfirst = (val = '') => {
   return val.replace(/^\w/, (st) => st.toUpperCase())
@@ -8,7 +8,7 @@ export const getPathnameValue = (pathname) => (data = {}) => objectPath.get(data
 export const setPathnameValue = (pathname) => (value, data = {}) => {
   objectPath.set(data, pathname, value)
   return data
-})
+}
 
 export const getPathnameTitle = (pathname) => {
   return pathname

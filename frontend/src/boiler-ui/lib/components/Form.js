@@ -1,22 +1,34 @@
 import React, { PropTypes, Component } from 'react'
 
-class Page extends Component {
+class Form extends Component {
 
   render() {
     return (
-      <div style={{ padding: this.props.padding + 'rem' }}>
-        {this.props.children}
-      </div>
+      <section>
+        {
+          this.props.fields.map((field, i) => {
+            return (
+              <div key={i}>
+
+              </div>
+            )
+          })
+        }
+      </section>
     )
   }
 }
 
-Page.propTypes = {
-  padding: PropTypes.number
+Form.propTypes = {
+  schema: PropTypes.array.isRequired,
+  library: PropTypes.func.isRequired,
+  data: PropTypes.object.isRequired,
+  meta PropTypes.object.isRequired,
+  update: PropTypes.func.isRequired
 }
 
-Page.defaultProps = {
-  padding: 1.8
+Form.defaultProps = {
+  
 }
 
-export default Page
+export default Form
