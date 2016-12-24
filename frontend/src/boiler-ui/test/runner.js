@@ -1,5 +1,7 @@
 import requireDirectory from 'require-directory'
 import objectPath from 'object-path'
+import fs from 'fs'
+import { join } from 'path'
 
 // if no dirs are specified run them all
 const ALL_DIRS = [
@@ -37,8 +39,18 @@ const runTests = (opts = {}) => {
     // prepend the base to the pathname
     .map(pathname => opts.base ? opts.base + '.' + pathname : pathname)
     .reduce((all, pathname) => {
-      const pathnames = pathname.split('.')
-      const dir = convertPathname(pathname)
+      let pathnames = pathname.split('.')
+      let parentPathnames = [].concat(pathnames)
+      const moduleName = parentPathnames.pop()
+      let dir = convertPathname(pathname)
+      let moduleFilter = null
+
+      if(fs.existsSync(join(__dirname, dir + '.js'))){
+        dir = convertPathname(parentPathnames.join('.'))
+        pathnames = parentPathnames
+        moduleFilter = moduleName
+      }
+
       const subtree = requireDirectory(module, dir)
       const testSuites = getTestSuites(pathnames, subtree)
         .map(suite => {
@@ -49,9 +61,14 @@ const runTests = (opts = {}) => {
             runner: suite.runner
           }
         })
+        .filter(suite => {
+          return moduleFilter ?
+            suite.name == parentPathnames.concat([moduleFilter]).join('.') :
+            true
+        })
       return all.concat(testSuites)
     }, [])
-    .forEach(suite => {      
+    .forEach(suite => {
       suite.runner(opts)
     })
 }
