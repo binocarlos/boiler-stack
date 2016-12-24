@@ -52,18 +52,8 @@ const runTests = (opts = {}) => {
       return all.concat(testSuites)
     }, [])
     .forEach(suite => {
-      console.log(suite.name)
+      suite.runner(opts)
     })
-
-  
-  /*
-  // filter out test suites
-  const runSuites = Object.keys(testSuites)
-    .filter(key => opts.filter ? key.indexOf(opts.filter) == 0 : true)
-    .reduce((all, key) => all.concat([testSuites[key]]), [])
-
-  runSuites.forEach(suite => suite(opts))
-  */
 }
 
 export default runTests

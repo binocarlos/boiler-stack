@@ -1,10 +1,11 @@
-import tape from 'tape'
-
+import Tape from 'tape'
 import ApiActions from '../../../src/actions/api'
 
-const runTests = (opts = {}) => {
+const tape = (name, handler) => Tape('unit -> actions -> api -> ' + name, handler)
+
+const apiActionTests = (opts = {}) => {
   
-  tape('action types', t => {
+  tape('types', t => {
     const actions = ApiActions('BASE')
     t.deepEqual(
       actions.types,
@@ -12,8 +13,7 @@ const runTests = (opts = {}) => {
         request: 'BASE_REQUEST',
         success: 'BASE_SUCCESS',
         failure: 'BASE_FAILURE'
-      },
-      'types correct'
+      }
     )
     t.end()
   })
@@ -25,37 +25,34 @@ const runTests = (opts = {}) => {
       {
         type: 'BASE_REQUEST',
         query: {size:10},
-        datA: {apples:20}
-      },
-      'request action correct'
+        input: {apples:20}
+      }
     )
     t.end()
   })
 
-  tape('success', t => {
+  tape('api success action', t => {
     const actions = ApiActions('BASE')
     t.deepEqual(
-      actions.request({size:10}, {apples:20}), 
+      actions.success({size:10}, {apples:20}), 
       {
-        type: 'BASE_REQUEST',
+        type: 'BASE_SUCCESS',
         query: {size:10},
-        datA: {apples:20}
-      },
-      'request action correct'
+        result: {apples:20}
+      }
     )
     t.end()
   })
 
-  tape('request', t => {
+  tape('api failure action', t => {
     const actions = ApiActions('BASE')
     t.deepEqual(
-      actions.request({size:10}, {apples:20}), 
+      actions.failure({size:10}, 'network problem'), 
       {
-        type: 'BASE_REQUEST',
+        type: 'BASE_FAILURE',
         query: {size:10},
-        datA: {apples:20}
-      },
-      'request action correct'
+        error: 'network problem'
+      }
     )
     t.end()
   })
@@ -63,4 +60,4 @@ const runTests = (opts = {}) => {
 
 }
 
-export default runTests
+export default apiActionTests
