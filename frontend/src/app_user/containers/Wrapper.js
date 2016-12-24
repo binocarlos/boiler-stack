@@ -16,18 +16,21 @@ class Wrapper extends Component {
       <Layout>
         <NavDrawer 
           pinned={false} permanentAt='xxxl'
-          active={this.props.menuOpen}
+          active={ this.props.menuOpen }
           onOverlayClick={ this.props.closeMenu }>
-          <Menu />
+          <Menu 
+            user={ this.props.user }
+            onClick={ this.props.closeMenu }
+          />
         </NavDrawer>
         <Panel>
           <AppBar
-            title={core.title}
+            title={ core.title }
             leftIcon="menu"
-            onLeftIconClick={this.props.openMenu}
+            onLeftIconClick={ this.props.openMenu }
           />
           <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
-            {this.props.children}
+            { this.props.children }
           </div>
         </Panel>
       </Layout>
@@ -38,7 +41,8 @@ class Wrapper extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     router: state.router,
-    menuOpen: state.menu.open
+    menuOpen: state.menu.open,
+    user: null
   }
 }
 
