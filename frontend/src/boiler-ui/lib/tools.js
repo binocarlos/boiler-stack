@@ -14,7 +14,7 @@ export const getPathnameTitle = (pathname) => {
   return pathname
     .split('.')
     .map(ucfirst)
-    .join(' -> ')
+    .join(' : ')
 }
 
 export const serialize = (val) => {

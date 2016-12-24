@@ -1,4 +1,5 @@
 import deepCheck from 'deep-check-error'
+import pluralize from 'pluralize'
 
 import {
   getPathnameValue,
@@ -6,24 +7,39 @@ import {
   getPathnameTitle
 } from '../../tools'
 
-import Validator from './validator'
-
 const REQUIRED_SETTINGS = [
   'name'
 ]
 
-export const text = (field = {}) => {
-  deepCheck(field, REQUIRED_SETTINGS)
+const text = (settings = {}) => {
+  if(typeof(settings) == 'string') {
+    settings = {
+      name: settings
+    }
+  }
 
-  const name = field.name
-  const title = field.title
+  deepCheck(settings, REQUIRED_SETTINGS)
+
+  const name = settings.name
+  const title = settings.title
+  const required = settings.required
+  const minLength = settings.minLength
+  const validate = settings.validate
 
   return {
     name: name,
-    type: 'text',
+    renderer: 'text',
     title: title || getPathnameTitle(name),
-    getValue: getPathnameValue(name),
-    setValue: setPathnameValue(name),
-    validate: Validator(field.validate)
+    get: getPathnameValue(name),
+    set: setPathnameValue(name),
+    validate: (value = '', data = {}) => {
+      if(required && (!value || value.length<=0)) return 'required'
+      if(minLength && (value || '').length < minLength) return 'must be at least ' + minLength + ' ' + pluralize('char', minLength)
+      return validate ?
+        validate(value, data) :
+        null
+    }
   }
 }
+
+export default text
