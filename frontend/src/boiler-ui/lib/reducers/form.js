@@ -1,15 +1,17 @@
 import update from 'immutability-helper'
+import immutable from 'object-path-immutable'
 import deepCheck from 'deep-check-error'
 
 const DEFAULT_STATE = {
-  originalData:{},
   data:{},
-  meta:{}
+  meta:{},
+  originalData:{},
+  originalMeta:{}
 }
 
 const REQUIRED_TYPES = [
+  'inject',
   'update',
-  'initialize',
   'revert'
 ]
 
@@ -20,42 +22,42 @@ const FormReducer = (types = {}) => {
   return (state = DEFAULT_STATE, action) => {
     switch (action.type) {
 
-      // used when the user changes form state
+      case types.inject:
+        return update(state, {
+          data: {
+            $set: action.data
+          },
+          originalData:{
+            $set: action.data
+          },
+          meta: {
+            $set: action.meta
+          },
+          originalMeta:{
+            $set: action.meta
+          },
+        })
+
       case types.update:
         return update(state, {
           data:{
-            $set:action.data
+            $set: immutable.set(state.data, action.pathname, action.data)
           },
           meta:{
-            $set:action.meta
+            $set: immutable.set(state.meta, action.pathname, action.meta)
           }
         })
 
-      // used to write initial form state
-      case types.initialize:
-        return update(state, {
-          data:{
-            $set:action.data
-          },
-          originalData:{
-            $set:action.data
-          },
-          meta:{
-            $set:null
-          }
-        })
-
-      // revert to the previous initialize state
       case types.revert:
         return update(state, {
           data:{
-            $set:state.originalData
+            $set: state.originalData
           },
           meta:{
-            $set:null
+            $set: state.originalMeta
           }
         })
-      
+
       default:
         return state
     }
