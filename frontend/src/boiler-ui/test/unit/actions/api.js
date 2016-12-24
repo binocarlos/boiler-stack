@@ -14,10 +14,10 @@ const testQueryCombinations = (t, action, type) => {
     'with query and data'
   )
   t.deepEqual(
-    action(undefined, {apples:20}), 
+    action(null, {apples:20}), 
     {
       type: type,
-      query: undefined,
+      query: null,
       payload: {apples:20}
     },
     'no query'
@@ -27,7 +27,7 @@ const testQueryCombinations = (t, action, type) => {
     {
       type: type,
       query: {a:9},
-      payload: undefined
+      payload: null
     },
     'no data'
   )
@@ -35,8 +35,8 @@ const testQueryCombinations = (t, action, type) => {
     action(), 
     {
       type: type,
-      query: undefined,
-      payload: undefined
+      query: null,
+      payload: null
     },
     'no query or data'
   )

@@ -11,9 +11,9 @@ const ApiActions = (base) => {
   ])
   return {
     types,
-    request: (query, payload) => action(types.request, {query, payload}),
-    success: (query, payload) => action(types.success, {query, payload}),
-    failure: (query, payload) => action(types.failure, {query, payload})
+    request: (query = null, payload = null) => action(types.request, {query, payload}),
+    success: (query = null, payload = null) => action(types.success, {query, payload}),
+    failure: (query = null, payload = null) => action(types.failure, {query, payload})
   }
 }
 

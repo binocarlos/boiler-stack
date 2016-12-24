@@ -30,30 +30,30 @@ const ApiReducer = (types = {}) => {
       case types.request:
         return update(state, {
           $merge:{
-            query:action.query,
-            loading:true,
-            loaded:false,
-            error:null
+            query: action.query,
+            loading: true,
+            loaded: false,
+            error: null
           }
         })
 
       case types.success:
         return update(state, {
           $merge:{
-            query:action.query,
-            loading:false,
-            loaded:true,
-            error:null
+            query: action.query,
+            loading: false,
+            loaded: true,
+            error: null
           }
         })
 
       case types.failure:
         return update(state, {
           $merge:{
-            query:action.query,
-            loading:false,
-            loaded:true,
-            error:action.error
+            query: action.query,
+            loading: false,
+            loaded: true,
+            error: action.payload
           }
         })
         
