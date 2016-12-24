@@ -1,34 +1,42 @@
 import React, { Component, PropTypes } from 'react'
 import { Link } from 'redux-little-router'
 
-import {
-  guestMenu,
-  userMenu
-} from '../config/menu'
-
 class Menu extends Component {
 
-  render() {
+  getLink(href, title) {
+    return (
+      <p>
+        <Link href={ href } onClick={ this.props.onClick }>
+          { title }
+        </Link>
+      </p>
+    )
+  }
 
-    const menuDescs = this.props.user ?
-      userMenu(this.props.user) :
-      guestMenu()
-
+  getGuestMenu() {
     return (
       <div>
-      {
-        menuDescs.map((item, i) => {
-          return (
-            <p key={i}>
-              <Link href={ item.href } onClick={ this.props.onClick }>
-                { item.title }
-              </Link>
-            </p>
-          )
-        })
-      }
+        {this.getLink('/', 'Home')}
+        {this.getLink('/login', 'Login')}
+        {this.getLink('/register', 'Register')}
       </div>
     )
+  }
+
+  getUserMenu() {
+    return (
+      <div>
+        {this.getLink('/', 'Dashboard')}
+        {this.getLink('/help', 'Help')}
+        {this.getLink('/about', 'About')}
+      </div>
+    )
+  }
+
+  render() {
+    return this.props.user ?
+      this.getUserMenu() :
+      this.getGuestMenu()
   }
 
 }

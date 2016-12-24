@@ -15,7 +15,6 @@ class Wrapper extends Component {
     return (
       <Layout>
         <NavDrawer 
-          pinned={false} permanentAt='xxxl'
           active={ this.props.menuOpen }
           onOverlayClick={ this.props.closeMenu }>
           <Menu 
@@ -29,8 +28,11 @@ class Wrapper extends Component {
             leftIcon="menu"
             onLeftIconClick={ this.props.openMenu }
           />
-          <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
+          <div>
             { this.props.children }
+          </div>
+          <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
+            
           </div>
         </Panel>
       </Layout>

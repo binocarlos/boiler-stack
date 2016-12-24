@@ -1,12 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 import { Link } from 'redux-little-router'
+import Page from '../../boiler-ui/lib/components/Page'
 
 class Dashboard extends Component {
 
   render() {
 
     return (
-      <div>
+      <Page>
         this is the dashboard page
         <p>
           <Link href="/help">Help</Link>
@@ -14,7 +15,7 @@ class Dashboard extends Component {
         <p>
           <Link href="/about">About</Link>
         </p>
-      </div>
+      </Page>
     )
   }
 
