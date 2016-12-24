@@ -3,6 +3,7 @@ import { routerActions } from 'react-router-redux'
 import ApiActions from '../boiler-ui/lib/actions/api'
 import ListActions from '../boiler-ui/lib/actions/list'
 import RouterActions from '../boiler-ui/lib/actions/router'
+import ToggleActions from '../folder-ui/lib/actions/toggle'
 /*import FormActions from '../folder-ui/lib/actions/form'
 import SelectionActions from '../folder-ui/lib/actions/selection'
 import ToggleActions from '../folder-ui/lib/actions/toggle'
@@ -16,9 +17,8 @@ import {
 const actions = {
 
   router: RouterActions('ROUTER'),
-
+  menu: ToggleActions('MENU'),
   installation: {
-
     table: {
       api: ApiActions('INSTALLATION_API'),
       list: ListActions('INSTALLATION_LIST')

@@ -5,10 +5,7 @@ import {
   MongoCodec
 } from '../folder-ui/lib/api/codecs'
 
-const URLS = {
-  currentuser: '/api/v1/currentuser',
-  installation: '/api/v1/installation'
-}
+import URLS from './config/urls'
 
 // apis
 const apis = {

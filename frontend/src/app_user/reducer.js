@@ -3,18 +3,20 @@ import { combineReducers } from 'redux'
 
 import ApiReducer from '../boiler-ui/lib/reducers/api'
 import ListReducer from '../boiler-ui/lib/reducers/list'
+import ToggleReducer from '../folder-ui/lib/reducers/toggle'
 
 /*
 import ApiReducer from '../folder-ui/lib/reducers/api'
 import FormReducer from '../folder-ui/lib/reducers/form'
 import SelectionReducer from '../folder-ui/lib/reducers/selection'
-import ToggleReducer from '../folder-ui/lib/reducers/toggle'
+
 */
 
 import actions from './actions'
 
 const reducer = combineReducers({
 
+  menu: ToggleReducer(actions.menu),
   installation: combineReducers({
 
     table: combineReducers({
