@@ -1,6 +1,6 @@
 import tape from 'tape'
 
-import * as tools from '../../src/actions/tools'
+import * as tools from '../../../src/actions/tools'
 
 const runTests = (opts = {}) => {
   
