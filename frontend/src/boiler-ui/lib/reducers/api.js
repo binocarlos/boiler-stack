@@ -40,6 +40,7 @@ const ApiReducer = (types = {}) => {
       case types.success:
         return update(state, {
           $merge:{
+            query:action.query,
             loading:false,
             loaded:true,
             error:null
@@ -49,6 +50,7 @@ const ApiReducer = (types = {}) => {
       case types.failure:
         return update(state, {
           $merge:{
+            query:action.query,
             loading:false,
             loaded:true,
             error:action.error

@@ -3,6 +3,45 @@ import ApiActions from '../../../src/actions/api'
 
 const tape = (name, handler) => Tape('unit -> actions -> api -> ' + name, handler)
 
+const testQueryCombinations = (t, action, type) => {
+  t.deepEqual(
+    action({size:10}, {apples:20}), 
+    {
+      type: type,
+      query: {size:10},
+      payload: {apples:20}
+    },
+    'with query and data'
+  )
+  t.deepEqual(
+    action(undefined, {apples:20}), 
+    {
+      type: type,
+      query: undefined,
+      payload: {apples:20}
+    },
+    'no query'
+  )
+  t.deepEqual(
+    action({a:9}), 
+    {
+      type: type,
+      query: {a:9},
+      payload: undefined
+    },
+    'no data'
+  )
+  t.deepEqual(
+    action(), 
+    {
+      type: type,
+      query: undefined,
+      payload: undefined
+    },
+    'no query or data'
+  )
+}
+
 const apiActionTests = (opts = {}) => {
   
   tape('types', t => {
@@ -20,44 +59,21 @@ const apiActionTests = (opts = {}) => {
 
   tape('request', t => {
     const actions = ApiActions('BASE')
-    t.deepEqual(
-      actions.request({size:10}, {apples:20}), 
-      {
-        type: 'BASE_REQUEST',
-        query: {size:10},
-        input: {apples:20}
-      }
-    )
+    testQueryCombinations(t, actions.request, 'BASE_REQUEST')
     t.end()
   })
 
-  tape('api success action', t => {
+  tape('success', t => {
     const actions = ApiActions('BASE')
-    t.deepEqual(
-      actions.success({size:10}, {apples:20}), 
-      {
-        type: 'BASE_SUCCESS',
-        query: {size:10},
-        result: {apples:20}
-      }
-    )
+    testQueryCombinations(t, actions.success, 'BASE_SUCCESS')
     t.end()
   })
 
-  tape('api failure action', t => {
+  tape('failure', t => {
     const actions = ApiActions('BASE')
-    t.deepEqual(
-      actions.failure({size:10}, 'network problem'), 
-      {
-        type: 'BASE_FAILURE',
-        query: {size:10},
-        error: 'network problem'
-      }
-    )
+    testQueryCombinations(t, actions.failure, 'BASE_FAILURE')
     t.end()
   })
-
-
 }
 
 export default apiActionTests
