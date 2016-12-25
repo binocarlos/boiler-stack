@@ -8,13 +8,13 @@ const testQueryCombinations = (t, action, type, name) => {
     action({size:10}, {apples:20}), 
     {
       type: type,
-      query: {size:10},
-      payload: {apples:20}
+      query: {size:20},
+      payload: {apples:10}
     },
     name + ': with query and data'
   )
   t.deepEqual(
-    action(null, {apples:20}), 
+    action({apples:20}),
     {
       type: type,
       query: null,
@@ -23,7 +23,7 @@ const testQueryCombinations = (t, action, type, name) => {
     name + ': no query'
   )
   t.deepEqual(
-    action({a:9}), 
+    action(null, {a:9}), 
     {
       type: type,
       query: {a:9},
