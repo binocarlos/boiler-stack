@@ -9,11 +9,11 @@ compose.rebuild:
 	docker-compose -f docker-compose.yml -f docker-compose.prod.yml build --no-cache --pull
 
 .PHONY: compose.up.dev
-compose.dev:
+compose.up.dev:
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
 
 .PHONY: compose.up.prod
-compose.prod:
+compose.up.prod:
 	docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
 
 .PHONY: frontend.analyze
@@ -27,6 +27,10 @@ frontend.test:
 .PHONY: frontend.release
 frontend.release:
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run frontend release
+
+.PHONY: frontend.logs
+frontend.logs:
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml logs -f frontend
 
 .PHONY: mongo.cli
 mongo.cli:
