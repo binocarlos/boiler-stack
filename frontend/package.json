@@ -8,6 +8,8 @@
     "release": "NODE_ENV=production UV_THREADPOOL_SIZE=100 webpack --config ./webpack.config.prod --colors --profile --progress",
     "watch": "NODE_ENV=development UV_THREADPOOL_SIZE=100 node ./server",
     "analyze": "NODE_ENV=production UV_THREADPOOL_SIZE=100 webpack  --config ./webpack.config.prod --json | webpack-bundle-size-analyzer",
+    "test:unit": "npm run test -- -b unit",
+    "test:acceptance": "npm run test -- -b acceptance",
     "test": "NODE_ENV=test babel-tape-runner testrunner.js",
     "test:pretty": "tap-spec"
   },
@@ -41,6 +43,7 @@
     "babel-preset-stage-0": "^6.5.0",
     "babel-preset-stage-2": "^6.13.0",
     "babel-tape-runner": "^2.0.1",
+    "casper": "^0.1.1",
     "css-loader": "^0.26.1",
     "express": "^4.13.4",
     "extract-text-webpack-plugin": "^1.0.1",

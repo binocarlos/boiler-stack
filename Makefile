@@ -22,7 +22,7 @@ frontend.analyze:
 
 .PHONY: frontend.test.unit
 frontend.test.unit:
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run frontend test -- -d unit
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run frontend test:unit
 
 .PHONY: frontend.release
 frontend.release:
