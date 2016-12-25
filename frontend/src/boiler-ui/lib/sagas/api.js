@@ -1,12 +1,12 @@
-import bows from 'bows'
+import Logger from '../logger'
 import deepCheck from 'deep-check-error'
 import { takeLatest } from 'redux-saga'
-import { fork, put, call, take, select } from 'redux-saga/effects'
+import { put, call } from 'redux-saga/effects'
 
 const REQUIRED_SETTINGS = [
-  'handler',
+  'api',
+  'actions.base',
   'actions.types.request',
-  'actions.request',
   'actions.success',
   'actions.failure',
 ]
@@ -16,28 +16,28 @@ const ApiSagaFactory = (settings = {}) => {
   deepCheck(settings, REQUIRED_SETTINGS)
 
   const actions = settings.actions
-  const handler = settings.handler
+  const api = settings.api
   const trigger = actions.types.request
-  
-  const logger = bows('folderui:saga:api:' + trigger)
 
-  function* apiRequest(action) {
+  const logger = Logger('saga:api:' + actions.base)
+
+  function* apiSaga(action) {
     logger('request', action)
     try {
-      const result = yield handler(action.query, action.data)
+      const result = yield api(action.query, action.payload)
       logger('response', result)
-      yield put(actions.success(result, action.query))
+      yield put(actions.success(action.query, result))
     } catch (e) {
       logger('error', e.message)
-      yield put(actions.failure(e.message, action.query))
+      yield put(actions.failure(action.query, e.message))
     }
   }
 
-  function* listener() {
-    yield takeLatest(trigger, apiRequest)
+  function* listen() {
+    yield takeLatest(trigger, apiSaga)
   }
 
-  return listener
+  return listen
 }
 
 export default ApiSagaFactory

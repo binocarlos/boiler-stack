@@ -10,6 +10,7 @@ const ValueActions = (base) => {
   ])
   return {
     types,
+    base,
     set: (data) => action(types.set, {data}),
     reset: () => action(types.reset)
   }

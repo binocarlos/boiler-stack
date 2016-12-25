@@ -3,7 +3,7 @@
 import update from 'immutability-helper'
 import deepCheck from 'deep-check-error'
 
-const DEFAULT_STATE = {
+export const DEFAULT_STATE = {
   // are we in a state of loading
   loading:false,
   // have we loaded any data yet

@@ -9,6 +9,7 @@ const ToggleActions = (base) => {
   ])
   return {
     types,
+    base,
     open: (payload = null) => action(types.toggle, { open:true, payload }),
     close: (payload = null) => action(types.toggle, { open:false, payload }),
     toggle: (open = false, payload = null) => action(types.toggle, { open, payload })

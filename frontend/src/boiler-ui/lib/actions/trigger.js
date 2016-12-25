@@ -9,6 +9,7 @@ const TriggerActions = (base) => {
   ])
   return {
     types,
+    base,
     trigger: (payload) => action(types.trigger, {payload})
   }
 }

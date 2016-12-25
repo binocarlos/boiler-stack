@@ -12,7 +12,7 @@ const FormActions = (base) => {
   ])
   return {
     types,
-
+    base,
     // we want to reset the form with new data
     // this will not be reduced it's a trigger for the saga
     initialize: (data) => action(types.initialize, {data}),
