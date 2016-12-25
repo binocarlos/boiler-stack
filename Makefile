@@ -20,9 +20,9 @@ compose.up.prod:
 frontend.analyze:
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run frontend analyze
 
-.PHONY: frontend.test
-frontend.test:
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run frontend test
+.PHONY: frontend.test.unit
+frontend.test.unit:
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run frontend test -- -d unit
 
 .PHONY: frontend.release
 frontend.release:
