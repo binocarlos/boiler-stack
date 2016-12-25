@@ -8,8 +8,8 @@ const testQueryCombinations = (t, action, type, name) => {
     action({size:10}, {apples:20}), 
     {
       type: type,
-      query: {size:20},
-      payload: {apples:10}
+      query: {apples:20},
+      payload: {size:10}
     },
     name + ': with query and data'
   )

@@ -8,6 +8,8 @@ const tape = (name, handler) => Tape('unit -> reducer -> api' + name, handler)
 const apiReducerTests = (opts = {}) => {
 
   const actions = ApiActions('BASE')
+  const QUERY = {b:3}
+  const PAYLOAD = {a:4}
   
   tape('', t => {
     const reducer = ApiReducer(actions.types)
@@ -19,10 +21,10 @@ const apiReducerTests = (opts = {}) => {
       error: null
     }, 'initial state')
 
-    t.deepEqual(reducer(undefined, actions.request({a:10}, {b:3})), {
+    t.deepEqual(reducer(undefined, actions.request(PAYLOAD, QUERY)), {
       loading: true,
       loaded: false,
-      query: {a:10},
+      query: QUERY,
       error: null
     }, 'request')
 
@@ -33,17 +35,17 @@ const apiReducerTests = (opts = {}) => {
       error: null
     }, 'null query')
 
-    t.deepEqual(reducer(undefined, actions.success({a:10}, {b:3})), {
+    t.deepEqual(reducer(undefined, actions.success(PAYLOAD, QUERY)), {
       loading: false,
       loaded: true,
-      query: {a:10},
+      query: QUERY,
       error: null
     }, 'success')
 
-    t.deepEqual(reducer(undefined, actions.failure({a:10}, 'network problem')), {
+    t.deepEqual(reducer(undefined, actions.failure('network problem', QUERY)), {
       loading: false,
       loaded: true,
-      query: {a:10},
+      query: QUERY,
       error: 'network problem'
     }, 'failure')
     
@@ -52,10 +54,10 @@ const apiReducerTests = (opts = {}) => {
       loaded: true,
       query: null,
       error: null
-    }, actions.request({a:10})), {
+    }, actions.request(null, QUERY)), {
       loading: true,
       loaded: false,
-      query: {a:10},
+      query: QUERY,
       error: null
     }, 'request resets loading')
     t.end()
