@@ -4,6 +4,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
-    container_name: boiler_frontend
+    image: boilerstack_frontend_prod
+    container_name: boilerstack_frontend_prod
     volumes:
       - ./frontend/dist:/usr/share/nginx/html

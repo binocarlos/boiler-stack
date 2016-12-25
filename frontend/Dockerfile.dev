@@ -1,7 +1,8 @@
-FROM node:5.2.0-slim
+FROM binocarlos/react-base
 MAINTAINER kaiyadavenport@gmail.com
 WORKDIR /app
 COPY ./package.json /app/package.json
-RUN npm install
+RUN yarn install
 COPY . /app
-ENTRYPOINT ["npm", "run", "watch"]
+ENTRYPOINT ["yarn", "run"]
+CMD ["watch"]

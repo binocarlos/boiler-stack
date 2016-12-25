@@ -4,7 +4,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
-    container_name: boiler_frontend
+    image: boilerstack_frontend_dev
+    container_name: boilerstack_frontend_dev
     volumes:
       - ./frontend/src:/app/src
       - ./frontend/www:/app/www

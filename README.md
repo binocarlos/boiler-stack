@@ -1,31 +1,46 @@
 # boiler-stack
 
-Starting place for apps.
+## build images
 
-You need `docker` and `docker-compose` (latest versions not the toolbox).
-
-If you get errors with docker, run as `sudo`.
-
-## install
-
-build the images:
-
-```
-$ make build
+```bash
+$ make compose.build
 ```
 
-## frontend
+If you want to re-trigger the pull/build from scratch:
 
-to build the frontend code:
-
+```bash
+$ make compose.rebuild
 ```
-$ make frontend.build
+
+## start stack
+
+To start the development stack:
+
+```bash
+$ make compose.up.dev
+```
+
+The frontend code is being served in development trim - this means hot module reloading and logging turned on.  The `frontend/src` folder is mounted so you can change files on your host and the frontend will rebuild.
+
+## build frontend code
+
+To build the production frontend artifacts (outputs to `frontend/dist`):
+
+```bash
 $ make frontend.release
-$ make frontend.watch
 ```
 
-## run stack
+To analyze which modules are taking up size in the build 
+(note these sizes are pre-uglify - use the ratios not the numbers)
 
+```bash
+$ make frontend.analyze
 ```
-$ docker-compose up
+
+#### run tests
+
+To run the frontend (unit) tests:
+
+```bash
+$ make frontend.test
 ```

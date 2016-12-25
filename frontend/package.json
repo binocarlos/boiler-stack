@@ -5,9 +5,9 @@
   "description": "the frontend for the boilerstack app",
   "main": "index.js",
   "scripts": {
-    "release": "NODE_ENV=production UV_THREADPOOL_SIZE=100 webpack --config ./webpack.config.production --colors --profile --progress",
+    "release": "NODE_ENV=production UV_THREADPOOL_SIZE=100 webpack --config ./webpack.config.prod --colors --profile --progress",
     "watch": "NODE_ENV=development UV_THREADPOOL_SIZE=100 node ./server",
-    "analyze": "NODE_ENV=production UV_THREADPOOL_SIZE=100 webpack  --config ./webpack.config.production --json | webpack-bundle-size-analyzer",
+    "analyze": "NODE_ENV=production UV_THREADPOOL_SIZE=100 webpack  --config ./webpack.config.prod --json | webpack-bundle-size-analyzer",
     "test": "NODE_ENV=test babel-tape-runner testrunner.js",
     "test:pretty": "tap-spec"
   },
