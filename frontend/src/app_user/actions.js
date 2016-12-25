@@ -1,5 +1,3 @@
-import { routerActions } from 'react-router-redux'
-
 import ApiActions from '../boiler-ui/lib/actions/api'
 import RouterActions from '../boiler-ui/lib/actions/router'
 import ToggleActions from '../folder-ui/lib/actions/toggle'
