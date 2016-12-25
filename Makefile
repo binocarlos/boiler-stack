@@ -20,6 +20,14 @@ compose.prod:
 frontend.analyze:
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run frontend analyze
 
+.PHONY: frontend.test
+frontend.test:
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run frontend test
+
+.PHONY: frontend.release
+frontend.release:
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run frontend release
+
 .PHONY: mongo.cli
 mongo.cli:
 	docker run -ti --rm \

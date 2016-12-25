@@ -10,3 +10,4 @@ services:
       - ./frontend/src:/app/src
       - ./frontend/www:/app/www
       - ./frontend/test:/app/test
+      - ./frontend/dist:/app/dist
