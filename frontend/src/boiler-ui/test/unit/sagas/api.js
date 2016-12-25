@@ -8,10 +8,6 @@ import ApiActions from '../../../src/actions/api'
 
 const tape = (name, handler) => Tape('unit -> config -> sagas -> api' + name, handler)
 
-const getState = () => {
-  return {}
-}
-
 const testSuite = (opts = {}) => {
 
   const actions = ApiActions('BASE')
