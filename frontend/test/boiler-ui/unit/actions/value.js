@@ -1,5 +1,5 @@
 import Tape from 'tape'
-import ValueActions from '../../../src/actions/value'
+import ValueActions from '../../../../src/boiler-ui/lib/actions/value'
 
 const tape = (name, handler) => Tape('unit -> actions -> value' + name, handler)
 

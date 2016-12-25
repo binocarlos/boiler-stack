@@ -1,5 +1,5 @@
 import Tape from 'tape'
-import RouterActions from '../../../src/actions/router'
+import RouterActions from '../../../../src/boiler-ui/lib/actions/router'
 import { PUSH } from 'redux-little-router'
 
 const tape = (name, handler) => Tape('unit -> actions -> router' + name, handler)

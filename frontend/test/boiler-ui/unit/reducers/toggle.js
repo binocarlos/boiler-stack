@@ -1,6 +1,6 @@
 import Tape from 'tape'
-import ToggleReducer from '../../../src/reducers/toggle'
-import ToggleActions from '../../../src/actions/toggle'
+import ToggleReducer from '../../../../src/boiler-ui/lib/reducers/toggle'
+import ToggleActions from '../../../../src/boiler-ui/lib/actions/toggle'
 
 const tape = (name, handler) => Tape('unit -> reducer -> toggle -> ' + name, handler)
 

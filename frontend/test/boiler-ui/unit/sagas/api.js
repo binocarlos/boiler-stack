@@ -2,9 +2,9 @@ import Tape from 'tape'
 import SagaTester from 'redux-saga-tester'
 import { put, call, take } from 'redux-saga/effects'
 
-import ApiSaga from '../../../src/sagas/api'
-import ApiReducer, { DEFAULT_STATE } from '../../../src/reducers/api'
-import ApiActions from '../../../src/actions/api'
+import ApiSaga from '../../../../src/boiler-ui/lib/sagas/api'
+import ApiReducer, { DEFAULT_STATE } from '../../../../src/boiler-ui/lib/reducers/api'
+import ApiActions from '../../../../src/boiler-ui/lib/actions/api'
 
 const tape = (name, handler) => Tape('unit -> config -> sagas -> api' + name, handler)
 

@@ -1,15 +1,25 @@
+import minimist from 'minimist'
 import requireDirectory from 'require-directory'
 import objectPath from 'object-path'
 import fs from 'fs'
 import { join } from 'path'
 
-// if no dirs are specified run them all
-const ALL_DIRS = [
-  'unit'
-]
+const args = minimist(process.argv, {
+  alias:{
+    d: 'dir',
+    b: 'base'
+  },
+  default:{
+    dir: process.env.DIR,
+    base: process.env.BASE
+  }
+})
 
 const convertPathname = (pathname) => './' + pathname.split('.').join('/')
-
+const getBasePath = (basename = '', pathname = '') => {
+  const splitter = basename && pathname ? '.' : ''
+  return basename + splitter + pathname
+}
 const getTestSuites = (pathnames = [], suite) => {
   if(typeof(suite) == 'object') {
     return Object.keys(suite).reduce((all, key) => {
@@ -32,12 +42,14 @@ const getTestSuites = (pathnames = [], suite) => {
 
 const runTests = (opts = {}) => {
 
-  let pathnames = opts.dir || ALL_DIRS
+  let pathnames = opts.dir || ''
+  const basename = opts.base || ''
+
   if(typeof(pathnames) == 'string') pathnames = [pathnames]
-  
+
   pathnames
     // prepend the base to the pathname
-    .map(pathname => opts.base ? opts.base + '.' + pathname : pathname)
+    .map(pathname => getBasePath(opts.base, pathname))
     .reduce((all, pathname) => {
       let pathnames = pathname.split('.')
       let parentPathnames = [].concat(pathnames)
@@ -45,11 +57,13 @@ const runTests = (opts = {}) => {
       let dir = convertPathname(pathname)
       let moduleFilter = null
 
-      if(fs.existsSync(join(__dirname, dir + '.js'))){
+      if(fs.existsSync(join(__dirname, '/test/' + dir + '.js'))){
         dir = convertPathname(parentPathnames.join('.'))
         pathnames = parentPathnames
         moduleFilter = moduleName
       }
+
+      dir = './test/' + dir
 
       const subtree = requireDirectory(module, dir)
       const testSuites = getTestSuites(pathnames, subtree)
@@ -73,4 +87,4 @@ const runTests = (opts = {}) => {
     })
 }
 
-export default runTests
+runTests(args)

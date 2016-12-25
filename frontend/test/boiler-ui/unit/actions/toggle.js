@@ -1,5 +1,5 @@
 import Tape from 'tape'
-import ToggleActions from '../../../src/actions/toggle'
+import ToggleActions from '../../../../src/boiler-ui/lib/actions/toggle'
 
 const tape = (name, handler) => Tape('unit -> actions -> toggle' + name, handler)
 

@@ -1,5 +1,5 @@
 import Tape from 'tape'
-import TriggerActions from '../../../src/actions/trigger'
+import TriggerActions from '../../../../src/boiler-ui/lib/actions/trigger'
 
 const tape = (name, handler) => Tape('unit -> actions -> trigger' + name, handler)
 

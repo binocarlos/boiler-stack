@@ -1,6 +1,6 @@
 import Tape from 'tape'
-import FormReducer from '../../../src/reducers/form'
-import FormActions from '../../../src/actions/form'
+import FormReducer from '../../../../src/boiler-ui/lib/reducers/form'
+import FormActions from '../../../../src/boiler-ui/lib/actions/form'
 
 const tape = (name, handler) => Tape('unit -> reducer -> form' + name, handler)
 

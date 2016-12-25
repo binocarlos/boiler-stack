@@ -1,6 +1,6 @@
 import Tape from 'tape'
-import ApiReducer from '../../../src/reducers/api'
-import ApiActions from '../../../src/actions/api'
+import ApiReducer from '../../../../src/boiler-ui/lib/reducers/api'
+import ApiActions from '../../../../src/boiler-ui/lib/actions/api'
 
 const tape = (name, handler) => Tape('unit -> reducer -> api' + name, handler)
 

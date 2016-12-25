@@ -1,6 +1,6 @@
 import Tape from 'tape'
-import ListReducer from '../../../src/reducers/list'
-import TriggerActions from '../../../src/actions/trigger'
+import ListReducer from '../../../../src/boiler-ui/lib/reducers/list'
+import TriggerActions from '../../../../src/boiler-ui/lib/actions/trigger'
 
 const tape = (name, handler) => Tape('unit -> reducer -> list' + name, handler)
 

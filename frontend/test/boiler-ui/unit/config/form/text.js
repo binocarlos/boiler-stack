@@ -1,5 +1,5 @@
 import Tape from 'tape'
-import Text from '../../../../src/config/form/text'
+import Text from '../../../../../src/boiler-ui/lib/config/form/text'
 
 const tape = (name, handler) => Tape('unit -> config -> form -> text' + name, handler)
 

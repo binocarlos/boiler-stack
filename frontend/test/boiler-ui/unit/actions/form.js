@@ -1,5 +1,5 @@
 import Tape from 'tape'
-import FormActions from '../../../src/actions/form'
+import FormActions from '../../../../src/boiler-ui/lib/actions/form'
 
 const tape = (name, handler) => Tape('unit -> actions -> form' + name, handler)
 
