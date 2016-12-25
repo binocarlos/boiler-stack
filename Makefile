@@ -14,3 +14,20 @@ storage.post:
 .PHONY: frontend.analyze
 frontend.analyze:
 	docker exec -t boiler_frontend npm run analyze
+
+.PHONY: compose.build
+compose.build:
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
+	docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
+
+.PHONY: compose.dev
+compose.dev:
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+.PHONY: compose.prod
+compose.prod:
+	docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
+
+.PHONY: compose.test
+compose.test:
+	echo hello

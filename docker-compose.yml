@@ -34,19 +34,6 @@ services:
       NOXY_API_FRONT: /api/v1
       NOXY_API_HOST: api
       NOXY_DEFAULT_HOST: frontend
-  frontend:
-    build:
-      context: ./frontend
-    container_name: boiler_frontend
-    volumes:
-      - ./frontend/src:/app/src
-  #frontend_production:
-  #  build:
-  #    context: ./frontend
-  #  container_name: boiler_frontend
-  #  volumes:
-  #    - ./frontend/dist:/usr/share/nginx/html
-  # stateless services
   auth:
     image: binocarlos/passport-slim
     container_name: boiler_auth

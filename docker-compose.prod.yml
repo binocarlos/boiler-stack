@@ -1,0 +1,9 @@
+version: '2'
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    container_name: boiler_frontend
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html
