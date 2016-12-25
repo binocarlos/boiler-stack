@@ -22,6 +22,12 @@ $ make compose.up.dev
 
 The frontend code is being served in development trim - this means hot module reloading and logging turned on.  The `frontend/src` folder is mounted so you can change files on your host and the frontend will rebuild.
 
+To tail logs for the frontend build in another window:
+
+```bash
+$ make frontend.logs
+```
+
 ## build frontend code
 
 To build the production frontend artifacts (outputs to `frontend/dist`):
@@ -37,10 +43,16 @@ To analyze which modules are taking up size in the build
 $ make frontend.analyze
 ```
 
+Once you have built the frontend - you can run the production trim (where the frontend assets are statically served):
+
+```bash
+$ make compose.up.prod
+```
+
 #### run tests
 
 To run the frontend (unit) tests:
 
 ```bash
-$ make frontend.test
+$ make frontend.test.unit
 ```
