@@ -11,3 +11,9 @@ services:
       - ./frontend/www:/app/www
       - ./frontend/test:/app/test
       - ./frontend/dist:/app/dist
+  frontend_cli:
+    extends: 
+      file: docker-compose.dev.yml
+      service: frontend
+    links:
+      - router:router

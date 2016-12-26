@@ -56,3 +56,17 @@ To run the frontend (unit) tests:
 ```bash
 $ make frontend.test.unit
 ```
+
+To run the acceptance tests - first start the stack in production trim:
+
+```bash
+$ make compose.up.prod -d
+```
+
+Then:
+
+```bash
+$ make frontend.test.acceptance
+```
+
+This uses phantomjs to visit the real stack.

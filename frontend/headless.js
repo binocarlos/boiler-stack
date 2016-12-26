@@ -1,4 +1,8 @@
 var casper = require('casper').create();
+
+console.log('-------------------------------------------');
+console.log('-------------------------------------------');
+console.dir(casper)
 casper.start('http://casperjs.org/');
 
 casper.then(function() {

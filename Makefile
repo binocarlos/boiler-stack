@@ -30,7 +30,7 @@ frontend.test.unit:
 
 .PHONY: frontend.test.acceptance
 frontend.test.acceptance:
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run frontend test:acceptance
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run frontend_cli test:acceptance
 
 .PHONY: frontend.release
 frontend.release:
@@ -39,6 +39,10 @@ frontend.release:
 .PHONY: frontend.logs
 frontend.logs:
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml logs -f frontend
+
+.PHONY: frontend.cli
+frontend.cli:
+	docker run -ti --rm --entrypoint bash boilerstack_frontend_dev
 
 .PHONY: mongo.cli
 mongo.cli:
