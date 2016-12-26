@@ -76,6 +76,16 @@ const FormSagaFactory = (settings = {}) => {
     console.dir(action)
   }
 
+  function* updateSaga(action) {
+    console.log('-------------------------------------------');
+    console.dir(action)
+  }
+
+  function* touchSaga(action) {
+    console.log('-------------------------------------------');
+    console.dir(action)
+  }
+
   function* root() {
 
     function* listenInitialize() {
@@ -86,9 +96,19 @@ const FormSagaFactory = (settings = {}) => {
       yield takeLatest(triggers.load, loadSaga)  
     }
 
+    function* listenUpdate() {
+      yield takeLatest(triggers.update, updateSaga)  
+    }
+
+    function* listenTouch() {
+      yield takeLatest(triggers.touch, touchSaga)  
+    }
+
     yield [
       fork(listenInitialize),
-      fork(listenLoad)
+      fork(listenLoad),
+      fork(listenUpdate),
+      fork(listenTouch)
     ]
   }
 
