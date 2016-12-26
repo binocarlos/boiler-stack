@@ -25,12 +25,14 @@ const text = (settings = {}) => {
   const required = settings.required
   const minLength = settings.minLength
   const validate = settings.validate
+  const initialValue = settings.initialValue || ''
 
   return {
     name: name,
     title: title || getPathnameTitle(name),
     get: getPathnameValue(name),
     set: setPathnameValue(name),
+    getInitial: () => initialValue,
     validate: (value = '', data = {}) => {
       if(required && (!value || value.length<=0)) return 'required'
       if(minLength && (value || '').length < minLength) return 'must be at least ' + minLength + ' ' + pluralize('char', minLength)

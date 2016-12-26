@@ -12,13 +12,13 @@ const testSuite = (opts = {}) => {
 
   const actions = FormActions('BASE')
 
-  const getTester = (schema = []) => {
+  const getTester = (getSchema = () => []) => {
     const sagaTester = new SagaTester({
       DEFAULT_STATE,
       reducers: { test: FormReducer(actions.types) }
     })
     sagaTester.start(FormSaga({
-      schema,
+      getSchema,
       actions
     }))
     return sagaTester

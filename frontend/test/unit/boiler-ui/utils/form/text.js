@@ -1,7 +1,7 @@
 import Tape from 'tape'
-import Text from '../../../../../src/boiler-ui/lib/config/form/text'
+import Text from '../../../../../src/boiler-ui/lib/utils/form/text'
 
-const tape = (name, handler) => Tape('unit -> config -> form -> text' + name, handler)
+const tape = (name, handler) => Tape('unit -> utils -> form -> text' + name, handler)
 
 const testSuite = (opts = {}) => {
 
@@ -29,6 +29,18 @@ const testSuite = (opts = {}) => {
       Text('fruit.red.apples').name,
       'fruit.red.apples',
       'name from string'
+    )
+
+    t.equal(
+      Text({ name: 'init', initialValue: 'oranges' }).getInitial(),
+      'oranges',
+      'with initialValue'
+    )
+
+    t.equal(
+      Text({ name: 'init' }).getInitial(),
+      '',
+      'without initialValue'
     )
 
     t.end()

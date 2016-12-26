@@ -1,3 +1,4 @@
+import immutable from 'object-path-immutable'
 import objectPath from 'object-path'
 
 export const ucfirst = (val = '') => {
@@ -5,10 +6,7 @@ export const ucfirst = (val = '') => {
 }
 
 export const getPathnameValue = (pathname) => (data = {}) => objectPath.get(data, pathname)
-export const setPathnameValue = (pathname) => (value, data = {}) => {
-  objectPath.set(data, pathname, value)
-  return data
-}
+export const setPathnameValue = (pathname) => (value, data = {}) => immutable.set(data, pathname, value)
 
 export const getPathnameTitle = (pathname) => {
   return pathname

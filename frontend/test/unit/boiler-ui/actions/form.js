@@ -15,6 +15,7 @@ const formActionTests = (opts = {}) => {
         load: 'BASE_LOAD',
         inject: 'BASE_INJECT',
         update: 'BASE_UPDATE',
+        touch: 'BASE_TOUCH',
         updated: 'BASE_UPDATED',
         revert: 'BASE_REVERT'
       },
@@ -50,14 +51,22 @@ const formActionTests = (opts = {}) => {
     )
 
     t.deepEqual(
-      actions.update('apples.pears', {size:10}, {size:20}), 
+      actions.update('apples.pears', {size:10}), 
       {
         type: 'BASE_UPDATE',
         name: 'apples.pears',
-        data: {size:10},
-        meta: {size:20}
+        value: {size:10}
       },
       'update'
+    )
+
+    t.deepEqual(
+      actions.touch('apples.pears'), 
+      {
+        type: 'BASE_TOUCH',
+        name: 'apples.pears'
+      },
+      'touch'
     )
 
     t.deepEqual(

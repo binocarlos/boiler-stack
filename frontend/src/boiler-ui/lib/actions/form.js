@@ -8,6 +8,7 @@ const FormActions = (base) => {
     'INITIALIZE',
     'LOAD',
     'UPDATE',
+    'TOUCH',
     'INJECT',
     'UPDATED',
     'REVERT'
@@ -16,7 +17,7 @@ const FormActions = (base) => {
     types,
     base,
 
-    // triggers
+    // triggers (from containers)
 
     // we want to inject new form data for an item that does not exist
     // trigger value initializers & generate meta before calling inject
@@ -27,7 +28,11 @@ const FormActions = (base) => {
     load: (data) => action(types.load, {data}),
 
     // a user event as resulted in a raw value for a schema field
-    update: (name, data, meta) => action(types.update, {name, data, meta}),
+    update: (name, value) => action(types.update, {name, value}),
+
+    // means the user has properly edited and field and the validation
+    // status can be displayed (this prevents eager error messages)
+    touch: (name) => action(types.touch, {name}),
 
     // reduced - called by the saga once processing is done
 
