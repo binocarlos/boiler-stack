@@ -2,7 +2,7 @@ import update from 'immutability-helper'
 import immutable from 'object-path-immutable'
 import deepCheck from 'deep-check-error'
 
-const DEFAULT_STATE = {
+export const DEFAULT_STATE = {
   data:{},
   meta:{},
   originalData:{},

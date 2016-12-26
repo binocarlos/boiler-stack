@@ -4,6 +4,7 @@ import { takeLatest } from 'redux-saga'
 import { put, call } from 'redux-saga/effects'
 
 const REQUIRED_SETTINGS = [
+  'schema',
   'actions.types.initialize',
   'actions.types.load',
   'actions.types.update',
@@ -11,33 +12,25 @@ const REQUIRED_SETTINGS = [
   'actions.updated'
 ]
 
-const ApiSagaFactory = (settings = {}) => {
+const FormSagaFactory = (settings = {}) => {
 
   deepCheck(settings, REQUIRED_SETTINGS)
 
   const actions = settings.actions
-  const api = settings.api
-  const trigger = actions.types.request
+  const schema = settings.schema
+  const triggers = actions.types
+  const logger = Logger('saga:form:' + actions.base)
 
-  const logger = Logger('saga:api:' + actions.base)
-
-  function* apiSaga(action) {
-    logger('request', action)
-    try {
-      const result = yield api(action.payload, action.query)
-      logger('response', result)
-      yield put(actions.success(result, action.query))
-    } catch (e) {
-      logger('error', e.message)
-      yield put(actions.failure(e.message, action.query))
-    }
+  function* initializeSaga(action) {
+    console.log('-------------------------------------------');
+    console.dir(action)
   }
 
-  function* listen() {
-    yield takeLatest(trigger, apiSaga)
+  function* root() {
+    yield takeLatest(triggers.initialize, initializeSaga)
   }
 
-  return listen
+  return root
 }
 
-export default ApiSagaFactory
+export default FormSagaFactory
