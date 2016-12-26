@@ -42,7 +42,7 @@ frontend.logs:
 
 .PHONY: frontend.cli
 frontend.cli:
-	docker run -ti --rm --entrypoint bash boilerstack_frontend_dev
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --entrypoint bash frontend
 
 .PHONY: mongo.cli
 mongo.cli:

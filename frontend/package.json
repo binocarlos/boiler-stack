@@ -20,6 +20,7 @@
     "deep-check-error": "^1.0.1",
     "history": "^2.1.1",
     "immutability-helper": "^2.0.0",
+    "node-horseman": "^3.2.0",
     "object-path-immutable": "^0.5.1",
     "pluralize": "^3.1.0",
     "react-addons-css-transition-group": "^15.4.1",
@@ -65,16 +66,5 @@
     "webpack-bundle-size-analyzer": "^2.2.0",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-hot-middleware": "^2.10.0"
-  },
-  "devdeps": {
-    "react-css-themr": "^1.2.0",
-    "redbox-react": "^1.2.4",
-    "html-webpack-plugin": "^2.16.1",
-    "ecstatic": "^2.1.0",
-    "codemirror": "^5.14.2",
-    "classnames": "^2.2.5",
-    "babel-polyfill": "^6.20.0",
-    "babel-runtime": "^6.20.0",
-    "babel-standalone": "^6.7.7"
   }
 }

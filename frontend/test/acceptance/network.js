@@ -1,9 +1,10 @@
+// test to see that we can connect to the router
 import Tape from 'tape'
 import axios from 'axios'
 
-const tape = (name, handler) => Tape('acceptance -> sanity' + name, handler)
+const tape = (name, handler) => Tape('acceptance -> network' + name, handler)
 
-const exampleAcceptanceTest = (opts = {}) => {
+const networkAcceptanceTest = (opts = {}) => {
   
   tape(' -> check network', t => {
     axios.get('http://router/')
@@ -19,4 +20,4 @@ const exampleAcceptanceTest = (opts = {}) => {
 
 }
 
-export default exampleAcceptanceTest
+export default networkAcceptanceTest
