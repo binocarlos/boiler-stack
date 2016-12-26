@@ -12,8 +12,10 @@ const formActionTests = (opts = {}) => {
       actions.types,
       {
         initialize: 'BASE_INITIALIZE',
+        load: 'BASE_LOAD',
         inject: 'BASE_INJECT',
         update: 'BASE_UPDATE',
+        updated: 'BASE_UPDATED',
         revert: 'BASE_REVERT'
       },
       'types'
@@ -26,6 +28,15 @@ const formActionTests = (opts = {}) => {
         data: {size:10}
       },
       'initialize'
+    )
+
+    t.deepEqual(
+      actions.load({size:10}, {size:20}), 
+      {
+        type: 'BASE_LOAD',
+        data: {size:10}
+      },
+      'load'
     )
 
     t.deepEqual(
@@ -42,7 +53,18 @@ const formActionTests = (opts = {}) => {
       actions.update('apples.pears', {size:10}, {size:20}), 
       {
         type: 'BASE_UPDATE',
-        pathname: 'apples.pears',
+        name: 'apples.pears',
+        data: {size:10},
+        meta: {size:20}
+      },
+      'update'
+    )
+
+    t.deepEqual(
+      actions.updated('apples.pears', {size:10}, {size:20}), 
+      {
+        type: 'BASE_UPDATED',
+        name: 'apples.pears',
         data: {size:10},
         meta: {size:20}
       },

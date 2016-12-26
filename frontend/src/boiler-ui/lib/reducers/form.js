@@ -11,7 +11,7 @@ const DEFAULT_STATE = {
 
 const REQUIRED_TYPES = [
   'inject',
-  'update',
+  'updated',
   'revert'
 ]
 
@@ -38,13 +38,13 @@ const FormReducer = (types = {}) => {
           },
         })
 
-      case types.update:
+      case types.updated:
         return update(state, {
           data:{
-            $set: immutable.set(state.data, action.pathname, action.data)
+            $set: immutable.set(state.data, action.name, action.data)
           },
           meta:{
-            $set: immutable.set(state.meta, action.pathname, action.meta)
+            $set: immutable.set(state.meta, action.name, action.meta)
           }
         })
 

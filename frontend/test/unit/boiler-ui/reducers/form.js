@@ -25,7 +25,7 @@ const formReducerTests = (opts = {}) => {
       originalMeta: {b:3}
     }, 'inject')
 
-    t.deepEqual(reducer(undefined, actions.update('c.d.e', 10, {valid:true})), {
+    t.deepEqual(reducer(undefined, actions.updated('c.d.e', 10, {valid:true})), {
       data: {c:{d:{e:10}}},
       meta: {c:{d:{e:{valid:true}}}},
       originalData: {},

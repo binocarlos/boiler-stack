@@ -6,24 +6,39 @@ import {
 const FormActions = (base) => {
   const types = getTypes(base, [
     'INITIALIZE',
-    'INJECT',
+    'LOAD',
     'UPDATE',
+    'INJECT',
+    'UPDATED',
     'REVERT'
   ])
   return {
     types,
     base,
-    // we want to reset the form with new data
-    // this will not be reduced it's a trigger for the saga
+
+    // triggers
+
+    // we want to inject new form data for an item that does not exist
+    // trigger value initializers & generate meta before calling inject
     initialize: (data) => action(types.initialize, {data}),
 
-    // wholesale update the data and meta - this will be reduced
+    // we want to inject form data for an item that has been loaded
+    // generate meta and trigger inject
+    load: (data) => action(types.load, {data}),
+
+    // a user event as resulted in a raw value for a schema field
+    update: (name, data, meta) => action(types.update, {name, data, meta}),
+
+    // reduced - called by the saga once processing is done
+
+    // once initialize or load have processed - this injects the results into
+    // the reducer
     inject: (data, meta) => action(types.inject, {data, meta}),
 
-    // update the value and meta for a single (possibly nested) key
-    update: (pathname, data, meta) => action(types.update, {pathname, data, meta}),
+    // once a field update has been processed
+    updated: (name, data, meta) => action(types.updated, {name, data, meta}),
 
-    // revert the data to the last update
+    // revert the data to the last injection
     revert: () => action(types.revert)
   }
 }

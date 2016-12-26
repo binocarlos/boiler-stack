@@ -28,7 +28,6 @@ const text = (settings = {}) => {
 
   return {
     name: name,
-    renderer: 'text',
     title: title || getPathnameTitle(name),
     get: getPathnameValue(name),
     set: setPathnameValue(name),

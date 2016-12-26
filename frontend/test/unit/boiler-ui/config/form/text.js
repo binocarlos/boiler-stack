@@ -31,12 +31,6 @@ const testSuite = (opts = {}) => {
       'name from string'
     )
 
-    t.equal(
-      Text('fruit.red.apples').renderer,
-      'text',
-      'renderer'
-    )
-
     t.end()
 
   })
