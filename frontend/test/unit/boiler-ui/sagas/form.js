@@ -96,7 +96,7 @@ const testSuite = (opts = {}) => {
   // there was a case where the initialize action was changing
   // when the update was called (because presumably the schema was mutating objects)
   // this test ensures this does not happen
-  tape(' -> update keeps meta immutable', t => {
+  tape(' -> update', t => {
     const tester = getTester()
     const schema = getSchema()
 
@@ -128,42 +128,40 @@ const testSuite = (opts = {}) => {
 
     t.end()
 
-
-/*
-    tester.dispatch(actions.initialize({}))
-
-    await tester.waitFor(actions.types.inject)
-
-    tester.dispatch(actions.update('testfield', 'oranges'))
-
-    console.log(JSON.stringify(tester.getActionsCalled(), null, 4))
-    t.deepEqual(
-      tester.getActionsCalled(),
-      [
-        actions.initialize({}),
-        actions.inject(schema.initialData(), schema.meta(schema.initialData())),
-        actions.update('testfield', 'oranges'),
-        actions.inject({fruit:'oranges'}, schema.meta({fruit:'oranges'}))
-      ],
-      'update action sequence'
-    )
-
-    t.equal(tester.getState().test.data.fruit, 'oranges', 'the field is updated')
-
-    t.end()
-*/
-
   })
 
-
-
-/*
   tape(' -> update + touch', t => {
     const tester = getTester()
     const schema = getSchema()
 
     tester.dispatch(actions.initialize({}))
     tester.dispatch(actions.update('testfield', 'oranges'))
+    tester.dispatch(actions.touch('testfield'))
+
+    t.deepEqual(
+      tester.getActionsCalled(),
+      [
+        actions.initialize({}),
+        actions.inject(schema.initialData(), schema.meta(schema.initialData())),
+        actions.update('testfield', 'oranges'),
+        actions.inject({fruit:'oranges'}, schema.meta({fruit:'oranges'})),
+        actions.touch('testfield'),
+        actions.inject(schema.initialData(), schema.touch('testfield', schema.meta(schema.initialData())))
+      ],
+      'touched action sequence'
+    )
+
+    t.equal(tester.getState().test.meta.fields.testfield.touched, true, 'the field is touched')
+
+    t.end()
+  })
+
+  tape(' -> update same value + touch', t => {
+    const tester = getTester()
+    const schema = getSchema()
+
+    tester.dispatch(actions.initialize({}))
+    tester.dispatch(actions.update('testfield', 'apples'))
     tester.dispatch(actions.touch('testfield'))
 
     t.deepEqual(
@@ -204,10 +202,6 @@ const testSuite = (opts = {}) => {
 
     t.end()
   })
-*/
-  
-
-
 
 }
 

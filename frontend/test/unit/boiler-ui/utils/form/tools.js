@@ -9,6 +9,7 @@ export const exampleField = (name = 'testfield', field = 'fruit', initialValue =
     get: (data = {}) => data.fruit,
     get: getPathnameValue(field),
     set: setPathnameValue(field),
+    compare: (a, b) => a == b,
     getInitial: (data = {}) => initialValue,
     validate: (value, data = {}) => value == initialValue ? 'still ' + initialValue : null
   }

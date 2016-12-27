@@ -75,11 +75,18 @@ const Schema = (fields = [], settings = {}) => {
     return immutable.set(meta, 'fields.' + name, fieldMeta)
   }
 
+  const compareField = (name, value, data = {}) => {
+    const field = fieldMap[name]
+    if(!field) throw new Error('field ' + name + ' not found')
+    return field.compare(field.get(data), value)
+  }
+
   return {
     initialData: getInitialData,
     meta: getMeta,
     update: updateField,
-    touch: touchField
+    touch: touchField,
+    compare: compareField
   }
 }
 
