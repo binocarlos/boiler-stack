@@ -66,14 +66,25 @@ const FormSagaFactory = (settings = {}) => {
   const triggers = actions.types
   const logger = Logger('saga:form:' + actions.base)
 
+  // this is populated by settings.getSchema using the data
+  // given to initalize or load
+  let schema = getSchema({})
+
+  function updateSchema(data) {
+    schema = getSchema(data)
+  }
+
   function* initializeSaga(action) {
-    console.log('-------------------------------------------');
-    console.dir(action)
+    updateSchema(action.data)
+    const data = schema.initialData(action.data)
+    const meta = schema.meta(data)
+    yield put(actions.inject(data, meta))
   }
 
   function* loadSaga(action) {
-    console.log('-------------------------------------------');
-    console.dir(action)
+    updateSchema(action.data)
+    const meta = schema.meta(action.data)
+    yield put(actions.inject(action.data, meta))
   }
 
   function* updateSaga(action) {

@@ -21,15 +21,18 @@ const testSuite = (opts = {}) => {
   const FIELDS = [
     exampleField()
   ]
-  const schema = Schema(FIELDS)
 
+  const getSchema = () => {
+    return Schema(FIELDS)
+  }
+  
   const getTester = (fields = FIELDS, state = DEFAULT_STATE) => {
     const sagaTester = new SagaTester({
       state,
       reducers: { test: FormReducer(actions.types) }
     })
     sagaTester.start(FormSaga({
-      getSchema: () => FIELDS,
+      getSchema,
       actions
     }))
     return sagaTester
@@ -49,6 +52,7 @@ const testSuite = (opts = {}) => {
 
   tape(' -> initialize', t => {
     const tester = getTester()
+    const schema = getSchema()
 
     tester.dispatch(actions.initialize({}))
 
