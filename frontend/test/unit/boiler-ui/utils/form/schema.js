@@ -132,6 +132,21 @@ const testSuite = (opts = {}) => {
 
   })
 
+  tape(' -> compare function', t => {
+
+    const schema = Schema([
+      exampleField()
+    ])
+
+    const data = schema.initialData()
+
+    t.equal(schema.compare('testfield', 'apples', data), true, 'the compare yielded true')
+    t.equal(schema.compare('testfield', 'oranges', data), false, 'the compare yielded false')
+    
+    t.end()
+
+  })
+
   tape(' -> custom validation function', t => {
 
     const schema = Schema([
