@@ -153,6 +153,29 @@ const testSuite = (opts = {}) => {
     t.end()
   })
 
+  tape(' -> touchform', t => {
+    const tester = getTester()
+    const schema = getSchema()
+
+    tester.dispatch(actions.initialize({}))
+    tester.dispatch(actions.touchform())
+
+    t.deepEqual(
+      tester.getActionsCalled(),
+      [
+        actions.initialize({}),
+        actions.inject(schema.initialData(), schema.meta(schema.initialData())),
+        actions.touchform(),
+        actions.updated(schema.initialData(), schema.touchForm(schema.meta(schema.initialData())))
+      ],
+      'touchform action sequence'
+    )
+
+    t.equal(tester.getState().test.meta.form_touched, true, 'the form is touched')
+
+    t.end()
+  })
+
 
 }
 

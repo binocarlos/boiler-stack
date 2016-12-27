@@ -54,6 +54,8 @@ const REQUIRED_SETTINGS = [
   'actions.types.initialize',
   'actions.types.load',
   'actions.types.update',
+  'actions.types.touch',
+  'actions.types.touchform',
   'actions.inject',
   'actions.updated'
 ]
@@ -106,6 +108,12 @@ const FormSagaFactory = (settings = {}) => {
     yield put(actions.updated(currentState.data, meta))
   }
 
+  function* touchformSaga(action) {
+    const currentState = yield select(selector)
+    const meta = schema.touchForm(currentState.meta)
+    yield put(actions.updated(currentState.data, meta))
+  }
+
   function* root() {
 
     function* listenInitialize() {
@@ -124,11 +132,16 @@ const FormSagaFactory = (settings = {}) => {
       yield takeEvery(triggers.touch, touchSaga)  
     }
 
+    function* listenTouchform() {
+      yield takeEvery(triggers.touchform, touchformSaga)  
+    }
+
     yield [
       fork(listenInitialize),
       fork(listenLoad),
       fork(listenUpdate),
-      fork(listenTouch)
+      fork(listenTouch),
+      fork(listenTouchform)
     ]
   }
 

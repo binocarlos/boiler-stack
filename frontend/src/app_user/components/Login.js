@@ -1,14 +1,10 @@
 import React, { Component, PropTypes } from 'react'
 import { Link } from 'redux-little-router'
-import { Card, CardTitle, CardText } from 'react-toolbox/lib/card'
+import { Card, CardTitle, CardText, CardActions } from 'react-toolbox/lib/card'
+import { Button } from 'react-toolbox/lib/button'
 
 import Page from '../../boiler-ui/lib/components/Page'
-import FormFields from '../../boiler-ui/lib/containers/FormFields'
-
-import formfields from '../config/formfields'
-
-import { login } from '../selectors'
-import actions from '../actions'
+import FormFields from '../../boiler-ui/lib/components/FormFields'
 
 class Login extends Component {
 
@@ -18,17 +14,27 @@ class Login extends Component {
         <Card>
           <CardTitle
             title="Login"
-            subtitle="Enter your email and password"
+            subtitle={(
+              <span>
+                Enter your email and password or <Link href="/register">click here</Link> to create an account
+              </span>
+            )}
           />
           <CardText>
             <FormFields
-              getFields={() => formfields.login()}
-              selector={login.form}
-              initializeAction={actions.user.login.form.initialize}
-              updateAction={actions.user.login.form.update}
-              touchAction={actions.user.login.form.touch}
+              fields={this.props.fields}
+              update={this.props.update}
+              touch={this.props.touch}
             />
           </CardText>
+          <CardActions>
+            <Button 
+              label="Submit" 
+              raised={this.props.valid} 
+              primary={this.props.valid}
+              onClick={() => this.props.submit(this.props.valid)}
+            />
+          </CardActions>
         </Card>
       </Page>
     )

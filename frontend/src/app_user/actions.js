@@ -27,7 +27,7 @@ const actions = {
     },
     register: {
       api: ApiActions('USER_REGISTER_API'),
-      form: FormActions('USER_LOGIN_FORM')
+      form: FormActions('USER_REGISTER_FORM')
     }
   },
 

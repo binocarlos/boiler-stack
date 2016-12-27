@@ -3,10 +3,15 @@ import { RelativeFragment as Fragment } from 'redux-little-router'
 import LocationFilter from '../boiler-ui/lib/containers/LocationFilter'
 import { processRoutes } from '../boiler-ui/lib/tools'
 
+// containers
 import Home from './containers/Home'
+import Login from './containers/Login'
+
+// normal components
 import Help from './components/Help'
 import About from './components/About'
-import Login from './components/Login'
+
+
 
 const routes = {
   '/': {
