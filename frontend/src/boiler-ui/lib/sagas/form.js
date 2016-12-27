@@ -45,11 +45,12 @@
 */
 import Logger from '../logger'
 import deepCheck from 'deep-check-error'
-import { takeLatest } from 'redux-saga'
-import { put, call, fork } from 'redux-saga/effects'
+import { takeLatest, takeEvery } from 'redux-saga'
+import { put, call, fork, select } from 'redux-saga/effects'
 
 const REQUIRED_SETTINGS = [
   'getSchema',
+  'selector',
   'actions.types.initialize',
   'actions.types.load',
   'actions.types.update',
@@ -63,6 +64,7 @@ const FormSagaFactory = (settings = {}) => {
 
   const actions = settings.actions
   const getSchema = settings.getSchema
+  const selector = settings.selector
   const triggers = actions.types
   const logger = Logger('saga:form:' + actions.base)
 
@@ -93,26 +95,27 @@ const FormSagaFactory = (settings = {}) => {
   }
 
   function* touchSaga(action) {
-    console.log('-------------------------------------------');
-    console.dir(action)
+    const currentState = yield select(selector)
+    const meta = schema.touch(action.name, currentState.meta)
+    yield put(actions.inject(currentState.data, meta))
   }
 
   function* root() {
 
     function* listenInitialize() {
-      yield takeLatest(triggers.initialize, initializeSaga)  
+      yield takeEvery(triggers.initialize, initializeSaga)  
     }
 
     function* listenLoad() {
-      yield takeLatest(triggers.load, loadSaga)  
+      yield takeEvery(triggers.load, loadSaga)  
     }
 
     function* listenUpdate() {
-      yield takeLatest(triggers.update, updateSaga)  
+      yield takeEvery(triggers.update, updateSaga)  
     }
 
     function* listenTouch() {
-      yield takeLatest(triggers.touch, touchSaga)  
+      yield takeEvery(triggers.touch, touchSaga)  
     }
 
     yield [

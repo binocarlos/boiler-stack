@@ -33,6 +33,7 @@ const testSuite = (opts = {}) => {
     })
     sagaTester.start(FormSaga({
       getSchema,
+      selector: (state) => state.test,
       actions
     }))
     return sagaTester
@@ -94,7 +95,7 @@ const testSuite = (opts = {}) => {
     const schema = getSchema()
 
     tester.dispatch(actions.initialize({}))
-    tester.dispatch(actions.touch('fruit'))
+    tester.dispatch(actions.touch('testfield'))
 
     // test that the initialize resulted in an inject
     t.deepEqual(
@@ -102,9 +103,10 @@ const testSuite = (opts = {}) => {
       [
         actions.initialize({}),
         actions.inject(schema.initialData(), schema.meta(schema.initialData())),
-        actions.touch('fruit')
+        actions.touch('testfield'),
+        actions.inject(schema.initialData(), schema.touch('testfield', schema.meta(schema.initialData())))
       ],
-      'injected with loaded values'
+      'touched action sequence'
     )
 
     t.equal(tester.getState().test.meta.fields.testfield.touched, true, 'the field is touched')

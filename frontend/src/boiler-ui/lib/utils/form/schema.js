@@ -71,8 +71,9 @@ const Schema = (fields = [], settings = {}) => {
 
   // update a field meta as touched
   const touchField = (name, meta = {}) => {
-    let fieldMeta = meta.fields[name] || getDefaultMeta()
-    fieldMeta.touched = true
+    const fieldMeta = Object.assign({}, meta.fields[name] || getDefaultMeta(), {
+      touched: true
+    })
     return immutable.set(meta, 'fields.' + name, fieldMeta)
   }
 
