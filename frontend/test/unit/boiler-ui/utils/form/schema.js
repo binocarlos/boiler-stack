@@ -112,7 +112,7 @@ const testSuite = (opts = {}) => {
     t.end()
 
   })
-
+/*
   tape(' -> touch has no effect is value is the same as original', t => {
 
     const schema = Schema([
@@ -127,7 +127,7 @@ const testSuite = (opts = {}) => {
     t.end()
 
   })
-
+*/
   tape(' -> custom validation function', t => {
 
     const schema = Schema([

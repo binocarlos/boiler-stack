@@ -43,7 +43,7 @@ const Schema = (fields = [], settings = {}) => {
       all[field.name] = fieldMeta
 
       return all
-    }, {})
+    }, meta.fields || {})
 
     let overallError = overallValidate ?
       overallValidate(data) :
