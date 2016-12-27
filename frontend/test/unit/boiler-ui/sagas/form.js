@@ -2,23 +2,34 @@ import Tape from 'tape'
 import SagaTester from 'redux-saga-tester'
 import { put, call, take } from 'redux-saga/effects'
 
+import Schema from '../../../../src/boiler-ui/lib/utils/form/schema'
+
 import FormSaga from '../../../../src/boiler-ui/lib/sagas/form'
 import FormReducer, { DEFAULT_STATE } from '../../../../src/boiler-ui/lib/reducers/form'
 import FormActions from '../../../../src/boiler-ui/lib/actions/form'
 
 const tape = (name, handler) => Tape('unit -> config -> sagas -> form' + name, handler)
 
+import {
+  exampleField,
+  exampleMeta
+} from '../utils/form/tools'
+
 const testSuite = (opts = {}) => {
 
   const actions = FormActions('BASE')
+  const FIELDS = [
+    exampleField()
+  ]
+  const schema = Schema(FIELDS)
 
-  const getTester = (getSchema = () => []) => {
+  const getTester = (fields = FIELDS, state = DEFAULT_STATE) => {
     const sagaTester = new SagaTester({
-      DEFAULT_STATE,
+      state,
       reducers: { test: FormReducer(actions.types) }
     })
     sagaTester.start(FormSaga({
-      getSchema,
+      getSchema: () => FIELDS,
       actions
     }))
     return sagaTester
@@ -36,7 +47,7 @@ const testSuite = (opts = {}) => {
     t.end()
   })
 
-  tape(' -> empty schema initialize', t => {
+  tape(' -> initialize', t => {
     const tester = getTester()
 
     tester.dispatch(actions.initialize({}))
@@ -46,7 +57,7 @@ const testSuite = (opts = {}) => {
       tester.getActionsCalled(),
       [
         actions.initialize({}),
-        actions.inject({}, {})
+        actions.inject(schema.initialData(), schema.meta(schema.initialData()))
       ],
       'initialize -> inject'
     )

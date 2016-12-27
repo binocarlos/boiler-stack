@@ -3,30 +3,11 @@ import Schema from '../../../../../src/boiler-ui/lib/utils/form/schema'
 import Text from '../../../../../src/boiler-ui/lib/utils/form/text'
 
 import {
-  getPathnameValue,
-  setPathnameValue
-} from '../../../../../src/boiler-ui/lib/tools'
+  exampleField,
+  exampleMeta
+} from './tools'
 
 const tape = (name, handler) => Tape('unit -> utils -> form -> schema' + name, handler)
-
-const exampleField = () => {
-  return {
-    name: 'testfield',
-    get: (data = {}) => data.fruit,
-    get: getPathnameValue('fruit'),
-    set: setPathnameValue('fruit'),
-    getInitial: (data = {}) => 'apples',
-    validate: (value, data = {}) => value == 'apples' ? 'still apples' : null
-  }
-}
-
-const exampleMeta = (fields = {}) => {
-  return {
-    custom_valid: true,
-    custom_error: null,
-    fields
-  }
-}
 
 const testSuite = (opts = {}) => {
 
