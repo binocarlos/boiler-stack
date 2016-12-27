@@ -1,20 +1,12 @@
-import Text from '../../boiler-ui/lib/components/formfields/Text'
-import { getPathnameValue } from '../../boiler-ui/lib/tools'
+import Text from '../../boiler-ui/lib/utils/formfields/Text'
 
 const FORMS = {
 
   login: () => {
-    return [{
-      name: 'email',
-      title: 'Email',
-      component: Text,
-      get: getPathnameValue('email')
-    }, {
-      name: 'password',
-      title: 'Password',
-      component: Text,
-      get: getPathnameValue('password')
-    }]
+    return [
+      Text('email'),
+      Text('password')
+    ]
   }
   
 }

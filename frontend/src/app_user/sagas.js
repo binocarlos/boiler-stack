@@ -1,7 +1,7 @@
 // saga imports
 import ApiSaga from '../boiler-ui/lib/sagas/api'
 import FormSaga from '../boiler-ui/lib/sagas/form'
-import Schema from '../boiler-ui/lib/utils/form/schema'
+import Schema from '../boiler-ui/lib/utils/schema'
 
 import selectors from './selectors'
 import actions from './actions'

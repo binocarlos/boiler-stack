@@ -79,14 +79,13 @@ const formActionTests = (opts = {}) => {
     )
 
     t.deepEqual(
-      actions.updated('apples.pears', {size:10}, {size:20}), 
+      actions.updated({size:10}, {size:20}), 
       {
         type: 'BASE_UPDATED',
-        name: 'apples.pears',
         data: {size:10},
         meta: {size:20}
       },
-      'update'
+      'updated'
     )
 
     t.deepEqual(

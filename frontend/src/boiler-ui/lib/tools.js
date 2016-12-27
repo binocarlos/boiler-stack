@@ -7,6 +7,9 @@ export const ucfirst = (val = '') => {
 
 export const getPathnameValue = (pathname) => (data = {}) => objectPath.get(data, pathname)
 export const setPathnameValue = (pathname) => (value, data = {}) => immutable.set(data, pathname, value)
+export const stringCompare = (a, b) => {
+  return a == b
+}
 
 export const getPathnameTitle = (pathname) => {
   return pathname

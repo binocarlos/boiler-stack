@@ -1,4 +1,4 @@
-import Text from '../../boiler-ui/lib/utils/form/Text'
+import Text from '../../boiler-ui/lib/utils/schema/Text'
 
 const SCHEMAS = {
 

@@ -41,10 +41,10 @@ const FormReducer = (types = {}) => {
       case types.updated:
         return update(state, {
           data:{
-            $set: immutable.set(state.data, action.name, action.data)
+            $set: action.data
           },
           meta:{
-            $set: immutable.set(state.meta, action.name, action.meta)
+            $set: action.meta
           }
         })
 

@@ -1,13 +1,13 @@
 import Tape from 'tape'
-import Schema from '../../../../../src/boiler-ui/lib/utils/form/schema'
-import Text from '../../../../../src/boiler-ui/lib/utils/form/text'
+import Schema from '../../../../../src/boiler-ui/lib/utils/schema'
+import Text from '../../../../../src/boiler-ui/lib/utils/schema/text'
 
 import {
   exampleField,
   exampleMeta
 } from './tools'
 
-const tape = (name, handler) => Tape('unit -> utils -> form -> schema' + name, handler)
+const tape = (name, handler) => Tape('unit -> utils -> schema' + name, handler)
 
 const testSuite = (opts = {}) => {
 

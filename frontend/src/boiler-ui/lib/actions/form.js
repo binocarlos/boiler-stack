@@ -43,7 +43,7 @@ const FormActions = (base) => {
     inject: (data = {}, meta = {}) => action(types.inject, {data, meta}),
 
     // once a field update has been processed
-    updated: (name = '', data = {}, meta = {}) => action(types.updated, {name, data, meta}),
+    updated: (data = {}, meta = {}) => action(types.updated, {data, meta}),
 
     // revert the data to the last injection
     revert: () => action(types.revert)

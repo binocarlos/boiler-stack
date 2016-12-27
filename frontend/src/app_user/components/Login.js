@@ -24,6 +24,7 @@ class Login extends Component {
             <FormFields
               getFields={() => formfields.login()}
               selector={login.form}
+              initializeAction={actions.user.login.form.initialize}
               updateAction={actions.user.login.form.update}
               touchAction={actions.user.login.form.touch}
             />

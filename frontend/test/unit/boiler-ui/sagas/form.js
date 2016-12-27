@@ -3,7 +3,7 @@ import async from 'async'
 import SagaTester from 'redux-saga-tester'
 import { put, call, take } from 'redux-saga/effects'
 
-import Schema from '../../../../src/boiler-ui/lib/utils/form/schema'
+import Schema from '../../../../src/boiler-ui/lib/utils/schema'
 
 import FormSaga from '../../../../src/boiler-ui/lib/sagas/form'
 import FormReducer, { DEFAULT_STATE } from '../../../../src/boiler-ui/lib/reducers/form'
@@ -14,7 +14,7 @@ const tape = (name, handler) => Tape('unit -> config -> sagas -> form' + name, h
 import {
   exampleField,
   exampleMeta
-} from '../utils/form/tools'
+} from '../utils/schema/tools'
 
 const testSuite = (opts = {}) => {
 
@@ -117,7 +117,7 @@ const testSuite = (opts = {}) => {
 
     const updateActions = [
       actions.update('testfield', 'oranges'),
-      actions.inject({fruit:'oranges'}, schema.meta({fruit:'oranges'}))
+      actions.updated({fruit:'oranges'}, schema.meta({fruit:'oranges'}))
     ]
 
     t.deepEqual(
@@ -143,7 +143,7 @@ const testSuite = (opts = {}) => {
         actions.initialize({}),
         actions.inject(schema.initialData(), schema.meta(schema.initialData())),
         actions.touch('testfield'),
-        actions.inject(schema.initialData(), schema.touch('testfield', schema.meta(schema.initialData())))
+        actions.updated(schema.initialData(), schema.touch('testfield', schema.meta(schema.initialData())))
       ],
       'touched action sequence'
     )

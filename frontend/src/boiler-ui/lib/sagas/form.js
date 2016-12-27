@@ -97,14 +97,13 @@ const FormSagaFactory = (settings = {}) => {
       currentState.data,
       currentState.meta
     )
-    yield put(actions.inject(result.data, result.meta))
+    yield put(actions.updated(result.data, result.meta))
   }
 
   function* touchSaga(action) {
     const currentState = yield select(selector)
-    
     const meta = schema.touch(action.name, currentState.meta)
-    yield put(actions.inject(currentState.data, meta))
+    yield put(actions.updated(currentState.data, meta))
   }
 
   function* root() {
