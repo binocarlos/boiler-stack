@@ -1,10 +1,11 @@
 // saga imports
-import ApiSaga from '../folder-ui/lib/sagas/api'
-/*import SwitchInstallation from '../boiler-ui/lib/sagas/switchInstallation'
-import RefreshUser from '../boiler-ui/lib/sagas/refreshUser'*/
+import ApiSaga from '../boiler-ui/lib/sagas/api'
+import FormSaga from '../boiler-ui/lib/sagas/form'
+import Schema from '../boiler-ui/lib/utils/form/schema'
 
 import selectors from './selectors'
 import actions from './actions'
+import schemas from './config/schemas'
 
 const getSagas = (apis = {}) => {
 
@@ -13,8 +14,15 @@ const getSagas = (apis = {}) => {
 
     // GET /auth/v1/status
     ApiSaga({
-      handler: apis.user.status.get,
+      api: apis.user.status.get,
       actions: actions.user.status.api
+    }),
+
+    // login form
+    FormSaga({
+      getSchema: () => Schema(schemas.login()),
+      selector: selectors.login.form,
+      actions: actions.user.login.form
     })
 
   ]
@@ -24,7 +32,7 @@ const getSagas = (apis = {}) => {
     
     // GET /api/v1/installations
     ApiSaga({
-      handler: apis.installation.table.get,
+      api: apis.installation.table.get,
       actions: actions.installation.table.api
     })
 

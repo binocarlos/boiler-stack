@@ -8,7 +8,7 @@ class Text extends Component {
       <Input 
         type='text' 
         label={ this.props.title } 
-        value={ this.props.value } 
+        value={ this.props.value || ''} 
         error={ this.props.error }
         onChange={ this.props.update }
         onBlur={ this.props.touch }
