@@ -112,22 +112,7 @@ const testSuite = (opts = {}) => {
     t.end()
 
   })
-/*
-  tape(' -> touch has no effect is value is the same as original', t => {
 
-    const schema = Schema([
-      exampleField('email', 'email', 'a'),
-      exampleField('password', 'password', '')
-    ])
-
-    const touchedMeta = schema.touch('password', {})
-
-    t.equal(touchedMeta.fields.password.touched, false, 'password field is not touched')
-
-    t.end()
-
-  })
-*/
   tape(' -> custom validation function', t => {
 
     const schema = Schema([

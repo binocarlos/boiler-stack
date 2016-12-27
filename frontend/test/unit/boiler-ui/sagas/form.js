@@ -1,4 +1,5 @@
 import Tape from 'tape'
+import async from 'async'
 import SagaTester from 'redux-saga-tester'
 import { put, call, take } from 'redux-saga/effects'
 
@@ -57,7 +58,6 @@ const testSuite = (opts = {}) => {
 
     tester.dispatch(actions.initialize({}))
 
-    // test that the initialize resulted in an inject
     t.deepEqual(
       tester.getActionsCalled(),
       [
@@ -77,7 +77,6 @@ const testSuite = (opts = {}) => {
 
     tester.dispatch(actions.load(data))
 
-    // test that the initialize resulted in an inject
     t.deepEqual(
       tester.getActionsCalled(),
       [
@@ -90,38 +89,54 @@ const testSuite = (opts = {}) => {
     t.end()
   })
 
-  tape(' -> touch', t => {
+  // after the initialize - the field will have an error
+  // to check we are not mutating references to meta data
+  // we check that the original action is the same
+  // after an update
+  // there was a case where the initialize action was changing
+  // when the update was called (because presumably the schema was mutating objects)
+  // this test ensures this does not happen
+  tape(' -> update keeps meta immutable', t => {
     const tester = getTester()
     const schema = getSchema()
 
-    tester.dispatch(actions.initialize({}))
-    tester.dispatch(actions.touch('testfield'))
+    const baseActions = [
+      actions.initialize({}),
+      actions.inject(schema.initialData(), schema.meta(schema.initialData()))
+    ]
 
-    // test that the initialize resulted in an inject
+    tester.dispatch(actions.initialize({}))
+
     t.deepEqual(
       tester.getActionsCalled(),
-      [
-        actions.initialize({}),
-        actions.inject(schema.initialData(), schema.meta(schema.initialData())),
-        actions.touch('testfield'),
-        actions.inject(schema.initialData(), schema.touch('testfield', schema.meta(schema.initialData())))
-      ],
-      'touched action sequence'
+      baseActions,
+      'initialize sequence correct'
     )
-
-    t.equal(tester.getState().test.meta.fields.testfield.touched, true, 'the field is touched')
-
-    t.end()
-  })
-
-  tape(' -> update', t => {
-    const tester = getTester()
-    const schema = getSchema()
-
-    tester.dispatch(actions.initialize({}))
+    
     tester.dispatch(actions.update('testfield', 'oranges'))
 
-    // test that the initialize resulted in an inject
+    const updateActions = [
+      actions.update('testfield', 'oranges'),
+      actions.inject({fruit:'oranges'}, schema.meta({fruit:'oranges'}))
+    ]
+
+    t.deepEqual(
+      tester.getActionsCalled(),
+      baseActions.concat(updateActions),
+      'update action sequence'
+    )
+
+    t.end()
+
+
+/*
+    tester.dispatch(actions.initialize({}))
+
+    await tester.waitFor(actions.types.inject)
+
+    tester.dispatch(actions.update('testfield', 'oranges'))
+
+    console.log(JSON.stringify(tester.getActionsCalled(), null, 4))
     t.deepEqual(
       tester.getActionsCalled(),
       [
@@ -136,7 +151,61 @@ const testSuite = (opts = {}) => {
     t.equal(tester.getState().test.data.fruit, 'oranges', 'the field is updated')
 
     t.end()
+*/
+
   })
+
+
+
+/*
+  tape(' -> update + touch', t => {
+    const tester = getTester()
+    const schema = getSchema()
+
+    tester.dispatch(actions.initialize({}))
+    tester.dispatch(actions.update('testfield', 'oranges'))
+    tester.dispatch(actions.touch('testfield'))
+
+    t.deepEqual(
+      tester.getActionsCalled(),
+      [
+        actions.initialize({}),
+        actions.inject(schema.initialData(), schema.meta(schema.initialData())),
+        actions.update('testfield', 'oranges'),
+        actions.inject({fruit:'oranges'}, schema.meta({fruit:'oranges'})),
+        actions.touch('testfield'),
+        actions.inject(schema.initialData(), schema.touch('testfield', schema.meta(schema.initialData())))
+      ],
+      'touched action sequence'
+    )
+
+    t.equal(tester.getState().test.meta.fields.testfield.touched, true, 'the field is touched')
+
+    t.end()
+  })
+
+  tape(' -> no update + touch', t => {
+    const tester = getTester()
+    const schema = getSchema()
+
+    tester.dispatch(actions.initialize({}))
+    tester.dispatch(actions.touch('testfield'))
+
+    t.deepEqual(
+      tester.getActionsCalled(),
+      [
+        actions.initialize({}),
+        actions.inject(schema.initialData(), schema.meta(schema.initialData()))
+      ],
+      'touched action sequence with no touch update'
+    )
+
+    t.equal(tester.getState().test.meta.fields.testfield.touched, false, 'the field is not touched')
+
+    t.end()
+  })
+*/
+  
 
 
 
