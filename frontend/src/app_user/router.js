@@ -3,7 +3,7 @@ import { RelativeFragment as Fragment } from 'redux-little-router'
 import LocationFilter from '../boiler-ui/lib/containers/LocationFilter'
 import { processRoutes } from '../boiler-ui/lib/tools'
 
-import Dashboard from './components/Dashboard'
+import Home from './containers/Home'
 import Help from './components/Help'
 import About from './components/About'
 import Login from './components/Login'
@@ -27,7 +27,7 @@ const fragments = (relative) => {
   return (
     <div>
       <LocationFilter filter={pathname => relative(pathname) == '/'}>
-        <Dashboard />
+        <Home />
       </LocationFilter>
       <Fragment forRoute='/help'>
         <Help />

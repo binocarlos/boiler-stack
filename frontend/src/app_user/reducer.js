@@ -20,8 +20,8 @@ const reducer = combineReducers({
   menu: ToggleReducer(actions.menu.types),
 
   user: combineReducers({
-    load: ApiReducer(actions.user.status.types),
-    data: UserReducer({
+    api: ApiReducer(actions.user.status.types),
+    record: UserReducer({
       update: actions.user.status.types.success
     })
   }),

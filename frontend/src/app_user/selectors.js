@@ -5,12 +5,17 @@ import {
 
 import screens from './config/screens'
 
-const user = {
+export const user = {
   raw: (state) => state.user,
-  data: (state) => (user.raw(state) || {}).data
+  api: (state) => state.api,
+  record: (state) => user.raw(state).record,
+  loggedIn: (state) => user.record(state).loggedIn,
+  id: (state) => user.record(state).id,
+  username: (state) => user.record(state).userdata,
+  userdata: (state) => user.record(state).userdata
 }
 
-const installation = {
+export const installation = {
 
   // raw
   raw: (state) => key ? state.installation[key] : state.installation,
