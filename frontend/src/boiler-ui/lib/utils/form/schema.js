@@ -32,7 +32,7 @@ const Schema = (fields = [], settings = {}) => {
   // generate a meta report based on the given data/meta
   const getMeta = (data = {}, meta = {}) => {
     const fieldMeta = fields.reduce((all, field) => {
-      let fieldMeta = all[field.name] || getDefaultMeta()
+      let fieldMeta = Object.assign({}, all[field.name] || getDefaultMeta())
       const currentValue = field.get(data)
       const error = field.validate ?
         field.validate(currentValue, data) :
@@ -43,7 +43,7 @@ const Schema = (fields = [], settings = {}) => {
       all[field.name] = fieldMeta
 
       return all
-    }, meta.fields || {})
+    }, Object.assign({}, meta.fields))
 
     let overallError = overallValidate ?
       overallValidate(data) :
