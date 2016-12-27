@@ -114,6 +114,30 @@ const testSuite = (opts = {}) => {
     t.end()
   })
 
+  tape(' -> update', t => {
+    const tester = getTester()
+    const schema = getSchema()
+
+    tester.dispatch(actions.initialize({}))
+    tester.dispatch(actions.update('testfield', 'oranges'))
+
+    // test that the initialize resulted in an inject
+    t.deepEqual(
+      tester.getActionsCalled(),
+      [
+        actions.initialize({}),
+        actions.inject(schema.initialData(), schema.meta(schema.initialData())),
+        actions.update('testfield', 'oranges'),
+        actions.inject({fruit:'oranges'}, schema.meta({fruit:'oranges'}))
+      ],
+      'update action sequence'
+    )
+
+    t.equal(tester.getState().test.data.fruit, 'oranges', 'the field is updated')
+
+    t.end()
+  })
+
 
 
 }
