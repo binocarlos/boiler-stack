@@ -3,14 +3,14 @@ import {
   setPathnameValue
 } from '../../../../../src/boiler-ui/lib/tools'
 
-export const exampleField = () => {
+export const exampleField = (name = 'testfield', field = 'fruit', initialValue = 'apples') => {
   return {
-    name: 'testfield',
+    name,
     get: (data = {}) => data.fruit,
-    get: getPathnameValue('fruit'),
-    set: setPathnameValue('fruit'),
-    getInitial: (data = {}) => 'apples',
-    validate: (value, data = {}) => value == 'apples' ? 'still apples' : null
+    get: getPathnameValue(field),
+    set: setPathnameValue(field),
+    getInitial: (data = {}) => initialValue,
+    validate: (value, data = {}) => value == initialValue ? 'still ' + initialValue : null
   }
 }
 

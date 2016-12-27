@@ -97,6 +97,22 @@ const testSuite = (opts = {}) => {
 
   })
 
+  tape(' -> update one field does not untouch another', t => {
+
+    const schema = Schema([
+      exampleField('email', 'email', ''),
+      exampleField('password', 'password', '')
+    ])
+
+    const updated = schema.update('password', 'a', {}, {})
+    const touchedMeta = schema.touch('password', updated.meta)
+    const updated2 = schema.update('email', 'a', updated.data, touchedMeta)
+
+    t.equal(updated2.meta.fields.password.touched, true, 'password field is still touched')
+    t.end()
+
+  })
+
   tape(' -> custom validation function', t => {
 
     const schema = Schema([
