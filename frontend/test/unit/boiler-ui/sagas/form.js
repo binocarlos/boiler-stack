@@ -63,7 +63,27 @@ const testSuite = (opts = {}) => {
         actions.initialize({}),
         actions.inject(schema.initialData(), schema.meta(schema.initialData()))
       ],
-      'initialize -> inject'
+      'injected with initial values'
+    )
+
+    t.end()
+  })
+
+  tape(' -> load', t => {
+    const tester = getTester()
+    const schema = getSchema()
+    const data = {b:10}
+
+    tester.dispatch(actions.load(data))
+
+    // test that the initialize resulted in an inject
+    t.deepEqual(
+      tester.getActionsCalled(),
+      [
+        actions.load(data),
+        actions.inject(data, schema.meta(data))
+      ],
+      'injected with loaded values'
     )
 
     t.end()
