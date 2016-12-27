@@ -8,24 +8,6 @@ const testSuite = (opts = {}) => {
   tape(' -> constructor', t => {
 
     t.equal(
-      Text({ name: 'fruit.red.apples', title: 'Oranges' }).title,
-      'Oranges',
-      'manual title'
-    )
-
-    t.equal(
-      Text({ name: 'fruit.red.apples' }).title,
-      'Fruit : Red : Apples',
-      'auto title'
-    )
-
-    t.equal(
-      Text('fruit.red.apples').title,
-      'Fruit : Red : Apples',
-      'auto title from string'
-    )
-
-    t.equal(
       Text('fruit.red.apples').name,
       'fruit.red.apples',
       'name from string'

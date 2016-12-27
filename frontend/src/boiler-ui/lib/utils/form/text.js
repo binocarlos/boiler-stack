@@ -3,8 +3,7 @@ import pluralize from 'pluralize'
 
 import {
   getPathnameValue,
-  setPathnameValue,
-  getPathnameTitle
+  setPathnameValue
 } from '../../tools'
 
 const REQUIRED_SETTINGS = [
@@ -21,7 +20,6 @@ const text = (settings = {}) => {
   deepCheck(settings, REQUIRED_SETTINGS)
 
   const name = settings.name
-  const title = settings.title
   const required = settings.required
   const minLength = settings.minLength
   const validate = settings.validate
@@ -29,7 +27,6 @@ const text = (settings = {}) => {
 
   return {
     name: name,
-    title: title || getPathnameTitle(name),
     get: getPathnameValue(name),
     set: setPathnameValue(name),
     getInitial: () => initialValue,
