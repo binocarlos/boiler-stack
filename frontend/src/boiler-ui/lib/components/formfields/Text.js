@@ -9,7 +9,9 @@ class Text extends Component {
         type='text' 
         label={ this.props.title } 
         value={ this.props.value } 
+        error={ this.props.error }
         onChange={ this.props.update }
+        onBlur={ this.props.touch }
       />
     )
   }
@@ -17,8 +19,8 @@ class Text extends Component {
 
 Text.propTypes = {
   title: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
-  update: PropTypes.func.isRequired
+  update: PropTypes.func.isRequired,
+  touch: PropTypes.func.isRequired
 }
 
 Text.defaultProps = {

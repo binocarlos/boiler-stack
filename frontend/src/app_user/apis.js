@@ -38,13 +38,11 @@ const apis = {
     })
   },
   installation: {
-    table: {
-      load: CrudAjax({
-        name: 'installation_table_load',
-        getUrl: () => URLS.installation.table,
-        encode: MongoCodec.encode
-      })
-    }
+    table: CrudAjax({
+      name: 'installation_table',
+      getUrl: () => URLS.installation.table,
+      encode: MongoCodec.encode
+    })
   }
 }
 

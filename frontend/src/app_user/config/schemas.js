@@ -1,23 +1,25 @@
-import React, { Component, PropTypes } from 'react'
-
-const text = (opts = {}) => {
-  return {
-    name:opts.name || 'name',
-    title:opts.title || 'Name'
-  }
-}
+import Text from '../../boiler-ui/lib/utils/form/Text'
 
 const SCHEMAS = {
-  installation: (store) => {
-    return [
 
-      text({
-        name: 'name',
-        title: 'Name'
+  login: () => {
+    return [
+      Text({
+        name: 'email',
+        required: true
+      }),
+      Text({
+        name: 'password',
+        required: true,
+        minLength: 4
       })
-      
     ]
-    
+  },
+
+  installation: () => {
+    return [
+      Text('name')
+    ]
   }
 }
 

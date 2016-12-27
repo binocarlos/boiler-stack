@@ -5,6 +5,7 @@ import ApiReducer from '../boiler-ui/lib/reducers/api'
 import ListReducer from '../boiler-ui/lib/reducers/list'
 import ToggleReducer from '../boiler-ui/lib/reducers/toggle'
 import UserReducer from '../boiler-ui/lib/reducers/user'
+import FormReducer from '../boiler-ui/lib/reducers/form'
 
 /*
 import ApiReducer from '../folder-ui/lib/reducers/api'
@@ -17,21 +18,38 @@ import actions from './actions'
 
 const reducer = combineReducers({
 
+  // menu open/closed
   menu: ToggleReducer(actions.menu.types),
 
   user: combineReducers({
-    api: ApiReducer(actions.user.status.types),
-    record: UserReducer({
-      update: actions.user.status.types.success
+    status: combineReducers({
+      api: ApiReducer(actions.user.status.api.types),
+      record: UserReducer({
+        // update the user record on status.api.success
+        update: actions.user.status.api.types.success
+      })
+    }),
+
+    login: combineReducers({
+      api: ApiReducer(actions.user.login.api.types),
+      // login form state
+      form: FormReducer(actions.user.login.form.types)
+    }),
+
+    register: combineReducers({
+      api: ApiReducer(actions.user.register.api.types),
+      // register form state
+      form: FormReducer(actions.user.register.form.types)
     })
+
   }),
 
   installation: combineReducers({
 
     table: combineReducers({
-      load: ApiReducer(actions.installation.table.load.types),
+      load: ApiReducer(actions.installation.table.api.types),
       list: ListReducer({
-        update: actions.installation.table.load.types.success
+        update: actions.installation.table.api.types.success
       })
     })
 

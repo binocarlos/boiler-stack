@@ -6,13 +6,18 @@ import {
 import screens from './config/screens'
 
 export const user = {
-  raw: (state) => state.user,
-  api: (state) => state.api,
-  record: (state) => user.raw(state).record,
+  status: (state) => state.user.status,
+  record: (state) => user.status(state).record,
   loggedIn: (state) => user.record(state).loggedIn,
   id: (state) => user.record(state).id,
   username: (state) => user.record(state).userdata,
   userdata: (state) => user.record(state).userdata
+}
+
+export const login = {
+  raw: (state) => state.user.login,
+  api: (state) => login.raw(state).api,
+  form: (state) => login.raw(state).form
 }
 
 export const installation = {
@@ -41,6 +46,7 @@ export const installation = {
 
 const selectors = {
   user,
+  login,
   installation
 }
 

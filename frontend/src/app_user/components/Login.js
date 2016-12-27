@@ -1,32 +1,23 @@
 import React, { Component, PropTypes } from 'react'
 import { Link } from 'redux-little-router'
 import Page from '../../boiler-ui/lib/components/Page'
-import FormFields from '../../boiler-ui/lib/components/FormFields'
-import TextField from '../../boiler-ui/lib/components/formfields/Text'
+import FormFields from '../../boiler-ui/lib/containers/FormFields'
 
-const FIELDS = [{
-  name: 'email',
-  component: TextField,
-  title: 'Email',
-  value: ''
-},{
-  name: 'password',
-  component: TextField,
-  title: 'Password',
-  value: ''
-}]
+import formfields from '../config/formfields'
+
+import { login } from '../selectors'
+import actions from '../actions'
 
 class Login extends Component {
 
   render() {
-
     return (
       <Page>
-        this is the login page
-        <hr />
         <FormFields
-          fields={FIELDS}
-          update={(v) => console.log(v)}
+          getFields={() => formfields.login()}
+          selector={login.form}
+          updateAction={actions.user.login.form.update}
+          touchAction={actions.user.login.form.touch}
         />
       </Page>
     )

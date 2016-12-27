@@ -14,7 +14,7 @@ const getSagas = (apis = {}) => {
     // GET /auth/v1/status
     ApiSaga({
       handler: apis.user.status.get,
-      actions: actions.user.status
+      actions: actions.user.status.api
     })
 
   ]
@@ -24,8 +24,8 @@ const getSagas = (apis = {}) => {
     
     // GET /api/v1/installations
     ApiSaga({
-      handler: apis.installation.table.load.get,
-      actions: actions.installation.table.load
+      handler: apis.installation.table.get,
+      actions: actions.installation.table.api
     })
 
   ]

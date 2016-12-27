@@ -1,13 +1,12 @@
 /*
 
-  * update(value)
-  * touch()
+  * update(name, value)
+  * touch(name)
   * fields[] - an array of form fields:
     * component
     * name
     * title
     * value
-    * touched
     * error
 
       
@@ -27,8 +26,10 @@ class FormFields extends Component {
               <div key={i}>
                 <FieldComponent
                   title={field.title}
+                  error={field.error}
                   value={field.value}
                   update={value => this.props.update(field.name, value)}
+                  touch={() => this.props.touch(field.name)}
                 />
               </div>
             )
@@ -41,7 +42,8 @@ class FormFields extends Component {
 
 FormFields.propTypes = {
   fields: PropTypes.array.isRequired,
-  update: PropTypes.func.isRequired
+  update: PropTypes.func.isRequired,
+  touch: PropTypes.func.isRequired
 }
 
 FormFields.defaultProps = {
