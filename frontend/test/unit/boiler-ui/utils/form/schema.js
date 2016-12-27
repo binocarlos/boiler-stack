@@ -113,6 +113,25 @@ const testSuite = (opts = {}) => {
 
   })
 
+  tape(' -> update one field does not mutate the meta', t => {
+
+    const schema = Schema([
+      exampleField()
+    ])
+
+    const data = schema.initialData()
+    const meta = schema.meta(data)
+
+    t.equal(meta.fields.testfield.error, 'still apples', 'initial error')
+
+    const updated = schema.update('testfield', 'oranges', data, meta)
+
+    t.equal(meta.fields.testfield.error, 'still apples', 'still initial error')
+
+    t.end()
+
+  })
+
   tape(' -> custom validation function', t => {
 
     const schema = Schema([
