@@ -1,8 +1,8 @@
 import Tape from 'tape'
-import ToggleReducer from '../../../../src/boiler-ui/lib/reducers/toggle'
+import ToggleReducer, { DEFAULT_STATE } from '../../../../src/boiler-ui/lib/reducers/toggle'
 import ToggleActions from '../../../../src/boiler-ui/lib/actions/toggle'
 
-const tape = (name, handler) => Tape('unit -> reducer -> toggle -> ' + name, handler)
+const tape = (name, handler) => Tape('unit -> reducer -> toggle' + name, handler)
 
 const toggleReducerTests = (opts = {}) => {
 
@@ -10,13 +10,10 @@ const toggleReducerTests = (opts = {}) => {
 
   const getReducer = () => ToggleReducer(actions.types)
 
-  tape('initial state', t => {
+  tape('', t => {
     const reducer = getReducer()
 
-    t.deepEqual(reducer(undefined, {}), {
-      open: false,
-      payload: null
-    }, 'initial state')
+    t.deepEqual(reducer(undefined, {}), DEFAULT_STATE, 'initial state')
 
     t.deepEqual(reducer(undefined, actions.toggle(true, 10)), {
       open: true,

@@ -16,7 +16,6 @@ export const exampleField = () => {
 
 export const exampleMeta = (fields = {}) => {
   return {
-    custom_valid: true,
     custom_error: null,
     fields
   }

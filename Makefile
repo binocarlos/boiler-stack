@@ -30,7 +30,7 @@ frontend.test.unit:
 
 .PHONY: frontend.test.acceptance
 frontend.test.acceptance:
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run frontend_cli test:acceptance
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.commands.yml run frontend_cli test:acceptance
 
 .PHONY: frontend.release
 frontend.release:

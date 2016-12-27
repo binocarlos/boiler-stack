@@ -6,6 +6,7 @@ import { processRoutes } from '../boiler-ui/lib/tools'
 import Dashboard from './components/Dashboard'
 import Help from './components/Help'
 import About from './components/About'
+import Login from './components/Login'
 
 const routes = {
   '/': {
@@ -16,6 +17,9 @@ const routes = {
   },
   '/about': {
     page:'about'
+  },
+  '/login': {
+    page:'login'
   }
 }
 
@@ -30,6 +34,9 @@ const fragments = (relative) => {
       </Fragment>
       <Fragment forRoute='/about'>
         <About />
+      </Fragment>
+      <Fragment forRoute='/login'>
+        <Login />
       </Fragment>
     </div>
   )

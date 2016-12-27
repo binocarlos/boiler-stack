@@ -1,5 +1,5 @@
 import Tape from 'tape'
-import ListReducer from '../../../../src/boiler-ui/lib/reducers/list'
+import ListReducer, { DEFAULT_STATE } from '../../../../src/boiler-ui/lib/reducers/list'
 import TriggerActions from '../../../../src/boiler-ui/lib/actions/trigger'
 
 const tape = (name, handler) => Tape('unit -> reducer -> list' + name, handler)
@@ -15,10 +15,7 @@ const listReducerTests = (opts = {}) => {
   tape('', t => {
     const reducer = getReducer()
 
-    t.deepEqual(reducer(undefined, {}), {
-      db: {},
-      ids: []
-    }, 'initial state')
+    t.deepEqual(reducer(undefined, {}), DEFAULT_STATE, 'initial state')
 
     t.deepEqual(reducer(undefined, actions.trigger()), {
       db: {},

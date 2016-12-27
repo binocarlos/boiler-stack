@@ -1,5 +1,5 @@
 import Tape from 'tape'
-import FormReducer from '../../../../src/boiler-ui/lib/reducers/form'
+import FormReducer, { DEFAULT_STATE } from '../../../../src/boiler-ui/lib/reducers/form'
 import FormActions from '../../../../src/boiler-ui/lib/actions/form'
 
 const tape = (name, handler) => Tape('unit -> reducer -> form' + name, handler)
@@ -11,12 +11,7 @@ const formReducerTests = (opts = {}) => {
   tape('', t => {
     const reducer = FormReducer(actions.types)
 
-    t.deepEqual(reducer(undefined, {}), {
-      data: {},
-      meta: {},
-      originalData: {},
-      originalMeta: {}
-    }, 'initial state')
+    t.deepEqual(reducer(undefined, {}), DEFAULT_STATE, 'initial state')
 
     t.deepEqual(reducer(undefined, actions.inject({a:10}, {b:3})), {
       data: {a:10},

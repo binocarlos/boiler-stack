@@ -9,7 +9,6 @@ const Schema = (fields = [], settings = {}) => {
 
   const getDefaultMeta = () => {
     return {
-      valid: true,
       touched: false,
       error: null
     }
@@ -39,7 +38,6 @@ const Schema = (fields = [], settings = {}) => {
         field.validate(currentValue, data) :
         null
 
-      fieldMeta.valid = error ? false : true
       fieldMeta.error = error
 
       all[field.name] = fieldMeta
@@ -52,7 +50,6 @@ const Schema = (fields = [], settings = {}) => {
       null
     
     return {
-      custom_valid: overallError ? false : true,
       custom_error: overallError,
       fields: fieldMeta
     }

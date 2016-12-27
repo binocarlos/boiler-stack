@@ -2,7 +2,7 @@
 import update from 'immutability-helper'
 import deepCheck from 'deep-check-error'
 
-const DEFAULT_STATE = {
+export const DEFAULT_STATE = {
   // the database of id -> data
   db: {},
   // the array of ids dictating order

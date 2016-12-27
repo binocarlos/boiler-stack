@@ -52,7 +52,6 @@ const testSuite = (opts = {}) => {
       meta,
       exampleMeta({
         testfield: {
-          valid: false,
           touched: false,
           error: 'still apples'
         }
@@ -74,7 +73,6 @@ const testSuite = (opts = {}) => {
       updated.meta,
       exampleMeta({
         testfield: {
-          valid: true,
           touched: false,
           error: null
         }
@@ -88,7 +86,6 @@ const testSuite = (opts = {}) => {
       touchedMeta,
       exampleMeta({
         testfield: {
-          valid: true,
           touched: true,
           error: null
         }
@@ -118,11 +115,9 @@ const testSuite = (opts = {}) => {
     t.deepEqual(
       meta,
       {
-        custom_valid: true,
         custom_error: null,
         fields: {
           testfield: {
-            valid: false,
             touched: false,
             error: 'still apples'
           }
@@ -136,11 +131,9 @@ const testSuite = (opts = {}) => {
     t.deepEqual(
       updated.meta,
       {
-        custom_valid: false,
         custom_error: 'custom oranges error',
         fields: {
           testfield: {
-            valid: true,
             touched: false,
             error: null
           }
@@ -154,11 +147,9 @@ const testSuite = (opts = {}) => {
     t.deepEqual(
       updated2.meta,
       {
-        custom_valid: true,
         custom_error: null,
         fields: {
           testfield: {
-            valid: true,
             touched: false,
             error: null
           }

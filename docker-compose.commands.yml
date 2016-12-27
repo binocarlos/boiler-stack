@@ -1,0 +1,8 @@
+version: '2'
+services:
+  frontend_cli:
+    extends: 
+      file: docker-compose.dev.yml
+      service: frontend
+    links:
+      - router:router

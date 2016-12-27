@@ -3,19 +3,18 @@
 import update from 'immutability-helper'
 import deepCheck from 'deep-check-error'
 
-const DEFAULT_STATE = {
+export const DEFAULT_STATE = {
   loggedIn: false,
   id: null,
   username: null,
-  meta: {}
+  userdata: {}
 }
 
 const REQUIRED_TYPES = [
   'update'
 ]
 
-const reduceUser = (state, action) => {
-  const user = action.data
+const reduceUser = (state, user) => {
   return update(state, {
     loggedIn: {
       $set: true
@@ -26,13 +25,13 @@ const reduceUser = (state, action) => {
     username: {
       $set: user.email || user.username
     },
-    meta: {
+    userdata: {
       $set: user.data || {}
     }
   })
 }
 
-const reduceGuest = (state, action) => {
+const reduceGuest = (state) => {
   return update(state, {
     loggedIn: {
       $set: false
@@ -43,7 +42,7 @@ const reduceGuest = (state, action) => {
     username: {
       $set: null
     },
-    meta: {
+    userdata: {
       $set: {}
     }
   })
@@ -57,9 +56,11 @@ const UserReducer = (types = {}) => {
 
       case types.update:
 
-        return action.loggedIn ?
-          reduceUser(state, action) :
-          reduceGuest(state, action)
+        const payload = action.payload || {}
+
+        return payload.loggedIn ?
+          reduceUser(state, payload.data) :
+          reduceGuest(state)
           
       default:
         return state

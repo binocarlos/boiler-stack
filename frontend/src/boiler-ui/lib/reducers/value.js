@@ -4,7 +4,7 @@
 import update from 'immutability-helper'
 import deepCheck from 'deep-check-error'
 
-const REQUIRED_TYPES = [
+export const REQUIRED_TYPES = [
   'set',
   'reset'
 ]

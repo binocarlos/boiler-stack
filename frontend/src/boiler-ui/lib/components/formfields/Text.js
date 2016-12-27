@@ -8,9 +8,8 @@ class Text extends Component {
       <Input 
         type='text' 
         label={ this.props.title } 
-        name={ this.props.name }
         value={ this.props.value } 
-        onChange={ this.props.onChange }
+        onChange={ this.props.update }
       />
     )
   }
@@ -18,7 +17,6 @@ class Text extends Component {
 
 Text.propTypes = {
   title: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
   value PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired
 }

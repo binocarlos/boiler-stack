@@ -1,5 +1,5 @@
 import Tape from 'tape'
-import ApiReducer from '../../../../src/boiler-ui/lib/reducers/api'
+import ApiReducer, { DEFAULT_STATE } from '../../../../src/boiler-ui/lib/reducers/api'
 import ApiActions from '../../../../src/boiler-ui/lib/actions/api'
 
 const tape = (name, handler) => Tape('unit -> reducer -> api' + name, handler)
@@ -14,12 +14,7 @@ const apiReducerTests = (opts = {}) => {
   tape('', t => {
     const reducer = ApiReducer(actions.types)
 
-    t.deepEqual(reducer(undefined, {}), {
-      loading: false,
-      loaded: false,
-      query: null,
-      error: null
-    }, 'initial state')
+    t.deepEqual(reducer(undefined, {}), DEFAULT_STATE, 'initial state')
 
     t.deepEqual(reducer(undefined, actions.request(PAYLOAD, QUERY)), {
       loading: true,
