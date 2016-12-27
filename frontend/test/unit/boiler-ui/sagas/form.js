@@ -89,6 +89,31 @@ const testSuite = (opts = {}) => {
     t.end()
   })
 
+  tape(' -> touch', t => {
+    const tester = getTester()
+    const schema = getSchema()
+
+    tester.dispatch(actions.initialize({}))
+    tester.dispatch(actions.touch('fruit'))
+
+    // test that the initialize resulted in an inject
+    t.deepEqual(
+      tester.getActionsCalled(),
+      [
+        actions.initialize({}),
+        actions.inject(schema.initialData(), schema.meta(schema.initialData())),
+        actions.touch('fruit')
+      ],
+      'injected with loaded values'
+    )
+
+    t.equal(tester.getState().test.meta.fields.testfield.touched, true, 'the field is touched')
+
+    t.end()
+  })
+
+
+
 }
 
 export default testSuite
