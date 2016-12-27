@@ -85,7 +85,7 @@ const testSuite = (opts = {}) => {
     const touchedMeta = schema.touch('testfield', updated.meta)
 
     t.deepEqual(
-      updated.meta,
+      touchedMeta,
       exampleMeta({
         testfield: {
           valid: true,
