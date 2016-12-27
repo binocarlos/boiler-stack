@@ -41,8 +41,7 @@ class FormFields extends Component {
 
 FormFields.propTypes = {
   fields: PropTypes.array.isRequired,
-  update: PropTypes.func.isRequired,
-  touch: PropTypes.func.isRequired
+  update: PropTypes.func.isRequired
 }
 
 FormFields.defaultProps = {

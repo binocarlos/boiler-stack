@@ -17,8 +17,8 @@ class Text extends Component {
 
 Text.propTypes = {
   title: PropTypes.string.isRequired,
-  value PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired
+  value: PropTypes.string.isRequired,
+  update: PropTypes.func.isRequired
 }
 
 Text.defaultProps = {
