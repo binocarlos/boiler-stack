@@ -130,12 +130,11 @@ const testSuite = (opts = {}) => {
 
   })
 
-  tape(' -> update + touch', t => {
+  tape(' -> touch', t => {
     const tester = getTester()
     const schema = getSchema()
 
     tester.dispatch(actions.initialize({}))
-    tester.dispatch(actions.update('testfield', 'oranges'))
     tester.dispatch(actions.touch('testfield'))
 
     t.deepEqual(
@@ -143,8 +142,6 @@ const testSuite = (opts = {}) => {
       [
         actions.initialize({}),
         actions.inject(schema.initialData(), schema.meta(schema.initialData())),
-        actions.update('testfield', 'oranges'),
-        actions.inject({fruit:'oranges'}, schema.meta({fruit:'oranges'})),
         actions.touch('testfield'),
         actions.inject(schema.initialData(), schema.touch('testfield', schema.meta(schema.initialData())))
       ],
@@ -156,52 +153,6 @@ const testSuite = (opts = {}) => {
     t.end()
   })
 
-  tape(' -> update same value + touch', t => {
-    const tester = getTester()
-    const schema = getSchema()
-
-    tester.dispatch(actions.initialize({}))
-    tester.dispatch(actions.update('testfield', 'apples'))
-    tester.dispatch(actions.touch('testfield'))
-
-    t.deepEqual(
-      tester.getActionsCalled(),
-      [
-        actions.initialize({}),
-        actions.inject(schema.initialData(), schema.meta(schema.initialData())),
-        actions.update('testfield', 'oranges'),
-        actions.inject({fruit:'oranges'}, schema.meta({fruit:'oranges'})),
-        actions.touch('testfield'),
-        actions.inject(schema.initialData(), schema.touch('testfield', schema.meta(schema.initialData())))
-      ],
-      'touched action sequence'
-    )
-
-    t.equal(tester.getState().test.meta.fields.testfield.touched, true, 'the field is touched')
-
-    t.end()
-  })
-
-  tape(' -> no update + touch', t => {
-    const tester = getTester()
-    const schema = getSchema()
-
-    tester.dispatch(actions.initialize({}))
-    tester.dispatch(actions.touch('testfield'))
-
-    t.deepEqual(
-      tester.getActionsCalled(),
-      [
-        actions.initialize({}),
-        actions.inject(schema.initialData(), schema.meta(schema.initialData()))
-      ],
-      'touched action sequence with no touch update'
-    )
-
-    t.equal(tester.getState().test.meta.fields.testfield.touched, false, 'the field is not touched')
-
-    t.end()
-  })
 
 }
 
