@@ -3,7 +3,9 @@ import immutable from 'object-path-immutable'
 // utility model to represent an array of form schema fields
 // the only state a schema object keeps is about it's fields
 // no data or meta is kept internally
-const Schema = (fields = []) => {
+const Schema = (fields = [], settings = {}) => {
+
+  const overallValidate = settings.validate
 
   const getDefaultMeta = () => {
     return {
@@ -30,7 +32,7 @@ const Schema = (fields = []) => {
 
   // generate a meta report based on the given data/meta
   const getMeta = (data = {}, meta = {}) => {
-    return fields.reduce((all, field) => {
+    const fieldMeta = fields.reduce((all, field) => {
       let fieldMeta = all[field.name] || getDefaultMeta()
       const currentValue = field.get(data)
       const error = field.validate ?
@@ -44,6 +46,16 @@ const Schema = (fields = []) => {
 
       return all
     }, {})
+
+    let overallError = overallValidate ?
+      overallValidate(data) :
+      null
+    
+    return {
+      custom_valid: overallError ? false : true,
+      custom_error: overallError,
+      fields: fieldMeta
+    }
   }
 
   // inject the new value and return new data and meta
@@ -59,11 +71,9 @@ const Schema = (fields = []) => {
 
   // update a field meta as touched
   const touchField = (name, meta = {}) => {
-    let fieldMeta = meta[name] || defaultMeta()
+    let fieldMeta = meta.fields[name] || getDefaultMeta()
     fieldMeta.touched = true
-    return Object.assign({}, meta, {
-      [name]: fieldMeta
-    })
+    return immutable.set(meta, 'fields.' + name, fieldMeta)
   }
 
   return {
