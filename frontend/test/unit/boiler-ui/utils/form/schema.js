@@ -147,6 +147,18 @@ const testSuite = (opts = {}) => {
 
   })
 
+  tape(' -> touch form', t => {
+
+    const schema = Schema([
+      exampleField()
+    ])
+
+    t.equal(schema.touchForm({}).form_touched, true, 'form_touched is true')
+
+    t.end()
+
+  })
+
   tape(' -> custom validation function', t => {
 
     const schema = Schema([
@@ -166,6 +178,7 @@ const testSuite = (opts = {}) => {
       meta,
       {
         custom_error: null,
+        form_touched: false,
         fields: {
           testfield: {
             touched: false,
@@ -182,6 +195,7 @@ const testSuite = (opts = {}) => {
       updated.meta,
       {
         custom_error: 'custom oranges error',
+        form_touched: false,
         fields: {
           testfield: {
             touched: false,
@@ -198,6 +212,7 @@ const testSuite = (opts = {}) => {
       updated2.meta,
       {
         custom_error: null,
+        form_touched: false,
         fields: {
           testfield: {
             touched: false,

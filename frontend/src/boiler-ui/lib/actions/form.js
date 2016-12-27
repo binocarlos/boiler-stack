@@ -9,6 +9,7 @@ const FormActions = (base) => {
     'LOAD',
     'UPDATE',
     'TOUCH',
+    'TOUCHFORM',
     'INJECT',
     'UPDATED',
     'REVERT'
@@ -33,6 +34,7 @@ const FormActions = (base) => {
     // means the user has properly edited and field and the validation
     // status can be displayed (this prevents eager error messages)
     touch: (name = '') => action(types.touch, {name}),
+    touchform: () => action(types.touchform),
 
     // reduced - called by the saga once processing is done
 

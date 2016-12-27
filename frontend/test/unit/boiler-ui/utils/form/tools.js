@@ -18,6 +18,7 @@ export const exampleField = (name = 'testfield', field = 'fruit', initialValue =
 export const exampleMeta = (fields = {}) => {
   return {
     custom_error: null,
+    form_touched: false,
     fields
   }
 }

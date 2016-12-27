@@ -7,7 +7,7 @@ const Schema = (fields = [], settings = {}) => {
 
   const overallValidate = settings.validate
 
-  const getDefaultMeta = () => {
+  const getDefaultField = () => {
     return {
       touched: false,
       error: null
@@ -32,7 +32,7 @@ const Schema = (fields = [], settings = {}) => {
   // generate a meta report based on the given data/meta
   const getMeta = (data = {}, meta = {}) => {
     const fieldMeta = fields.reduce((all, field) => {
-      let fieldMeta = Object.assign({}, all[field.name] || getDefaultMeta())
+      let fieldMeta = Object.assign({}, all[field.name] || getDefaultField())
       const currentValue = field.get(data)
       const error = field.validate ?
         field.validate(currentValue, data) :
@@ -51,6 +51,7 @@ const Schema = (fields = [], settings = {}) => {
     
     return {
       custom_error: overallError,
+      form_touched: meta.form_touched ? true : false,
       fields: fieldMeta
     }
   }
@@ -69,10 +70,16 @@ const Schema = (fields = [], settings = {}) => {
   // update a field meta as touched
   const touchField = (name, meta = {}) => {
     const fields = meta.fields || {}
-    const fieldMeta = Object.assign({}, fields[name] || getDefaultMeta(), {
+    const fieldMeta = Object.assign({}, fields[name] || getDefaultField(), {
       touched: true
     })
     return immutable.set(meta, 'fields.' + name, fieldMeta)
+  }
+
+  const touchForm = (meta = {}) => {
+    return Object.assign({}, meta, {
+      form_touched: true
+    })
   }
 
   const compareField = (name, value, data = {}) => {
@@ -86,6 +93,7 @@ const Schema = (fields = [], settings = {}) => {
     meta: getMeta,
     update: updateField,
     touch: touchField,
+    touchForm: touchForm,
     compare: compareField
   }
 }

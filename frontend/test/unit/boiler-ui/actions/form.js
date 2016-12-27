@@ -16,6 +16,7 @@ const formActionTests = (opts = {}) => {
         inject: 'BASE_INJECT',
         update: 'BASE_UPDATE',
         touch: 'BASE_TOUCH',
+        touchform: 'BASE_TOUCHFORM',
         updated: 'BASE_UPDATED',
         revert: 'BASE_REVERT'
       },
@@ -67,6 +68,14 @@ const formActionTests = (opts = {}) => {
         name: 'apples.pears'
       },
       'touch'
+    )
+
+    t.deepEqual(
+      actions.touchform(),
+      {
+        type: 'BASE_TOUCHFORM'
+      },
+      'touchform'
     )
 
     t.deepEqual(
