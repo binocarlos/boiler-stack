@@ -13,7 +13,7 @@ const REQUIRED_URLS = [
   'update'
 ]
 
-const Apis = (urls = {}) => {
+const UserApis = (urls = {}) => {
   deepCheck(urls, REQUIRED_URLS)
   return {
     status: CrudAjax({
@@ -35,4 +35,4 @@ const Apis = (urls = {}) => {
   }
 }
 
-export default Apis
+export default UserApis

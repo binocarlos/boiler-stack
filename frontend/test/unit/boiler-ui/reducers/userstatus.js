@@ -1,5 +1,5 @@
 import Tape from 'tape'
-import UserReducer, { DEFAULT_STATE } from '../../../../src/boiler-ui/lib/reducers/user'
+import UserStatusReducer, { DEFAULT_STATE } from '../../../../src/boiler-ui/lib/reducers/userstatus'
 import ApiActions from '../../../../src/boiler-ui/lib/actions/api'
 
 const tape = (name, handler) => Tape('unit -> reducer -> user' + name, handler)
@@ -8,7 +8,7 @@ const userReducerTests = (opts = {}) => {
 
   const actions = ApiActions('BASE')
 
-  const getReducer = () => UserReducer({
+  const getReducer = () => UserStatusReducer({
     update: actions.types.success
   })
 

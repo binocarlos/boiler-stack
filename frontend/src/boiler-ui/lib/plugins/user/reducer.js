@@ -2,14 +2,14 @@
 import { combineReducers } from 'redux'
 
 import ApiReducer from '../../reducers/api'
-import UserReducer from '../../reducers/user'
+import UserStatusReducer from '../../reducers/userstatus'
 import FormReducer from '../../reducers/form'
 
-const getReducer = (actions) => {
+const UserReducer = (actions) => {
   return combineReducers({
     status: combineReducers({
       api: ApiReducer(actions.status.api.types),
-      record: UserReducer({
+      record: UserStatusReducer({
         // update the user record on status.api.success
         update: actions.status.api.types.success
       })
@@ -30,4 +30,4 @@ const getReducer = (actions) => {
   })
 }
 
-export default getReducer
+export default UserReducer

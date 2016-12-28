@@ -1,76 +1,22 @@
-// saga imports
-import ApiSaga from '../boiler-ui/lib/sagas/api'
-import ApiTriggerSaga from '../boiler-ui/lib/sagas/apitrigger'
-import FormSaga from '../boiler-ui/lib/sagas/form'
-import Schema from '../boiler-ui/lib/utils/schema'
-
-import selectors from './selectors'
-import actions from './actions'
+import UserSaga from '../boiler-ui/lib/plugins/user/saga'
 import schemas from './config/schemas'
+import { user as userActions } from './actions'
+import { user as userSelectors } from './selectors'
+import { user as userApis } from './apis'
 
 const getSagas = (apis = {}) => {
 
-  // user
-  const userSagas = [
+  return [
 
-    // login form
-    FormSaga({
-      getSchema: () => Schema(schemas.login()),
-      selector: selectors.user.login.form,
-      actions: actions.user.login.form
-    }),
-
-    // register form
-    FormSaga({
-      getSchema: () => Schema(schemas.register()),
-      selector: selectors.user.register.form,
-      actions: actions.user.register.form
-    }),
-
-    // GET /auth/v1/status
-    ApiSaga({
-      api: apis.user.status.get,
-      actions: actions.user.status.api
-    }),
-
-    // POST /auth/v1/login
-    ApiSaga({
-      api: apis.user.login.post,
-      actions: actions.user.login.api
-    }),
-
-    // POST /auth/v1/register
-    ApiSaga({
-      api: apis.user.register.post,
-      actions: actions.user.register.api
-    }),
-
-    // submit login form
-    ApiTriggerSaga({
-      trigger: actions.user.login.form.types.submit,
-      handler: actions.user.login.api.request,
-      selectors: {
-        payload: selectors.user.login.formdata,
-        query: (state) => null
-      }
-    }),
-
-    // submit register form
-    ApiTriggerSaga({
-      trigger: actions.user.register.form.types.submit,
-      handler: actions.user.register.api.request,
-      selectors: {
-        payload: selectors.user.register.formdata,
-        query: (state) => null
-      }
+    UserSaga({
+      getLoginSchema: schemas.login,
+      getRegisterSchema: schemas.register,
+      actions: userActions,
+      selectors: userSelectors,
+      apis: userApis
     })
 
   ]
-
-  const sagas = []
-    .concat(userSagas)
-
-  return sagas
 }
 
 export default getSagas

@@ -1,10 +1,3 @@
-// api imports
-import Ajax from '../boiler-ui/lib/api/ajax'
-import CrudAjax from '../boiler-ui/lib/api/crudajax'
-import {
-  MongoCodec
-} from '../boiler-ui/lib/api/codecs'
-
 import UserApis from '../boiler-ui/lib/plugins/user/apis'
 
 const URLS = {
@@ -19,14 +12,21 @@ const URLS = {
   }
 }
 
-// apis
+export const user = UserApis({
+  status: () => URLS.user.status,
+  login: () => URLS.user.login,
+  register: () => URLS.user.register,
+  update: () => URLS.user.update
+})
+
 const apis = {
-  user: UserApis({
-    status: () => URLS.user.status,
-    login: () => URLS.user.login,
-    register: () => URLS.user.register,
-    update: () => URLS.user.update
-  })/*
+  user
+}
+
+export default apis
+
+
+ /*
   installation: {
     table: CrudAjax({
       name: 'installation_table',
@@ -34,6 +34,3 @@ const apis = {
       encode: MongoCodec.encode
     })
   }*/
-}
-
-export default apis

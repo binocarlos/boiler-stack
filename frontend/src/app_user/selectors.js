@@ -1,6 +1,4 @@
-import {
-  userSelectors
-} from '../boiler-ui/lib/selectors'
+import userSelectors from '../boiler-ui/lib/plugins/user/selectors'
 
 export const user = userSelectors(state => state.user)
 
