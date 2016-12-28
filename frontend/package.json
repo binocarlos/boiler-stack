@@ -11,8 +11,7 @@
     "test:unit": "npm run test -- -b unit",
     "test:acceptance": "npm run test -- -b acceptance",
     "test": "NODE_ENV=test babel-tape-runner testrunner.js",
-    "test:pretty": "tap-spec",
-    "test:diff": "tap-difflet"
+    "test:pretty": "tap-diff"
   },
   "dependencies": {
     "async": "^2.1.2",
@@ -60,8 +59,7 @@
     "require-directory": "^2.1.1",
     "sass-loader": "^4.0.0",
     "style-loader": "^0.13.1",
-    "tap-difflet": "^0.7.0",
-    "tap-spec": "^4.1.1",
+    "tap-diff": "^0.1.1",
     "tape": "^4.6.3",
     "transfer-webpack-plugin": "^0.1.4",
     "webpack": "^1.14.0",

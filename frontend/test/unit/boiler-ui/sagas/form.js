@@ -26,6 +26,13 @@ const testSuite = (opts = {}) => {
   const getSchema = () => {
     return Schema(FIELDS)
   }
+
+  const baseActions = (schema) => {
+    return [
+      actions.initialize({}),
+      actions.inject(schema.initialData(), schema.meta(schema.initialData()))
+    ]
+  }
   
   const getTester = (fields = FIELDS, state = DEFAULT_STATE) => {
     const sagaTester = new SagaTester({
@@ -42,10 +49,15 @@ const testSuite = (opts = {}) => {
 
   tape(' -> constructor', t => {
     const tester = getTester()
+    const schema = getSchema()
+    const reducer = FormReducer(actions.types)
+
+    const actualState = tester.getState().test
+    const expectedState = reducer(undefined, actions.inject(schema.initialData(), schema.meta(schema.initialData())))
 
     t.deepEqual(
-      tester.getState().test,
-      DEFAULT_STATE,
+      actualState,
+      expectedState,
       'default state'
     )
 
@@ -60,10 +72,7 @@ const testSuite = (opts = {}) => {
 
     t.deepEqual(
       tester.getActionsCalled(),
-      [
-        actions.initialize({}),
-        actions.inject(schema.initialData(), schema.meta(schema.initialData()))
-      ],
+      baseActions(schema).concat(baseActions(schema)),
       'injected with initial values'
     )
 
@@ -79,10 +88,10 @@ const testSuite = (opts = {}) => {
 
     t.deepEqual(
       tester.getActionsCalled(),
-      [
+      baseActions(schema).concat([
         actions.load(data),
         actions.inject(data, schema.meta(data))
-      ],
+      ]),
       'injected with loaded values'
     )
 
@@ -100,16 +109,9 @@ const testSuite = (opts = {}) => {
     const tester = getTester()
     const schema = getSchema()
 
-    const baseActions = [
-      actions.initialize({}),
-      actions.inject(schema.initialData(), schema.meta(schema.initialData()))
-    ]
-
-    tester.dispatch(actions.initialize({}))
-
     t.deepEqual(
       tester.getActionsCalled(),
-      baseActions,
+      baseActions(schema),
       'initialize sequence correct'
     )
     
@@ -122,7 +124,7 @@ const testSuite = (opts = {}) => {
 
     t.deepEqual(
       tester.getActionsCalled(),
-      baseActions.concat(updateActions),
+      baseActions(schema).concat(updateActions),
       'update action sequence'
     )
 
@@ -134,17 +136,14 @@ const testSuite = (opts = {}) => {
     const tester = getTester()
     const schema = getSchema()
 
-    tester.dispatch(actions.initialize({}))
     tester.dispatch(actions.touch('testfield'))
 
     t.deepEqual(
       tester.getActionsCalled(),
-      [
-        actions.initialize({}),
-        actions.inject(schema.initialData(), schema.meta(schema.initialData())),
+      baseActions(schema).concat([
         actions.touch('testfield'),
         actions.updated(schema.initialData(), schema.touch('testfield', schema.meta(schema.initialData())))
-      ],
+      ]),
       'touched action sequence'
     )
 
@@ -157,17 +156,14 @@ const testSuite = (opts = {}) => {
     const tester = getTester()
     const schema = getSchema()
 
-    tester.dispatch(actions.initialize({}))
     tester.dispatch(actions.touchform())
 
     t.deepEqual(
       tester.getActionsCalled(),
-      [
-        actions.initialize({}),
-        actions.inject(schema.initialData(), schema.meta(schema.initialData())),
+      baseActions(schema).concat([
         actions.touchform(),
         actions.updated(schema.initialData(), schema.touchForm(schema.meta(schema.initialData())))
-      ],
+      ]),
       'touchform action sequence'
     )
 
