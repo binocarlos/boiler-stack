@@ -54,6 +54,14 @@ const fragments = (relative) => {
         <Register />
       </UserRedirect>
 
+      <Fragment forRoute="/help">
+        <Help />
+      </Fragment>
+
+      <Fragment forRoute="/about">
+        <About />
+      </Fragment>
+
     </div>
   )
 }
