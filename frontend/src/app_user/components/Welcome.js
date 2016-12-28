@@ -11,7 +11,13 @@ class Welcome extends Component {
     return (
       <Page>
         <p>Welcome</p>
-        <GuestMenu hideHome={true} redirect={this.props.redirect} />
+        <GuestMenu 
+          hide={{
+            'Home': true
+          }} 
+          ripple={false} 
+          redirect={this.props.redirect}
+        />
       </Page>
     )
   }
