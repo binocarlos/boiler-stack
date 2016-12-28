@@ -24,13 +24,3 @@ const apis = {
 }
 
 export default apis
-
-
- /*
-  installation: {
-    table: CrudAjax({
-      name: 'installation_table',
-      getUrl: () => URLS.installation.table,
-      encode: MongoCodec.encode
-    })
-  }*/
