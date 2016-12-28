@@ -8,6 +8,7 @@ const FormActions = (base) => {
     'INITIALIZE',
     'LOAD',
     'UPDATE',
+    'SUBMIT',
     'TOUCH',
     'TOUCHFORM',
     'INJECT',
@@ -35,6 +36,9 @@ const FormActions = (base) => {
     // status can be displayed (this prevents eager error messages)
     touch: (name = '') => action(types.touch, {name}),
     touchform: () => action(types.touchform),
+
+    // a trigger for a saga
+    submit: () => action(types.submit),
 
     // reduced - called by the saga once processing is done
 

@@ -6,17 +6,17 @@ import { Button } from 'react-toolbox/lib/button'
 import Page from '../../boiler-ui/lib/components/Page'
 import FormFields from '../../boiler-ui/lib/components/FormFields'
 
-class Login extends Component {
+class Register extends Component {
 
   render() {
     return (
       <Page>
         <Card>
           <CardTitle
-            title="Login"
+            title="Register"
             subtitle={(
               <span>
-                Enter your email and password to login or <Link href="/register">click here</Link> to create an account
+                Enter your details to create a new account
               </span>
             )}
           />
@@ -42,4 +42,4 @@ class Login extends Component {
 
 }
 
-export default Login
+export default Register

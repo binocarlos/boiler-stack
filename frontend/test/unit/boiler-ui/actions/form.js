@@ -18,7 +18,8 @@ const formActionTests = (opts = {}) => {
         touch: 'BASE_TOUCH',
         touchform: 'BASE_TOUCHFORM',
         updated: 'BASE_UPDATED',
-        revert: 'BASE_REVERT'
+        revert: 'BASE_REVERT',
+        submit: 'BASE_SUBMIT'
       },
       'types'
     )
@@ -95,6 +96,15 @@ const formActionTests = (opts = {}) => {
       },
       'revert'
     )
+
+    t.deepEqual(
+      actions.submit(),
+      {
+        type: 'BASE_SUBMIT'
+      },
+      'submit'
+    )
+
 
     t.end()
   })

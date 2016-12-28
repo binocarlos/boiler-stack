@@ -20,6 +20,12 @@ export const login = {
   form: (state) => login.raw(state).form
 }
 
+export const register = {
+  raw: (state) => state.user.register,
+  api: (state) => register.raw(state).api,
+  form: (state) => register.raw(state).form
+}
+
 export const installation = {
 
   // raw
