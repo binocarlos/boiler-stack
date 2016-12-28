@@ -140,10 +140,11 @@ const FormSagaFactory = (settings = {}) => {
       fork(listenInitialize),
       fork(listenLoad),
       fork(listenUpdate),
-      fork(listenTouch)
+      fork(listenTouch),
+      fork(listenTouchform)
     ]
 
-    yield put(actions.initialize({}))
+    yield put(actions.initialize({}, {}))
   }
 
   return root
