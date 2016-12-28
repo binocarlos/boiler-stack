@@ -1,8 +1,10 @@
 // api imports
 import deepCheck from 'deep-check-error'
 
-import { fork, put } from 'redux-saga/effects'
+import { takeLatest } from 'redux-saga'
+import { fork, put, take } from 'redux-saga/effects'
 
+import routerActions from '../../actions/router'
 import ApiSaga from '../../sagas/api'
 import ApiTriggerSaga from '../../sagas/apitrigger'
 import FormSaga from '../../sagas/form'
@@ -24,6 +26,23 @@ const UserSaga = (settings = {}) => {
   const actions = settings.actions
   const selectors = settings.selectors
   const apis = settings.apis
+
+  function* triggerUserReload() {
+    yield put(actions.status.api.request())
+  }
+
+  function* triggerUserReloadThenRedirect() {
+    yield put(actions.status.api.request())
+    const resultAction = yield take([
+      actions.status.api.types.success,
+      actions.status.api.types.failure
+    ])
+
+    // if it was a success - then do the redirect
+    if(resultAction.type == actions.status.api.types.success) {
+      yield put(routerActions.push('/'))
+    }
+  }
 
   const sagas = [
 
@@ -79,10 +98,15 @@ const UserSaga = (settings = {}) => {
       }
     }),
 
-    // trigger a user status load
-    function* initialUserLoad() {
-      yield put(actions.status.api.request())
-    }
+    // listen for a successful login/register and refresh the user status
+    function* triggerRefresh() {
+      yield takeLatest([
+        actions.login.api.types.success,
+        actions.register.api.types.success
+      ], triggerUserReloadThenRedirect)
+    },
+
+    triggerUserReload
 
   ]
 

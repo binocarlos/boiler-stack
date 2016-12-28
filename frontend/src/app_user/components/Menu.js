@@ -29,6 +29,7 @@ class Menu extends Component {
         {this.getLink('/', 'Dashboard')}
         {this.getLink('/help', 'Help')}
         {this.getLink('/about', 'About')}
+        <a href="/auth/v1/logout">Logout</a>
       </div>
     )
   }

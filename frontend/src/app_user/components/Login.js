@@ -16,7 +16,7 @@ class Login extends Component {
             title="Login"
             subtitle={(
               <span>
-                Enter your email and password to login or <Link href="/register">click here</Link> to create an account
+                Enter your email and password to login - <Link href="/register">click here</Link> to create an account
               </span>
             )}
           />

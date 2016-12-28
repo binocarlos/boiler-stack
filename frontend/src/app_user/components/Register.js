@@ -16,7 +16,7 @@ class Register extends Component {
             title="Register"
             subtitle={(
               <span>
-                Enter your details to create a new account
+                Enter your details to create a new account - <Link href="/login">click here</Link> to login
               </span>
             )}
           />
