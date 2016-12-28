@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import deepCheck from 'deep-check-error'
 
+import routerActions from '../actions/router'
+
 import { 
   mapFormField,
   doesFormHaveError
@@ -62,7 +64,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       valid ?
         dispatch(actions.submit()) :
         dispatch(actions.touchform())
-    }
+    },
+    redirect: (path) => dispatch(routerActions.push(path))
   }
 }
 

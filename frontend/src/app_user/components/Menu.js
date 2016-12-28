@@ -1,50 +1,48 @@
 import React, { Component, PropTypes } from 'react'
+import { List, ListItem, ListSubHeader, ListDivider, ListCheckbox } from 'react-toolbox/lib/list'
 import { Link } from 'redux-little-router'
 
-class Menu extends Component {
+import { URLS } from '../apis'
+import icons from '../config/icons'
 
-  getLink(href, title) {
-    return (
-      <p>
-        <Link href={ href } onClick={ this.props.onClick }>
-          { title }
-        </Link>
-      </p>
-    )
-  }
+const getItem = (title, icon, handler) => {
+  return (
+    <ListItem 
+      key={title} 
+      caption={title} 
+      leftIcon={icon} 
+      onClick={handler}
+    />
+  )
+}
 
-  getGuestMenu() {
-    return (
-      <div>
-        {this.getLink('/', 'Home')}
-        {this.getLink('/login', 'Login')}
-        {this.getLink('/register', 'Register')}
-      </div>
-    )
-  }
-
-  getUserMenu() {
-    return (
-      <div>
-        {this.getLink('/', 'Dashboard')}
-        {this.getLink('/help', 'Help')}
-        {this.getLink('/about', 'About')}
-        <a href="/auth/v1/logout">Logout</a>
-      </div>
-    )
-  }
-
+export class GuestMenu extends Component {
   render() {
-    return this.props.loggedIn ?
-      this.getUserMenu() :
-      this.getGuestMenu()
+    const redirect = (path) => () => this.props.redirect(path)
+    return (
+      <List selectable ripple>
+        {this.props.hideHome ? (<div></div>) : getItem('Home', icons.home, redirect('/'))}
+        {getItem('Login', icons.login, redirect('/login'))}
+        {getItem('Register', icons.register, redirect('/register'))}
+        {getItem('Help', icons.help, redirect('/help'))}
+        {getItem('About', icons.about, redirect('/about'))}
+      </List>
+    )
   }
-
 }
 
-Menu.propTypes = {
-  user: PropTypes.object,
-  onClick: PropTypes.func
+export class UserMenu extends Component {
+  render() {
+    const redirect = (path) => () => this.props.redirect(path)
+    return (
+      <List selectable ripple>
+        {this.props.hideHome ? (<div></div>) : getItem('Dashboard', icons.dashboard, redirect('/'))}
+        {getItem('Help', icons.help, redirect('/help'))}
+        {getItem('About', icons.about, redirect('/about'))}
+        {getItem('Logout', icons.logout, () => {
+          document.location = URLS.user.logout
+        })}
+      </List>
+    )
+  }
 }
-
-export default Menu

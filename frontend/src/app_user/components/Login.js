@@ -29,6 +29,10 @@ class Login extends Component {
           </CardText>
           <CardActions>
             <Button 
+              label="Cancel" 
+              onClick={() => this.props.redirect('/')}
+            />
+            <Button 
               label="Submit" 
               raised={this.props.valid} 
               primary={this.props.valid}

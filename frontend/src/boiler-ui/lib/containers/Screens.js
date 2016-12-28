@@ -20,20 +20,11 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-const mapDispatchToProps = (state, ownProps) => {
-  return {}
-}
-
 ScreensContainer.propTypes = {
   basepath: PropTypes.string.isRequired,
   getFragments: PropTypes.func.isRequired
 }
 
-ScreensContainer.defaultProps = {
-  
-}
-
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(ScreensContainer)

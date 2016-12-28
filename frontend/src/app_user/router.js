@@ -2,33 +2,32 @@ import React, { Component, PropTypes } from 'react'
 import { RelativeFragment as Fragment } from 'redux-little-router'
 
 import Location from '../boiler-ui/lib/containers/routes/Location'
-import UserRedirect from '../boiler-ui/lib/containers/routes/UserRedirect'
+import UserFilter from '../boiler-ui/lib/containers/routes/UserFilter'
 
 // containers
 import Login from './containers/Login'
 import Register from './containers/Register'
 
 // normal components
-import Dashboard from './components/Dashboard'
-import Welcome from './components/Welcome'
+import Home from './components/Home'
 import Help from './components/Help'
 import About from './components/About'
 
 const routes = {
   '/': {
-    page:'dashboard'
+    title:''
   },
   '/help': {
-    page:'help'
+    title:'Help'
   },
   '/about': {
-    page:'about'
+    title:'About'
   },
   '/login': {
-    page:'login'
+    title:'Login'
   },
   '/register': {
-    page:'register'
+    title:'Register'
   }
 }
 
@@ -38,21 +37,17 @@ const fragments = (relative) => {
   return (
     <div>
 
-      <Location user={true} filter={compareRoute('/')}>
-        <Dashboard />
+      <Location filter={compareRoute('/')}>
+        <Home />
       </Location>
 
-      <Location user={false} filter={compareRoute('/')}>
-        <Welcome />
-      </Location>
-
-      <UserRedirect route="/login" redirector={loggedIn => loggedIn ? '/' : null}>
+      <Fragment forRoute="/login">
         <Login />
-      </UserRedirect>
+      </Fragment>
 
-      <UserRedirect route="/register" redirector={loggedIn => loggedIn ? '/' : null}>
+      <Fragment forRoute="/register">
         <Register />
-      </UserRedirect>
+      </Fragment>
 
       <Fragment forRoute="/help">
         <Help />

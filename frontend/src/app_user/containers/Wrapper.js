@@ -5,11 +5,23 @@ import AppBar from 'react-toolbox/lib/app_bar'
 import { IconButton } from 'react-toolbox/lib/button'
 import { Layout, NavDrawer, Panel, Sidebar } from 'react-toolbox/lib/layout'
 
+import UserFilter from '../../boiler-ui/lib/containers/routes/UserFilter'
+
+import routerActions from '../../boiler-ui/lib/actions/router'
+
 import core from '../config/core'
 import selectors from '../selectors'
 import actions from '../actions'
 
-import Menu from '../components/Menu'
+import {
+  menu as menuSelector,
+  user as userSelector
+} from '../selectors'
+
+import {
+  GuestMenu,
+  UserMenu
+} from '../components/Menu'
 
 class Wrapper extends Component {
 
@@ -30,15 +42,25 @@ class Wrapper extends Component {
   }
 
   fullWrapper() {
+    const menuRedirect = (path) => {
+      this.props.redirect(path)
+      this.props.closeMenu()
+    }
     return (
       <Layout>
         <NavDrawer 
-          active={ this.props.menuOpen }
-          onOverlayClick={ this.props.closeMenu }>
-          <Menu 
-            loggedIn={ this.props.loggedIn }
-            onClick={ this.props.closeMenu }
+          active={ this.props.isMenuOpen }
+          onOverlayClick={ this.props.closeMenu }
+        >
+
+          <UserFilter
+            user={UserMenu}
+            guest={GuestMenu}
+            componentProps={{
+              redirect: menuRedirect
+            }}
           />
+
         </NavDrawer>
         <Panel>
           <AppBar
@@ -53,6 +75,7 @@ class Wrapper extends Component {
       </Layout>
     )
   }
+  
   render() {
     return this.props.userLoaded ?
       this.fullWrapper() :
@@ -63,16 +86,17 @@ class Wrapper extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     router: state.router,
-    menuOpen: state.menu.open,
-    loggedIn: selectors.user.status.loggedIn(state),
-    userLoaded: selectors.user.status.loaded(state)
+    isMenuOpen: menuSelector.open(state),
+    loggedIn: userSelector.status.loggedIn(state),
+    userLoaded: userSelector.status.loaded(state)
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     openMenu: () => dispatch(actions.menu.open()),
-    closeMenu: () => dispatch(actions.menu.close())
+    closeMenu: () => dispatch(actions.menu.close()),
+    redirect: (path) => dispatch(routerActions.push(path))
   }
 }
 

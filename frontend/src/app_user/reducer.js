@@ -1,17 +1,17 @@
 import { combineReducers } from 'redux'
 
-import ToggleReducer from '../boiler-ui/lib/reducers/toggle'
+import MenuReducer from '../boiler-ui/lib/plugins/menu/reducer'
 import UserReducer from '../boiler-ui/lib/plugins/user/reducer'
 
 import {
-  menu,
-  user
+  menu as menuActions,
+  user as userActions
 } from './actions'
 
 const reducer = combineReducers({
 
-  menu: ToggleReducer(menu.types),
-  user: UserReducer(user)
+  menu: MenuReducer(menuActions),
+  user: UserReducer(userActions)
 
 })
 

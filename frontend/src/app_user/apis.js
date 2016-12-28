@@ -1,9 +1,10 @@
 import UserApis from '../boiler-ui/lib/plugins/user/apis'
 
-const URLS = {
+export const URLS = {
   user: {
     status: '/auth/v1/status',
     login: '/auth/v1/login',
+    logout: '/auth/v1/logout',
     register: '/auth/v1/register',
     update: '/api/v1/currentuser'
   },

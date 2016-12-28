@@ -1,6 +1,8 @@
 import immutable from 'object-path-immutable'
 import objectPath from 'object-path'
 
+import { userStatusSelectors } from './plugins/user/selectors'
+
 export const ucfirst = (val = '') => {
   return val.replace(/^\w/, (st) => st.toUpperCase())
 }
@@ -56,4 +58,13 @@ export const relativePath = (basepath) => (pathname = '') => {
   return ret && ret.length > 0 ?
     ret :
     '/'
+}
+
+export const getUserState = (state) => {
+  const statusSelector = userStatusSelectors((state) => state.user.status)
+  return {
+    router: state.router,
+    loggedIn: statusSelector.loggedIn(state) ? true : false,
+    loaded: statusSelector.loaded(state)
+  }
 }
