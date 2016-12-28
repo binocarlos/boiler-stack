@@ -2,21 +2,21 @@ import React, { Component, PropTypes } from 'react'
 import { NavDrawer } from 'react-toolbox/lib/layout'
 
 import UserFilter from '../../boiler-ui/lib/containers/UserFilter'
-import BaseMenu from '../../boiler-ui/lib/components/Menu'
+import IconMenu from '../../boiler-ui/lib/components/IconMenu'
 
 import {
   user as userMenu,
   guest as guestMenu
-} from '../config/menu'
+} from '../config/appbar_menu'
 
 export class GuestMenu extends Component {
   render() {
     return (
-      <BaseMenu 
+      <IconMenu 
         items={guestMenu}
         hide={this.props.hide}
         redirect={this.props.redirect}
-        ripple={this.props.ripple}
+        white
       />
     )
   }
@@ -25,35 +25,26 @@ export class GuestMenu extends Component {
 export class UserMenu extends Component {
   render() {
     return (
-      <BaseMenu 
+      <IconMenu 
         items={userMenu}
         hide={this.props.hide}
         redirect={this.props.redirect}
-        ripple={this.props.ripple}
+        white
       />
     )
   }
 }
 
-class Menu extends Component {
+class AppBarMenu extends Component {
   render() {
     return (
-      <NavDrawer 
-          active={ this.props.isOpen }
-          onOverlayClick={ this.props.close }
-        >
-
-        <UserFilter
-          user={ UserMenu }
-          guest={ GuestMenu }
-          componentProps={{
-            redirect: this.props.redirect
-          }}
-        />
-
-      </NavDrawer>
+      <UserFilter
+        user={ UserMenu }
+        guest={ GuestMenu }
+        injectRedirect={true}
+      />
     )
   }
 }
 
-export default Menu
+export default AppBarMenu

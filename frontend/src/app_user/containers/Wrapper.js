@@ -1,11 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
+import { Layout, NavDrawer, Panel } from 'react-toolbox/lib/layout'
 import AppBar from 'react-toolbox/lib/app_bar'
-import { IconButton } from 'react-toolbox/lib/button'
-import { Layout, NavDrawer, Panel, Sidebar } from 'react-toolbox/lib/layout'
-
-import UserFilter from '../../boiler-ui/lib/containers/UserFilter'
 
 import routerActions from '../../boiler-ui/lib/actions/router'
 
@@ -18,10 +15,8 @@ import {
   user as userSelector
 } from '../selectors'
 
-import {
-  GuestMenu,
-  UserMenu
-} from '../components/Menu'
+import Menu from '../components/Menu'
+import AppBarMenu from '../components/AppBarMenu'
 
 class Wrapper extends Component {
 
@@ -30,11 +25,11 @@ class Wrapper extends Component {
       <Layout>
         <Panel>
           <AppBar
-            title={ this.props.pagetitle }
+            title={ this.props.pageTitle }
             leftIcon="menu"
           />
           <div style={{ flex: 1, overflowY: 'auto' }}>
-            
+            loading...
           </div>
         </Panel>
       </Layout>
@@ -48,26 +43,21 @@ class Wrapper extends Component {
     }
     return (
       <Layout>
-        <NavDrawer 
-          active={ this.props.isMenuOpen }
-          onOverlayClick={ this.props.closeMenu }
-        >
-
-          <UserFilter
-            user={UserMenu}
-            guest={GuestMenu}
-            componentProps={{
-              redirect: menuRedirect
-            }}
-          />
-
-        </NavDrawer>
+        
+        <Menu
+          isOpen={ this.props.isMenuOpen }
+          close={ this.props.closeMenu }
+          redirect={ menuRedirect }
+        />
+        
         <Panel>
           <AppBar
-            title={ this.props.pagetitle }
+            title={ this.props.pageTitle }
             leftIcon="menu"
             onLeftIconClick={ this.props.openMenu }
-          />
+          >
+            <AppBarMenu />
+          </AppBar>
           <div style={{ flex: 1, overflowY: 'auto' }}>
             { this.props.children }
           </div>
@@ -85,14 +75,14 @@ class Wrapper extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const page = state.router.result || {}
-  const pagetitle = core.title + (
+  const pageTitle = core.title + (
     page.title ? 
       ' : ' + page.title :
       ''
   )
   return {
     router: state.router,
-    pagetitle,
+    pageTitle,
     isMenuOpen: menuSelector.open(state),
     loggedIn: userSelector.status.loggedIn(state),
     userLoaded: userSelector.status.loaded(state)
