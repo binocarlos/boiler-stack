@@ -1,9 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { RelativeFragment as Fragment } from 'redux-little-router'
 
-import CORE from './config/core'
-import { GetRoute, RouteProcessor, HomeRouteMatcher } from '../boiler-ui/lib/tools'
-
 import Login from './containers/Login'
 import Register from './containers/Register'
 
@@ -11,18 +8,11 @@ import Home from './components/Home'
 import Help from './components/Help'
 import About from './components/About'
 
-// stuff to do with prepending the basepath (so the routes read nicely)
-const routeProcessor = RouteProcessor(CORE.basepath)
-const getRoute = GetRoute(CORE.basepath)
-const homeRouteMatcher = HomeRouteMatcher(CORE.basepath)
-
-const homeRoute = {
-  title:''
-}
+import { routeProcessor, getRoute, homeRouteMatcher } from './tools'
 
 const routes = routeProcessor({
-  '': homeRoute,
-  '/': homeRoute,
+  '': {},
+  '/': {},
   '/help': {
     title:'Help'
   },
@@ -30,10 +20,12 @@ const routes = routeProcessor({
     title:'About'
   },
   '/login': {
-    title:'Login'
+    title:'Login',
+    requireGuest: getRoute('/')
   },
   '/register': {
-    title:'Register'
+    title:'Register',
+    requireGuest: getRoute('/')
   }
 })
 

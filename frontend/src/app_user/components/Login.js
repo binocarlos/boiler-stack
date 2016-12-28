@@ -5,6 +5,8 @@ import { Button } from 'react-toolbox/lib/button'
 import Page from '../../boiler-ui/lib/components/Page'
 import FormFields from '../../boiler-ui/lib/components/FormFields'
 
+import Link from './Link'
+
 class Login extends Component {
 
   render() {

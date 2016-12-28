@@ -2,7 +2,7 @@
 import deepCheck from 'deep-check-error'
 
 import { takeLatest } from 'redux-saga'
-import { fork, put, take } from 'redux-saga/effects'
+import { fork, put, take, select } from 'redux-saga/effects'
 
 import routerActions from '../../actions/router'
 import ApiSaga from '../../sagas/api'
@@ -11,6 +11,7 @@ import FormSaga from '../../sagas/form'
 import Schema from '../../utils/schema'
 
 const REQUIRED_SETTINGS = [
+  'successRedirect',
   'getLoginSchema',
   'getRegisterSchema',
   'actions',
@@ -26,6 +27,7 @@ const UserSaga = (settings = {}) => {
   const actions = settings.actions
   const selectors = settings.selectors
   const apis = settings.apis
+  const successRedirect = settings.successRedirect
 
   function* triggerUserReload() {
     yield put(actions.status.api.request())
@@ -40,7 +42,21 @@ const UserSaga = (settings = {}) => {
 
     // if it was a success - then do the redirect
     if(resultAction.type == actions.status.api.types.success) {
-      yield put(routerActions.push('/'))
+      yield put(routerActions.push(successRedirect))
+    }
+  }
+
+  function* checkCurrentRoute(action) {
+    const routerState = yield select(state => state.router)
+    const loggedIn = yield select(selectors.status.loggedIn)
+
+    const page = routerState.result || {}
+
+    if(page.requireUser && !loggedIn){
+      yield put(routerActions.push(page.requireUser))
+    }
+    else if(page.requireGuest && loggedIn){
+      yield put(routerActions.push(page.requireGuest))
     }
   }
 
@@ -104,6 +120,17 @@ const UserSaga = (settings = {}) => {
         actions.login.api.types.success,
         actions.register.api.types.success
       ], triggerUserReloadThenRedirect)
+    },
+
+    // listen for either route changes or user status refreshes
+    // and check the user has access to the current route
+    // this is controlled by the info passed to the redux-little-router
+    // reducer by the routeinfo
+    function* checkRouteAccess() {
+      yield takeLatest([
+        actions.status.api.types.success,
+        routerActions.types.changed
+      ], checkCurrentRoute)
     },
 
     triggerUserReload
