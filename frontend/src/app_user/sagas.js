@@ -67,20 +67,8 @@ const getSagas = (apis = {}) => {
 
   ]
 
-  // installation
-  const installationSagas = [
-    
-    // GET /api/v1/installations
-    ApiSaga({
-      api: apis.installation.table.get,
-      actions: actions.installation.table.api
-    })
-
-  ]
-
   const sagas = []
     .concat(userSagas)
-    .concat(installationSagas)
 
   return sagas
 }

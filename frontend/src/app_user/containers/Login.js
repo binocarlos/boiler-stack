@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 
 import formfields from '../config/formfields'
-import { login } from '../selectors'
+import selectors from '../selectors'
 import actions from '../actions'
 
 import FormContainer from '../../boiler-ui/lib/containers/Form'
@@ -15,7 +15,7 @@ class LoginContainer extends Component {
       <FormContainer
         formComponent={ Login }
         getFields={ formfields.login }
-        selector={ login.form }
+        selector={ selectors.user.login.form }
         actions={ actions.user.login.form }
       />
     )

@@ -6,30 +6,33 @@ import {
 import screens from './config/screens'
 
 // re-used between login and register
-const auth = (raw) => {
-  const authSelector = {
+const authSelectors = (raw) => {
+  const api = (state) => raw(state).api
+  const form = (state) => raw(state).form
+  return {
     raw,
-    api: (state) => authSelector.raw(state).api,
-    form: (state) => authSelector.raw(state).form,
-    formdata: (state) => authSelector.form(state).data,
-    formmeta: (state) => authSelector.form(state).meta
+    api,
+    form,
+    formdata: (state) => form(state).data,
+    formmeta: (state) => form(state).meta
   }
-  return authSelector
+}
+
+const userStatusSelectors = (raw) => {
+  const api = (state) => raw(state).api
+  const record = (state) => raw(state).record
+  return {
+    raw,
+    api,
+    record,
+    loggedIn: (state) => record(state).loggedIn
+  }
 }
 
 export const user = {
-  status: {
-    raw: (state) => state.user.status,
-    api: (state) => user.status.raw(state).api,
-    loaded: (state) => user.status.api(state).loaded,
-    record: (state) => user.status.raw(state).record,
-    loggedIn: (state) => user.record(state).loggedIn,
-    id: (state) => user.record(state).id,
-    username: (state) => user.record(state).userdata,
-    userdata: (state) => user.record(state).userdata
-  },
-  login: auth(state => state.user.login),
-  register: auth(state => state.user.register)
+  status: userStatusSelectors(state => state.user.status),
+  login: authSelectors(state => state.user.login),
+  register: authSelectors(state => state.user.register)
 }
 
 /*
@@ -58,10 +61,7 @@ export const installation = {
 }
 */
 const selectors = {
-  user,
-  login,
-  register/*,
-  installation*/
+  user
 }
 
 export default selectors

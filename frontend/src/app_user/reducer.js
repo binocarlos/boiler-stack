@@ -42,7 +42,11 @@ const reducer = combineReducers({
       form: FormReducer(actions.user.register.form.types)
     })
 
-  }),
+  })
+
+/*
+
+,
 
   installation: combineReducers({
 
@@ -55,7 +59,8 @@ const reducer = combineReducers({
 
   })
 
-/*
+
+  
   installation: combineReducers({
 
     table: combineReducers({

@@ -2,6 +2,9 @@ import ApiActions from '../boiler-ui/lib/actions/api'
 import RouterActions from '../boiler-ui/lib/actions/router'
 import ToggleActions from '../boiler-ui/lib/actions/toggle'
 import FormActions from '../boiler-ui/lib/actions/form'
+
+import UserActions from '../boiler-ui/lib/plugins/user/actions'
+
 /*import FormActions from '../folder-ui/lib/actions/form'
 import SelectionActions from '../folder-ui/lib/actions/selection'
 import ToggleActions from '../folder-ui/lib/actions/toggle'
@@ -17,25 +20,7 @@ const actions = {
   router: RouterActions('ROUTER'),
   menu: ToggleActions('MENU'),
 
-  user: {
-    status: {
-      api: ApiActions('USER_STATUS_API')
-    },
-    login: {
-      api: ApiActions('USER_LOGIN_API'),
-      form: FormActions('USER_LOGIN_FORM')
-    },
-    register: {
-      api: ApiActions('USER_REGISTER_API'),
-      form: FormActions('USER_REGISTER_FORM')
-    }
-  },
-
-  installation: {
-    table: {
-      api: ApiActions('INSTALLATION_TABLE_LOAD')
-    }
-  }
+  user: UserActions('USER')
 }
 
 /*
