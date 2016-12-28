@@ -78,7 +78,7 @@ export const RouteProcessor = (BASEPATH) => (routes = {}) => {
   }, {})
 }
 export const HomeRouteMatcher = (BASEPATH) => {
-  const getRoute = GetRoute(CORE.basepath)
+  const getRoute = GetRoute(BASEPATH)
   return (location) => {
     if(location.pathname == getRoute('')) return true
     if(location.pathname == getRoute('/')) return true

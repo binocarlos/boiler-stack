@@ -4,18 +4,17 @@ import { RelativeFragment as Fragment } from 'redux-little-router'
 import CORE from './config/core'
 import { GetRoute, RouteProcessor, HomeRouteMatcher } from '../boiler-ui/lib/tools'
 
-const routeProcessor = RouteProcessor(CORE.basepath)
-const getRoute = GetRoute(CORE.basepath)
-const homeRouteMatcher = HomeRouteMatcher(CORE.basepath)
-
-// containers
 import Login from './containers/Login'
 import Register from './containers/Register'
 
-// normal components
 import Home from './components/Home'
 import Help from './components/Help'
 import About from './components/About'
+
+// stuff to do with prepending the basepath (so the routes read nicely)
+const routeProcessor = RouteProcessor(CORE.basepath)
+const getRoute = GetRoute(CORE.basepath)
+const homeRouteMatcher = HomeRouteMatcher(CORE.basepath)
 
 const homeRoute = {
   title:''
