@@ -1,11 +1,12 @@
-// listen to the submit trigger for a form group
-// call the request action of an api group
+// listen to a dumb trigger action (trigger)
+// run a selector for the payload and one for the query (selectors)
+// run the 'request' action of an api action group (handler)
 import Tape from 'tape'
 import async from 'async'
 import SagaTester from 'redux-saga-tester'
 import { put, call, take } from 'redux-saga/effects'
 
-import SubmitFormSaga from '../../../../src/boiler-ui/lib/sagas/formsubmit'
+import ApiTriggerSaga from '../../../../src/boiler-ui/lib/sagas/apitrigger'
 import FormActions from '../../../../src/boiler-ui/lib/actions/form'
 import ApiActions from '../../../../src/boiler-ui/lib/actions/api'
 
@@ -28,20 +29,18 @@ const testSuite = (opts = {}) => {
         test: () => FIXTURE
       }
     })
-    sagaTester.start(SubmitFormSaga({
+    sagaTester.start(ApiTriggerSaga({
       trigger: formactions.types.submit,
-      selector: (state) => state.test,
-      getQuery: (data, meta) => {
-        return {
-          a: data.fruit + '15'
-        }
-      },
-      handler: apiactions.request
+      handler: apiactions.request,
+      selectors: {
+        payload: (state) => state.test.data,
+        query: (state) => state.test.data.fruit + 15
+      }
     }))
     return sagaTester
   }
 
-  tape(' -> initialize', t => {
+  tape('', t => {
     const tester = getTester()
     
     tester.dispatch(formactions.submit())
@@ -50,7 +49,7 @@ const testSuite = (opts = {}) => {
       tester.getActionsCalled(),
       [
         formactions.submit(),
-        apiactions.request(FIXTURE.data, {a:'apples15'})
+        apiactions.request(FIXTURE.data, 'apples15')
       ],
       'api request was triggered by form.submit'
     )

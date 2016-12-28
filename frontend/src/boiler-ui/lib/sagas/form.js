@@ -45,7 +45,7 @@
 */
 import Logger from '../logger'
 import deepCheck from 'deep-check-error'
-import { takeLatest, takeEvery, delay } from 'redux-saga'
+import { takeLatest, takeEvery } from 'redux-saga'
 import { put, call, fork, select  } from 'redux-saga/effects'
 
 const REQUIRED_SETTINGS = [
