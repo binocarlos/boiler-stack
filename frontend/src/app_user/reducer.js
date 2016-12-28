@@ -1,98 +1,22 @@
 // reducer imports
 import { combineReducers } from 'redux'
 
-import ApiReducer from '../boiler-ui/lib/reducers/api'
-import ListReducer from '../boiler-ui/lib/reducers/list'
+//import ApiReducer from '../boiler-ui/lib/reducers/api'
 import ToggleReducer from '../boiler-ui/lib/reducers/toggle'
-import UserReducer from '../boiler-ui/lib/reducers/user'
-import FormReducer from '../boiler-ui/lib/reducers/form'
+//import FormReducer from '../boiler-ui/lib/reducers/form'
 
-/*
-import ApiReducer from '../folder-ui/lib/reducers/api'
-import FormReducer from '../folder-ui/lib/reducers/form'
-import SelectionReducer from '../folder-ui/lib/reducers/selection'
+import UserReducer from '../boiler-ui/lib/plugins/user/reducer'
 
-*/
-
-import actions from './actions'
+import {
+  menu,
+  user
+} from './actions'
 
 const reducer = combineReducers({
 
-  // menu open/closed
-  menu: ToggleReducer(actions.menu.types),
+  menu: ToggleReducer(menu.types),
+  user: UserReducer(user)
 
-  user: combineReducers({
-    status: combineReducers({
-      api: ApiReducer(actions.user.status.api.types),
-      record: UserReducer({
-        // update the user record on status.api.success
-        update: actions.user.status.api.types.success
-      })
-    }),
-
-    login: combineReducers({
-      api: ApiReducer(actions.user.login.api.types),
-      // login form state
-      form: FormReducer(actions.user.login.form.types)
-    }),
-
-    register: combineReducers({
-      api: ApiReducer(actions.user.register.api.types),
-      // register form state
-      form: FormReducer(actions.user.register.form.types)
-    })
-
-  })
-
-/*
-
-,
-
-  installation: combineReducers({
-
-    table: combineReducers({
-      load: ApiReducer(actions.installation.table.api.types),
-      list: ListReducer({
-        update: actions.installation.table.api.types.success
-      })
-    })
-
-  })
-
-
-  
-  installation: combineReducers({
-
-    table: combineReducers({
-
-      api: ApiReducer({
-        types: actions.installation.table.api.types,
-        injector: injectors.list
-      })
-
-    // data to drive the table
-    list:ApiReducer({
-      types: actions.installation.api.list.types,
-      injector: injectors.list
-    }),
-
-    // selected table ids
-    selection:SelectionReducer({
-      types: actions.installation.table.types
-    }),
-
-    // the data that appears in the add/edit form
-    form:FormReducer({
-      types: actions.installation.form.types
-    }),
-
-    // keep track of if the delete window is currently open
-    deleteWindow:ToggleReducer({
-      types: actions.installation.deleteWindow.types
-    })
-
-  })
-*/
 })
 
 export default reducer
