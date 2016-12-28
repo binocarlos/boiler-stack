@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import routerActions from '../../actions/router'
-import { getUserState } from '../../tools'
+import routerActions from '../actions/router'
+import { getUserState } from '../tools'
 
 class UserFilter extends Component {
   render() {

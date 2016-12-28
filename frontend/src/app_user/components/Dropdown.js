@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { Link } from 'redux-little-router'
+import Link from './Link'
 
 import {
   guestDropdown,

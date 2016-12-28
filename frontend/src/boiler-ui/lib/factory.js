@@ -33,7 +33,6 @@ const boilerapp = (settings = {}) => {
   messages.boot()
 
   const store = Store({
-    basepath,
     reducer,
     routes,
     middleware,

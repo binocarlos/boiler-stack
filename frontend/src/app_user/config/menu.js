@@ -1,19 +1,20 @@
 import { URLS } from '../apis'
 import icons from './icons'
+import { getRoute } from './core'
 
 export const guest = [
-  ['Home', icons.home, '/'],
-  ['Help', icons.help, '/help'],
-  ['About', icons.about, '/about'],
+  ['Home', icons.home, getRoute('/')],
+  ['Help', icons.help, getRoute('/help')],
+  ['About', icons.about, getRoute('/about')],
   '-',
-  ['Login', icons.login, '/login'],
-  ['Register', icons.register, '/register']
+  ['Login', icons.login, getRoute('/login')],
+  ['Register', icons.register, getRoute('/register')]
 ]
 
 export const user = [
-  ['Dashboard', icons.dashboard, '/'],
-  ['Help', icons.help, '/help'],
-  ['About', icons.about, '/about'],
+  ['Dashboard', icons.dashboard, getRoute('/')],
+  ['Help', icons.help, getRoute('/help')],
+  ['About', icons.about, getRoute('/about')],
   '-',
   ['Logout', icons.logout, () => {
     document.location = URLS.user.logout

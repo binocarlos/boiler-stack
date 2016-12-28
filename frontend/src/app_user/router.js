@@ -1,8 +1,12 @@
 import React, { Component, PropTypes } from 'react'
 import { RelativeFragment as Fragment } from 'redux-little-router'
 
-import Location from '../boiler-ui/lib/containers/routes/Location'
-import UserFilter from '../boiler-ui/lib/containers/routes/UserFilter'
+import CORE from './config/core'
+import { GetRoute, RouteProcessor, HomeRouteMatcher } from '../boiler-ui/lib/tools'
+
+const routeProcessor = RouteProcessor(CORE.basepath)
+const getRoute = GetRoute(CORE.basepath)
+const homeRouteMatcher = HomeRouteMatcher(CORE.basepath)
 
 // containers
 import Login from './containers/Login'
@@ -13,10 +17,13 @@ import Home from './components/Home'
 import Help from './components/Help'
 import About from './components/About'
 
-const routes = {
-  '/': {
-    title:''
-  },
+const homeRoute = {
+  title:''
+}
+
+const routes = routeProcessor({
+  '': homeRoute,
+  '/': homeRoute,
   '/help': {
     title:'Help'
   },
@@ -29,7 +36,7 @@ const routes = {
   '/register': {
     title:'Register'
   }
-}
+})
 
 // relative strips the basepath from the current url
 const fragments = (relative) => {
@@ -37,23 +44,23 @@ const fragments = (relative) => {
   return (
     <div>
 
-      <Location filter={compareRoute('/')}>
+      <Fragment forRoute={getRoute('')} withConditions={homeRouteMatcher}>
         <Home />
-      </Location>
+      </Fragment>
 
-      <Fragment forRoute="/login">
+      <Fragment forRoute={getRoute('/login')}>
         <Login />
       </Fragment>
 
-      <Fragment forRoute="/register">
+      <Fragment forRoute={getRoute('/register')}>
         <Register />
       </Fragment>
 
-      <Fragment forRoute="/help">
+      <Fragment forRoute={getRoute('/help')}>
         <Help />
       </Fragment>
 
-      <Fragment forRoute="/about">
+      <Fragment forRoute={getRoute('/about')}>
         <About />
       </Fragment>
 

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 
-import UserFilter from '../../boiler-ui/lib/containers/routes/UserFilter'
+import UserFilter from '../../boiler-ui/lib/containers/UserFilter'
 
 import Dashboard from './Dashboard'
 import Welcome from './Welcome'

@@ -48,7 +48,7 @@ export const getLabel = (st = '') => st.replace(/\W/g, '').toLowerCase()
 export const getFunctionName = (fun) => {
   let ret = fun.toString()
   ret = ret.substr('function '.length)
-  ret = ret.substr(0, ret.indexOf('('))
+  ret = ret.substr(0, ret.indeRouteProcessorxOf('('))
   return ret
 }
 
@@ -66,5 +66,22 @@ export const getUserState = (state) => {
     router: state.router,
     loggedIn: statusSelector.loggedIn(state) ? true : false,
     loaded: statusSelector.loaded(state)
+  }
+}
+
+export const GetRoute = (BASEPATH) => (route) => BASEPATH + route
+export const RouteProcessor = (BASEPATH) => (routes = {}) => {
+  return Object.keys(routes).reduce((all, route) => {
+    return Object.assign({}, all, {
+      [BASEPATH + route]: routes[route]
+    })
+  }, {})
+}
+export const HomeRouteMatcher = (BASEPATH) => {
+  const getRoute = GetRoute(CORE.basepath)
+  return (location) => {
+    if(location.pathname == getRoute('')) return true
+    if(location.pathname == getRoute('/')) return true
+    return false
   }
 }

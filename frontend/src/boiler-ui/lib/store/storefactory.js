@@ -8,7 +8,6 @@ const configureStore = (opts = {}) => {
   const middleware = opts.middleware || []
   const routes = opts.routes || {}
   const reducer = opts.reducer
-  const basepath = opts.basepath || ''
   const initialState = opts.initialState
   const extraComposeArgs = opts.extraComposeArgs || []
   const sagaMiddleware = createSagaMiddleware()
@@ -17,8 +16,7 @@ const configureStore = (opts = {}) => {
     routerEnhancer,
     routerMiddleware  
   } = routerForBrowser({
-    routes,
-    basename: basepath
+    routes
   })
 
   const finalMiddleware = [
@@ -35,14 +33,9 @@ const configureStore = (opts = {}) => {
     ].concat(extraComposeArgs))
   )
 
-  
   const initialLocation = store.getState().router
   if (initialLocation) {
-    const relative = relativePath(initialLocation.basename)
-    const adjustedLocation = Object.assign({}, initialLocation, {
-      pathname: relative(initialLocation.pathname)
-    })
-    store.dispatch(initializeCurrentLocation(adjustedLocation))
+    store.dispatch(initializeCurrentLocation(initialLocation))  
   }
 
   store.runSaga = sagaMiddleware.run

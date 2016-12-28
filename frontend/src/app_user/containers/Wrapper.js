@@ -5,7 +5,7 @@ import AppBar from 'react-toolbox/lib/app_bar'
 import { IconButton } from 'react-toolbox/lib/button'
 import { Layout, NavDrawer, Panel, Sidebar } from 'react-toolbox/lib/layout'
 
-import UserFilter from '../../boiler-ui/lib/containers/routes/UserFilter'
+import UserFilter from '../../boiler-ui/lib/containers/UserFilter'
 
 import routerActions from '../../boiler-ui/lib/actions/router'
 
@@ -30,7 +30,7 @@ class Wrapper extends Component {
       <Layout>
         <Panel>
           <AppBar
-            title={ core.title }
+            title={ this.props.pagetitle }
             leftIcon="menu"
           />
           <div style={{ flex: 1, overflowY: 'auto' }}>
@@ -64,7 +64,7 @@ class Wrapper extends Component {
         </NavDrawer>
         <Panel>
           <AppBar
-            title={ core.title }
+            title={ this.props.pagetitle }
             leftIcon="menu"
             onLeftIconClick={ this.props.openMenu }
           />
@@ -84,8 +84,15 @@ class Wrapper extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const page = state.router.result || {}
+  const pagetitle = core.title + (
+    page.title ? 
+      ' : ' + page.title :
+      ''
+  )
   return {
     router: state.router,
+    pagetitle,
     isMenuOpen: menuSelector.open(state),
     loggedIn: userSelector.status.loggedIn(state),
     userLoaded: userSelector.status.loaded(state)
