@@ -7,6 +7,13 @@ const FORMS = {
       Text('email'),
       Text('password')
     ]
+  },
+
+  register: () => {
+    return [
+      Text('email'),
+      Text('password')
+    ]
   }
   
 }

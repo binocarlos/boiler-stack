@@ -9,10 +9,6 @@ import {
 
 class FormContainer extends Component {
 
-  componentDidMount() {
-    this.props.initialize()
-  }
-  
   render() {
     const FormComponent = this.props.formComponent
     const fields = this.props.getFields(this.props.data, this.props.meta)
@@ -46,7 +42,6 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const REQUIRED_ACTIONS = [
-  'actions.initialize',
   'actions.update',
   'actions.touch',
   'actions.touchform',
@@ -57,9 +52,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   deepCheck(ownProps, REQUIRED_ACTIONS)
   const actions = ownProps.actions
   return {
-    initialize: () => {
-      dispatch(actions.initialize())
-    },
     update: (name, value) => {
       dispatch(actions.update(name, value))
     },

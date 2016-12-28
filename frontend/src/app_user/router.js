@@ -6,6 +6,7 @@ import { processRoutes } from '../boiler-ui/lib/tools'
 // containers
 import Home from './containers/Home'
 import Login from './containers/Login'
+import Register from './containers/Register'
 
 // normal components
 import Help from './components/Help'
@@ -25,6 +26,9 @@ const routes = {
   },
   '/login': {
     page:'login'
+  },
+  '/register': {
+    page:'register'
   }
 }
 
@@ -42,6 +46,9 @@ const fragments = (relative) => {
       </Fragment>
       <Fragment forRoute='/login'>
         <Login />
+      </Fragment>
+      <Fragment forRoute='/register'>
+        <Register />
       </Fragment>
     </div>
   )

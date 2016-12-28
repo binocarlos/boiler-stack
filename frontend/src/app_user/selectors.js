@@ -53,6 +53,7 @@ export const installation = {
 const selectors = {
   user,
   login,
+  register,
   installation
 }
 

@@ -45,8 +45,8 @@
 */
 import Logger from '../logger'
 import deepCheck from 'deep-check-error'
-import { takeLatest, takeEvery } from 'redux-saga'
-import { put, call, fork, select } from 'redux-saga/effects'
+import { takeLatest, takeEvery, delay } from 'redux-saga'
+import { put, call, fork, select  } from 'redux-saga/effects'
 
 const REQUIRED_SETTINGS = [
   'getSchema',
@@ -140,9 +140,10 @@ const FormSagaFactory = (settings = {}) => {
       fork(listenInitialize),
       fork(listenLoad),
       fork(listenUpdate),
-      fork(listenTouch),
-      fork(listenTouchform)
+      fork(listenTouch)
     ]
+
+    yield put(actions.initialize({}))
   }
 
   return root

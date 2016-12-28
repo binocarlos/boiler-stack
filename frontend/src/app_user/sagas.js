@@ -23,6 +23,13 @@ const getSagas = (apis = {}) => {
       getSchema: () => Schema(schemas.login()),
       selector: selectors.login.form,
       actions: actions.user.login.form
+    }),
+
+    // register form
+    FormSaga({
+      getSchema: () => Schema(schemas.register()),
+      selector: selectors.register.form,
+      actions: actions.user.register.form
     })
 
   ]
