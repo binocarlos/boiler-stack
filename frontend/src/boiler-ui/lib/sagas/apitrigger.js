@@ -24,10 +24,13 @@ const ApiTriggerSagaFactory = (settings = {}) => {
   const trigger = settings.trigger
   const handler = settings.handler
   const selectors = settings.selectors
+  const logger = Logger('saga:apitrigger:' + trigger)
   
   function* triggerApi(action) {
     const payload = yield select(selectors.payload)
     const query = yield select(selectors.query)
+
+    logger('trigger api (payload, query): ', payload, query)
 
     yield put(handler(payload, query))
   }
