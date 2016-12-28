@@ -4,6 +4,7 @@ import update from 'immutability-helper'
 import deepCheck from 'deep-check-error'
 
 export const DEFAULT_STATE = {
+  request_count: 0,
   loggedIn: false,
   id: null,
   username: null,
@@ -27,6 +28,9 @@ const reduceUser = (state, user) => {
     },
     userdata: {
       $set: user.data || {}
+    },
+    request_count: {
+      $set: state.request_count + 1
     }
   })
 }
@@ -44,6 +48,9 @@ const reduceGuest = (state) => {
     },
     userdata: {
       $set: {}
+    },
+    request_count: {
+      $set: state.request_count + 1
     }
   })
 }

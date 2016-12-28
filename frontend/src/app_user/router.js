@@ -12,8 +12,6 @@ import Register from './containers/Register'
 import Help from './components/Help'
 import About from './components/About'
 
-
-
 const routes = {
   '/': {
     page:'dashboard'

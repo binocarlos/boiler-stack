@@ -16,14 +16,14 @@ const getSagas = (apis = {}) => {
     // login form
     FormSaga({
       getSchema: () => Schema(schemas.login()),
-      selector: selectors.login.form,
+      selector: selectors.user.login.form,
       actions: actions.user.login.form
     }),
 
     // register form
     FormSaga({
       getSchema: () => Schema(schemas.register()),
-      selector: selectors.register.form,
+      selector: selectors.user.register.form,
       actions: actions.user.register.form
     }),
 
@@ -50,7 +50,7 @@ const getSagas = (apis = {}) => {
       trigger: actions.user.login.form.types.submit,
       handler: actions.user.login.api.request,
       selectors: {
-        payload: selectors.login.formdata,
+        payload: selectors.user.login.formdata,
         query: (state) => null
       }
     }),
@@ -60,10 +60,10 @@ const getSagas = (apis = {}) => {
       trigger: actions.user.register.form.types.submit,
       handler: actions.user.register.api.request,
       selectors: {
-        payload: selectors.register.formdata,
+        payload: selectors.user.register.formdata,
         query: (state) => null
       }
-    }),
+    })
 
   ]
 

@@ -20,6 +20,7 @@ const userReducerTests = (opts = {}) => {
     t.deepEqual(reducer(undefined, actions.success({
       loggedIn: false
     })), {
+      request_count: 1,
       loggedIn: false,
       id: null,
       username: null,
@@ -36,6 +37,7 @@ const userReducerTests = (opts = {}) => {
         }
       }
     })), {
+      request_count: 1,
       loggedIn: true,
       id: 10,
       username: 'bob',

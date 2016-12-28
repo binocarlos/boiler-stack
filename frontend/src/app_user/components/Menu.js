@@ -34,7 +34,7 @@ class Menu extends Component {
   }
 
   render() {
-    return this.props.user ?
+    return this.props.loggedIn ?
       this.getUserMenu() :
       this.getGuestMenu()
   }

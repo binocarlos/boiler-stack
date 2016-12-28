@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 
 import { user } from '../selectors'
 
-import Dashboard from './Dashboard'
-import Welcome from './Welcome'
+import Dashboard from '../components/Dashboard'
+import Welcome from '../components/Welcome'
 
 class Home extends Component {
   render() {

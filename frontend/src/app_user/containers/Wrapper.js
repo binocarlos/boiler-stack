@@ -6,6 +6,7 @@ import { IconButton } from 'react-toolbox/lib/button'
 import { Layout, NavDrawer, Panel, Sidebar } from 'react-toolbox/lib/layout'
 
 import core from '../config/core'
+import selectors from '../selectors'
 import actions from '../actions'
 
 import Menu from '../components/Menu'
@@ -18,7 +19,7 @@ class Wrapper extends Component {
           active={ this.props.menuOpen }
           onOverlayClick={ this.props.closeMenu }>
           <Menu 
-            user={ this.props.user }
+            loggedIn={ this.props.loggedIn }
             onClick={ this.props.closeMenu }
           />
         </NavDrawer>
@@ -41,7 +42,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     router: state.router,
     menuOpen: state.menu.open,
-    user: null
+    loggedIn: selectors.user.status.loggedIn(state),
+    userLoaded: false
   }
 }
 

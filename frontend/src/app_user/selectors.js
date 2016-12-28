@@ -5,15 +5,7 @@ import {
 
 import screens from './config/screens'
 
-export const user = {
-  status: (state) => state.user.status,
-  record: (state) => user.status(state).record,
-  loggedIn: (state) => user.record(state).loggedIn,
-  id: (state) => user.record(state).id,
-  username: (state) => user.record(state).userdata,
-  userdata: (state) => user.record(state).userdata
-}
-
+// re-used between login and register
 const auth = (raw) => {
   const authSelector = {
     raw,
@@ -25,9 +17,22 @@ const auth = (raw) => {
   return authSelector
 }
 
-export const login = auth(state => state.user.login)
-export const register = auth(state => state.user.register)
+export const user = {
+  status: {
+    raw: (state) => state.user.status,
+    api: (state) => user.status.raw(state).api,
+    loaded: (state) => user.status.api(state).loaded,
+    record: (state) => user.status.raw(state).record,
+    loggedIn: (state) => user.record(state).loggedIn,
+    id: (state) => user.record(state).id,
+    username: (state) => user.record(state).userdata,
+    userdata: (state) => user.record(state).userdata
+  },
+  login: auth(state => state.user.login),
+  register: auth(state => state.user.register)
+}
 
+/*
 export const installation = {
 
   // raw
@@ -51,12 +56,12 @@ export const installation = {
     }
   }
 }
-
+*/
 const selectors = {
   user,
   login,
-  register,
-  installation
+  register/*,
+  installation*/
 }
 
 export default selectors
