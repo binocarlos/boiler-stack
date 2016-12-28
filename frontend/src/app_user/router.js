@@ -1,14 +1,16 @@
 import React, { Component, PropTypes } from 'react'
 import { RelativeFragment as Fragment } from 'redux-little-router'
-import LocationFilter from '../boiler-ui/lib/containers/LocationFilter'
-import { processRoutes } from '../boiler-ui/lib/tools'
+
+import Location from '../boiler-ui/lib/containers/routes/Location'
+import UserRedirect from '../boiler-ui/lib/containers/routes/UserRedirect'
 
 // containers
-import Home from './containers/Home'
 import Login from './containers/Login'
 import Register from './containers/Register'
 
 // normal components
+import Dashboard from './components/Dashboard'
+import Welcome from './components/Welcome'
 import Help from './components/Help'
 import About from './components/About'
 
@@ -30,24 +32,28 @@ const routes = {
   }
 }
 
+// relative strips the basepath from the current url
 const fragments = (relative) => {
+  const compareRoute = (route) => (pathname) => relative(pathname) == route
   return (
     <div>
-      <LocationFilter filter={pathname => relative(pathname) == '/'}>
-        <Home />
-      </LocationFilter>
-      <Fragment forRoute='/help'>
-        <Help />
-      </Fragment>
-      <Fragment forRoute='/about'>
-        <About />
-      </Fragment>
-      <Fragment forRoute='/login'>
+
+      <Location user={true} filter={compareRoute('/')}>
+        <Dashboard />
+      </Location>
+
+      <Location user={false} filter={compareRoute('/')}>
+        <Welcome />
+      </Location>
+
+      <UserRedirect route="/login" redirector={loggedIn => loggedIn ? '/' : null}>
         <Login />
-      </Fragment>
-      <Fragment forRoute='/register'>
+      </UserRedirect>
+
+      <UserRedirect route="/register" redirector={loggedIn => loggedIn ? '/' : null}>
         <Register />
-      </Fragment>
+      </UserRedirect>
+
     </div>
   )
 }

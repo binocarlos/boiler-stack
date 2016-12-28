@@ -1,5 +1,5 @@
 // re-used between login and register
-const userAuthSelectors = (raw) => {
+export const userAuthSelectors = (raw) => {
   const api = (state) => raw(state).api
   const form = (state) => raw(state).form
   return {
@@ -11,7 +11,7 @@ const userAuthSelectors = (raw) => {
   }
 }
 
-const userStatusSelectors = (raw) => {
+export const userStatusSelectors = (raw) => {
   const api = (state) => raw(state).api
   const record = (state) => raw(state).record
   return {
@@ -23,7 +23,7 @@ const userStatusSelectors = (raw) => {
   }
 }
 
-const UserSelectors = (raw) => {
+export const UserSelectors = (raw) => {
   return {
     status: userStatusSelectors(state => raw(state).status),
     login: userAuthSelectors(state => raw(state).login),
