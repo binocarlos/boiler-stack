@@ -12,7 +12,24 @@ import actions from '../actions'
 import Menu from '../components/Menu'
 
 class Wrapper extends Component {
-  render() {
+
+  loadingWrapper() {
+    return (
+      <Layout>
+        <Panel>
+          <AppBar
+            title={ core.title }
+            leftIcon="menu"
+          />
+          <div style={{ flex: 1, overflowY: 'auto' }}>
+            
+          </div>
+        </Panel>
+      </Layout>
+    )
+  }
+
+  fullWrapper() {
     return (
       <Layout>
         <NavDrawer 
@@ -36,6 +53,11 @@ class Wrapper extends Component {
       </Layout>
     )
   }
+  render() {
+    return this.props.userLoaded ?
+      this.fullWrapper() :
+      this.loadingWrapper()
+  }
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -43,7 +65,7 @@ const mapStateToProps = (state, ownProps) => {
     router: state.router,
     menuOpen: state.menu.open,
     loggedIn: selectors.user.status.loggedIn(state),
-    userLoaded: false
+    userLoaded: selectors.user.status.loaded(state)
   }
 }
 

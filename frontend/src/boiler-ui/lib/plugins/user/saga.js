@@ -1,7 +1,7 @@
 // api imports
 import deepCheck from 'deep-check-error'
 
-import { fork } from 'redux-saga/effects'
+import { fork, put } from 'redux-saga/effects'
 
 import ApiSaga from '../../sagas/api'
 import ApiTriggerSaga from '../../sagas/apitrigger'
@@ -77,7 +77,12 @@ const UserSaga = (settings = {}) => {
         payload: selectors.register.formdata,
         query: (state) => null
       }
-    })
+    }),
+
+    // trigger a user status load
+    function* initialUserLoad() {
+      yield put(actions.status.api.request())
+    }
 
   ]
 

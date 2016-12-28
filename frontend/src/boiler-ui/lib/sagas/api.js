@@ -28,7 +28,7 @@ const ApiSagaFactory = (settings = {}) => {
       logger('response', result)
       yield put(actions.success(result, action.query))
     } catch (e) {
-      logger('error', e.message)
+      logger('error', e.message, e.stack)
       yield put(actions.failure(e.message, action.query))
     }
   }

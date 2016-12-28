@@ -18,7 +18,8 @@ const userStatusSelectors = (raw) => {
     raw,
     api,
     record,
-    loggedIn: (state) => record(state).loggedIn
+    loggedIn: (state) => record(state).loggedIn,
+    loaded: (state) => record(state).request_count > 0
   }
 }
 
