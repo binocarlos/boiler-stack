@@ -1,5 +1,5 @@
 import Tape from 'tape'
-import UserStatusReducer, { DEFAULT_STATE } from '../../../../src/boiler-ui/lib/reducers/userstatus'
+import UserStatusReducer, { DEFAULT_STATE } from '../../../../src/boiler-ui/lib/plugins/user/userstatus_reducer'
 import ApiActions from '../../../../src/boiler-ui/lib/actions/api'
 
 const tape = (name, handler) => Tape('unit -> reducer -> user' + name, handler)

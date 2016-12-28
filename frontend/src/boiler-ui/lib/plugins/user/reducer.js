@@ -2,8 +2,8 @@
 import { combineReducers } from 'redux'
 
 import ApiReducer from '../../reducers/api'
-import UserStatusReducer from '../../reducers/userstatus'
 import FormReducer from '../../reducers/form'
+import UserStatusReducer from './userstatus_reducer'
 
 const UserReducer = (actions) => {
   return combineReducers({
