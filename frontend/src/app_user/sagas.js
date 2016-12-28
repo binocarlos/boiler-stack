@@ -1,5 +1,6 @@
 // saga imports
 import ApiSaga from '../boiler-ui/lib/sagas/api'
+import ApiTriggerSaga from '../boiler-ui/lib/sagas/apitrigger'
 import FormSaga from '../boiler-ui/lib/sagas/form'
 import Schema from '../boiler-ui/lib/utils/schema'
 
@@ -11,12 +12,6 @@ const getSagas = (apis = {}) => {
 
   // user
   const userSagas = [
-
-    // GET /auth/v1/status
-    ApiSaga({
-      api: apis.user.status.get,
-      actions: actions.user.status.api
-    }),
 
     // login form
     FormSaga({
@@ -30,7 +25,45 @@ const getSagas = (apis = {}) => {
       getSchema: () => Schema(schemas.register()),
       selector: selectors.register.form,
       actions: actions.user.register.form
-    })
+    }),
+
+    // GET /auth/v1/status
+    ApiSaga({
+      api: apis.user.status.get,
+      actions: actions.user.status.api
+    }),
+
+    // POST /auth/v1/login
+    ApiSaga({
+      api: apis.user.login.post,
+      actions: actions.user.login.api
+    }),
+
+    // POST /auth/v1/register
+    ApiSaga({
+      api: apis.user.register.post,
+      actions: actions.user.register.api
+    }),
+
+    // submit login form
+    ApiTriggerSaga({
+      trigger: actions.user.login.form.types.submit,
+      handler: actions.user.login.api.request,
+      selectors: {
+        payload: selectors.login.formdata,
+        query: (state) => null
+      }
+    }),
+
+    // submit register form
+    ApiTriggerSaga({
+      trigger: actions.user.register.form.types.submit,
+      handler: actions.user.register.api.request,
+      selectors: {
+        payload: selectors.register.formdata,
+        query: (state) => null
+      }
+    }),
 
   ]
 

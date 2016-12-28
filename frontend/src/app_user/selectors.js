@@ -14,17 +14,19 @@ export const user = {
   userdata: (state) => user.record(state).userdata
 }
 
-export const login = {
-  raw: (state) => state.user.login,
-  api: (state) => login.raw(state).api,
-  form: (state) => login.raw(state).form
+const auth = (raw) => {
+  const authSelector = {
+    raw,
+    api: (state) => authSelector.raw(state).api,
+    form: (state) => authSelector.raw(state).form,
+    formdata: (state) => authSelector.form(state).data,
+    formmeta: (state) => authSelector.form(state).meta
+  }
+  return authSelector
 }
 
-export const register = {
-  raw: (state) => state.user.register,
-  api: (state) => register.raw(state).api,
-  form: (state) => register.raw(state).form
-}
+export const login = auth(state => state.user.login)
+export const register = auth(state => state.user.register)
 
 export const installation = {
 

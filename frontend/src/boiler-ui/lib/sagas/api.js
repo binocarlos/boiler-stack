@@ -34,6 +34,7 @@ const ApiSagaFactory = (settings = {}) => {
   }
 
   function* listen() {
+    logger('listening: ' + trigger)
     yield takeLatest(trigger, apiSaga)
   }
 

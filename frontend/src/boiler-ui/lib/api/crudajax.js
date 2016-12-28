@@ -29,14 +29,14 @@ const crudAjaxFactory = (settings = {}) => {
             result.map(encode)
         })
     },
-    post:(query = {}, data) => {
+    post:(data, query = {}) => {
       return ajaxClient
         .post(getUrl(), data)
         .then(result => {
           return encode(result)
         })
     },
-    put:(query = {}, data) => {
+    put:(data, query = {}) => {
       if(!query.id) throw new Error('no id query given')
       return ajaxClient
         .put(getUrl() + '/' + query.id, data)

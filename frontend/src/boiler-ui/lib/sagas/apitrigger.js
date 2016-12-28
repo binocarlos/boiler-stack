@@ -36,6 +36,7 @@ const ApiTriggerSagaFactory = (settings = {}) => {
   }
 
   function* root() {
+    logger('listening: ' + trigger)
     yield takeLatest(trigger, triggerApi)
   }
 

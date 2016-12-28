@@ -117,22 +117,27 @@ const FormSagaFactory = (settings = {}) => {
   function* root() {
 
     function* listenInitialize() {
+      logger('listening:initialize: ' + triggers.initialize)
       yield takeEvery(triggers.initialize, initializeSaga)  
     }
 
     function* listenLoad() {
+      logger('listening:load: ' + triggers.load)
       yield takeEvery(triggers.load, loadSaga)  
     }
 
     function* listenUpdate() {
+      logger('listening:update: ' + triggers.update)
       yield takeEvery(triggers.update, updateSaga)  
     }
 
     function* listenTouch() {
+      logger('listening:touch: ' + triggers.touch)
       yield takeEvery(triggers.touch, touchSaga)  
     }
 
     function* listenTouchform() {
+      logger('listening:touchform: ' + triggers.touchform)
       yield takeEvery(triggers.touchform, touchformSaga)  
     }
 
