@@ -7,8 +7,21 @@ import Register from './containers/Register'
 import Home from './components/Home'
 import Help from './components/Help'
 import About from './components/About'
+import Installations from './components/Installations'
 
 import { routeProcessor, getRoute, homeRouteMatcher } from './tools'
+
+const guest = (route) => {
+  return Object.assign({}, route, {
+    requireGuest: getRoute('/')
+  })
+}
+
+const user = (route) => {
+  return Object.assign({}, route, {
+    requireUser: getRoute('/')
+  })
+}
 
 const routes = routeProcessor({
   '': {},
@@ -19,21 +32,22 @@ const routes = routeProcessor({
   '/about': {
     title:'About'
   },
-  '/login': {
-    title:'Login',
-    requireGuest: getRoute('/')
-  },
-  '/register': {
-    title:'Register',
-    requireGuest: getRoute('/')
-  }
+  '/login': guest({
+    title:'Login'
+  }),
+  '/register': guest({
+    title:'Register'
+  }),
+  '/companies': user({
+    title:'Companies'
+  })
 })
 
 // relative strips the basepath from the current url
 const fragments = (relative) => {
   const compareRoute = (route) => (pathname) => relative(pathname) == route
   return (
-    <div>
+    <div className='routeContainer'>
 
       <Fragment forRoute={getRoute('')} withConditions={homeRouteMatcher}>
         <Home />
@@ -53,6 +67,10 @@ const fragments = (relative) => {
 
       <Fragment forRoute={getRoute('/about')}>
         <About />
+      </Fragment>
+
+      <Fragment forRoute={getRoute('/companies')}>
+        <Installations />
       </Fragment>
 
     </div>

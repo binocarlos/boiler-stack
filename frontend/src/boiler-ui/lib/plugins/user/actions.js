@@ -4,15 +4,15 @@ import FormActions from '../../actions/form'
 const UserActions = (base) => {
   return {
     status: {
-      api: ApiActions(base + 'STATUS_API')
+      api: ApiActions(base + '_STATUS_API')
     },
     login: {
-      api: ApiActions(base + 'LOGIN_API'),
-      form: FormActions(base + 'LOGIN_FORM')
+      api: ApiActions(base + '_LOGIN_API'),
+      form: FormActions(base + '_LOGIN_FORM')
     },
     register: {
-      api: ApiActions(base + 'REGISTER_API'),
-      form: FormActions(base + 'REGISTER_FORM')
+      api: ApiActions(base + '_REGISTER_API'),
+      form: FormActions(base + '_REGISTER_FORM')
     }
   }
 }

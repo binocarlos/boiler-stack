@@ -5,7 +5,8 @@ const icons = {
   home: 'home',
   logout: 'exit_to_app',
   login: 'account_circle',
-  register: 'create'
+  register: 'create',
+  installation: 'business'
 }
 
 export default icons
