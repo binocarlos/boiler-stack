@@ -11,6 +11,7 @@ export class GuestMenu extends Component {
     return (
       <BaseMenu 
         items={guestMenu}
+        hide={this.props.hide}
         redirect={this.props.redirect}
         ripple={this.props.ripple}
       />
@@ -23,6 +24,7 @@ export class UserMenu extends Component {
     return (
       <BaseMenu 
         items={userMenu}
+        hide={this.props.hide}
         redirect={this.props.redirect}
         ripple={this.props.ripple}
       />

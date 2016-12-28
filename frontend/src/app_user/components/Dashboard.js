@@ -12,7 +12,9 @@ class Dashboard extends Component {
       <Page>
         <p>Dashboard</p>
         <UserMenu 
-          hideHome={true} 
+          hide={{
+            'Dashboard': true
+          }}
           ripple={false} 
           redirect={this.props.redirect}
         />
