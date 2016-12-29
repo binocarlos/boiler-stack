@@ -24,7 +24,7 @@ const ApiTriggerSagaFactory = (settings = {}) => {
   const trigger = settings.trigger
   const handler = settings.handler
   const selectors = settings.selectors
-  const logger = Logger('saga:apitrigger:' + trigger)
+  const logger = Logger('saga : apitrigger : ' + trigger.toLowerCase())
   
   function* triggerApi(action) {
     const payload = yield select(selectors.payload)

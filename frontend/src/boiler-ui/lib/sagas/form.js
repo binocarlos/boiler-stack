@@ -68,7 +68,7 @@ const FormSagaFactory = (settings = {}) => {
   const getSchema = settings.getSchema
   const selector = settings.selector
   const triggers = actions.types
-  const logger = Logger('saga:form:' + actions.base)
+  const logger = Logger('saga : form : ' + actions.base.toLowerCase())
 
   // this is populated by settings.getSchema using the data
   // given to initalize or load

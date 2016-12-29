@@ -22,7 +22,10 @@ import reducer from './reducer'
 // we keep the route info and fragments in the same file for readability
 // the route info is what is reduced when the route is active
 // the fragments control what container shows for what route
-import router from './router'
+import {
+  routes,
+  fragments
+} from './routes'
 
 // an opinionated App Wrapper - this is kept in the app because there will be
 // lots of variations in how the overall app layout should work
@@ -36,7 +39,6 @@ const BASE_PATH = '/app'
 const INITIAL_STATE = window.__INITIAL_STATE__
 
 // the route info and sagas that we pass to the AppFactory
-const routes = router.routes
 const sagas = Sagas(apis)
 
 // create a render function that we pass our root container into
@@ -52,8 +54,8 @@ ReactDOM.render(
   render(
     <Wrapper>
       <Screens
-        basepath={BASE_PATH}
-        getFragments={router.fragments}
+        basepath={ BASE_PATH }
+        getFragments={ fragments }
       />
     </Wrapper>
   ),

@@ -19,7 +19,7 @@ const ApiSagaFactory = (settings = {}) => {
   const api = settings.api
   const trigger = actions.types.request
 
-  const logger = Logger('saga:api:' + actions.base)
+  const logger = Logger('saga : api : ' + actions.base.toLowerCase())
 
   function* apiSaga(action) {
     logger('request', action)

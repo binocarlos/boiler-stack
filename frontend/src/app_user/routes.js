@@ -25,7 +25,7 @@ const user = (route) => {
   })
 }
 
-const routes = routeProcessor({
+export const routes = routeProcessor({
   '': {},
   '/': {},
   '/help': {
@@ -48,12 +48,17 @@ const routes = routeProcessor({
 
 // functions run when a route is loaded
 // we can dispatch actions to sagas
-const triggers = () => {
-  loadCompanies: (dispatch) => dispatch(actions.installation.table.api.list.request())
+export const triggers = {
+  loadCompanies: (routerState) => {
+    return {
+      type: 'TEST2'
+    }
+  },
+  loadCompanies2: (routerState) => actions.installation.table.api.list.request()
 }
 
 // relative strips the basepath from the current url
-const fragments = (relative) => {
+export const fragments = (relative) => {
   const compareRoute = (route) => (pathname) => relative(pathname) == route
   return (
     <div className='routeContainer'>
@@ -88,5 +93,6 @@ const fragments = (relative) => {
 
 export default {
   routes,
+  triggers,
   fragments
 }

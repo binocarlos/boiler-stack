@@ -28,7 +28,7 @@ const UserSaga = (settings = {}) => {
   const selectors = settings.selectors
   const apis = settings.apis
   const successRedirect = settings.successRedirect
-  const logger = Logger('saga:user:' + actions.base)
+  const logger = Logger('saga:user')
 
   function* triggerUserReload() {
     yield put(actions.status.api.request())
