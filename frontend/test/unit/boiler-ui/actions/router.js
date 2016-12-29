@@ -11,7 +11,8 @@ const routerActionTests = (opts = {}) => {
     t.deepEqual(
       routerActions.types,
       {
-        push: PUSH
+        push: PUSH,
+        changed: 'ROUTER_LOCATION_CHANGED'
       },
       'types'
     )
