@@ -49,12 +49,7 @@ export const routes = routeProcessor({
 // functions run when a route is loaded
 // we can dispatch actions to sagas
 export const triggers = {
-  loadCompanies: (routerState) => {
-    return {
-      type: 'TEST2'
-    }
-  },
-  loadCompanies2: (routerState) => actions.installation.table.api.list.request()
+  loadCompanies: (routerState) => actions.installation.table.api.list.request()
 }
 
 // relative strips the basepath from the current url

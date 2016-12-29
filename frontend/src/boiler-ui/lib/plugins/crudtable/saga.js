@@ -21,7 +21,7 @@ const CrudTableSaga = (settings = {}) => {
   const sagas = [
 
     ApiSaga({
-      api: api.list,
+      api: api,
       actions: actions.list
     })
 
