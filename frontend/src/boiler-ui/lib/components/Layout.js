@@ -13,6 +13,7 @@ class LayoutComponent extends Component {
 
     const panelBarClass = this.props.panelBarClass
     const panelBarContent = this.props.panelBarContent
+    const panelBarProps = this.props.panelBarProps || {}
 
     let sideDrawer = null
     let panelBar = null
@@ -39,7 +40,7 @@ class LayoutComponent extends Component {
     }
     else if(panelBarContent){
       panelBar = (
-        <PanelBar flat>
+        <PanelBar {...panelBarProps}>
           {panelBarContent}
         </PanelBar>
       )

@@ -3,11 +3,12 @@ import { RelativeFragment as Fragment } from 'redux-little-router'
 
 import Login from './containers/Login'
 import Register from './containers/Register'
+import Installations from './containers/Installations'
 
 import Home from './components/Home'
 import Help from './components/Help'
 import About from './components/About'
-import Installations from './components/Installations'
+
 
 import { routeProcessor, getRoute, homeRouteMatcher } from './tools'
 

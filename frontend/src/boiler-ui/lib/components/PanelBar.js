@@ -9,6 +9,9 @@ class PanelBar extends Component {
     return (
       <AppBar 
         theme={theme}
+        title={this.props.title}
+        flat={this.props.flat}
+        leftIcon={this.props.leftIcon}
       >
         {this.props.children}
       </AppBar>
