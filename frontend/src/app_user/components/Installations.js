@@ -19,7 +19,7 @@ class Installations extends Component {
 
     return (
       <Layout
-        sideDrawerContent={sideDrawerContent}
+        
         panelBarContent={panelBarContent}
       >
   

@@ -14,47 +14,67 @@ class LayoutComponent extends Component {
     const panelBarClass = this.props.panelBarClass
     const panelBarContent = this.props.panelBarContent
 
-    const sideDrawer = sideDrawerClass ?
-      (
+    let sideDrawer = null
+    let panelBar = null
+
+    if(sideDrawerClass){
+      sideDrawer = (
         <sideDrawerClass />
-      ) :
-      (
-        sideDrawerContent ?
-        (
-          <SideDrawer>
-            <div>
-              {sideDrawerContent}
-            </div>
-          </SideDrawer>
-        ) :
-        null
       )
+    }
+    else if(sideDrawerContent) {
+      sideDrawer = (
+        <SideDrawer>
+          <div>
+            {sideDrawerContent}
+          </div>
+        </SideDrawer>
+      ) 
+    }
 
-    const panelBar = panelBarClass ?
-      (
+    if(panelBarClass){
+      panelBar = (
         <panelBarClass />
+      )
+    }
+    else if(panelBarContent){
+      panelBar = (
+        <PanelBar flat>
+          {panelBarContent}
+        </PanelBar>
+      )
+    }
+
+    const contentPanel = panelBar ?
+      (
+        <Panel>
+          {panelBar}
+          <Page>
+            {this.props.children}
+          </Page>
+        </Panel>
       ) :
       (
-        panelBarContent ?
-        (
-          <PanelBar flat>
-            {panelBarContent}
-          </PanelBar>
-        ) :
-        null
+        <Panel>
+          <Page>
+            {this.props.children}
+          </Page>
+        </Panel>
       )
 
-    return (
-      <Layout>
-        {sideDrawer}
-        <Panel>
-            {panelBar}
-            <Page>
-              {this.props.children}
-            </Page>
-        </Panel>
-      </Layout>
-    )
+    return sideDrawer ?
+      (
+        <Layout>
+          {sideDrawer}
+          {contentPanel}
+        </Layout>
+      ) :
+      (
+        <Layout>
+          {contentPanel}
+        </Layout>
+      )
+
   }
 
 }
