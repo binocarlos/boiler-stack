@@ -43,10 +43,6 @@ class IconMenu extends Component {
     const theme = this.props.white ?
       whitetheme :
       null
-
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.dir(whitetheme)
     return (
       <UIIconMenu theme={theme} icon={this.props.icon} menuRipple iconRipple>
         { this.processItems(this.props.items, redirect, this.props.ripple) }

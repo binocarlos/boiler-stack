@@ -75,14 +75,10 @@ class Wrapper extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const page = state.router.result || {}
-  const pageTitle = core.title + (
-    page.title ? 
-      ' : ' + page.title :
-      ''
-  )
   return {
     router: state.router,
-    pageTitle,
+    pageTitle: core.title,
+    page,
     isMenuOpen: menuSelector.open(state),
     loggedIn: userSelector.status.loggedIn(state),
     userLoaded: userSelector.status.loaded(state)

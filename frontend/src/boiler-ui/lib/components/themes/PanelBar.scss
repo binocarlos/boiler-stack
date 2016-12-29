@@ -1,0 +1,6 @@
+@import "~react-toolbox/lib/colors";
+.appBar {
+  color: $palette-grey-700;
+  background-color: $palette-grey-100;
+  z-index: 0 !important;
+}

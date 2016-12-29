@@ -4,7 +4,7 @@ class Page extends Component {
 
   render() {
     return (
-      <div style={{ padding: this.props.padding + 'rem' }}>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
         {this.props.children}
       </div>
     )

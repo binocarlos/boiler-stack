@@ -1,27 +1,75 @@
 import React, { Component, PropTypes } from 'react'
-import { Layout, NavDrawer, Panel } from 'react-toolbox/lib/layout'
-import Page from '../../boiler-ui/lib/components/Page'
-import Link from './Link'
+import Layout from '../../boiler-ui/lib/components/Layout'
 
 class Installations extends Component {
 
   render() {
 
+    const sideDrawerContent = (
+      <div>
+        This is the sidebar
+      </div>
+    )
+
+    const panelBarContent = (
+      <div>
+        This is the panelbar
+      </div>
+    )
+
     return (
-      <Layout>
-          <NavDrawer active={true}
-              pinned={true} permanentAt='xxxl'>
-              <p>
-                  Navigation, account switcher, etc. go here.
-              </p>
-          </NavDrawer>
-          <Panel>
-              <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
-                  <h1>Main Content</h1>
-                  <p>Main content goes here.</p>
-                  
-              </div>
-          </Panel>
+      <Layout
+        sideDrawerContent={sideDrawerContent}
+        panelBarContent={panelBarContent}
+      >
+  
+        <div>
+            <h1>Main Content</h1>
+            <p>Main content goes here.</p>
+            
+          <br /><br /><br /><br /><br /><br />
+
+          Navigation, account switcher, etc. go here.
+          <br /><br /><br /><br /><br /><br />
+
+          Navigation, account switcher, etc. go here.
+          <br /><br /><br /><br /><br /><br />
+
+          Navigation, account switcher, etc. go here.
+          <br /><br /><br /><br /><br /><br />
+
+          Navigation, account switcher, etc. go here.
+          <br /><br /><br /><br /><br /><br />
+
+          Navigation, account switcher, etc. go here.
+          <br /><br /><br /><br /><br /><br />
+
+          Navigation, account switcher, etc. go here.
+          <br /><br /><br /><br /><br /><br />
+
+          Navigation, account switcher, etc. go here.
+          <br /><br /><br /><br /><br /><br />
+
+          Navigation, account switcher, etc. go here.
+          <br /><br /><br /><br /><br /><br />
+
+          Navigation, account switcher, etc. go here.
+          <br /><br /><br /><br /><br /><br />
+
+          Navigation, account switcher, etc. go here.
+          <br /><br /><br /><br /><br /><br />
+
+          Navigation, account switcher, etc. go here.<br /><br /><br /><br /><br /><br />
+
+          Navigation, account switcher, etc. go here.
+          <br /><br /><br /><br /><br /><br />
+
+          Navigation, account switcher, etc. go here.
+          <br /><br /><br /><br /><br /><br />
+
+          Navigation, account switcher, etc. go here.
+        </div>
+              
       </Layout>
     )
   }
