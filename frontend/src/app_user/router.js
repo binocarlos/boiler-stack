@@ -3,12 +3,13 @@ import { RelativeFragment as Fragment } from 'redux-little-router'
 
 import Login from './containers/Login'
 import Register from './containers/Register'
-import Installations from './containers/Installations'
+import InstallationTable from './containers/InstallationTable'
 
 import Home from './components/Home'
 import Help from './components/Help'
 import About from './components/About'
 
+import actions from './actions'
 
 import { routeProcessor, getRoute, homeRouteMatcher } from './tools'
 
@@ -40,9 +41,16 @@ const routes = routeProcessor({
     title:'Register'
   }),
   '/companies': user({
-    title:'Companies'
+    title:'Companies',
+    trigger: 'loadCompanies'
   })
 })
+
+// functions run when a route is loaded
+// we can dispatch actions to sagas
+const triggers = () => {
+  loadCompanies: (dispatch) => dispatch(actions.installation.table.api.list.request())
+}
 
 // relative strips the basepath from the current url
 const fragments = (relative) => {
@@ -71,7 +79,7 @@ const fragments = (relative) => {
       </Fragment>
 
       <Fragment forRoute={getRoute('/companies')}>
-        <Installations />
+        <InstallationTable />
       </Fragment>
 
     </div>

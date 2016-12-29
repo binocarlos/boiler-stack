@@ -17,7 +17,7 @@ const ListReducer = (types = {}) => {
 
   deepCheck(types, REQUIRED_TYPES)
 
-  const apiReducer = (state = DEFAULT_STATE, action) => {
+  return (state = DEFAULT_STATE, action) => {
     switch (action.type) {
 
       // input = array of objects
@@ -43,8 +43,6 @@ const ListReducer = (types = {}) => {
         return state
     }
   }
-
-  return apiReducer
 }
 
 export default ListReducer

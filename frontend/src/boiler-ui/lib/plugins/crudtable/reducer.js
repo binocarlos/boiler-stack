@@ -3,13 +3,16 @@ import { combineReducers } from 'redux'
 
 import ApiReducer from '../../reducers/api'
 import ValueReducer from '../../reducers/value'
+import ListReducer from '../../reducers/list'
 
 const CrudReducer = (actions) => {
   return combineReducers({
-    list: combineReducers({
-      api: ApiReducer(actions.list.api.types),
-      selection: ValueReducer(actions.list.selection.types),
-      data: ValueReducer(actions.list.data.types)
+    api: combineReducers({
+      list: ApiReducer(actions.api.list.types)
+    }),
+    selection: ValueReducer(actions.selection.types),
+    data: ListReducer({
+      update: actions.api.list.types.success
     })
   })
 }

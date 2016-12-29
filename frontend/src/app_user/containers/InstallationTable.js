@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import CrudList from '../../boiler-ui/lib/components/toolbars/CrudList'
+import CrudTableToolbar from '../../boiler-ui/lib/components/toolbars/CrudTable'
 import icons from '../config/icons'
 
 class Installations extends Component {
@@ -9,7 +9,7 @@ class Installations extends Component {
   render() {
 
     return (
-      <CrudList
+      <CrudTableToolbar
         title='Companies'
         icon={icons.installation}
         onAdd={this.props.onAdd}
@@ -22,7 +22,7 @@ class Installations extends Component {
         <div>
             table
         </div>
-      </CrudList>
+      </CrudTableToolbar>
     )
   }
 

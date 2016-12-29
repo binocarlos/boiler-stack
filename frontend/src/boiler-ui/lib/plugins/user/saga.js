@@ -1,4 +1,4 @@
-// api imports
+import Logger from '../../logger'
 import deepCheck from 'deep-check-error'
 
 import { takeLatest } from 'redux-saga'
@@ -28,6 +28,7 @@ const UserSaga = (settings = {}) => {
   const selectors = settings.selectors
   const apis = settings.apis
   const successRedirect = settings.successRedirect
+  const logger = Logger('saga:user:' + actions.base)
 
   function* triggerUserReload() {
     yield put(actions.status.api.request())
@@ -116,10 +117,12 @@ const UserSaga = (settings = {}) => {
 
     // listen for a successful login/register and refresh the user status
     function* triggerRefresh() {
-      yield takeLatest([
+      const types = [
         actions.login.api.types.success,
         actions.register.api.types.success
-      ], triggerUserReloadThenRedirect)
+      ]
+      types.forEach(type => logger('listening: ' + type))
+      yield takeLatest(types, triggerUserReloadThenRedirect)
     },
 
     // listen for either route changes or user status refreshes
@@ -127,10 +130,12 @@ const UserSaga = (settings = {}) => {
     // this is controlled by the info passed to the redux-little-router
     // reducer by the routeinfo
     function* checkRouteAccess() {
-      yield takeLatest([
+      const types = [
         actions.status.api.types.success,
         routerActions.types.changed
-      ], checkCurrentRoute)
+      ]
+      types.forEach(type => logger('listening: ' + type))
+      yield takeLatest(types, checkCurrentRoute)
     },
 
     triggerUserReload

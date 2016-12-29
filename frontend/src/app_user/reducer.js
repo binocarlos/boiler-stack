@@ -2,7 +2,7 @@ import { combineReducers } from 'redux'
 
 import MenuReducer from '../boiler-ui/lib/plugins/menu/reducer'
 import UserReducer from '../boiler-ui/lib/plugins/user/reducer'
-import CrudReducer from '../boiler-ui/lib/plugins/crud/reducer'
+import CrudTableReducer from '../boiler-ui/lib/plugins/crudtable/reducer'
 
 import {
   menu as menuActions,
@@ -14,8 +14,9 @@ const reducer = combineReducers({
 
   menu: MenuReducer(menuActions),
   user: UserReducer(userActions),
-  installation: CrudReducer(installationActions)
-
+  installation: combineReducers({
+    table: CrudTableReducer(installationActions.table)
+  })
 })
 
 export default reducer
