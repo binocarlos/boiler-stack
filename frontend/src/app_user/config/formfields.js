@@ -1,4 +1,4 @@
-import Text from '../../boiler-ui/lib/utils/formfields/Text'
+import Text from '../../boiler-ui/lib/utils/formfields/text'
 
 const FORMS = {
 
