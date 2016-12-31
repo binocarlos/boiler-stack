@@ -44,7 +44,10 @@ export const routes = routeProcessor({
     title:'Companies',
     trigger: 'loadCompanies',
     '/add': {
-      title:'Companies ADD'
+      title:'Companies ADD',
+      '/child': {
+        title: 'Child'
+      }
     },
     '/edit/:id': {
       title:'Companies EDIT'
@@ -90,6 +93,9 @@ export const fragments = (relative) => {
         </AbsoluteFragment>
         <Fragment forRoute='/add'>
           <div>ADD</div>
+          <Fragment forRoute='/child'>
+            <div>CHILD</div>
+          </Fragment>
         </Fragment>
         <Fragment forRoute='/edit/:id'>
           <div>EDIT</div>

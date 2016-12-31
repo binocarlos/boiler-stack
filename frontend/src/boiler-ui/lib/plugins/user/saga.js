@@ -30,6 +30,13 @@ const UserSaga = (settings = {}) => {
   const successRedirect = settings.successRedirect
   const logger = Logger('saga:user')
 
+  // recurse over the parent routes until one says '{requireUser, requireGuest}'
+  function doesRouteRequireProp(route, prop) {
+    if(route[prop]) return route[prop]
+    if(route.parent) return doesRouteRequireProp(route.parent, prop)
+    return null
+  }
+
   function* triggerUserReload() {
     yield put(actions.status.api.request())
   }
@@ -53,11 +60,14 @@ const UserSaga = (settings = {}) => {
 
     const page = routerState.result || {}
 
-    if(page.requireUser && !loggedIn){
-      yield put(routerActions.push(page.requireUser))
+    const doesRequireUser = doesRouteRequireProp(page, 'requireUser')
+    const doesRequireGuest = doesRouteRequireProp(page, 'requireGuest')
+
+    if(doesRequireUser && !loggedIn){
+      yield put(routerActions.push(doesRequireUser))
     }
-    else if(page.requireGuest && loggedIn){
-      yield put(routerActions.push(page.requireGuest))
+    else if(doesRequireGuest && loggedIn){
+      yield put(routerActions.push(doesRequireGuest))
     }
   }
 
