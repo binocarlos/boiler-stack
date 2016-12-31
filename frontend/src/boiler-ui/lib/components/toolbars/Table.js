@@ -5,7 +5,7 @@ import Button from 'react-toolbox/lib/button'
 import Layout from '../Layout'
 import ButtonMenu from '../ButtonMenu'
 
-class CrudList extends Component {
+class TableToolbar extends Component {
 
   getAddButton() {
     if(!this.props.onAdd) return
@@ -57,4 +57,4 @@ class CrudList extends Component {
 
 }
 
-export default CrudList
+export default TableToolbar

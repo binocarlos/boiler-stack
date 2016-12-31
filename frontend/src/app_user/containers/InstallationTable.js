@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
 import { router as routerActions } from '../actions'
-import CrudTableToolbar from '../../boiler-ui/lib/components/toolbars/CrudTable'
+import TableToolbar from '../../boiler-ui/lib/components/toolbars/Table'
 import icons from '../config/icons'
 import { getRoute } from '../tools'
 
@@ -11,7 +11,7 @@ class Installations extends Component {
   render() {
 
     return (
-      <CrudTableToolbar
+      <TableToolbar
         title='Companies'
         icon={icons.installation}
         onAdd={() => this.props.redirect('/companies/add')}
@@ -24,7 +24,7 @@ class Installations extends Component {
         <div>
             table
         </div>
-      </CrudTableToolbar>
+      </TableToolbar>
     )
   }
 

@@ -15,9 +15,6 @@ export const installation = CrudAjax({
   getUrl: () => URLS.installation
 })
 
-console.log('-------------------------------------------');
-console.log('-------------------------------------------');
-console.dir(installation)
 const apis = {
   user,
   installation

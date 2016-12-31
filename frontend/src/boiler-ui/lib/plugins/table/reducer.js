@@ -5,16 +5,17 @@ import ApiReducer from '../../reducers/api'
 import ValueReducer from '../../reducers/value'
 import ListReducer from '../../reducers/list'
 
-const CrudReducer = (actions) => {
+const TableReducer = (actions) => {
   return combineReducers({
-    api: combineReducers({
-      list: ApiReducer(actions.api.list.types)
-    }),
+    list: ApiReducer(actions.list.types),
     selection: ValueReducer(actions.selection.types),
+
+    // this reduces the result from the list.success
+    // action and maps it into a table structure
     data: ListReducer({
-      update: actions.api.list.types.success
+      update: actions.list.types.success
     })
   })
 }
 
-export default CrudReducer
+export default TableReducer

@@ -1,6 +1,6 @@
 import UserSaga from '../boiler-ui/lib/plugins/user/saga'
 import RouteTriggerSaga from '../boiler-ui/lib/sagas/routetrigger'
-import CrudTableSaga from '../boiler-ui/lib/plugins/crudtable/saga'
+import ApiSaga from '../boiler-ui/lib/sagas/api'
 import schemas from './config/schemas'
 import { user as userSelectors } from './selectors'
 
@@ -31,9 +31,9 @@ const getSagas = (apis = {}) => {
       apis: userApis
     }),
 
-    CrudTableSaga({
+    ApiSaga({
       api: installationApi.list,
-      actions: installationActions.table.api
+      actions: installationActions.table.list
     }),
 
     RouteTriggerSaga({
