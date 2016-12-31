@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { RelativeFragment as Fragment } from 'redux-little-router'
+import { RelativeFragment as Fragment, AbsoluteFragment } from 'redux-little-router'
 
 import Login from './containers/Login'
 import Register from './containers/Register'
@@ -42,7 +42,13 @@ export const routes = routeProcessor({
   }),
   '/companies': user({
     title:'Companies',
-    trigger: 'loadCompanies'
+    trigger: 'loadCompanies',
+    '/add': {
+      title:'Companies ADD'
+    },
+    '/edit/:id': {
+      title:'Companies EDIT'
+    }
   })
 })
 
@@ -79,8 +85,18 @@ export const fragments = (relative) => {
       </Fragment>
 
       <Fragment forRoute={getRoute('/companies')}>
-        <InstallationTable />
+        <AbsoluteFragment withConditions={location => location.route === getRoute('/companies')}>
+          <InstallationTable />
+        </AbsoluteFragment>
+        <Fragment forRoute='/add'>
+          <div>ADD</div>
+        </Fragment>
+        <Fragment forRoute='/edit/:id'>
+          <div>EDIT</div>
+        </Fragment>
       </Fragment>
+
+      
 
     </div>
   )

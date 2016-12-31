@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
+import { router as routerActions } from '../actions'
 import CrudTableToolbar from '../../boiler-ui/lib/components/toolbars/CrudTable'
 import icons from '../config/icons'
+import { getRoute } from '../tools'
 
 class Installations extends Component {
 
@@ -12,7 +14,7 @@ class Installations extends Component {
       <CrudTableToolbar
         title='Companies'
         icon={icons.installation}
-        onAdd={this.props.onAdd}
+        onAdd={() => this.props.redirect('/companies/add')}
         redirect={this.props.redirect}
         actions={[
           ['Test1', 'inbox', '/'],
@@ -35,8 +37,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onAdd: () => console.log('adding'),
-    redirect: (path) => dispatch(routerActions.push(path))
+    redirect: (path) => dispatch(routerActions.push(getRoute(path)))
   }
 }
 
