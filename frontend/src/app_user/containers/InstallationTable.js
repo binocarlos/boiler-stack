@@ -6,7 +6,7 @@ import TableToolbar from '../../boiler-ui/lib/components/toolbars/Table'
 import icons from '../config/icons'
 import { getRoute } from '../tools'
 
-class Installations extends Component {
+class InstallationTable extends Component {
 
   render() {
 
@@ -45,4 +45,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Installations)
+)(InstallationTable)

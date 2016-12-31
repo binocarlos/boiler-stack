@@ -14,6 +14,12 @@ const FORMS = {
       Text('email'),
       Text('password')
     ]
+  },
+
+  installation: () => {
+    return [
+      Text('name')
+    ]
   }
   
 }

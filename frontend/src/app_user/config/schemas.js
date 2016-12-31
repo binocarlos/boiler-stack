@@ -32,7 +32,10 @@ const SCHEMAS = {
 
   installation: () => {
     return [
-      Text('name')
+      Text({
+        name: 'name',
+        required: true
+      })
     ]
   }
 }

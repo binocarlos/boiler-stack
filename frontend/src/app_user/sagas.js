@@ -1,8 +1,15 @@
 import UserSaga from '../boiler-ui/lib/plugins/user/saga'
 import RouteTriggerSaga from '../boiler-ui/lib/sagas/routetrigger'
 import ApiSaga from '../boiler-ui/lib/sagas/api'
+import FormSaga from '../boiler-ui/lib/sagas/form'
+
+import Schema from '../boiler-ui/lib/utils/schema'
+
 import schemas from './config/schemas'
-import { user as userSelectors } from './selectors'
+import { 
+  user as userSelectors,
+  installation as installationSelectors
+} from './selectors'
 
 import { 
   user as userActions,
@@ -38,7 +45,14 @@ const getSagas = (apis = {}) => {
       apis: userApis
     }),
 
-    // installation api sagas
+    // installation sagas
+
+    // form
+    FormSaga({
+      getSchema: () => Schema(schemas.installation()),
+      selector: (state) => installationSelectors.form(state).fields,
+      actions: installationActions.form.fields
+    }),
 
     // GET /api/v1/installations
     ApiSaga({

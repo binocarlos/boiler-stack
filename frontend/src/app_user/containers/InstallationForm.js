@@ -3,29 +3,41 @@ import { connect } from 'react-redux'
 
 import { router as routerActions } from '../actions'
 import FormToolbar from '../../boiler-ui/lib/components/toolbars/Form'
+import FormComponent from '../../boiler-ui/lib/components/Form'
+import FormContainer from '../../boiler-ui/lib/containers/Form'
 import icons from '../config/icons'
 import { getRoute } from '../tools'
 
-import {
-  installation as actions
-} from '../actions'
+import formfields from '../config/formfields'
+import selectors from '../selectors'
+import actions from '../actions'
 
-class Installations extends Component {
+import {
+  doesFormHaveError
+} from '../../boiler-ui/lib/utils/formfields/tools'
+
+const formDataSelector = (state) => selectors.installation.form(state).fields
+
+class InstallationForm extends Component {
 
   render() {
 
     return (
       <FormToolbar
         title='Company'
-        icon={icons.installation}
-        onCancel={() => this.props.redirect('/companies')}
-        onRevert={this.props.revert}
-        onSave={this.props.save}
-        valid={true}
+        icon={ icons.installation }
+        onCancel={ () => this.props.redirect('/companies') }
+        onRevert={ this.props.revert }
+        onSave={ this.props.save }
+        valid={ this.props.valid }
       >
-        <div>
-            form
-        </div>
+        <FormContainer
+          formComponent={ FormComponent }
+          getFields={ formfields.installation }
+          selector={ formDataSelector }
+          actions={ actions.installation.form.fields }
+        />
+
       </FormToolbar>
     )
   }
@@ -34,7 +46,9 @@ class Installations extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  return {}
+  return {
+    valid: doesFormHaveError(formDataSelector(state).meta) ? false : true
+  }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -48,4 +62,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Installations)
+)(InstallationForm)

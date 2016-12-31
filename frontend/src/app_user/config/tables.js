@@ -21,16 +21,6 @@ const TABLES = {
       text({
         name: 'name',
         title: 'Name'
-      }),
-      small({
-        title: 'Status',
-        render: (data, field) => {
-          return data.id == currentInstallation ?
-            (
-              <div>active</div>
-            ) :
-            null
-        }
       })
     ]
 

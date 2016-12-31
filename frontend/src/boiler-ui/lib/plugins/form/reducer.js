@@ -8,7 +8,7 @@ const FormWrapperReducer = (actions) => {
     get: ApiReducer(actions.get.types),
     post: ApiReducer(actions.post.types),
     put: ApiReducer(actions.put.types),
-    data: FormReducer(actions.data.types)
+    fields: FormReducer(actions.fields.types)
   })
 }
 

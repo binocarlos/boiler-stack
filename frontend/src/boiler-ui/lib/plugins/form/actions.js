@@ -6,7 +6,7 @@ const FormWrapperActions = (base) => {
     get: ApiActions(base + '_GET'),
     post: ApiActions(base + '_POST'),
     put: ApiActions(base + '_PUT'),
-    data: FormActions(base + '_DATA')
+    fields: FormActions(base + '_FIELDS')
   }
 }
 

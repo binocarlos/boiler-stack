@@ -4,7 +4,7 @@ import deepCheck from 'deep-check-error'
 
 import routerActions from '../actions/router'
 
-import { 
+import {
   mapFormField,
   doesFormHaveError
 } from '../utils/formfields/tools'
