@@ -6,7 +6,8 @@ const icons = {
   logout: 'exit_to_app',
   login: 'account_circle',
   register: 'create',
-  installation: 'business'
+  installation: 'business',
+  experiment: 'query_builder'
 }
 
 export default icons

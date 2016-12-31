@@ -8,6 +8,7 @@ import InstallationTable from './containers/InstallationTable'
 import Home from './components/Home'
 import Help from './components/Help'
 import About from './components/About'
+import Table from './components/Table'
 
 import actions from './actions'
 
@@ -43,7 +44,10 @@ export const routes = routeProcessor({
   '/companies': user({
     title:'Companies',
     trigger: 'loadCompanies'
-  })
+  }),
+  '/table': {
+    title:'Table'
+  }
 })
 
 // functions run when a route is loaded
@@ -80,6 +84,10 @@ export const fragments = (relative) => {
 
       <Fragment forRoute={getRoute('/companies')}>
         <InstallationTable />
+      </Fragment>
+
+      <Fragment forRoute={getRoute('/table')}>
+        <Table />
       </Fragment>
 
     </div>
