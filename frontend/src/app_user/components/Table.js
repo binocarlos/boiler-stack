@@ -17,7 +17,11 @@ const UserModel = {
 
 const users = [
   {name: 'Javi Jimenez', twitter: '@soyjavi', birthdate: new Date(1980, 3, 11), cats: 1},
-  {name: 'Javi Velasco', twitter: '@javivelasco', birthdate: new Date(1987, 1, 1), dogs: 1, active: true}
+  {name: 'Javi Velasco', twitter: '@javivelasco', birthdate: new Date(1987, 1, 1), dogs: 1, active: true},
+  {name: 'Bill', twitter: '@lol', birthdate: new Date(1981, 1, 12), dogs: 1, active: true},
+  {name: 'Alice', twitter: '@alice', birthdate: new Date(1982, 12, 1), dogs: 1, active: true},
+  {name: 'Tim', twitter: '@tim', birthdate: new Date(1985, 11, 11), dogs: 1, active: true},
+  {name: 'Dickman400', twitter: '@dick', birthdate: new Date(1987, 18, 1), dogs: 1, active: true}
 ];
 
 class TableExperiment extends Component {
@@ -38,7 +42,7 @@ class TableExperiment extends Component {
 
     return (
       <Page>
-        this is the table experiment page. Below is a react table
+        This is the table experiment page. Below is a react table. Try dragging and dropping
         <Table
           model={UserModel}
           onChange={this.handleChange}
