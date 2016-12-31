@@ -11,23 +11,23 @@ class TableToolbar extends Component {
     if(!this.props.onAdd) return
     return (
       <Button
-        label='Add'
-        icon='add'
+        label={this.props.addTitle}
+        icon={this.props.addIcon}
         onClick={this.props.onAdd}
       />
     )
   }
 
   getActionsButton() {
-    if(!this.props.actions || this.props.actions.length <= 0) return
+    if(!this.props.buttonActions || this.props.buttonActions.length <= 0) return
     return (
       <ButtonMenu
         redirect={this.props.redirect}
         buttonProps={{
-          label: 'Actions',
-          icon: 'more_vert'
+          label: this.props.actionTitle,
+          icon: this.props.actionIcon
         }}
-        items={this.props.actions}
+        items={this.props.buttonActions}
       />
     )
   }
@@ -55,6 +55,24 @@ class TableToolbar extends Component {
     )
   }
 
+}
+
+TableToolbar.propTypes = {
+  title: PropTypes.string.isRequired,
+  icon: PropTypes.string.isRequired,
+  actionTitle: PropTypes.string,
+  actionIcon: PropTypes.string,
+  addTitle: PropTypes.string,
+  addIcon: PropTypes.string,
+  onAdd: PropTypes.func.isRequired,
+  redirect: PropTypes.func.isRequired
+}
+
+TableToolbar.defaultProps = {
+  actionTitle: 'Actions',
+  actionIcon: 'more_vert',
+  addTitle: 'Add',
+  addIcon: 'add'
 }
 
 export default TableToolbar

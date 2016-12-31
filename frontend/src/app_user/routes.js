@@ -1,9 +1,11 @@
 import React, { Component, PropTypes } from 'react'
-import { RelativeFragment as Fragment, AbsoluteFragment } from 'redux-little-router'
+import { RelativeFragment as Fragment, AbsoluteFragment } from '../boiler-ui/lib/components/Router'
 
 import Login from './containers/Login'
 import Register from './containers/Register'
+
 import InstallationTable from './containers/InstallationTable'
+import InstallationForm from './containers/InstallationForm'
 
 import Home from './components/Home'
 import Help from './components/Help'
@@ -44,13 +46,10 @@ export const routes = routeProcessor({
     title:'Companies',
     trigger: 'loadCompanies',
     '/add': {
-      title:'Companies ADD',
-      '/child': {
-        title: 'Child'
-      }
+      title:'Companies : Add'
     },
     '/edit/:id': {
-      title:'Companies EDIT'
+      title:'Companies : Edit'
     }
   })
 })
@@ -65,7 +64,7 @@ export const triggers = {
 export const fragments = (relative) => {
   const compareRoute = (route) => (pathname) => relative(pathname) == route
   return (
-    <div className='routeContainer'>
+    <div className='routeWrapper'>
 
       <Fragment forRoute={getRoute('')} withConditions={homeRouteMatcher}>
         <Home />
@@ -88,18 +87,19 @@ export const fragments = (relative) => {
       </Fragment>
 
       <Fragment forRoute={getRoute('/companies')}>
+
         <AbsoluteFragment withConditions={location => location.route === getRoute('/companies')}>
           <InstallationTable />
         </AbsoluteFragment>
+
         <Fragment forRoute='/add'>
-          <div>ADD</div>
-          <Fragment forRoute='/child'>
-            <div>CHILD</div>
-          </Fragment>
+          <InstallationForm />
         </Fragment>
+
         <Fragment forRoute='/edit/:id'>
           <div>EDIT</div>
         </Fragment>
+        
       </Fragment>
 
       

@@ -1,4 +1,3 @@
-// reducer imports
 import { combineReducers } from 'redux'
 
 import ApiReducer from '../../reducers/api'

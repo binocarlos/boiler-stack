@@ -22,6 +22,13 @@ const getSagas = (apis = {}) => {
 
   return [
 
+    // listen for route changes and run the corresponding trigger
+    RouteTriggerSaga({
+      triggers
+    }),
+
+    // looks after authentication of routes, login/register
+    // and loading user status upon initialization
     UserSaga({
       successRedirect: getRoute('/'),
       getLoginSchema: schemas.login,
@@ -31,13 +38,30 @@ const getSagas = (apis = {}) => {
       apis: userApis
     }),
 
+    // installation api sagas
+
+    // GET /api/v1/installations
     ApiSaga({
       api: installationApi.list,
       actions: installationActions.table.list
     }),
 
-    RouteTriggerSaga({
-      triggers
+    // GET /api/v1/installations/:id
+    ApiSaga({
+      api: installationApi.get,
+      actions: installationActions.form.get
+    }),
+
+    // POST /api/v1/installations
+    ApiSaga({
+      api: installationApi.post,
+      actions: installationActions.form.post
+    }),
+
+    // PUT /api/v1/installations/:id
+    ApiSaga({
+      api: installationApi.put,
+      actions: installationActions.form.put
     })
 
   ]

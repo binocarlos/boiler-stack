@@ -3,8 +3,8 @@ import ValueActions from '../../actions/value'
 
 const CrudTableActions = (base) => {
   return {
-    list: ApiActions(base + '_API_LIST'),
-    selection: ValueActions(base + '__SELECTION')
+    list: ApiActions(base + '_LIST'),
+    selection: ValueActions(base + '_SELECTION')
   }
 }
 

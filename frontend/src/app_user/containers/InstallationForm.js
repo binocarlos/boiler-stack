@@ -2,30 +2,31 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
 import { router as routerActions } from '../actions'
-import TableToolbar from '../../boiler-ui/lib/components/toolbars/Table'
+import FormToolbar from '../../boiler-ui/lib/components/toolbars/Form'
 import icons from '../config/icons'
 import { getRoute } from '../tools'
+
+import {
+  installation as actions
+} from '../actions'
 
 class Installations extends Component {
 
   render() {
 
     return (
-      <TableToolbar
-        title='Companies'
+      <FormToolbar
+        title='Company'
         icon={icons.installation}
-        onAdd={() => this.props.redirect('/companies/add')}
-        redirect={this.props.redirect}
-        buttonActions={[
-          ['Test1', 'inbox', '/'],
-          ['Test2', 'inbox', '/']
-        ]}
-        addIcon={icons.add}
+        onCancel={() => this.props.redirect('/companies')}
+        onRevert={this.props.revert}
+        onSave={this.props.save}
+        valid={true}
       >
         <div>
-            table
+            form
         </div>
-      </TableToolbar>
+      </FormToolbar>
     )
   }
 
@@ -38,7 +39,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    redirect: (path) => dispatch(routerActions.push(getRoute(path)))
+    redirect: (path) => dispatch(routerActions.push(getRoute(path))),
+    revert: () => console.log('revert'),
+    save: () => console.log('save')
   }
 }
 
