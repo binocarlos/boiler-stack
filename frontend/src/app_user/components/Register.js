@@ -31,7 +31,7 @@ class Register extends Component {
           <CardActions>
             <Button 
               label="Cancel" 
-              onClick={() => this.props.redirect('/')}
+              onClick={() => this.props.redirect('/app')}
             />
             <Button 
               label="Submit" 

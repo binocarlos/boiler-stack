@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+//import { DragSource } from 'react-dnd'
 import Page from '../../boiler-ui/lib/components/Page'
 
 import Link from './Link'
