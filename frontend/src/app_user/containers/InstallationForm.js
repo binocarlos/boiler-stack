@@ -54,7 +54,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     redirect: (path) => dispatch(routerActions.push(getRoute(path))),
-    revert: () => console.log('revert'),
+    revert: () => dispatch(actions.installation.form.fields.revert()),
     save: () => console.log('save')
   }
 }
