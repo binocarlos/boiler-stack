@@ -15,11 +15,6 @@ const getSagas = (apis = {}) => {
 
   return [
 
-    // listen for route changes and run the corresponding trigger
-    RouteTriggerSaga({
-      triggers
-    }),
-
     // looks after authentication of routes, login/register
     // and loading user status upon initialization
     UserSaga({
@@ -44,6 +39,11 @@ const getSagas = (apis = {}) => {
       selector: selectors.installation.formfields,
       apis: apis.installation,
       successRedirect: getRoute('/companies')
+    }),
+
+    // listen for route changes and run the corresponding trigger
+    RouteTriggerSaga({
+      triggers
     })
 
   ]

@@ -38,6 +38,7 @@ const boilerapp = (settings = {}) => {
     middleware,
     initialState
   })
+  const initialLocation = store.getState().router
 
   function *rootSaga() {
     yield sagas.map(fork)

@@ -60,23 +60,23 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const REQUIRED_ACTIONS = [
-  'formActions.update',
-  'formActions.touch',
-  'formActions.touchform',
-  'formActions.submit'
+  'actions.update',
+  'actions.touch',
+  'actions.touchform',
+  'actions.submit'
 ]
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   deepCheck(ownProps, REQUIRED_ACTIONS)
-  const formActions = ownProps.formActions
+  const actions = ownProps.actions
   return {
-    update: (name, value) => dispatch(formActions.update(name, value)),
-    touch: (name) => dispatch(formActions.touch(name)),
-    revert: () => dispatch(formActions.revert()),
+    update: (name, value) => dispatch(actions.update(name, value)),
+    touch: (name) => dispatch(actions.touch(name)),
+    revert: () => dispatch(actions.revert()),
     submit: (valid) => {
       valid ?
-        dispatch(formActions.submit()) :
-        dispatch(formActions.touchform())
+        dispatch(actions.submit()) :
+        dispatch(actions.touchform())
     }
   }
 }
