@@ -2,17 +2,17 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import deepCheck from 'deep-check-error'
 
+import Table from 'react-toolbox/lib/table'
+
 import routerActions from '../../actions/router'
 import TableToolbar from '../../components/toolbars/Table'
+
+import Selectors from './selectors'
 
 class TablePluginContainer extends Component {
 
   render() {
 
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.dir(this.props.data)
-    console.dir(this.props.selection)
     return (
       <TableToolbar
         title={ this.props.title }
@@ -24,9 +24,15 @@ class TablePluginContainer extends Component {
           ['Test2', 'inbox', '/']
         ]}
       >
-        <div>
-            table
-        </div>
+        <Table
+          heading={ true }
+          model={ this.props.schema }
+          onSelect={ this.props.onSelect }
+          selectable
+          multiSelectable
+          selected={ this.props.selection }
+          source={ this.props.data }
+        />
       </TableToolbar>
     )
   }
@@ -38,10 +44,15 @@ const REQUIRED_PROPS = [
 
 const mapStateToProps = (state, ownProps) => {
   deepCheck(ownProps, REQUIRED_PROPS)
-  const tableState = ownProps.selector(state)
+  const selectors = Selectors(ownProps.selector)
+  let items = selectors.items(state)
+  const selection = selectors.selection(state)
+
+  if(ownProps.mapData) items = items.map(ownProps.mapData)
+
   return {
-    data: tableState.data,
-    selection: tableState.selection
+    data: items,
+    selection: selection
   }
 }
 
@@ -53,7 +64,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   deepCheck(ownProps, REQUIRED_ACTIONS)
   
   return {
-    
+    onSelect: (selection) => dispatch(ownProps.actions.selection.set(selection))
   }
 }
 

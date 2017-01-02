@@ -3,8 +3,9 @@ import { connect } from 'react-redux'
 
 import TableContainer from '../../boiler-ui/lib/plugins/table/Container'
 
-import { router as routerActions } from '../actions'
+import actions from '../actions'
 import icons from '../config/icons'
+import tables from '../config/tables'
 import { getRoute } from '../tools'
 import selectors from '../selectors'
 
@@ -19,19 +20,24 @@ class InstallationTable extends Component {
         selector={ selector }
         onAdd={ () => this.props.redirect('/companies/add') }
         redirect={ this.props.redirect }
+        schema={ tables.installation.schema }
+        mapData={ tables.installation.map(this.props.currentInstallation) }
+        actions={ actions.installation.table }
       />
     )
   }
 }
 
-
 const mapStateToProps = (state, ownProps) => {
-  return {}
+  const userData = selectors.user.status.record(state).data || {}
+  return {
+    currentInstallation: userData.currentInstallation
+  }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    redirect: (path) => dispatch(routerActions.push(getRoute(path)))
+    redirect: (path) => dispatch(actions.router.push(getRoute(path)))
   }
 }
 

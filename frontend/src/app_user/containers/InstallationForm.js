@@ -20,7 +20,7 @@ class InstallationForm extends Component {
         onCancel={ () => this.props.redirect('/companies') }
         getFields={ formfields.installation }
         selector={ selector }
-        formActions={ actions.installation.form.fields }
+        actions={ actions.installation.form.fields }
       />
     )
   }
