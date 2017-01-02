@@ -44,12 +44,14 @@ export const routes = routeProcessor({
   }),
   '/companies': user({
     title:'Companies',
-    trigger: 'loadCompanies',
+    trigger: 'loadInstallations',
     '/add': {
-      title:'Companies : Add'
+      title:'Companies : Add',
+      trigger: 'addInstallation'
     },
     '/edit/:id': {
-      title:'Companies : Edit'
+      title:'Companies : Edit',
+      trigger: 'editInstallation'
     }
   })
 })
@@ -57,7 +59,9 @@ export const routes = routeProcessor({
 // functions run when a route is loaded
 // we can dispatch actions to sagas
 export const triggers = {
-  loadCompanies: (routerState) => actions.installation.table.list.request()
+  loadInstallations: (routerState) => actions.installation.table.list.request(),
+  addInstallation: (routerState) => actions.installation.form.fields.initialize({}),
+  editInstallation: (routerState) => null
 }
 
 // relative strips the basepath from the current url
