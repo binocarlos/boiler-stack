@@ -67,11 +67,11 @@ FormToolbar.propTypes = {
 
 FormToolbar.defaultProps = {
   cancelTitle: 'Cancel',
-  cancelIcon: 'cancel',
+  cancelIcon: 'clear',
   revertTitle: 'Revert',
-  revertIcon: 'cached',
+  revertIcon: 'undo',
   saveTitle: 'Save',
-  saveIcon: 'check_circle'
+  saveIcon: 'send'
 }
 
 export default FormToolbar

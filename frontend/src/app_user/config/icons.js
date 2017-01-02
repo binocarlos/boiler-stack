@@ -7,10 +7,10 @@ const icons = {
   login: 'account_circle',
   register: 'create',
   installation: 'business',
-  cancel: 'cancel',
-  revert: 'cached',
-  save: 'check_circle',
-  add: 'add_circle',
+  cancel: 'clear',
+  revert: 'undo',
+  save: 'send',
+  add: 'add',
   actions: 'more_vert'
 }
 
