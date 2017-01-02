@@ -14,6 +14,7 @@ class TableToolbar extends Component {
         label={this.props.addTitle}
         icon={this.props.addIcon}
         onClick={this.props.onAdd}
+        ripple={false}
       />
     )
   }
@@ -25,7 +26,8 @@ class TableToolbar extends Component {
         redirect={this.props.redirect}
         buttonProps={{
           label: this.props.actionTitle,
-          icon: this.props.actionIcon
+          icon: this.props.actionIcon,
+          ripple: false
         }}
         items={this.props.buttonActions}
       />

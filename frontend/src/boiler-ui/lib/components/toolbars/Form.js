@@ -15,11 +15,13 @@ class FormToolbar extends Component {
           label={this.props.cancelTitle}
           icon={this.props.cancelIcon}
           onClick={this.props.onCancel}
+          ripple={false}
         />
         <Button
           label={this.props.revertTitle}
           icon={this.props.revertIcon}
           onClick={this.props.onRevert}
+          ripple={false}
         />
         <Button
           label={this.props.saveTitle}
@@ -27,6 +29,7 @@ class FormToolbar extends Component {
           onClick={this.props.onSave}
           raised={this.props.valid} 
           primary={this.props.valid}
+          ripple={false}
         />
       </Navigation>
     )
