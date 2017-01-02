@@ -49,11 +49,13 @@ export const routes = routeProcessor({
     trigger: 'loadInstallations',
     '/add': {
       title:'Companies : Add',
-      trigger: 'addInstallation'
+      trigger: 'addInstallation',
+      api: 'post'
     },
     '/edit/:id': {
       title:'Companies : Edit',
-      trigger: 'editInstallation'
+      trigger: 'editInstallation',
+      api: 'put'
     }
   })
 })

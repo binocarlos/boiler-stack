@@ -42,7 +42,8 @@ const getSagas = (apis = {}) => {
       getSchema: schemas.installation,
       actions: actions.installation.form,
       selector: selectors.installation.formfields,
-      apis: apis.installation
+      apis: apis.installation,
+      successRedirect: getRoute('/companies')
     })
 
   ]
