@@ -7,6 +7,7 @@ class Text extends Component {
     return (
       <Input 
         type='text' 
+        spellCheck={false}
         label={ this.props.title } 
         value={ this.props.value || ''} 
         error={ this.props.error }
