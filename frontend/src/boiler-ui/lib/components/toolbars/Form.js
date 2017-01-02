@@ -26,7 +26,7 @@ class FormToolbar extends Component {
         <Button
           label={this.props.saveTitle}
           icon={this.props.saveIcon}
-          onClick={this.props.onSave}
+          onClick={this.props.onSubmit}
           raised={this.props.valid} 
           primary={this.props.valid}
           ripple={false}
@@ -61,7 +61,7 @@ FormToolbar.propTypes = {
   saveIcon: PropTypes.string,
   onCancel: PropTypes.func.isRequired,
   onRevert: PropTypes.func.isRequired,
-  onSave: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   valid: PropTypes.bool.isRequired
 }
 
