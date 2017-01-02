@@ -55,7 +55,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     redirect: (path) => dispatch(routerActions.push(getRoute(path))),
     revert: () => dispatch(actions.installation.form.fields.revert()),
-    save: () => console.log('save')
+    save: () => {
+      dispatch(actions.installation.form.fields.submit())
+    }
   }
 }
 

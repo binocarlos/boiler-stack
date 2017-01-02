@@ -1,11 +1,10 @@
-import UserSaga from '../boiler-ui/lib/plugins/user/saga'
 import RouteTriggerSaga from '../boiler-ui/lib/sagas/routetrigger'
+import UserSaga from '../boiler-ui/lib/plugins/user/saga'
+import FormSaga from '../boiler-ui/lib/plugins/form/saga'
 import ApiSaga from '../boiler-ui/lib/sagas/api'
-import FormSaga from '../boiler-ui/lib/sagas/form'
-
-import Schema from '../boiler-ui/lib/utils/schema'
 
 import schemas from './config/schemas'
+
 import { 
   user as userSelectors,
   installation as installationSelectors
@@ -45,14 +44,7 @@ const getSagas = (apis = {}) => {
       apis: userApis
     }),
 
-    // installation sagas
-
-    // form
-    FormSaga({
-      getSchema: () => Schema(schemas.installation()),
-      selector: (state) => installationSelectors.form(state).fields,
-      actions: installationActions.form.fields
-    }),
+    // installation table
 
     // GET /api/v1/installations
     ApiSaga({
@@ -60,22 +52,13 @@ const getSagas = (apis = {}) => {
       actions: installationActions.table.list
     }),
 
-    // GET /api/v1/installations/:id
-    ApiSaga({
-      api: installationApi.get,
-      actions: installationActions.form.get
-    }),
 
-    // POST /api/v1/installations
-    ApiSaga({
-      api: installationApi.post,
-      actions: installationActions.form.post
-    }),
-
-    // PUT /api/v1/installations/:id
-    ApiSaga({
-      api: installationApi.put,
-      actions: installationActions.form.put
+    // installation form
+    FormSaga({
+      getSchema: schemas.installation,
+      actions: installationActions.form,
+      selector: installationSelectors.form,
+      apis: installationApi
     })
 
   ]
