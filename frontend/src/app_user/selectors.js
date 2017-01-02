@@ -5,8 +5,10 @@ export const router = (state) => state.router
 export const menu = MenuSelectors(state => state.menu)
 export const user = UserSelectors(state => state.user)
 export const installation = {
-  table: state => state.installation.table,
-  form: state => state.installation.form
+  raw: state => state.installation,
+  table: state => installation.raw(state).table,
+  form: state => installation.raw(state).form,
+  formfields: state => installation.form(state).fields
 }
 
 const selectors = {

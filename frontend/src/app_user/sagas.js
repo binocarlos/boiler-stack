@@ -41,7 +41,7 @@ const getSagas = (apis = {}) => {
     FormSaga({
       getSchema: schemas.installation,
       actions: actions.installation.form,
-      selector: selectors.installation.form,
+      selector: selectors.installation.formfields,
       apis: apis.installation
     })
 
