@@ -13,6 +13,8 @@ import About from './components/About'
 
 import actions from './actions'
 
+// these tools map in the basepath onto any of the routes
+// the basepath is the mountpoint of the app (e.g. '/app' or '/admin')
 import { routeProcessor, getRoute, homeRouteMatcher } from './tools'
 
 const guest = (route) => {
