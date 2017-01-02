@@ -3,13 +3,8 @@ export const TableSelectors = (raw) => {
     data: (state) => raw(state).data,
     selection: (state) => raw(state).selection.value,
     items: (state) => {
-      const data = selectors.data(state)
-      return data.ids.map(id => data.db[id])
-    },
-    selectedItems: (state) => {
-      const data = selectors.data(state)
-      const selectedIds = selectors.selection(state)
-      return selectedIds.map(id => data.db[id])
+      const db = selectors.data(state).db
+      return selectors.data(state).ids.map(id => db[id])
     }
   }
   return selectors
