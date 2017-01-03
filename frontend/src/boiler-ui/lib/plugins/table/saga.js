@@ -1,14 +1,16 @@
 import Logger from '../../logger'
 import deepCheck from 'deep-check-error'
 
-import { takeLatest } from 'redux-saga'
+import { takeLatest, takeEvery } from 'redux-saga'
 import { fork, put, take, select } from 'redux-saga/effects'
 
 import ApiSaga from '../../sagas/api'
 
 const REQUIRED_SETTINGS = [
   'actions.list',
-  'apis.list'
+  'actions.delete',
+  'apis.list',
+  'apis.delete'
 ]
 
 const TablePluginSaga = (settings = {}) => {
@@ -27,7 +29,23 @@ const TablePluginSaga = (settings = {}) => {
     ApiSaga({
       api: apis.list,
       actions: actions.list
-    })
+    }),
+
+    // DELETE /api/v1/installations
+    ApiSaga({
+      api: apis.delete,
+      actions: actions.delete
+    }),
+
+    function* listenForDeleteSuccess() {
+      function* reloadList(action) {
+        yield put(actions.selection.set([]))
+        yield put(actions.deleteWindow.close())
+        yield put(actions.list.request())
+      }
+
+      yield takeEvery(actions.delete.types.success, reloadList)
+    }
 
   ]
 

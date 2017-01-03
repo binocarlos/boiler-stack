@@ -1,11 +1,14 @@
 import ApiActions from '../../actions/api'
 import ValueActions from '../../actions/value'
+import ToggleActions from '../../actions/toggle'
 
-const CrudTableActions = (base) => {
+const TableActions = (base) => {
   return {
     list: ApiActions(base + '_LIST'),
-    selection: ValueActions(base + '_SELECTION')
+    delete: ApiActions(base + '_DELETE'),
+    selection: ValueActions(base + '_SELECTION'),
+    deleteWindow: ToggleActions(base + '_DELETE_WINDOW')
   }
 }
 
-export default CrudTableActions
+export default TableActions

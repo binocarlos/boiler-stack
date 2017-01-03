@@ -11,7 +11,10 @@ import Schema from '../../utils/schema'
 
 const REQUIRED_SETTINGS = [
   'getSchema',
-  'actions',
+  'actions.get',
+  'actions.post',
+  'actions.put',
+  'actions.fields',
   'selectors',
   'apis.get',
   'apis.put',
