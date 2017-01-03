@@ -1,13 +1,19 @@
 import React, { Component, PropTypes } from 'react'
 import Chip from 'react-toolbox/lib/chip'
 import Avatar from 'react-toolbox/lib/avatar'
+import { Button } from 'react-toolbox/lib/button'
+import Tooltip from 'react-toolbox/lib/tooltip'
+import Navigation from 'react-toolbox/lib/navigation'
+
+const TooltipButton = Tooltip(Button)
 
 const TABLES = {
 
   installation: {
     schema: {
       name: {type: String},
-      status: {}
+      status: {},
+      actions: {}
     },
     map: (currentInstallation) => (item) => {
 
@@ -31,6 +37,34 @@ const TABLES = {
             justifyContent: 'left'
           }}>
             {active}
+          </div>
+        ),
+        actions: (
+          <div style={{
+            display: 'flex',
+            justifyContent: 'left'
+          }}>
+            <Navigation type='horizontal'>
+              <TooltipButton 
+                tooltip='Delete'
+                ripple={false}
+                icon='delete'
+                floating
+                mini />
+              <TooltipButton 
+                tooltip='Edit'
+                ripple={false}
+                icon='create'
+                floating
+                mini />
+              <TooltipButton 
+                tooltip='Activate'
+                ripple={false}
+                icon='forward'
+                primary
+                floating
+                mini />
+            </Navigation>
           </div>
         )
       }
