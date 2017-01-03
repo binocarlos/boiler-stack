@@ -55,6 +55,16 @@ const FormPluginSaga = (settings = {}) => {
       actions: actions.put
     }),
 
+    // for the edit form - trigger a form.load action
+    // once the data is loaded
+    function* listenForLoadedData() {
+      function* triggerLoad(action) {
+        yield put(actions.fields.load(action.payload))
+      }
+      logger('listening: ' + actions.get.types.success)
+      yield takeLatest(actions.get.types.success, triggerLoad)
+    },
+
     function* listenForSubmit() {
       const trigger = actions.fields.types.submit
       function* submitForm(action) {

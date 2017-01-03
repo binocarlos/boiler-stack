@@ -14,14 +14,15 @@
 import Logger from '../logger'
 import deepCheck from 'deep-check-error'
 import { takeLatest } from 'redux-saga'
-import { put, call, fork, select  } from 'redux-saga/effects'
+import { put, call, fork, select, take  } from 'redux-saga/effects'
 
 import routerActions from '../actions/router'
 
 const ROUTER_CHANGED = routerActions.types.changed
 
 const REQUIRED_SETTINGS = [
-  'triggers'
+  'triggers',
+  'userLoadedActionType'
 ]
 
 const RouteTriggerSaga = (settings = {}) => {
@@ -44,9 +45,10 @@ const RouteTriggerSaga = (settings = {}) => {
 
   function* root() {
     logger('listening: ' + ROUTER_CHANGED)
+    logger('listening: ' + settings.userLoadedActionType)
     yield [
-      fork(processRoute),
-      takeLatest(ROUTER_CHANGED, processRoute)
+      takeLatest(ROUTER_CHANGED, processRoute),
+      takeLatest(settings.userLoadedActionType, processRoute)
     ]
   }
 

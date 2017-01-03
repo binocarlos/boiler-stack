@@ -24,7 +24,7 @@ const ApiSagaFactory = (settings = {}) => {
   function* apiSaga(action) {
     logger('request', action)
     try {
-      const result = yield api(action.payload, action.query)
+      const result = yield api(action.query, action.payload)
       logger('response', result)
       yield put(actions.success(result, action.query))
     } catch (e) {

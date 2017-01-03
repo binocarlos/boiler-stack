@@ -35,13 +35,13 @@ const crudAjaxFactory = (settings = {}) => {
         .get(url)
         .then(result => result.map(encode))
     },
-    post:(data, query = {}) => {
+    post:(query = {}, data) => {
       query = query || {}
       return ajaxClient
         .post(getUrl(), data)
         .then(encode)
     },
-    put:(data, query = {}) => {
+    put:(query = {}, data) => {
       query = query || {}
       if(!query.id) throw new Error('no id query given')
       return ajaxClient

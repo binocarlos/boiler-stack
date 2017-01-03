@@ -27,12 +27,18 @@ class TablePluginContainer extends Component {
           ''
       ) + this.props.title
 
+    let buttonActions = []
+
+    if(selectedItems.length == 1) {
+      buttonActions.push(['Edit', 'create', () => this.props.edit(selectedItems[0].id)])
+    }
+
     return (
       <TableToolbar
-        title={ this.props.title }
+        title={ title }
         icon={  this.props.icon }
         onAdd={ selectedItems.length == 0 ? this.props.add : null }
-        buttonActions={ this.props.buttonActions }
+        buttonActions={ buttonActions }
       >
         <Table
           heading={ this.props.heading }
@@ -67,18 +73,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const actions = ownProps.actions
   return {
     add: () => dispatch(routerActions.push(ownProps.routes.add)),
-    edit: (item) => dispatch(routerActions.push(ownProps.routes.edit.replace(':id', () => item.id))),
+    edit: (id) => dispatch(routerActions.push(ownProps.routes.edit.replace(':id', id))),
     select: (selection) => dispatch(actions.selection.set(selection))
   }
 }
 
-/*
-
-  madd: () => dispatch(routerActions.push(getRoute(BASEPATH + '/add'))),
-    edit: (item) => dispatch(routerActions.push(getRoute(BASEPATH + '/edit/' + item.id))),
-    select: (selection) => dispatch(tableActions.selection.set(selection))
-  
-*/
 export default connect(
   mapStateToProps,
   mapDispatchToProps
