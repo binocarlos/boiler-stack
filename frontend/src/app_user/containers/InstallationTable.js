@@ -9,41 +9,29 @@ import tables from '../config/tables'
 import { getRoute } from '../tools'
 import selectors from '../selectors'
 
-const tableSelectors = selectors.installation.table
 const routerActions = actions.router
-const tableActions = actions.installation.table
 const userSelector = selectors.user.status.record
 
+const tableSelectors = selectors.installation.table
+const tableActions = actions.installation.table
+const tableSchema = tables.installation.schema
+
 const BASEPATH = '/companies'
+const TITLE = 'Companies'
 
 class InstallationTable extends Component {
   render() {
 
-    const tableMap = tables.installation.map(this.props.currentInstallation)
-    const data = this.props.data.map(tableMap)
-    const selected = this.props.selection.map(i => data[i])
-    const title = selected.length == 1 ?
-      selected[0].name :
-      (
-        selected.length > 0 ? 
-          selected.length + ' ' :
-          ''
-      ) + 'Companies'
+    const tableProps = Object.assign({}, this.props, {
+      mapData: tables.installation.map(this.props.currentInstallation),
+      selectors: tableSelectors,
+      actions: tableActions,
+      schema: tableSchema,
+      getRoute
+    })
 
     return (
-      <TableContainer
-        title={ title }
-        icon={ icons.installation }
-        selectors={ selectors }
-        heading={ true }
-        onAdd={ selected.length == 0 ? this.props.onAdd : null }
-        onEdit={ this.props.onEdit }
-        onSelect={ this.props.onSelect }
-        redirect={ this.props.redirect }
-        schema={ tables.installation.schema }
-        data={ this.props.data }
-        selection={ this.props.selection }
-      />
+      <TableContainer {...tableProps} />
     )
   }
 }
@@ -51,26 +39,15 @@ class InstallationTable extends Component {
 const mapStateToProps = (state, ownProps) => {
   const userData = userSelector(state).data || {}
   const currentInstallation = userData.currentInstallation
-  const selection = tableSelectors.selection(state)
-  const data = tableSelectors.items(state)
-
   return {
     currentInstallation,
-    data,
-    selection
-  }
-}
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    redirect: (path) => dispatch(routerActions.push(getRoute(path))),
-    onAdd: () => dispatch(routerActions.push(getRoute(BASEPATH + '/add'))),
-    onEdit: (item) => dispatch(routerActions.push(getRoute(BASEPATH + '/edit/' + item.id))),
-    onSelect: (selection) => dispatch(tableActions.selection.set(selection))
+    title: TITLE,
+    basepath: BASEPATH,
+    icon: icons.installation
   }
 }
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(InstallationTable)
