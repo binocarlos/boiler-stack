@@ -3,6 +3,8 @@ const BASE = (base) => (path = '') => base + path
 const auth = BASE('/auth/v1')
 const currentuser = BASE('/api/v1/currentuser')
 const installation = BASE('/api/v1/installations')
+const client = BASE('/api/v1/clients')
+const project = BASE('/api/v1/projects')
 
 const URLS = {
   user: {
@@ -12,7 +14,9 @@ const URLS = {
     register: auth('/register'),
     update: currentuser()
   },
-  installation: installation()
+  installation: installation(),
+  client: client(),
+  project: project()
 }
 
 export default URLS

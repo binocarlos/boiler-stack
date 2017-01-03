@@ -11,7 +11,9 @@ const icons = {
   revert: 'undo',
   save: 'send',
   add: 'add',
-  actions: 'more_vert'
+  actions: 'more_vert',
+  client: 'people',
+  project: 'location_city'
 }
 
 export default icons

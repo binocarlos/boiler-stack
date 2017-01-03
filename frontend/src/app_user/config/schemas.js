@@ -37,6 +37,24 @@ const SCHEMAS = {
         required: true
       })
     ]
+  },
+
+  client: () => {
+    return [
+      Text({
+        name: 'name',
+        required: true
+      })
+    ]
+  },
+
+  project: () => {
+    return [
+      Text({
+        name: 'name',
+        required: true
+      })
+    ]
   }
 }
 

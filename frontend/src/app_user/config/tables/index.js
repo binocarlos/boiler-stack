@@ -5,7 +5,7 @@ import { Button } from 'react-toolbox/lib/button'
 import Tooltip from 'react-toolbox/lib/tooltip'
 import Navigation from 'react-toolbox/lib/navigation'
 
-import plugins from '../plugins'
+import plugins from '../../plugins'
 
 const TooltipButton = Tooltip(Button)
 

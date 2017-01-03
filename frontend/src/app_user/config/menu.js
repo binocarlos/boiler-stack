@@ -14,6 +14,8 @@ export const guest = [
 export const user = [
   ['Dashboard', icons.dashboard, getRoute('/')],
   ['Companies', icons.installation, getRoute('/companies')],
+  ['Clients', icons.client, getRoute('/clients')],
+  ['Projects', icons.project, getRoute('/projects')],
   '-',
   ['Help', icons.help, getRoute('/help')],
   ['About', icons.about, getRoute('/about')],

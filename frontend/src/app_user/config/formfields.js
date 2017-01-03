@@ -20,6 +20,18 @@ const FORMS = {
     return [
       Text('name')
     ]
+  },
+
+  client: () => {
+    return [
+      Text('name')
+    ]
+  },
+
+  project: () => {
+    return [
+      Text('name')
+    ]
   }
   
 }
