@@ -12,7 +12,9 @@ export const user = UserApis({
 
 export const installation = CrudAjax({
   name: 'installation',
-  getUrl: () => URLS.installation
+  getUrl: () => URLS.installation,
+  encode: MongoCodec.encode,
+  decode: MongoCodec.decode
 })
 
 const apis = {

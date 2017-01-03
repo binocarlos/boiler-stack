@@ -13,10 +13,6 @@ class TablePluginContainer extends Component {
       this.props.data.map(this.props.mapData) :
       this.props.data
 
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.log(JSON.stringify(data, null, 4))
-
     const selectedItems = this.props.selection.map(i => data[i])
 
     const title = selectedItems.length == 1 ?
