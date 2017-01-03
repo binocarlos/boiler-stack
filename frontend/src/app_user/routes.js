@@ -63,7 +63,10 @@ export const routes = routeProcessor({
 export const triggers = {
   loadInstallations: (routerState) => plugins.installation.table.actions.list.request(),
   addInstallation: (routerState) => plugins.installation.form.actions.fields.initialize({}),
-  editInstallation: (routerState) => plugins.installation.form.actions.get.request(null, routerState.params)
+  editInstallation: (routerState) => [
+    plugins.installation.form.actions.fields.initialize({}),
+    plugins.installation.form.actions.get.request(null, routerState.params)
+  ]
 }
 
 // relative strips the basepath from the current url

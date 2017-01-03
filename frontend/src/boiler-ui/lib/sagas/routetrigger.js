@@ -39,7 +39,13 @@ const RouteTriggerSaga = (settings = {}) => {
     if(trigger){
       const triggerAction = trigger(routerState)
       logger('processing', result.trigger, triggerAction)
-      yield put(triggerAction)
+
+      if(triggerAction.constructor === Array) {
+        yield triggerAction.map(action => put(action))
+      }
+      else{
+        yield put(triggerAction)
+      }
     }
   }
 
