@@ -32,6 +32,21 @@ const RouteTriggerSaga = (settings = {}) => {
   const triggers = settings.triggers || {}
   const logger = Logger('saga : routetrigger')
 
+  // actions triggered when the user data is refreshed
+  function* processInitialTriggers() {
+    const initialTriggers = triggers.initial
+    if(initialTriggers){
+      logger('processing initial triggers')
+      if(initialTriggers.constructor === Array) {
+        yield initialTriggers.map(action => put(action))
+      }
+      else{
+        yield put(initialTriggers)
+      }
+    }
+    yield call(processRoute)
+  }
+
   function* processRoute() {
     const routerState = yield select(state => state.router)
     const result = routerState.result || {}
@@ -54,7 +69,7 @@ const RouteTriggerSaga = (settings = {}) => {
     logger('listening: ' + settings.userLoadedActionType)
     yield [
       takeLatest(ROUTER_CHANGED, processRoute),
-      takeLatest(settings.userLoadedActionType, processRoute)
+      takeLatest(settings.userLoadedActionType, processInitialTriggers)
     ]
   }
 

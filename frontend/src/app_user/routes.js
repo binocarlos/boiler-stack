@@ -61,6 +61,9 @@ export const routes = routeProcessor({
 // functions run when a route is loaded
 // we can dispatch actions to sagas
 export const triggers = {
+  initial: [
+    plugins.installation.table.actions.list.request()
+  ],
   loadInstallations: (routerState) => [
     plugins.installation.table.actions.selection.set([]),
     plugins.installation.table.actions.list.request()

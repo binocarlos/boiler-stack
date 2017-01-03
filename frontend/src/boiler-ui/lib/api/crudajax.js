@@ -43,9 +43,11 @@ const crudAjaxFactory = (settings = {}) => {
     },
     put:(query = {}, data) => {
       query = query || {}
-      if(!query.id) throw new Error('no id query given')
+      const url = query.id ?
+        getUrl() + '/' + query.id :
+        getUrl()
       return ajaxClient
-        .put(getUrl() + '/' + query.id, data)
+        .put(url, data)
         .then(encode)
     },
     delete:(query = {}) => {

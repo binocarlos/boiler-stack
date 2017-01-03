@@ -6,6 +6,7 @@ const UserActions = (base) => {
     status: {
       api: ApiActions(base + '_STATUS_API')
     },
+    update: ApiActions(base + '_UPDATE_API'),
     login: {
       api: ApiActions(base + '_LOGIN_API'),
       form: FormActions(base + '_LOGIN_FORM')

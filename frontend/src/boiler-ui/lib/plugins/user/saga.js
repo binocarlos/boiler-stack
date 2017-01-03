@@ -105,6 +105,12 @@ const UserSaga = (settings = {}) => {
       actions: actions.register.api
     }),
 
+    // PUT /api/v1/currentuser
+    ApiSaga({
+      api: apis.update.put,
+      actions: actions.update
+    }),
+
     // submit login form
     ApiTriggerSaga({
       trigger: actions.login.form.types.submit,

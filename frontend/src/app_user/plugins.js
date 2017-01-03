@@ -23,8 +23,6 @@ export const snackbar = SnackbarPlugin({
   selector: state => state.snackbar
 })
 
-
-
 export const user = UserPlugin({
   base: 'USER',
   successRedirect: getRoute('/'),
@@ -46,9 +44,8 @@ export const installation = {
     // inject the current installation so we can use it
     // to map the 'active' field of the table
     mapStateToProps: (state) => {
-      const userData = plugins.user.selectors.status.record(state).data || {}
       return {
-        currentInstallation: userData.currentInstallation
+        currentInstallation: plugins.user.selectors.status.currentInstallation(state)
       }
     },
     getMapFunction: (props) => tables.installation.map(props.currentInstallation),
@@ -75,9 +72,11 @@ export const installation = {
 
 export const installationDropdown = InstallationDropdownPlugin({
   base: 'INSTALLATION_DROPDOWN',
+  title: 'company',
   loadTrigger: installation.table.actions.list.request,
+  userActions: user.actions,
   selectors: {
-    userdata: user.selectors.status.record,
+    userdata: user.selectors.status.data,
     installations: installation.table.selectors.items
   }
 })

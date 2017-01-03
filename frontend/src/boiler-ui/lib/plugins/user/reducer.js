@@ -24,6 +24,10 @@ const UserReducer = (actions) => {
       api: ApiReducer(actions.register.api.types),
       // register form state
       form: FormReducer(actions.register.form.types)
+    }),
+
+    update: combineReducers({
+      api: ApiReducer(actions.register.api.types),
     })
 
   })

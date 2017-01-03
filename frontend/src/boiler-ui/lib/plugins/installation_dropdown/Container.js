@@ -24,8 +24,8 @@ class InstallationDropdown extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const userData = ownProps.selectors.userdata(state).data || {}
-  const installations = ownProps.selectors.installations(state)  
+  const userData = ownProps.selectors.userdata(state) || {}
+  const installations = ownProps.selectors.installations(state)
   return {
     currentInstallation: userData.currentInstallation,
     installations
@@ -34,7 +34,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onChange: (val) => console.log(val)
+    onChange: (val) => dispatch(ownProps.actions.trigger(val))
   }
 }
 
