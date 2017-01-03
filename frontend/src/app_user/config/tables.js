@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import Chip from 'react-toolbox/lib/chip'
+import Avatar from 'react-toolbox/lib/avatar'
 
 const TABLES = {
 
@@ -12,7 +13,12 @@ const TABLES = {
 
       const active = item.id == currentInstallation ?
         (
-          <Chip>active</Chip>
+          <Chip>
+            <Avatar style={{backgroundColor: 'deepskyblue'}} icon="done" />
+            <span>
+              active
+            </span>
+          </Chip>
         ) :
         null
 
