@@ -2,6 +2,7 @@ import MenuPlugin from '../boiler-ui/lib/plugins/menu'
 import UserPlugin from '../boiler-ui/lib/plugins/user'
 import TablePlugin from '../boiler-ui/lib/plugins/table'
 import FormPlugin from '../boiler-ui/lib/plugins/form'
+import SnackbarPlugin from '../boiler-ui/lib/plugins/snackbar'
 
 import { getRoute } from './tools'
 
@@ -14,6 +15,11 @@ import apis from './apis'
 export const menu = MenuPlugin({
   base: 'MENU',
   selector: state => state.menu
+})
+
+export const snackbar = SnackbarPlugin({
+  base: 'SNACKBAR',
+  selector: state => state.snackbar
 })
 
 export const user = UserPlugin({
@@ -66,6 +72,7 @@ export const installation = {
 
 const plugins = {
   menu,
+  snackbar,
   user,
   installation
 }

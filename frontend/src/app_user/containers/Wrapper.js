@@ -56,6 +56,9 @@ class Wrapper extends Component {
             { this.props.children }
           </div>
         </Panel>
+
+        { plugins.snackbar.getContainer() }
+
       </Layout>
     )
   }

@@ -9,15 +9,14 @@ const getSagas = (apis = {}) => {
 
   return [
 
-    
     plugins.user.saga,
+    plugins.snackbar.saga,
     plugins.installation.table.saga,
     plugins.installation.form.saga,
     RouteTriggerSaga({
       triggers,
       userLoadedActionType: actions.user.status.api.types.success
     })
-    
 
   ]
 }

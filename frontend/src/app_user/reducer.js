@@ -4,6 +4,7 @@ import plugins from './plugins'
 
 const reducer = combineReducers({
   menu: plugins.menu.reducer,
+  snackbar: plugins.snackbar.reducer,
   user: plugins.user.reducer,
   installation: combineReducers({
     table: plugins.installation.table.reducer,

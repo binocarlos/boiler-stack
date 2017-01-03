@@ -5,6 +5,7 @@ import { takeLatest } from 'redux-saga'
 import { fork, put, take, select } from 'redux-saga/effects'
 
 import routerActions from '../../actions/router'
+import systemActions from '../../actions/system'
 import ApiSaga from '../../sagas/api'
 import FormSaga from '../../sagas/form'
 import Schema from '../../utils/schema'
@@ -94,6 +95,11 @@ const FormPluginSaga = (settings = {}) => {
         ])
 
         if(responseAction.type === apiActions.types.success) {
+          yield put(systemActions.mutation({
+            message: page.api == 'put' ?
+              payload.name + ' saved' :
+              payload.name + ' created'
+          }))
           yield put(routerActions.push(successRedirect))
         }
       }

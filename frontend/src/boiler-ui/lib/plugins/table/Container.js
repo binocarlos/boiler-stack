@@ -71,7 +71,7 @@ class TablePluginContainer extends Component {
         <Dialog
           actions={[
             { label: "Cancel", icon: 'cancel', onClick: this.props.closeDeleteWindow },
-            { label: "Delete", icon: 'delete', onClick: () => this.props.confirmDelete(selectedIds) }
+            { label: "Delete", icon: 'delete', onClick: () => this.props.confirmDelete(selectedIds, title) }
           ]}
           active={ this.props.isDeleteWindowOpen }
           onEscKeyDown={ this.props.closeDeleteWindow }
@@ -111,7 +111,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     openDeleteWindow: () => dispatch(actions.deleteWindow.open()),
     closeDeleteWindow: () => dispatch(actions.deleteWindow.close()),
     // send an 'ids' property to the query and we can do multi-delete
-    confirmDelete: (ids) => dispatch(actions.delete.request(null, {ids}))
+    confirmDelete: (ids, message) => dispatch(actions.delete.request(null, {ids, message}))
   }
 }
 

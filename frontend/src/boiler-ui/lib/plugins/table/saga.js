@@ -5,6 +5,7 @@ import { takeLatest, takeEvery } from 'redux-saga'
 import { fork, put, take, select } from 'redux-saga/effects'
 
 import ApiSaga from '../../sagas/api'
+import systemActions from '../../actions/system'
 
 const REQUIRED_SETTINGS = [
   'actions.list',
@@ -39,6 +40,9 @@ const TablePluginSaga = (settings = {}) => {
 
     function* listenForDeleteSuccess() {
       function* reloadList(action) {
+        yield put(systemActions.mutation({
+          message: action.query.message + ' deleted'
+        }))
         yield put(actions.selection.set([]))
         yield put(actions.deleteWindow.close())
         yield put(actions.list.request())
