@@ -6,24 +6,22 @@ const TABLES = {
   installation: {
     schema: {
       name: {type: String},
-      active: {}
+      status: {}
     },
     map: (currentInstallation) => (item) => {
 
       const active = item.id == currentInstallation ?
         (
           <Chip>active</Chip>
-        ) : (
-          <Chip>active</Chip>
-        )
+        ) :
+        null
 
       return {
         id: item.id,
         name: item.name,
-        active: (
+        status: (
           <div style={{
             display: 'flex',
-            
             justifyContent: 'left'
           }}>
             {active}

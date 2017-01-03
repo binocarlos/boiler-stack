@@ -44,7 +44,12 @@ class IconMenu extends Component {
       whitetheme :
       null
     return (
-      <UIIconMenu theme={theme} icon={this.props.icon} menuRipple iconRipple>
+      <UIIconMenu 
+        theme={theme} 
+        icon={this.props.icon} 
+        menuRipple 
+        iconRipple
+      >
         { this.processItems(this.props.items, redirect, this.props.ripple) }
       </UIIconMenu>
     )
