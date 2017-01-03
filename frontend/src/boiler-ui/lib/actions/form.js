@@ -38,7 +38,7 @@ const FormActions = (base) => {
     touchform: () => action(types.touchform),
 
     // a trigger for a saga
-    submit: () => action(types.submit),
+    submit: (payload = {}) => action(types.submit, {payload}),
 
     // reduced - called by the saga once processing is done
 

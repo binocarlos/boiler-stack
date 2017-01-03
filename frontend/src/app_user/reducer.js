@@ -1,22 +1,13 @@
 import { combineReducers } from 'redux'
 
-import MenuReducer from '../boiler-ui/lib/plugins/menu/reducer'
-import UserReducer from '../boiler-ui/lib/plugins/user/reducer'
-import TableReducer from '../boiler-ui/lib/plugins/table/reducer'
-import FormReducer from '../boiler-ui/lib/plugins/form/reducer'
-
-import {
-  menu as menuActions,
-  user as userActions,
-  installation as installationActions
-} from './actions'
+import plugins from './plugins'
 
 const reducer = combineReducers({
-  menu: MenuReducer(menuActions),
-  user: UserReducer(userActions),
+  menu: plugins.menu.reducer,
+  user: plugins.user.reducer,
   installation: combineReducers({
-    table: TableReducer(installationActions.table),
-    form: FormReducer(installationActions.form)
+    table: plugins.installation.table.reducer,
+    form: plugins.installation.form.reducer
   })
 })
 

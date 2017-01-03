@@ -44,7 +44,7 @@ class ButtonMenu extends Component {
   }
 
   render() {
-    const redirect = (path) => () => this.props.redirect(path)
+    const redirect = (path) => () => this.props.redirect ? this.props.redirect(path) : null
     const buttonProps = Object.assign({}, this.props.buttonProps, {
       onClick: this.handleButtonClick
     })

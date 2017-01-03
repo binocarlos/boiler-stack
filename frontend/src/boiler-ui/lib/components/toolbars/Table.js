@@ -67,7 +67,7 @@ TableToolbar.propTypes = {
   addTitle: PropTypes.string,
   addIcon: PropTypes.string,
   onAdd: PropTypes.func,
-  redirect: PropTypes.func.isRequired
+  redirect: PropTypes.func
 }
 
 TableToolbar.defaultProps = {

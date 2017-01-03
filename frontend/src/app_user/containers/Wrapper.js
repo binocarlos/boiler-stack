@@ -4,16 +4,10 @@ import { connect } from 'react-redux'
 import { Layout, NavDrawer, Panel } from 'react-toolbox/lib/layout'
 import AppBar from 'react-toolbox/lib/app_bar'
 
-import routerActions from '../../boiler-ui/lib/actions/router'
+import actions from '../actions'
+import plugins from '../plugins'
 
 import core from '../config/core'
-import selectors from '../selectors'
-import actions from '../actions'
-
-import {
-  menu as menuSelector,
-  user as userSelector
-} from '../selectors'
 
 import Menu from '../components/Menu'
 import AppBarMenu from '../components/AppBarMenu'
@@ -79,17 +73,17 @@ const mapStateToProps = (state, ownProps) => {
     router: state.router,
     pageTitle: core.title,
     page,
-    isMenuOpen: menuSelector.open(state),
-    loggedIn: userSelector.status.loggedIn(state),
-    userLoaded: userSelector.status.loaded(state)
+    isMenuOpen: plugins.menu.selectors.open(state),
+    loggedIn: plugins.user.selectors.status.loggedIn(state),
+    userLoaded: plugins.user.selectors.status.loaded(state)
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    openMenu: () => dispatch(actions.menu.open()),
-    closeMenu: () => dispatch(actions.menu.close()),
-    redirect: (path) => dispatch(routerActions.push(path))
+    openMenu: () => dispatch(plugins.menu.actions.open()),
+    closeMenu: () => dispatch(plugins.menu.actions.close()),
+    redirect: (path) => dispatch(actions.router.push(path))
   }
 }
 

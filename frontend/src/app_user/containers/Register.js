@@ -1,8 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 
 import formfields from '../config/formfields'
-import selectors from '../selectors'
-import actions from '../actions'
+import plugins from '../plugins'
 
 import FormContainer from '../../boiler-ui/lib/containers/Form'
 import Register from '../components/Register'
@@ -15,8 +14,8 @@ class RegisterContainer extends Component {
       <FormContainer
         formComponent={ Register }
         getFields={ formfields.register }
-        selector={ selectors.user.register.form }
-        actions={ actions.user.register.form }
+        selector={ plugins.user.selectors.register.form }
+        actions={ plugins.user.actions.register.form }
       />
     )
     

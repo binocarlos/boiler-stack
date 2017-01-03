@@ -10,10 +10,9 @@ import FormSaga from '../../sagas/form'
 import Schema from '../../utils/schema'
 
 const REQUIRED_SETTINGS = [
-  'successRedirect',
   'getSchema',
   'actions',
-  'selector',
+  'selectors',
   'apis.get',
   'apis.put',
   'apis.post'
@@ -25,7 +24,7 @@ const FormPluginSaga = (settings = {}) => {
   const getSchema = settings.getSchema
   
   const actions = settings.actions
-  const selector = settings.selector
+  const selectors = settings.selectors
   const apis = settings.apis
   const successRedirect = settings.successRedirect
   const logger = Logger('saga:form')
@@ -34,7 +33,7 @@ const FormPluginSaga = (settings = {}) => {
 
     FormSaga({
       getSchema: () => Schema(getSchema()),
-      selector: selector,
+      selector: selectors.fields,
       actions: actions.fields
     }),
 
@@ -59,8 +58,9 @@ const FormPluginSaga = (settings = {}) => {
     function* listenForSubmit() {
       const trigger = actions.fields.types.submit
       function* submitForm(action) {
+        const successRedirect = action.payload
         const routerState = yield select(state => state.router)
-        const payload = yield select(state => selector(state).data)
+        const payload = yield select(state => selectors.fields(state).data)
 
         // check if we are doing a put or post
         const page = routerState.result

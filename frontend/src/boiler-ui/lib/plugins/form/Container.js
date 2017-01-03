@@ -16,9 +16,8 @@ import {
 class FormPluginContainer extends Component {
 
   render() {
-
     const fields = this.props
-      .getFields(this.props.data, this.props.meta)
+      .getFormFields(this.props.data, this.props.meta)
       .map(field => {
         return mapFormField(field, this.props.data, this.props.meta, this.props.originalData, this.props.form_touched)
       })
@@ -27,7 +26,7 @@ class FormPluginContainer extends Component {
       <FormToolbar
         title={ this.props.title }
         icon={ this.props.icon }
-        onCancel={ this.props.onCancel }
+        onCancel={ this.props.cancel }
         onRevert={ this.props.revert }
         onSubmit={ () => this.props.submit(this.props.valid) }
         valid={ this.props.valid }
@@ -43,13 +42,8 @@ class FormPluginContainer extends Component {
   }
 }
 
-const REQUIRED_PROPS = [
-  'selector'
-]
-
 const mapStateToProps = (state, ownProps) => {
-  deepCheck(ownProps, REQUIRED_PROPS)
-  const formState = ownProps.selector(state)
+  const formState = ownProps.selectors.fields(state)
   return {
     valid: doesFormHaveError(formState.meta) ? false : true,
     form_touched: formState.meta.form_touched,
@@ -59,24 +53,17 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-const REQUIRED_ACTIONS = [
-  'actions.update',
-  'actions.touch',
-  'actions.touchform',
-  'actions.submit'
-]
-
 const mapDispatchToProps = (dispatch, ownProps) => {
-  deepCheck(ownProps, REQUIRED_ACTIONS)
   const actions = ownProps.actions
   return {
-    update: (name, value) => dispatch(actions.update(name, value)),
-    touch: (name) => dispatch(actions.touch(name)),
-    revert: () => dispatch(actions.revert()),
+    update: (name, value) => dispatch(actions.fields.update(name, value)),
+    touch: (name) => dispatch(actions.fields.touch(name)),
+    revert: () => dispatch(actions.fields.revert()),
+    cancel: () => dispatch(routerActions.push(ownProps.routes.cancel)),
     submit: (valid) => {
       valid ?
-        dispatch(actions.submit()) :
-        dispatch(actions.touchform())
+        dispatch(actions.fields.submit(ownProps.routes.success)) :
+        dispatch(actions.fields.touchform())
     }
   }
 }

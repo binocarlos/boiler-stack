@@ -4,14 +4,12 @@ import { RelativeFragment as Fragment, AbsoluteFragment } from '../boiler-ui/lib
 import Login from './containers/Login'
 import Register from './containers/Register'
 
-import InstallationTable from './containers/InstallationTable'
-import InstallationForm from './containers/InstallationForm'
-
 import Home from './components/Home'
 import Help from './components/Help'
 import About from './components/About'
 
 import actions from './actions'
+import plugins from './plugins'
 
 // these tools map in the basepath onto any of the routes
 // the basepath is the mountpoint of the app (e.g. '/app' or '/admin')
@@ -63,8 +61,8 @@ export const routes = routeProcessor({
 // functions run when a route is loaded
 // we can dispatch actions to sagas
 export const triggers = {
-  loadInstallations: (routerState) => actions.installation.table.list.request(),
-  addInstallation: (routerState) => actions.installation.form.fields.initialize({}),
+  loadInstallations: (routerState) => plugins.installation.table.actions.list.request(),
+  addInstallation: (routerState) => plugins.installation.form.actions.fields.initialize({}),
   editInstallation: (routerState) => null
 }
 
@@ -97,11 +95,11 @@ export const fragments = (relative) => {
       <Fragment forRoute={getRoute('/companies')}>
 
         <AbsoluteFragment withConditions={location => location.route === getRoute('/companies')}>
-          <InstallationTable />
+          { plugins.installation.table.getContainer() }
         </AbsoluteFragment>
 
         <Fragment forRoute='/add'>
-          <InstallationForm />
+          { plugins.installation.form.getContainer() }
         </Fragment>
 
         <Fragment forRoute='/edit/:id'>

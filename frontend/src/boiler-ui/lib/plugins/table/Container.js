@@ -9,11 +9,15 @@ class TablePluginContainer extends Component {
 
   render() {
 
-    const data = this.props.mapData ?
-      this.props.data.map(this.props.mapData) :
-      this.props.data
+    // get a map function that can transform the table
+    // data based on the extra state selector
+    const mapFunction = this.props.getMapFunction ?
+      this.props.getMapFunction(this.props) :
+      (data) => data
 
+    const data = this.props.data.map(mapFunction)
     const selectedItems = this.props.selection.map(i => data[i])
+    const tableFields = this.props.getTableFields()
 
     const title = selectedItems.length == 1 ?
       selectedItems[0].name :
@@ -27,15 +31,14 @@ class TablePluginContainer extends Component {
       <TableToolbar
         title={ this.props.title }
         icon={  this.props.icon }
-        onAdd={ selectedItems.length == 0 ? this.props.onAdd : null }
-        redirect={ this.props.redirect }
+        onAdd={ selectedItems.length == 0 ? this.props.add : null }
         buttonActions={ this.props.buttonActions }
       >
         <Table
           heading={ this.props.heading }
-          model={ this.props.schema }
-          onSelect={ this.props.onSelect }
-          selectable
+          model={ tableFields }
+          onSelect={ this.props.select }
+          selectable={ data.length > 0 }
           multiSelectable
           selected={ this.props.selection }
           source={ data }
@@ -45,29 +48,37 @@ class TablePluginContainer extends Component {
   }
 }
 
-
 const mapStateToProps = (state, ownProps) => {
   const selection = ownProps.selectors.selection(state)
   const data = ownProps.selectors.items(state)
 
-  return {
+  // inject extra state that can be passed to the mapFunction
+  const extraState = ownProps.mapStateToProps ?
+    ownProps.mapStateToProps(state, ownProps) :
+    {}
+
+  return Object.assign({}, extraState, {
     data,
     selection
-  }
+  })
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  const tableActions = ownProps.actions
-  const BASEPATH = ownProps.basepath
-  const getRoute = ownProps.getRoute
+  const actions = ownProps.actions
   return {
-    redirect: (path) => dispatch(routerActions.push(getRoute(path))),
-    onAdd: () => dispatch(routerActions.push(getRoute(BASEPATH + '/add'))),
-    onEdit: (item) => dispatch(routerActions.push(getRoute(BASEPATH + '/edit/' + item.id))),
-    onSelect: (selection) => dispatch(tableActions.selection.set(selection))
+    add: () => dispatch(routerActions.push(ownProps.routes.add)),
+    edit: (item) => dispatch(routerActions.push(ownProps.routes.edit.replace(':id', () => item.id))),
+    select: (selection) => dispatch(actions.selection.set(selection))
   }
 }
 
+/*
+
+  madd: () => dispatch(routerActions.push(getRoute(BASEPATH + '/add'))),
+    edit: (item) => dispatch(routerActions.push(getRoute(BASEPATH + '/edit/' + item.id))),
+    select: (selection) => dispatch(tableActions.selection.set(selection))
+  
+*/
 export default connect(
   mapStateToProps,
   mapDispatchToProps
