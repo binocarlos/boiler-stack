@@ -9,6 +9,7 @@ import Home from './components/Home'
 import Help from './components/Help'
 import About from './components/About'
 import Table from './components/Table'
+import Card from './components/Card'
 
 import actions from './actions'
 
@@ -47,6 +48,9 @@ export const routes = routeProcessor({
   }),
   '/table': {
     title:'Table'
+  },
+  '/card': {
+    title:'Card'
   }
 })
 
@@ -88,6 +92,10 @@ export const fragments = (relative) => {
 
       <Fragment forRoute={getRoute('/table')}>
         <Table />
+      </Fragment>
+
+      <Fragment forRoute={getRoute('/card')}>
+        <Card />
       </Fragment>
 
     </div>

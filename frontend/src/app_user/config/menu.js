@@ -16,6 +16,7 @@ export const user = [
   ['Companies', icons.installation, getRoute('/companies')],
   '-',
   ['Table', icons.experiment, getRoute('/table')],
+  ['Card', icons.experiment, getRoute('/card')],
   '-',
   ['Help', icons.help, getRoute('/help')],
   ['About', icons.about, getRoute('/about')],
