@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import Dropdown from '../../boiler-ui/lib/components/Dropdown'
-import plugins from '../plugins'
+import Dropdown from '../../components/Dropdown'
 
 class InstallationDropdown extends Component {
 
@@ -12,25 +11,24 @@ class InstallationDropdown extends Component {
         label: item.name
       }
     })
-    
     return (
       <Dropdown
         white
-        label='active company:'
+        label={ 'active ' + (this.props.title || 'installation') }
         data={ data }
         onChange={ this.props.onChange }
         value={ this.props.currentInstallation }
       />
     )
-    
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const userData = plugins.user.selectors.status.record(state).data || {}
+  const userData = ownProps.selectors.userdata(state).data || {}
+  const installations = ownProps.selectors.installations(state)  
   return {
     currentInstallation: userData.currentInstallation,
-    installations: plugins.installation.table.selectors.items(state)  
+    installations
   }
 }
 

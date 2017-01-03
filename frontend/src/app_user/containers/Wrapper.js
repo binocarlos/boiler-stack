@@ -11,7 +11,6 @@ import core from '../config/core'
 
 import Menu from '../components/Menu'
 import AppBarMenu from '../components/AppBarMenu'
-import InstallationDropdown from './InstallationDropdown'
 
 class Wrapper extends Component {
 
@@ -51,7 +50,7 @@ class Wrapper extends Component {
             leftIcon="menu"
             onLeftIconClick={ this.props.openMenu }
           >
-            <InstallationDropdown />
+            { plugins.installationDropdown.getContainer() }
             <AppBarMenu />
           </AppBar>
           <div style={{ flex: 1, overflowY: 'auto' }}>

@@ -3,6 +3,7 @@ import UserPlugin from '../boiler-ui/lib/plugins/user'
 import TablePlugin from '../boiler-ui/lib/plugins/table'
 import FormPlugin from '../boiler-ui/lib/plugins/form'
 import SnackbarPlugin from '../boiler-ui/lib/plugins/snackbar'
+import InstallationDropdownPlugin from '../boiler-ui/lib/plugins/installation_dropdown'
 
 import { getRoute } from './tools'
 
@@ -21,6 +22,8 @@ export const snackbar = SnackbarPlugin({
   base: 'SNACKBAR',
   selector: state => state.snackbar
 })
+
+
 
 export const user = UserPlugin({
   base: 'USER',
@@ -70,11 +73,21 @@ export const installation = {
   })
 }
 
+export const installationDropdown = InstallationDropdownPlugin({
+  base: 'INSTALLATION_DROPDOWN',
+  loadTrigger: installation.table.actions.list.request,
+  selectors: {
+    userdata: user.selectors.status.record,
+    installations: installation.table.selectors.items
+  }
+})
+
 const plugins = {
   menu,
   snackbar,
   user,
-  installation
+  installation,
+  installationDropdown
 }
 
 export default plugins

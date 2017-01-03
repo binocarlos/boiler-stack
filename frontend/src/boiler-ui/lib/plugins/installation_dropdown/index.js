@@ -1,0 +1,41 @@
+import React, { Component, PropTypes } from 'react'
+import deepCheck from 'deep-check-error'
+
+import Actions from './actions'
+import Saga from './saga'
+import Container from './Container'
+
+const REQUIRED_SETTINGS = [
+  'base',
+  'selectors.userdata',
+  'selectors.installations'
+]
+
+const InstallationDropdownPlugin = (settings = {}) => {
+  deepCheck(settings, REQUIRED_SETTINGS)
+
+  const actions = Actions(settings.base)
+  const selectors = settings.selectors
+  const saga = Saga({
+    actions
+  })
+
+  const getContainer = () => {
+    const containerProps = Object.assign({}, settings, {
+      selectors,
+      actions
+    })
+    return (
+      <Container {...containerProps} />
+    )
+  }
+
+  return {
+    actions,
+    saga,
+    selectors,
+    getContainer
+  }
+}
+
+export default InstallationDropdownPlugin
