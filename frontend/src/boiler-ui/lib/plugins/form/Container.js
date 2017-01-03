@@ -23,7 +23,7 @@ class FormPluginContainer extends Component {
       })
 
     const title = this.props.data.id ?
-      this.props.data.name :
+      this.props.originalData.name :
       'New ' + this.props.title
 
     return (
