@@ -48,7 +48,7 @@ export const installation = {
         currentInstallation: plugins.user.selectors.status.currentInstallation(state)
       }
     },
-    getMapFunction: (props) => tables.installation.map(props.currentInstallation),
+    getMapFunction: tables.installation.map,
     routes: {
       add: getRoute('/companies/add'),
       edit: getRoute('/companies/edit/:id')

@@ -51,7 +51,6 @@ class TablePluginContainer extends Component {
       deleteTitle = deleteItems[0]
     }
     
-    
     return (
       <TableToolbar
         title={ title }
@@ -105,6 +104,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   const actions = ownProps.actions
   return {
+    dispatch: dispatch,
     add: () => dispatch(routerActions.push(ownProps.routes.add)),
     edit: (id) => dispatch(routerActions.push(ownProps.routes.edit.replace(':id', id))),
     select: (selection) => dispatch(actions.selection.set(selection)),

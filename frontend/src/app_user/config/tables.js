@@ -5,6 +5,8 @@ import { Button } from 'react-toolbox/lib/button'
 import Tooltip from 'react-toolbox/lib/tooltip'
 import Navigation from 'react-toolbox/lib/navigation'
 
+import plugins from '../plugins'
+
 const TooltipButton = Tooltip(Button)
 
 const TABLES = {
@@ -15,7 +17,9 @@ const TABLES = {
       status: {},
       actions: {}
     },
-    map: (currentInstallation) => (item) => {
+    map: (props) => (item, i) => {
+
+      const currentInstallation = props.currentInstallation
 
       const active = item.id == currentInstallation ?
         (
@@ -50,20 +54,30 @@ const TABLES = {
                 ripple={false}
                 icon='delete'
                 floating
-                mini />
+                mini 
+                onClick={() => {
+                  props.select([i])
+                  props.openDeleteWindow()
+                }} />
               <TooltipButton 
                 tooltip='Edit'
                 ripple={false}
                 icon='create'
                 floating
-                mini />
+                mini 
+                onClick={() => {
+                  props.edit(item.id)
+                }} />
               <TooltipButton 
                 tooltip='Activate'
                 ripple={false}
                 icon='forward'
                 primary
                 floating
-                mini />
+                mini 
+                onClick={() => {
+                  props.dispatch(plugins.installationDropdown.actions.trigger(item.id))
+                }} />
             </Navigation>
           </div>
         )
