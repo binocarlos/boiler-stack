@@ -22,9 +22,13 @@ class FormPluginContainer extends Component {
         return mapFormField(field, this.props.data, this.props.meta, this.props.originalData, this.props.form_touched)
       })
 
+    const title = this.props.data.id ?
+      this.props.data.name :
+      'New ' + this.props.title
+
     return (
       <FormToolbar
-        title={ this.props.title }
+        title={ title }
         icon={ this.props.icon }
         onCancel={ this.props.cancel }
         onRevert={ this.props.revert }

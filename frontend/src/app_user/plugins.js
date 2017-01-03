@@ -31,7 +31,7 @@ export const installation = {
     name: 'INSTALLATION_TABLE',
     apis: apis.installation,
     selector: state => state.installation.table,
-    title: 'Company',
+    title: 'Companies',
     icon: icons.installation,
     getTableFields: () => tables.installation.schema,
     // inject the current installation so we can use it
