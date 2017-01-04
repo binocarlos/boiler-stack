@@ -102,7 +102,8 @@ export const triggers = {
   ],
   loadProjects: (routerState) => [
     plugins.project.table.actions.selection.set([]),
-    plugins.project.table.actions.list.request()
+    plugins.project.table.actions.list.request(),
+    plugins.client.table.actions.list.request()
   ],
   addInstallation: (routerState) => plugins.installation.form.actions.fields.initialize({}),
   addClient: (routerState) => plugins.client.form.actions.fields.initialize({}),

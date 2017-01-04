@@ -9,7 +9,7 @@ import tables from '../config/tables'
 import icons from '../config/icons'
 import apis from '../apis'
 
-import user from './user'
+import client from './client'
 
 const project = {
 
@@ -20,6 +20,12 @@ const project = {
     title: 'Projects',
     icon: icons.project,
     getTableFields: () => tables.project.schema,
+    mapStateToProps: (state) => {
+      const db = client.table.selectors.data(state).db
+      return {
+        clients: db
+      }
+    },
     getMapFunction: tables.project.map,
     routes: {
       add: getRoute('/projects/add'),

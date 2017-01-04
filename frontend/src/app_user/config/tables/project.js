@@ -12,12 +12,17 @@ const TooltipButton = Tooltip(Button)
 const PROJECT_TABLE = {
   schema: {
     name: {type: String},
+    client: {type: String},
     actions: {}
   },
   map: (props) => (item, i) => {
+    const clients = props.clients
+    const client = clients[item.clientid] || {}
+
     return {
       id: item.id,
       name: item.name,
+      client: client.name,
       actions: (
         <div style={{
           display: 'flex',

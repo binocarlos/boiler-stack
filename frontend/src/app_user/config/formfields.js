@@ -1,4 +1,8 @@
 import Text from '../../boiler-ui/lib/utils/formfields/text'
+import Select from '../../boiler-ui/lib/utils/formfields/select'
+import LoadSelect from '../../boiler-ui/lib/utils/formfields/loadselect'
+
+import plugins from '../plugins'
 
 const FORMS = {
 
@@ -30,7 +34,19 @@ const FORMS = {
 
   project: () => {
     return [
-      Text('name')
+      Text('name'),
+      LoadSelect({
+        name: 'clientid',
+        title: 'Client',
+        selector: plugins.client.table.selectors.items,
+        trigger: plugins.client.table.actions.list.request,
+        mapOptions: (client) => {
+          return {
+            value: client.id,
+            label: client.name
+          }
+        }
+      })
     ]
   }
   

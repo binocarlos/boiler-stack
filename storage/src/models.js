@@ -42,6 +42,7 @@ var InstallationSchema = new Schema({
 var ProjectSchema = new Schema({
   name: { type: String, required: true },
   installationid: { type: Schema.Types.ObjectId, required: true },
+  clientid: { type: Schema.Types.ObjectId, required: true },
   littleid: { type: String, required: true }
 })
 

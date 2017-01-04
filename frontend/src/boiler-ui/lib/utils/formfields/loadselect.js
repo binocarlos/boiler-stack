@@ -1,6 +1,8 @@
 import React, { PropTypes, Component } from 'react'
 import deepCheck from 'deep-check-error'
 import Select from '../../components/formfields/Select'
+import LoadSelect from '../../containers/LoadSelect'
+
 import {
   ucfirst,
   getPathnameValue,
@@ -8,7 +10,10 @@ import {
 } from '../../tools'
 
 const REQUIRED_SETTINGS = [
-  'name'
+  'name',
+  'selector',
+  'mapOptions',
+  'trigger'
 ]
 
 const select = (settings = {}) => {
@@ -26,12 +31,22 @@ const select = (settings = {}) => {
     get: getPathnameValue(settings.name),
     compare: stringCompare,
     getComponent: (props) => {
-      const options = settings.options || []
+      const selector = (state) => {
+        let options = settings.selector(state) || []
+        options = settings.mapOptions ?
+          options.map(settings.mapOptions) :
+          options
+        return {
+          options
+        }
+      }
       const finalProps = Object.assign({}, props, {
-        options
+        component: Select,
+        trigger: settings.trigger,
+        selector
       })
       return (
-        <Select {...finalProps} />
+        <LoadSelect {...finalProps} />
       )
     }
   }
