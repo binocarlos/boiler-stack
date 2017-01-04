@@ -9,6 +9,14 @@ const reducer = combineReducers({
   installation: combineReducers({
     table: plugins.installation.table.reducer,
     form: plugins.installation.form.reducer
+  }),
+  client: combineReducers({
+    table: plugins.client.table.reducer,
+    form: plugins.client.form.reducer
+  }),
+  project: combineReducers({
+    table: plugins.project.table.reducer,
+    form: plugins.project.form.reducer
   })
 })
 

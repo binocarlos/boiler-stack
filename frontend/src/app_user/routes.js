@@ -55,6 +55,34 @@ export const routes = routeProcessor({
       trigger: 'editInstallation',
       api: 'put'
     }
+  }),
+  '/clients': user({
+    title:'Clients',
+    trigger: 'loadClients',
+    '/add': {
+      title:'Clients : Add',
+      trigger: 'addClient',
+      api: 'post'
+    },
+    '/edit/:id': {
+      title:'Clients : Edit',
+      trigger: 'editClient',
+      api: 'put'
+    }
+  }),
+  '/projects': user({
+    title:'Projects',
+    trigger: 'loadProjects',
+    '/add': {
+      title:'Projects : Add',
+      trigger: 'addProject',
+      api: 'post'
+    },
+    '/edit/:id': {
+      title:'Projects : Edit',
+      trigger: 'editProject',
+      api: 'put'
+    }
   })
 })
 
@@ -68,10 +96,28 @@ export const triggers = {
     plugins.installation.table.actions.selection.set([]),
     plugins.installation.table.actions.list.request()
   ],
+  loadClients: (routerState) => [
+    plugins.client.table.actions.selection.set([]),
+    plugins.client.table.actions.list.request()
+  ],
+  loadProjects: (routerState) => [
+    plugins.project.table.actions.selection.set([]),
+    plugins.project.table.actions.list.request()
+  ],
   addInstallation: (routerState) => plugins.installation.form.actions.fields.initialize({}),
+  addClient: (routerState) => plugins.client.form.actions.fields.initialize({}),
+  addProject: (routerState) => plugins.project.form.actions.fields.initialize({}),
   editInstallation: (routerState) => [
     plugins.installation.form.actions.fields.initialize({}),
     plugins.installation.form.actions.get.request(null, routerState.params)
+  ],
+  editClient: (routerState) => [
+    plugins.client.form.actions.fields.initialize({}),
+    plugins.client.form.actions.get.request(null, routerState.params)
+  ],
+  editProject: (routerState) => [
+    plugins.project.form.actions.fields.initialize({}),
+    plugins.project.form.actions.get.request(null, routerState.params)
   ]
 }
 
@@ -113,6 +159,38 @@ export const fragments = (relative) => {
 
         <Fragment forRoute='/edit/:id'>
           { plugins.installation.form.getContainer() }
+        </Fragment>
+        
+      </Fragment>
+
+      <Fragment forRoute={getRoute('/clients')}>
+
+        <AbsoluteFragment withConditions={location => location.route === getRoute('/clients')}>
+          { plugins.client.table.getContainer() }
+        </AbsoluteFragment>
+
+        <Fragment forRoute='/add'>
+          { plugins.client.form.getContainer() }
+        </Fragment>
+
+        <Fragment forRoute='/edit/:id'>
+          { plugins.client.form.getContainer() }
+        </Fragment>
+        
+      </Fragment>
+
+      <Fragment forRoute={getRoute('/projects')}>
+
+        <AbsoluteFragment withConditions={location => location.route === getRoute('/projects')}>
+          { plugins.project.table.getContainer() }
+        </AbsoluteFragment>
+
+        <Fragment forRoute='/add'>
+          { plugins.project.form.getContainer() }
+        </Fragment>
+
+        <Fragment forRoute='/edit/:id'>
+          { plugins.project.form.getContainer() }
         </Fragment>
         
       </Fragment>

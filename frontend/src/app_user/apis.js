@@ -43,9 +43,21 @@ export const installation = MongoCrud({
   getUrl: () => URLS.installation
 })
 
+export const client = MongoCrud({
+  name: 'client',
+  getUrl: (query) => [URLS.client, query.currentInstallation].join('/')
+})
+
+export const project = MongoCrud({
+  name: 'project',
+  getUrl: (query) => [URLS.project, query.currentInstallation].join('/')
+})
+
 const apis = {
   user,
-  installation
+  installation,
+  client,
+  project
 }
 
 export default apis

@@ -28,7 +28,7 @@ module.exports = function(opts){
     })
   }
 
-  function addInstallationProject(id, data, logger, logger, done){
+  function addInstallationProject(id, data, logger, done){
     installations.processId(id, logger, function(err, fullid){
       if(err) return done(err)
       data.installationid = fullid

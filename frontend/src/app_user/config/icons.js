@@ -6,7 +6,7 @@ const icons = {
   logout: 'exit_to_app',
   login: 'account_circle',
   register: 'create',
-  installation: 'business',
+  installation: 'apps',
   cancel: 'clear',
   revert: 'undo',
   save: 'send',

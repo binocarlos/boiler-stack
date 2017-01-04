@@ -2,9 +2,9 @@ import Ajax from './ajax'
 
 const crudAjaxFactory = (settings = {}) => {
 
-  const getUrl = () => {
+  const getUrl = (query) => {
     return settings.getUrl ?
-      settings.getUrl() :
+      settings.getUrl(query) :
       settings.url
   }
 
@@ -20,8 +20,8 @@ const crudAjaxFactory = (settings = {}) => {
     get:(query = {}) => {
       query = query || {}
       const url = query.id ?
-        getUrl() + '/' + query.id :
-        getUrl()
+        getUrl(query) + '/' + query.id :
+        getUrl(query)
       return ajaxClient
         .get(url)
         .then(encode)
@@ -29,8 +29,8 @@ const crudAjaxFactory = (settings = {}) => {
     list:(query = {}) => {
       query = query || {}
       const url = query.id ?
-        getUrl() + '/' + query.id :
-        getUrl()
+        getUrl(query) + '/' + query.id :
+        getUrl(query)
       return ajaxClient
         .get(url)
         .then(result => result.map(encode))
@@ -38,14 +38,14 @@ const crudAjaxFactory = (settings = {}) => {
     post:(query = {}, data) => {
       query = query || {}
       return ajaxClient
-        .post(getUrl(), data)
+        .post(getUrl(query), data)
         .then(encode)
     },
     put:(query = {}, data) => {
       query = query || {}
       const url = query.id ?
-        getUrl() + '/' + query.id :
-        getUrl()
+        getUrl(query) + '/' + query.id :
+        getUrl(query)
       return ajaxClient
         .put(url, data)
         .then(encode)
@@ -56,12 +56,12 @@ const crudAjaxFactory = (settings = {}) => {
       if(query.ids){
         return query.ids.map(id => {
           return ajaxClient
-            .delete(getUrl() + '/' + id)
+            .delete(getUrl(query) + '/' + id)
         })
       }
       else{
         return ajaxClient
-          .delete(getUrl() + '/' + query.id)
+          .delete(getUrl(query) + '/' + query.id)
       }
       
     }

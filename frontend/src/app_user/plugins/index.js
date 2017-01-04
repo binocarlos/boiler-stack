@@ -4,6 +4,8 @@ import SnackbarPlugin from '../../boiler-ui/lib/plugins/snackbar'
 import user from './user'
 import installation from './installation'
 import installationDropdown from './installation_dropdown'
+import client from './client'
+import project from './project'
 
 export const menu = MenuPlugin({
   base: 'MENU',
@@ -20,7 +22,9 @@ const plugins = {
   snackbar,
   user,
   installation,
-  installationDropdown
+  installationDropdown,
+  client,
+  project
 }
 
 export default plugins
