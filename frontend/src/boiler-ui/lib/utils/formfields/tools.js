@@ -6,7 +6,7 @@ export const mapFormField = (field, data, meta, originalData, form_touched) => {
   meta = (meta.fields || {})[field.name] || {}
   const error = form_touched || ( hasChanged && meta.touched ) ? meta.error : null
   return {
-    component: field.component,
+    getComponent: field.getComponent,
     name: field.name,
     title: field.title,
     value,

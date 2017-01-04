@@ -53,6 +53,10 @@ const SCHEMAS = {
       Text({
         name: 'name',
         required: true
+      }),
+      Text({
+        name: 'clientid',
+        required: true
       })
     ]
   }

@@ -21,16 +21,16 @@ class FormFields extends Component {
       <div>
         {
           fields.map((field, i) => {
-            const FieldComponent = field.component
+            const componentProps = {
+              title: field.title,
+              error: field.error,
+              value: field.value,
+              update: value => this.props.update(field.name, value),
+              touch: () => this.props.touch(field.name)
+            }
             return (
               <div key={i}>
-                <FieldComponent
-                  title={field.title}
-                  error={field.error}
-                  value={field.value}
-                  update={value => this.props.update(field.name, value)}
-                  touch={() => this.props.touch(field.name)}
-                />
+                { field.getComponent(componentProps) }
               </div>
             )
           })

@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react'
 import deepCheck from 'deep-check-error'
-import Text from '../../components/formfields/Text'
+import Select from '../../components/formfields/Select'
 import {
   ucfirst,
   getPathnameValue,
@@ -11,7 +11,7 @@ const REQUIRED_SETTINGS = [
   'name'
 ]
 
-const text = (settings = {}) => {
+const select = (settings = {}) => {
   if(typeof(settings) == 'string') {
     settings = {
       name: settings
@@ -27,10 +27,10 @@ const text = (settings = {}) => {
     compare: stringCompare,
     getComponent: (props) => {
       return (
-        <Text {...props} />
+        <Select {...props} />
       )
     }
   }
 }
 
-export default text
+export default select
