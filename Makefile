@@ -44,15 +44,10 @@ frontend.logs:
 frontend.cli:
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --entrypoint bash frontend
 
-.PHONY: mongo.cli
-mongo.cli:
-	docker run -ti --rm \
-		--name mongo_cli \
-		--network boilerstack_default \
-		--link boiler_mongo:mongo \
-		--entrypoint mongo \
-		mongo mongo:27017/boiler
-
-.PHONY: storage.post
-storage.post:
-	curl -H "Content-Type: application/json" -X POST -d '{"name":"Test","projectid":"58226cab426437000123ac8b"}' http://localhost:8089/api/v1/quotes
+.PHONY: postgres.cli
+postgres.cli:
+	docker run -it --rm \
+		--net boilerstack_default \
+		--link boiler_postgres:postgres \
+		-e PGPASSWORD=boiler \
+		postgres psql -h postgres -U boiler

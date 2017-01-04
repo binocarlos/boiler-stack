@@ -10,6 +10,16 @@ services:
     container_name: boiler_mongo
     volumes:
       - ./.data/mongo:/data/db
+  postgres:
+    image: postgres:9.6.1
+    container_name: boiler_postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./.data/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=boiler
+      - POSTGRES_PASSWORD=boiler
   digger:
     image: binocarlos/digger-rest
     container_name: boiler_digger
