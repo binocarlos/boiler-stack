@@ -6,14 +6,18 @@
   "main": "index.js",
   "scripts": {},
   "dependencies": {
-    "bhttp": "^1.2.4",
-    "concat-stream": "^1.5.1",
-    "digger-folder-ui": "^2.2.0",
-    "hat": "^0.0.3",
-    "http-hash-router": "^1.1.0",
+    "async": "^2.1.4",
+    "body-parser": "^1.15.2",
+    "connect-redis": "^3.2.0",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.14.0",
+    "express-pino-logger": "^2.0.0",
+    "express-session": "^1.14.2",
+    "ioredis": "^2.4.3",
     "minimist": "^1.2.0",
-    "pino": "^3.0.5",
-    "pino-http": "^2.2.0"
+    "passport": "^0.3.2",
+    "pg": "^6.1.2",
+    "pino": "^3.1.0"
   },
   "devDependencies": {}
 }

@@ -1,83 +1,41 @@
-var url = require('url')
+"use strict";
+const express = require('express')
+const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
+const pino = require('express-pino-logger')
 
-var HttpHashRouter = require('http-hash-router')
-var Logger = require('./logger')
-var Auth = require('./auth')
+const Routes = require('./routes')
+const tools = require('./tools')
 
-var Digger = require('./routes/digger')
-var Version = require('./routes/version')
-var Users = require('./routes/users')
-var Installations = require('./routes/installations')
-var Projects = require('./routes/projects')
-var Quotes = require('./routes/quotes')
-var Clients = require('./routes/clients')
+function App(settings) {
 
-module.exports = function(opts){
+  const session = settings.session
+  const passport = settings.passport
+  const base = settings.base
+  const queries = settings.queries
+  const commands = settings.commands
 
-  opts = opts || {}
+  const app = express()
 
-  if(!opts.url) logger.error(new Error('routes needs a url option'))
+  app.use(pino())
+  app.use(bodyParser.urlencoded({
+    extended: true
+  }))
+  app.use(bodyParser.json())
+  app.use(cookieParser())
+  app.use(session)
+  app.use(passport.initialize())
+  app.use(passport.session())
 
-  var router = HttpHashRouter()
-
-  // the auth function that is passed the context from above
-  var auth = Auth(opts)
-
-  var routeOpts = Object.assign({}, opts, {
-    auth:auth
+  Routes(app, {
+    base,
+    queries,
+    commands
   })
 
-  // this setps up the 
-  // /api/v1/digger/:project/:section -> (/api/v1/digger/apples/oranges)
-  // /project/:project/:section-> (/project/apples/oranges)
-  Digger(router, Object.assign({}, opts, {
-    auth:auth('digger'),
-    // the frontend route prefix
-    frontendPrefix:'digger',
-    // the backend digger prefix
-    backendPrefix:'account',
-    // the array of params to map from the route
-    paramFields:['account', 'section']
-  }))
+  app.use(tools.errorHandler)
 
-  Version(router)
-
-  Users(router, Object.assign({}, opts, {
-    auth:auth('users')
-  }))
-
-  Installations(router, Object.assign({}, opts, {
-    auth:auth('installations')
-  }))
-
-  Projects(router, Object.assign({}, opts, {
-    auth:auth('projects')
-  }))
-
-  Quotes(router, Object.assign({}, opts, {
-    auth:auth('quotes')
-  }))
-
-  Clients(router, Object.assign({}, opts, {
-    auth:auth('clients')
-  }))
-
-  var logger = Logger({
-    name:'api'
-  })
-
-  function handler(req, res) {
-    logger(req, res)
-    
-    function onError(err) {
-      if (err) {
-        req.log.error({}, err)
-        res.statusCode = err.statusCode || 500;
-        res.end(err.message);
-      }
-    }
-    router(req, res, {}, onError)
-  }
-
-  return handler
+  return app
 }
+
+module.exports = App

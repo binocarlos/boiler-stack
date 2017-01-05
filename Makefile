@@ -1,3 +1,7 @@
+.PHONY: clean
+clean:
+	docker rm -f `docker ps -aq`
+
 .PHONY: compose.build
 compose.build:
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
@@ -46,8 +50,8 @@ frontend.cli:
 
 .PHONY: postgres.cli
 postgres.cli:
-	docker run -it --rm \
-		--net boilerstack_default \
-		--link boiler_postgres:postgres \
-		-e PGPASSWORD=boiler \
-		postgres psql -h postgres -U boiler
+	bash scripts/postgres.sh
+
+.PHONY: redis.cli
+redis.cli:
+	bash scripts/redis.sh

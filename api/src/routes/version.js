@@ -1,15 +1,11 @@
-var path = require('path')
-var tools = require('../tools')
-var VERSION = require(path.join(__dirname, '..', '..', 'package.json')).version
+"use strict";
 
-module.exports = function(router, opts){
+const packageInfo = require('../../package.json')
 
-  opts = opts || {}
-
-  router.set(opts.url + '/version', {
-    GET:function(req, res){
-      res.end(VERSION)
-    }
-  })
-
+function Version(settings) {
+  return (req, res) => {
+    res.send(packageInfo.version)
+  }
 }
+
+module.exports = Version

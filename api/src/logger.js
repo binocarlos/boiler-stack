@@ -1,37 +1,21 @@
-var pinohttp = require('pino-http')
-var pino = require('pino')
-var hat = require('hat')
+"use strict";
+const pino = require('pino')
 
-function getLogLevel(level){
-  return level || process.env.LOGLEVEL || 'info'
-}
-
-function getLogOptions(opts){
-  opts = opts || {}
-  var level = getLogLevel(opts.level)
-  return Object.assign({}, opts, {
-    level:level,
-    logLevel:level,
-    genReqId:function (req) {
-      return req.headers['x-tracer-id']
+function Logger(name) {
+  const logger = pino()
+  function log(data) {
+    if(process.env.NODE_ENV != 'production') {
+      logger.info(Object.assign({}, data, {
+        name: name
+      }))
     }
-  })
+  }
+
+  log.error = function(err) {
+    logger.error(err)    
+  }
+  
+  return log
 }
 
-module.exports = function(opts){
-  var httplogger = pinohttp(getLogOptions(opts))
-  var logger = pino(getLogOptions(opts))
-  return function(req, res){
-    var id = req.headers['x-tracer-id'] ? req.headers['x-tracer-id'] : req.headers['x-tracer-id'] = hat()
-    httplogger(req, res)
-    req.log.debug({}, 'api request: ' + req.method + ' ' + req.url)
-    req.log = logger.child({
-      req:{
-        id:id,
-        method:req.method,
-        url:req.url
-      }
-    })
-    req.log.id = id
-  }
-}
+module.exports = Logger

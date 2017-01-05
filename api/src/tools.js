@@ -1,110 +1,126 @@
-var bhttp = require('bhttp')
-var hat = require('hat')
-var concat = require('concat-stream')
+"use strict";
+const crypto = require('crypto')
 
-function errorWrapper(logger, res, fn, errorCode){
-  errorCode = errorCode || 500
-  return function(err, data){
-    if(err){
-      logger.error(data, err)
-      res.statusCode = errorCode
-      res.end(err.toString())
-      return
-    }
-    fn(data)
+function makeSalt() {
+  return Math.round((new Date().valueOf() * Math.random())) + '';
+}
+
+function encryptPassword(password, salt) {
+  if (!password) return '';
+  try {
+    return crypto
+      .createHmac('sha1', salt)
+      .update(password)
+      .digest('hex');
+  } catch (err) {
+    return '';
   }
 }
 
-function jsonRequestWrapper(req, res, done){
-  req.pipe(concat(function(data){
-    var stringData = data.toString()
-    var jsonData = null
-    try{
-      jsonData = JSON.parse(stringData)
-    } catch(err) {
-      req.log.error({
-        data:stringData
-      }, err.toString())
-      res.statusCode = 500
-      res.end(err.toString())
-      return
+function checkUserPassword(user, password) {
+  const encryptedPassword = encryptPassword(password, user.salt)
+  return encryptedPassword == user.hashed_password
+}
+
+function generateUser(email, password) {
+  const salt = makeSalt()
+  const encryptedPassword = encryptPassword(password, salt)
+  return {
+    email: email,
+    hashed_password: encryptedPassword,
+    salt: salt,
+    data: {}
+  }
+}
+
+function errorHandler(err, req, res, next) {
+  let code = 500
+  let message = ''
+  let data = null
+  if(err instanceof Error) {
+    if(process.env.NODE_ENV != 'production'){
+      console.error(err.stack)
     }
-    done(jsonData)
-  }))
-}
-
-function jsonResponseWrapper(logger, res, opts){
-  opts = opts || {}
-  return errorWrapper(logger, res, function(data){
-    data = opts.filter ? opts.filter(data) : data
-    res.setHeader('Content-type', 'application/json')
-    res.end(JSON.stringify(data))  
-  }, opts.code)
-}
-
-function authUrl(path){
-  var url = 'http://' + process.env.AUTH_SERVICE_HOST + ':' + process.env.AUTH_SERVICE_PORT
-  return path ? url + path : url
-}
-
-function diggerUrl(path){
-  var url = 'http://' + process.env.DIGGER_SERVICE_HOST + ':' + process.env.DIGGER_SERVICE_PORT
-  return path ? url + path : url
-}
-
-function storageUrl(path){
-  var url = 'http://' + process.env.STORAGE_SERVICE_HOST + ':' + process.env.STORAGE_SERVICE_PORT
-  return path ? url + path : url
-}
-
-var AUTH_PATH = '/auth/v1/status'
-
-function loadUser(logger, cookie, done){
-  var url = authUrl(AUTH_PATH)
-  logger.debug({
-    url:url,
-    tracerid:logger.id
-  }, 'load user from auth service')
-  bhttp.get(url, {
-    decodeJSON:true,
-    headers:{
-      cookie:cookie,
-      'x-tracer-id':logger.id
-    }
-  }, function(err, authResp){
-    if(err) return done(err)
-    done(null, authResp.body)
+    err = err.message
+  }
+  else if(typeof(err) === 'string') {
+    message = err
+  }
+  else if (err instanceof Array) {
+    message = err[0]
+    code = err[1]
+    data = err[2]
+  }
+  else if (err instanceof Object) {
+    message = err.message
+    code = err.code
+    data = err.data
+  }
+  else {
+    message = 'unknown error type: ' + typeof(err)
+  }
+  const errorData = Object.assign({}, data, {
+    error: message
   })
+  res
+    .status(code)
+    .json(errorData)
 }
 
-const LITTLEID_LENGTH = 8
-
-function littleid(){
-  return hat().substring(0,LITTLEID_LENGTH)
+function insertSQL(table, obj, schema) {
+  obj = obj || {}
+  schema = schema || {}
+  const fields = Object.keys(obj)
+    .map(f => `  "${f}"`)
+    .join(",\n")
+  const placeholders = Object.keys(obj)
+    .map((f, i) => `  $${i+1}${schema[f] ? '::' + schema[f] : ''}`)
+    .join(",\n")
+  const values = Object.keys(obj)
+    .map(f => obj[f])
+  const sql = `insert into "${table}"
+(
+${fields}
+)
+values
+(
+${placeholders}
+)
+returning *
+`
+  return {
+    sql,
+    values
+  }
 }
 
-function isLittleId(id){
-  return id.length == LITTLEID_LENGTH
-}
-
-function encodeQuery(query){
-  if(!query) return null
-  var ret = {}
-  Object.keys(query || {}).forEach(function(key){
-    ret[key] = JSON.stringify(query[key])
-  })
-  return ret
+function updateSQL(table, obj, schema, clause, clauseValues) {
+  obj = obj || {}
+  schema = schema || {}
+  const placeholders = Object.keys(obj)
+    .map((f, i) => `set "${f}" = $${i+1}${schema[f] ? '::' + schema[f] : ''}`)
+    .join(",\n")
+  const values = Object.keys(obj)
+    .map(f => obj[f])
+    .concat(clauseValues)
+  const sql = `update "${table}"
+${placeholders}
+where
+${clause}
+returning *
+`
+  return {
+    sql,
+    values
+  }
 }
 
 module.exports = {
-  loadUser:loadUser,
-  authUrl:authUrl,
-  diggerUrl:diggerUrl,
-  storageUrl:storageUrl,
-  errorWrapper:errorWrapper,
-  jsonRequestWrapper:jsonRequestWrapper,
-  jsonResponseWrapper:jsonResponseWrapper,
-  littleid:littleid,
-  isLittleId:isLittleId,
-  encodeQuery:encodeQuery
+  makeSalt,
+  encryptPassword,
+  checkUserPassword,
+  generateUser,
+  errorHandler,
+  insertSQL,
+  updateSQL
 }
