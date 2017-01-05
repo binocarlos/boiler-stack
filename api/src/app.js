@@ -12,8 +12,7 @@ function App(settings) {
   const session = settings.session
   const passport = settings.passport
   const base = settings.base
-  const queries = settings.queries
-  const commands = settings.commands
+  const model = settings.model  
 
   const app = express()
 
@@ -27,11 +26,7 @@ function App(settings) {
   app.use(passport.initialize())
   app.use(passport.session())
 
-  Routes(app, {
-    base,
-    queries,
-    commands
-  })
+  Routes(app, base, model)
 
   app.use(tools.errorHandler)
 

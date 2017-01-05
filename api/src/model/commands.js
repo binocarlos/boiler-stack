@@ -1,29 +1,18 @@
 "use strict";
 const tools = require('../tools')
-const selectors = require('./selectors')
-const single = selectors.single
+const Crud = require('./crud')
 
-function Commands(db) {
-
-  const user = {
-
-    create: (user, done) => {
-      const userRecord = tools.generateUser(user)
-      const insert = tools.insertSQL('user', userRecord)
-      db(insert.sql, insert.values, single(done))
-    },
-
-    update: (id, data, done) => {
-      const update = tools.updateSQL('user', {
-        data: JSON.stringify(data)
-      }, `"id" = $1`, [id])
-      db(update.sql, update.values, single(done))
-    }
-  }
-
-  return {
-    user
-  }
+const user = (db) => {
+  const users = Crud(db, 'user')
+  return Object.assign({}, users, {
+    register: (data, done) => users.insert(tools.generateUser(data), done),
+    save: (data, params, done) => users.update({data:JSON.stringify(data)}, params, done)
+  })
 }
 
-module.exports = Commands
+const installation = (db) => Crud(db, 'installation')
+
+module.exports = {
+  user,
+  installation
+}

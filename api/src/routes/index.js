@@ -5,9 +5,11 @@ const logger = Logger('routes')
 
 const Version = require('./version')
 const Auth = require('./auth')
+const Installations = require('./installations')
 
-function Routes(app, settings) {
-  const base = settings.base
+function Routes(app, base, model) {
+  const queries = model.queries
+  const commands = model.commands
   function bind(method) {
     const methodHandler = app[method]
     if(!methodHandler) throw new Error('unknown method: ' + method)
@@ -30,9 +32,19 @@ function Routes(app, settings) {
   const post = bind('post')
   const put = bind('put')
   const del = bind('delete')
+
+  const queries = settings.queries
+  const commands = settings.commands
   
   const version = Version(settings)
-  const auth = Auth(settings)
+  const auth = Auth({
+    queries: queries.user,
+    commands: commands.user
+  })
+  const installations = Installations({
+    queries: queries.installations,
+    commands: commands.installations
+  })
 
   get('/version', version)
   get('/status', auth.status)
@@ -40,6 +52,8 @@ function Routes(app, settings) {
   post('/register', auth.register)
   put('/update', protect, auth.update)
   get('/logout', protect, auth.logout)
+
+
 }
 
 module.exports = Routes

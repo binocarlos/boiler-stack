@@ -67,60 +67,10 @@ function errorHandler(err, req, res, next) {
     .json(errorData)
 }
 
-function insertSQL(table, obj, schema) {
-  obj = obj || {}
-  schema = schema || {}
-  const fields = Object.keys(obj)
-    .map(f => `  "${f}"`)
-    .join(",\n")
-  const placeholders = Object.keys(obj)
-    .map((f, i) => `  $${i+1}${schema[f] ? '::' + schema[f] : ''}`)
-    .join(",\n")
-  const values = Object.keys(obj)
-    .map(f => obj[f])
-  const sql = `insert into "${table}"
-(
-${fields}
-)
-values
-(
-${placeholders}
-)
-returning *
-`
-  return {
-    sql,
-    values
-  }
-}
-
-function updateSQL(table, obj, clause, clauseValues, schema) {
-  obj = obj || {}
-  schema = schema || {}
-  if(!clause) throw new Error('clause required')
-  clauseValues = clauseValues || []
-  const placeholders = Object.keys(obj)
-    .map((f, i) => `set "${f}" = $${i+1+clauseValues.length}${schema[f] ? '::' + schema[f] : ''}`)
-    .join(",\n")
-  const values = clauseValues.concat(Object.keys(obj).map(f => obj[f]))
-  const sql = `update "${table}"
-${placeholders}
-where
-${clause}
-returning *
-`
-  return {
-    sql,
-    values
-  }
-}
-
 module.exports = {
   makeSalt,
   encryptPassword,
   checkUserPassword,
   generateUser,
-  errorHandler,
-  insertSQL,
-  updateSQL
+  errorHandler
 }

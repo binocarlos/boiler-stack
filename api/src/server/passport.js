@@ -7,7 +7,7 @@ function Passport(queries) {
   })
 
   passport.deserializeUser(function(req, id, done) {
-    queries.user.load(id, done)
+    queries.user.get({id}, done)
   })
 
   return passport

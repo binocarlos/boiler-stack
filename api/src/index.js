@@ -3,14 +3,15 @@ const Logger = require('./logger')
 const logger = Logger('core')
 
 const settings = require('./settings')
-const Postgres = require('./postgres')
-const Redis = require('./redis')
-const Database = require('./database')
-const Session = require('./session')
-const Passport = require('./passport')
-const Queries = require('./model/queries')
-const Commands = require('./model/commands')
+const Postgres = require('./tools/postgres')
+const Redis = require('./tools/redis')
+const Session = require('./tools/session')
+const Passport = require('./tools/passport')
+
+const Model = require('./model')
+
 const App = require('./app')
+const raw = require('./model/raw')
 
 const postgres = Postgres({
   user: settings.postgresuser,
@@ -31,18 +32,16 @@ const session = Session(redis, {
   secret: settings.cookiesecret
 })
 
-const db = Database(postgres)
+const model = Model({
+  postgres
+})
 
-const queries = Queries(db)
-const commands = Commands(db)
-
-const passport = Passport(queries)
+const passport = Passport(model.queries)
 
 const app = App({
   session,
   passport,
-  queries,
-  commands,
+  model,
   base: settings.base
 })
 
