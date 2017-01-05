@@ -7,11 +7,16 @@ function Queries(db) {
 
   const user = {
 
-    email: (email, done) => {
-      db(`select * from "user" where "email" = $1;`, [email], single(done))
+    login: (email, password, done) => {
+      db(`select * from "user" where "email" = $1;`, [email], single((err, user) => {
+        if(err) return done(err)
+        return tools.checkUserPassword(user, password) ?
+          done(null, user) :
+          done()
+      }))
     },
 
-    id: (id, done) => {
+    load: (id, done) => {
       db(`select * from "user" where "id" = $1;`, [id], single(done))
     }
 

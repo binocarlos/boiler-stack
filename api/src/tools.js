@@ -22,14 +22,14 @@ function checkUserPassword(user, password) {
   return encryptedPassword == user.hashed_password
 }
 
-function generateUser(email, password) {
+function generateUser(user) {
   const salt = makeSalt()
-  const encryptedPassword = encryptPassword(password, salt)
+  const encryptedPassword = encryptPassword(user.password, salt)
   return {
-    email: email,
+    email: user.email,
     hashed_password: encryptedPassword,
     salt: salt,
-    data: {}
+    data: JSON.stringify(user.data || {})
   }
 }
 
@@ -94,15 +94,15 @@ returning *
   }
 }
 
-function updateSQL(table, obj, schema, clause, clauseValues) {
+function updateSQL(table, obj, clause, clauseValues, schema) {
   obj = obj || {}
   schema = schema || {}
+  if(!clause) throw new Error('clause required')
+  clauseValues = clauseValues || []
   const placeholders = Object.keys(obj)
-    .map((f, i) => `set "${f}" = $${i+1}${schema[f] ? '::' + schema[f] : ''}`)
+    .map((f, i) => `set "${f}" = $${i+1+clauseValues.length}${schema[f] ? '::' + schema[f] : ''}`)
     .join(",\n")
-  const values = Object.keys(obj)
-    .map(f => obj[f])
-    .concat(clauseValues)
+  const values = clauseValues.concat(Object.keys(obj).map(f => obj[f]))
   const sql = `update "${table}"
 ${placeholders}
 where

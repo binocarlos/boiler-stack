@@ -8,11 +8,16 @@ function Commands(db) {
   const user = {
 
     create: (user, done) => {
-      user = Object.assign({}, user, {
-        data: JSON.stringify(user.data || {})
-      })
-      const insert = tools.insertSQL('user', user)
+      const userRecord = tools.generateUser(user)
+      const insert = tools.insertSQL('user', userRecord)
       db(insert.sql, insert.values, single(done))
+    },
+
+    update: (id, data, done) => {
+      const update = tools.updateSQL('user', {
+        data: JSON.stringify(data)
+      }, `"id" = $1`, [id])
+      db(update.sql, update.values, single(done))
     }
   }
 

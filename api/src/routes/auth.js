@@ -1,7 +1,6 @@
 "use strict";
 const urlparse = require('url').parse
 const async = require('async')
-const tools = require('../tools')
 
 function Auth(settings) {
 
@@ -22,13 +21,8 @@ function Auth(settings) {
     if(!email) return error(['no email given', 400, errorData])
     if(!password) return error(['no password given', 400, errorData])
     async.waterfall([
-      (next) => queries.user.email(req.body.email, next),
-      (user, next) => {
-        // be ambigous
-        if(!user) return next(['incorrect details', 403, errorData])
-        if(!tools.checkUserPassword(user, password)) return next(['incorrect details', 403, errorData])
-        req.login(user, (err) => next(err, user))
-      }
+      (next) => queries.user.login(email, password, next),
+      (user, next) => req.login(user, (err) => next(err, user))
     ], (err, user) => {
       if(err) return error(err)
       res.json({
@@ -44,14 +38,28 @@ function Auth(settings) {
     const errorData = {registered: false}
     if(!email) return error(['no email given', 400, errorData])
     if(!password) return error(['no password given', 400, errorData])
-    const userRecord = tools.generateUser(email, password)
     async.waterfall([
-      (next) => commands.user.create(userRecord, next),
+      (next) => commands.user.create(email, password, next),
       (user, next) => req.login(user, (err) => next(err, user))
     ], (err, user) => {
       if(err) return error(err)
       res.json({
         registered: true,
+        data: user
+      })
+    })
+  }
+
+  const update = (req, res, error) => {
+    const data = req.body
+    const errorData = {updated: false}
+    if(!data) return error(['no data given', 400, errorData])
+    async.waterfall([
+      (next) => commands.user.update(req.user.id, data, next)
+    ], (err, user) => {
+      if(err) return error(err)
+      res.json({
+        updated: true,
         data: user
       })
     })
@@ -68,6 +76,7 @@ function Auth(settings) {
     status,
     login,
     register,
+    update,
     logout
   }
 }
