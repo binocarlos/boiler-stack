@@ -1,16 +1,10 @@
 "use strict";
 
-const single = (done) => (err, results) => {
+const single = (done) => (err, rows) => {
   if(err) return done(err)
-  done(null, results ? results[0] : null)
-}
-
-const command = (done) => (err, results) => {
-  if(err) return done(err)
-  done(null, results ? results.rows : null)
+  done(null, rows ? rows[0] : null)
 }
 
 module.exports = {
-  single,
-  command
+  single
 }

@@ -2,7 +2,6 @@
 const tools = require('../tools')
 const selectors = require('./selectors')
 const single = selectors.single
-const command = selectors.command
 
 function Commands(db) {
 
@@ -13,7 +12,7 @@ function Commands(db) {
         data: JSON.stringify(user.data || {})
       })
       const insert = tools.insertSQL('user', user)
-      db(insert.sql, insert.values, command(single(done)))
+      db(insert.sql, insert.values, single(done))
     }
   }
 

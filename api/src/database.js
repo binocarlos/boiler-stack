@@ -20,13 +20,15 @@ function Database(postgres) {
           })
           return done(error.message)
         }
+        const rows = results.rows
         logger({
           action: 'query',
           sql,
           values,
-          results: (results || []).length
+          results: (rows || []).length
         })
-        done(null, results)
+        console.log(JSON.stringify(results, null, 4))
+        done(null, rows)
       })
     })
   }
