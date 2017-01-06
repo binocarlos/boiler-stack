@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import { DragSource } from 'react-dnd';
-//import { Card, CardTitle, CardText, CardActions } from 'react-toolbox/lib/card'
 
 const ItemTypes = {
   CARD: 'card'
