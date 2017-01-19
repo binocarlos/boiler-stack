@@ -1,6 +1,6 @@
 const BASE = (base) => (path = '') => base + path
 
-const auth = BASE('/auth/v1')
+const auth = BASE('/api/v1')
 const currentuser = BASE('/api/v1/currentuser')
 const installation = BASE('/api/v1/installations')
 const client = BASE('/api/v1/clients')

@@ -2,10 +2,7 @@
 const urlparse = require('url').parse
 const async = require('async')
 
-function Auth(settings) {
-
-  const queries = settings.queries
-  const commands = settings.commands
+function Auth(userModel) {
 
   const status = (req, res) => {
     res.json({
@@ -21,12 +18,12 @@ function Auth(settings) {
     if(!email) return error(['no email given', 400, errorData])
     if(!password) return error(['no password given', 400, errorData])
     async.waterfall([
-      (next) => queries.login(email, password, next),
+      (next) => userModel.login(email, password, next),
       (user, next) => req.login(user, (err) => next(err, user))
     ], (err, user) => {
       if(err) return error(err)
       res.json({
-        loggedIn: true,
+        loggedIn: user ? true : false,
         data: user
       })
     })
@@ -39,7 +36,7 @@ function Auth(settings) {
     if(!email) return error(['no email given', 400, errorData])
     if(!password) return error(['no password given', 400, errorData])
     async.waterfall([
-      (next) => commands.register(email, password, next),
+      (next) => userModel.register(email, password, next),
       (user, next) => req.login(user, (err) => next(err, user))
     ], (err, user) => {
       if(err) return error(err)
@@ -55,7 +52,7 @@ function Auth(settings) {
     const errorData = {updated: false}
     if(!data) return error(['no data given', 400, errorData])
     async.waterfall([
-      (next) => commands.save(req.user.id, data, next)
+      (next) => userModel.save(req.user.id, data, next)
     ], (err, user) => {
       if(err) return error(err)
       res.json({

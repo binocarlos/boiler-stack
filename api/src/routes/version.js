@@ -2,7 +2,7 @@
 
 const packageInfo = require('../../package.json')
 
-function Version(settings) {
+function Version() {
   return (req, res) => {
     res.send(packageInfo.version)
   }

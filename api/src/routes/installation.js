@@ -2,13 +2,10 @@
 const urlparse = require('url').parse
 const async = require('async')
 
-function Installations(settings) {
-
-  const queries = settings.queries
-  const commands = settings.commands
+function Installations(model) {
 
   const list = (req, res, error) => {
-    queries.list({id:req.user.id}, (err, items) => {
+    model.list({id:req.user.id}, (err, items) => {
       if(err) return error(err)
       res.json(items)
     })
@@ -19,4 +16,4 @@ function Installations(settings) {
   }
 }
 
-module.exports = Auth
+module.exports = Installations

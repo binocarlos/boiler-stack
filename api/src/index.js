@@ -3,15 +3,18 @@ const Logger = require('./logger')
 const logger = Logger('core')
 
 const settings = require('./settings')
-const Postgres = require('./tools/postgres')
-const Redis = require('./tools/redis')
-const Session = require('./tools/session')
-const Passport = require('./tools/passport')
-
-const Model = require('./model')
+const Postgres = require('./postgres')
+const Query = require('./query')
+const Redis = require('./redis')
+const Session = require('./session')
+const Passport = require('./passport')
 
 const App = require('./app')
-const raw = require('./model/raw')
+
+const Routes = require('./routes')
+const Models = require('./models')
+
+const tools = require('./tools')
 
 const postgres = Postgres({
   user: settings.postgresuser,
@@ -20,6 +23,8 @@ const postgres = Postgres({
   host: settings.postgreshost,
   port: settings.postgresport
 })
+
+const query = Query(postgres)
 
 const redis = Redis({
   host: settings.redishost,
@@ -32,18 +37,17 @@ const session = Session(redis, {
   secret: settings.cookiesecret
 })
 
-const model = Model({
-  postgres
-})
-
-const passport = Passport(model.queries)
-
+const models = Models(query)
+const passport = Passport(models.user)
+const routes = Routes(settings.base, models)
 const app = App({
   session,
-  passport,
-  model,
-  base: settings.base
+  passport
 })
+
+routes(app)
+
+app.use(tools.errorHandler)
 
 app.listen(settings.port, () => logger({
   action: 'booted'
