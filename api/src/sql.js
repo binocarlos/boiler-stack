@@ -107,7 +107,13 @@ function SQL(query, table) {
     })
   }
   const del = (params, done) => query(deleteSQL(table, where(params)), done)
-  const raw = (sql, params, done) => query({sql, params}, done)
+  const raw = (sql, params, done) => {
+    console.log('-------------------------------------------');
+    console.log('-------------------------------------------');
+    console.log(sql)
+    console.dir(params)
+    query({sql, params}, done)
+  }
 
   return {
     select:select,

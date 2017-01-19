@@ -4,21 +4,21 @@ const SQL = require('../sql')
 
 const installationList = `select *
 from
-  "installation"
+  installation
 join
-  "collaboration"
+  collaboration
 on
-  "collaboration.installation" = "installation.id"
+  (collaboration.installation = installation.id)
 where
-  "collaboration.user" = $1
+  collaboration.useraccount = $1
 order by
-  "installation.name"
+  installation.name
 `
 
 const Installation = (db) => {
   const sql = SQL(db, 'installation')
   return {
-    list: (userid, done) => sql.raw(installationList, {userid}, done)
+    list: (userid, done) => sql.raw(installationList, [userid], done)
   }
 }
 

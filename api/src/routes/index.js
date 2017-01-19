@@ -41,6 +41,7 @@ const Routes = (base, models) => (app) => {
   post('/register', auth.register)
   put('/update', protect, auth.update)
   get('/logout', protect, auth.logout)
+  get('/installations', protect, installations.list)
 }
 
 module.exports = Routes

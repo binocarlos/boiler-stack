@@ -5,7 +5,7 @@ const async = require('async')
 function Installations(model) {
 
   const list = (req, res, error) => {
-    model.list({id:req.user.id}, (err, items) => {
+    model.list(req.user.id, (err, items) => {
       if(err) return error(err)
       res.json(items)
     })
