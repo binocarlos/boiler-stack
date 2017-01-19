@@ -13,9 +13,10 @@ function Query(postgres) {
         return done(err)
       }
       client.query(sql, params, (error, results) => {
-        returnConnection()
+        
         if(error){
           logger.error({
+            action: 'query',
             sql,
             params,
             message: error.message,
@@ -23,6 +24,9 @@ function Query(postgres) {
           })
           return done(error.message)
         }
+        
+        returnConnection()
+        
         const rows = results.rows
         logger({
           action: 'query',
@@ -34,7 +38,7 @@ function Query(postgres) {
       })
     })
   }
-  return query
+  return runQuery
 }
 
 module.exports = Query

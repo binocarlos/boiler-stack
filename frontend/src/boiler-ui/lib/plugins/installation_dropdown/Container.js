@@ -5,6 +5,12 @@ import Dropdown from '../../components/Dropdown'
 class InstallationDropdown extends Component {
 
   render() {
+
+    if(!this.props.active) {
+      return (
+        <div></div>
+      )
+    }
     const data = this.props.installations.map(item => {
       return {
         value: item.id,
@@ -25,8 +31,10 @@ class InstallationDropdown extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const userData = ownProps.selectors.userdata(state) || {}
+  const userRecord = ownProps.selectors.userrecord(state)
   const installations = ownProps.selectors.installations(state)
   return {
+    active: userRecord.loggedIn ? true : false,
     currentInstallation: userData.currentInstallation,
     installations
   }

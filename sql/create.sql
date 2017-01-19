@@ -1,6 +1,6 @@
-CREATE TABLE "user" (
+CREATE TABLE "useraccount" (
   "id"                serial primary key not null,
-  "email"             text not null,
+  "email"             text not null unique,
   "hashed_password"   text not null,
   "salt"              text not null,
   "data"              json
@@ -15,7 +15,7 @@ create table "installation" (
 
 create table "collaboration" (
   "id"                serial primary key not null,
-  "user"              int references "user" (id),
+  "useraccount"       int references "useraccount" (id),
   "installation"      int references "installation" (id),
   "permission"        text not null
 );

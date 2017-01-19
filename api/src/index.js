@@ -38,6 +38,7 @@ const session = Session(redis, {
 })
 
 const models = Models(query)
+
 const passport = Passport(models.user)
 const routes = Routes(settings.base, models)
 const app = App({

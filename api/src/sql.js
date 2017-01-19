@@ -4,22 +4,22 @@ function where(obj, schema) {
   const sql = Object.keys(obj)
     .map((f, i) => `  "${f}" = $${i+1}${schema[f] ? '::' + schema[f] : ''}`)
     .join("\n  and\n")
-  const values = Object.keys(obj).map(f => obj[f])
+  const params = Object.keys(obj).map(f => obj[f])
   return {
     sql,
-    values
+    params
   }
 }
 
-function selectSQL(table, obj, schema) {
-  const clause = where(obj, schema)
+function selectSQL(table, clause, schema) {
+  clause = where(clause, schema)
   const sql = `select * from "${table}"
 where
 ${clause.sql}
 `
   return {
     sql,
-    values: clause.values
+    params: clause.params
   }
 }
 
@@ -32,7 +32,7 @@ function insertSQL(table, obj, schema) {
   const placeholders = Object.keys(obj)
     .map((f, i) => `  $${i+1}${schema[f] ? '::' + schema[f] : ''}`)
     .join(",\n")
-  const values = Object.keys(obj)
+  const params = Object.keys(obj)
     .map(f => obj[f])
   const sql = `insert into "${table}"
 (
@@ -46,19 +46,19 @@ returning *
 `
   return {
     sql,
-    values
+    params
   }
 }
 
-function updateSQL(table, obj, clause, schema) {
+function updateSQL(table, updateData, clauseObj, schema) {
+  if(!clause) throw new Error('clause required')
   obj = obj || {}
   schema = schema || {}
-  if(!clause) throw new Error('clause required')
-  clauseValues = clauseValues || []
+  clause = where(clauseObj, schema)
   const placeholders = Object.keys(obj)
-    .map((f, i) => `set "${f}" = $${i+1+clause.values.length}${schema[f] ? '::' + schema[f] : ''}`)
+    .map((f, i) => `set "${f}" = $${i+1+clause.params.length}${schema[f] ? '::' + schema[f] : ''}`)
     .join(",\n")
-  const values = clause.values.concat(Object.keys(obj).map(f => obj[f]))
+  const params = (Object.keys(obj).map(f => obj[f])).concat(clause.params)
   const sql = `update "${table}"
 ${placeholders}
 where
@@ -67,20 +67,20 @@ returning *
 `
   return {
     sql,
-    values
+    params
   }
 }
 
-function deleteSQL(table, clause) {
-  obj = obj || {}
+function deleteSQL(table, clauseObj, schema) {
   if(!clause) throw new Error('clause required')
+  const clause = where(clauseObj, schema)
   const sql = `delete from "${table}"
 where
 ${clause.sql}
 `
   return {
     sql,
-    values: clause.values
+    params: clause.params
   }
 }
 
@@ -93,7 +93,19 @@ function SQL(query, table) {
     })
   }
   const insert = (data, done) => query(insertSQL(table, data), done)
+  const insertOne = (data, done) => {
+    insert(data, (err, results) => {
+      if(err) return done(err)
+      done(null, results ? results[0] : null)
+    })
+  }
   const update = (data, params, done) => query(updateSQL(table, data, where(params)), done)
+  const updateOne = (data, params, done) => {
+    update(data, params, (err, results) => {
+      if(err) return done(err)
+      done(null, results ? results[0] : null)
+    })
+  }
   const del = (params, done) => query(deleteSQL(table, where(params)), done)
   const raw = (sql, params, done) => query({sql, params}, done)
 
@@ -101,7 +113,9 @@ function SQL(query, table) {
     select:select,
     get:get,
     insert:insert,
+    insertOne:insertOne,
     update:update,
+    updateOne:updateOne,
     del:del,
     raw:raw
   }

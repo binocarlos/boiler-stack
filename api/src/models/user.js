@@ -3,7 +3,7 @@ const tools = require('../tools')
 const SQL = require('../sql')
 
 const User = (db) => {
-  const sql = SQL(db, 'user')
+  const sql = SQL(db, 'useraccount')
 
   const login = (email, password, done) => {
     sql.get({email}, (err, user) => {
@@ -12,13 +12,14 @@ const User = (db) => {
       done(null, tools.checkUserPassword(user, password) ? user : null)
     })
   }
-  const register = (data, done) => sql.insert(tools.generateUser(data), done)
-  const save = (data, params, done) => sql.update({data:JSON.stringify(data)}, params, done)
+  const register = (data, done) => sql.insertOne(tools.generateUser(data), done)
+  const save = (data, params, done) => sql.updateOne({data:JSON.stringify(data)}, params, done)
 
   return {
     login,
     register,
-    save
+    save,
+    get:sql.get
   }
 }
 
