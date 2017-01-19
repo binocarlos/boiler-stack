@@ -10,8 +10,20 @@ tape('select', (t) => {
   sql.select({
     color:'red'
   }, (err, query) => {
-    console.log('-------------------------------------------');
-    console.dir(query)
+
+    if(err) {
+      t.error(err)
+    }
+    else {
+      t.deepEqual(query, {
+        sql: `select * from "apples"
+where
+  "color" = $1
+`,
+        params: ['red']
+      })
+    }
+
     t.end()
   })
 })
