@@ -40,7 +40,7 @@ const Routes = (base, models) => (app) => {
   post('/login', auth.login)
   post('/register', auth.register)
   put('/update', protect, auth.update)
-  get('/logout', protect, auth.logout)
+  get('/logout', auth.logout)
   get('/installations', protect, installations.list)
 }
 

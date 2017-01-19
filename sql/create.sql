@@ -12,7 +12,6 @@ create table "installation" (
   "data"              json
 );
 
-
 create table "collaboration" (
   "id"                serial primary key not null,
   "useraccount"       int references "useraccount" (id),
@@ -40,5 +39,11 @@ create table "quote" (
   "installation"      int references "installation" (id),
   "project"           int references "project" (id),
   "name"              text not null,
+  "data"              json
+);
+
+create table "commandlog" (
+  "id"                serial primary key not null,
+  "timestamp"         timestamp without time zone default (now() at time zone 'utc'),
   "data"              json
 );
