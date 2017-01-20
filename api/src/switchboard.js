@@ -8,7 +8,9 @@ function commandRecorder(models) {
   Object.keys(models || {}).forEach(key => {
     const model = models[key]
     model.on('command', (command) => {
-      models.commandLog.create(command, (err) => {
+      models.commandLog.create({
+        data:command
+      }, (err) => {
         logger({
           action: 'command',
           command
