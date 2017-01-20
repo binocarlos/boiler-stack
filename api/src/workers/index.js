@@ -1,8 +1,8 @@
 "use strict";
 const UserCreate = require('./usercreate')
 
-function Workers(jobQueue){
-  const userCreate = jobQueue.worker('usercreate', UserCreate)
+function Workers(models){
+  const userCreate = UserCreate(models)
   return {
     userCreate
   }

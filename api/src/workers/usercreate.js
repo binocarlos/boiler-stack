@@ -1,10 +1,10 @@
 "use strict";
 
-function UserCreate(err, job, next, id){
+const UserCreate = (models) => (user) => {
   console.log('-------------------------------------------');
   console.log('-------------------------------------------');
-  console.log('user create')
-  console.dir(job)
+  console.log('creating user')
+  console.dir(user)
 }
 
 module.exports = UserCreate

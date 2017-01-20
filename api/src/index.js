@@ -8,8 +8,6 @@ const Query = require('./query')
 const Redis = require('./redis')
 const Session = require('./session')
 const Passport = require('./passport')
-const EventBus = require('./eventbus')
-const JobQueue = require('./jobqueue')
 const Switchboard = require('./switchboard')
 const Workers = require('./workers')
 
@@ -41,14 +39,10 @@ const session = Session(redis, {
   secret: settings.cookiesecret
 })
 
-const eventBus = EventBus(redis)
-const jobQueue = JobQueue(redis)
-
 const models = Models(query)
+const workers = Workers(models)
 
-Switchboard(models, eventBus, jobQueue)
-
-const workers = Workers(jobQueue)
+Switchboard(models, workers)
 
 const passport = Passport(models.user)
 const routes = Routes(settings.base, models)
