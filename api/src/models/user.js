@@ -1,12 +1,20 @@
 "use strict";
 const tools = require('../tools')
-const SQL = require('../sql')
+const SQL = require('../database/sql')
 const async = require('async')
 const EventEmitter = require('events')
 
-const User = (db) => {
+// load the user to check password against
+const userLogin = `select *
+from
+  useraccount
+where
+  collaboration.useraccount = $1
+order by
+  installation.name
+`
 
-  const sql = SQL(db, 'useraccount')
+const User = (connection) => {
   const user = new EventEmitter()
 
   const login = (email, password, done) => {

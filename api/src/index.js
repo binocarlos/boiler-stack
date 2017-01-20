@@ -3,15 +3,17 @@ const Logger = require('./logger')
 const logger = Logger('core')
 
 const settings = require('./settings')
-const Postgres = require('./postgres')
-const Query = require('./query')
-const Redis = require('./redis')
-const Session = require('./session')
-const Passport = require('./passport')
+
+const Postgres = require('./database/postgres')
+const Query = require('./database/query')
+const Redis = require('./database/redis')
+
+const Session = require('./webserver/session')
+const Passport = require('./webserver/passport')
+const App = require('./webserver/app')
+
 const Switchboard = require('./switchboard')
 const Workers = require('./workers')
-
-const App = require('./app')
 
 const Routes = require('./routes')
 const Models = require('./models')

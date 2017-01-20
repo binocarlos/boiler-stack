@@ -1,7 +1,7 @@
 "use strict";
 
 const pg = require('pg')
-const Logger = require('./logger')
+const Logger = require('../logger')
 
 const logger = Logger('postgres')
 

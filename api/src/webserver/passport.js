@@ -2,6 +2,7 @@
 const passport = require('passport')
 
 function Passport(userModel) {
+
   passport.serializeUser(function(req, user, done) {
     done(null, user.id)
   })

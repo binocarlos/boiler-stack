@@ -3,4 +3,5 @@ DROP TABLE "project";
 DROP TABLE "client";
 DROP TABLE "collaboration";
 DROP TABLE "installation";
-DROP TABLE "user";
+DROP TABLE "useraccount";
+DROP TABLE "commandlog";
