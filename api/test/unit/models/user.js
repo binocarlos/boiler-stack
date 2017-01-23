@@ -55,8 +55,36 @@ tape('register', (t) => {
   }, [userData])
 
   user.register(USER_ACCOUNT, (err, result) => {
+    if(err) t.error(err)
     t.deepEqual(userData, result, 'user objects are equal')
     postgres.check(t, 'register query logs are equal')
+    t.end()
+  })
+
+})
+
+tape('save', (t) => {
+  const DATA = { color: 'red' }
+  const PARAMS = { id: 3 }
+    
+  const postgres = tools.postgres()
+  const user = getUser(postgres)
+  
+  postgres.expect({
+    sql: 'update useraccount set data = $1 where id = $2 returning *',
+    params: [ JSON.stringify(DATA), PARAMS.id ]
+  }, [{
+    id: PARAMS.id,
+    data: DATA
+  }])
+
+  user.save(DATA, PARAMS, (err, result) => {
+    if(err) t.error(err)
+    t.deepEqual(result, {
+      id: PARAMS.id,
+      data: DATA
+    })
+    postgres.check(t, 'save query logs are equal')
     t.end()
   })
 
