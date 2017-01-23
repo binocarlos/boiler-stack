@@ -3,11 +3,12 @@
   utility functions for generating sql text
   
 */
-function where(params, schema) {
+function where(params, schema, offset) {
   params = params || {}
   schema = schema || {}
+  offset = offset || 1
   const sql = Object.keys(params)
-    .map((f, i) => `"${f}" = $${i+1}${schema[f] ? '::' + schema[f] : ''}`)
+    .map((f, i) => `"${f}" = $${i+offset}${schema[f] ? '::' + schema[f] : ''}`)
     .join("\nand\n")
   params = Object.keys(params).map(f => params[f])
   return {
@@ -59,12 +60,12 @@ function updateSQL(table, data, params, schema) {
   if(!clause) throw new Error('clause required')
   data = data || {}
   schema = schema || {}
-  clause = where(params, schema)
-  const placeholders = Object.keys(obj)
-    .map((f, i) => `set "${f}" = $${i+1+clause.params.length}${schema[f] ? '::' + schema[f] : ''}`)
+  const placeholders = Object.keys(data)
+    .map((f, i) => `"${f}" = $${i+1}${schema[f] ? '::' + schema[f] : ''}`)
     .join(",\n")
-  const params = (Object.keys(obj).map(f => obj[f])).concat(clause.params)
-  const sql = `update "${table}"
+  clause = where(params, schema, Object.keys(data).length + 1)
+  params = Object.keys(data).map(f => data[f]).concat(clause.params)
+  const sql = `update "${table}" set
 ${placeholders}
 where
 ${clause.sql}

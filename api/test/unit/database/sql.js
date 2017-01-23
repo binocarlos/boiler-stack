@@ -8,21 +8,32 @@ const BASE_WHERE = {
   b: 'apples'
 }
 
-const BASE_SQL = [
-  '"a" = $1',
-  'and',
-  '"b" = $2'
-].join("\n")
+const BASE_SQL = (baseIndex) => {
+  baseIndex = baseIndex || 1
+  return [
+    `"a" = $${baseIndex}`,
+    `and`,
+    `"b" = $${baseIndex+1}`
+  ].join("\n")
+}
 
 const BASE_PARAMS = Object.keys(BASE_WHERE).map(k => BASE_WHERE[k])
 
 tape('sql - where', (t) => {
   const query = SQL.where(BASE_WHERE)
   t.deepEqual(query, {
-    sql:BASE_SQL,
+    sql: BASE_SQL(),
     params: BASE_PARAMS
   }, 'the where clause is correct')
+  t.end()
+})
 
+tape('sql - where, with offset', (t) => {
+  const query = SQL.where(BASE_WHERE, {}, 2)
+  t.deepEqual(query, {
+    sql: BASE_SQL(2),
+    params: BASE_PARAMS
+  }, 'the where clause with offset is correct')
   t.end()
 })
 
@@ -31,7 +42,7 @@ tape('sql - select', (t) => {
   const CHECK_SELECT = [
     `select * from "${BASE_TABLE}"`,
     'where',
-    BASE_SQL,
+    BASE_SQL(),
     ''
   ].join("\n")
 
@@ -39,7 +50,6 @@ tape('sql - select', (t) => {
     sql: CHECK_SELECT,
     params: BASE_PARAMS
   }, 'the select query is correct')
-
   t.end()
 })
 
@@ -53,7 +63,22 @@ tape('sql - insert', (t) => {
     sql: CHECK_INSERT,
     params: BASE_PARAMS
   }, 'the insert query is correct')
-
   t.end()
 })
 
+tape('sql - update', (t) => {
+  const query = SQL.update(BASE_TABLE, {c: 'red'}, BASE_WHERE)
+  const CHECK_UPDATE = [
+    `update "${BASE_TABLE}" set`,
+    `"c" = $1`,
+    'where',
+    BASE_SQL(2),
+    'returning *',
+    ''
+  ].join("\n")
+  t.deepEqual(query, {
+    sql: CHECK_UPDATE,
+    params: ['red'].concat(BASE_PARAMS)
+  }, 'the update query is correct')
+  t.end()
+})
