@@ -42,7 +42,8 @@ const EventBus = () => {
 
 // mock postgres that logs the queries
 // and uses a hash to record results / compare
-const Postgres = () => {
+const Postgres = (opts) => {
+  opts = opts || {}
   let state = {
     finished: false,
     queries: {
@@ -57,11 +58,15 @@ const Postgres = () => {
     }
   }
 
+  const processParams = (params) => {
+    return opts.noParams ? [] : params
+  }
+
   const processQuery = (sql, params) => {
     sql = (sql || '').replace(/\n/g, ' ')
     sql = (sql || '').replace(/\s*$/, '')
     sql = (sql || '').replace(/"/g, '')
-    params = params || []
+    params = processParams(params || [])
     return {
       sql,
       params
@@ -90,7 +95,6 @@ const Postgres = () => {
     query: (sql, params, done) => {
       const query = processQuery(sql, params)
       const hash = queryHash(query)
-
       const expected = state.queries.expected.db[hash]
       const results = expected ?
         expected.results :
@@ -120,5 +124,6 @@ const connection = (postgres) => Connection(postgres)
 
 module.exports = {
   postgres: Postgres,
+  eventBus: EventBus,
   connection
 }
