@@ -1,23 +1,24 @@
 "use strict";
 const pino = require('pino')
 
-function Logger(name) {
-  if(process.env.NODE_ENV == 'TEST') {
-    function dumblogger() {}
-    dumblogger.error = function() {}
-    return dumblogger
-  }
+const SILENT_ENVS = {
+  production: true,
+  test: true
+}
 
+const shouldLog = () => SILENT_ENVS[process.env.NODE_ENV] ? false : true
+
+const Logger = (name) => {
   const logger = pino()
-  function log(data) {
-    if(process.env.NODE_ENV != 'production') {
-      logger.info(Object.assign({}, data, {
-        name: name
-      }))
-    }
+  const log = (data) => {
+    if(!shouldLog()) return
+    logger.info(Object.assign({}, data, {
+      name: name
+    }))
   }
 
-  log.error = function(err) {
+  log.error = (err) => {
+    if(!shouldLog()) return
     logger.error(err)    
   }
   

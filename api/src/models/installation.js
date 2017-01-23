@@ -26,9 +26,9 @@ order by
   }
 }
 
-// transaction query array
+// create the given user as the owner of the installation
+// (transaction)
 const create = (data, userid) => {
-
   return [
     SQL.insert('installation', data),
     SQL.insert('collaboration', {
@@ -39,49 +39,7 @@ const create = (data, userid) => {
       installation: 'raw'
     })
   ]
-  async.series([
-    (next) => {
-      client.query(SQL.insert('installation', {
-
-      }))
-    },
-
-    (next) => {
-
-    }
-  ], done)
 }
-
-/*
-const create = (data) => {
-
-}
-// an installation is always created by the owner
-// insert a collaboration alongside the installation for this
-const createInstallation = `BEGIN;
-insert into installation
-(
-  name
-)
-values
-(
-  %L
-);
-insert into collaboration 
-(
-  useraccount,
-  installation,
-  permission
-)
-values
-(
-  %L,
-  lastval(),
-  'owner'
-);
-COMMIT;
-`
-*/
 
 const Installation = (connection, eventBus) => {
   
