@@ -32,10 +32,10 @@ function insertSQL(table, data, schema) {
   data = data || {}
   schema = schema || {}
   const fields = Object.keys(data)
-    .map(f => `  "${f}"`)
+    .map(f => `"${f}"`)
     .join(",\n")
   const placeholders = Object.keys(data)
-    .map((f, i) => `  $${i+1}${schema[f] ? '::' + schema[f] : ''}`)
+    .map((f, i) => `$${i+1}${schema[f] ? '::' + schema[f] : ''}`)
     .join(",\n")
   const params = Object.keys(data)
     .map(f => data[f])
