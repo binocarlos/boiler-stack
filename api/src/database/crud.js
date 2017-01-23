@@ -42,8 +42,8 @@ const Crud = (connection, table) => {
   const select = (params, done) => runQuery(connection, sql.select(table, params), selectors.rows(done))
   const get = (params, done) => runQuery(connection, sql.select(table, params), selectors.single(done))
   const insert = (data, done) => runQuery(connection, sql.insert(table, data), selectors.single(done))
-  const update = (data, params, done) => runQuery(connection, sql.update(table, data, params), selectors.rows(done))
-  const del = (params, done) => runQuery(connection, sql.delete(table, params), selectors.rows(done))
+  const update = (data, params, done) => runQuery(connection, sql.update(table, data, params), selectors.single(done))
+  const del = (params, done) => runQuery(connection, sql.delete(table, params), selectors.single(done))
 
   return {
     select: select,

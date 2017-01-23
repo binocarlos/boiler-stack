@@ -1,27 +1,13 @@
 "use strict";
 const tools = require('../tools')
-const SQL = require('../database/sql')
-const async = require('async')
-const EventEmitter = require('events')
+const Crud = require('../database/crud')
 
-// load the user to check password against
-const userLogin = `select *
-from
-  useraccount
-where
-  collaboration.useraccount = $1
-order by
-  installation.name
-`
+const User = (connection, eventBus) => {
 
-const User = (connection) => {
-  const user = new EventEmitter()
-
+  const crud = Crud(connection, 'useraccount')
+  
   const login = (email, password, done) => {
-
-
-    
-    sql.get({email}, (err, result) => {
+    crud.get({email}, (err, result) => {
       if(err) return done(err)
       if(!result) return done()
       done(null, tools.checkUserPassword(result, password) ? result : null)
@@ -30,39 +16,38 @@ const User = (connection) => {
 
   const register = (data, done) => {
     const userData = tools.generateUser(data)
-    sql.insertOne(userData, (err, result) => {
+    crud.insert(userData, (err, result) => {
       if(err) return done(err)
-      user.emit('command', {
-        method: 'insertOne',
-        data: userData,
+      eventBus.emit('models.user.register', {
+        query: {
+          data
+        },
         result
       })
-      user.emit('created', result)
       done(null, result)
     })
   }
 
   const save = (data, params, done) => {
     const userData = {data: JSON.stringify(data)}
-    sql.updateOne(userData, params, (err, result) => {
+    crud.update(userData, params, (err, result) => {
       if(err) return done(err)
-      user.emit('command', {
-        method: 'updateOne',
-        data: userData,
-        params,
+      eventBus.emit('models.user.save', {
+        query: {
+          data,
+          params
+        },
         result
       })
-      user.emit('updated', result)
       done(null, result)
     })
   }
 
-  user.login = login
-  user.register = register
-  user.save = save
-  user.get = sql.get
-
-  return user
+  return {
+    login,
+    register,
+    save
+  }
 }
 
 module.exports = User
