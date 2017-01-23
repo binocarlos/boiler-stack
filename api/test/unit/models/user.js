@@ -69,7 +69,7 @@ tape('register', (t) => {
           result: userData
         }
       }]
-    })
+    }, 'the models.user.register event was emitted')
     t.end()
   })
 
@@ -78,9 +78,13 @@ tape('register', (t) => {
 tape('save', (t) => {
   const DATA = { color: 'red' }
   const PARAMS = { id: 3 }
-    
+  const RESULT = {
+    id: PARAMS.id,
+    data: DATA
+  }
   const postgres = tools.postgres()
-  const user = getUser(postgres)
+  const eventBus = tools.eventBus()
+  const user = getUser(postgres, eventBus)
   
   postgres.expect({
     sql: 'update useraccount set data = $1 where id = $2 returning *',
@@ -92,11 +96,20 @@ tape('save', (t) => {
 
   user.save(DATA, PARAMS, (err, result) => {
     if(err) t.error(err)
-    t.deepEqual(result, {
-      id: PARAMS.id,
-      data: DATA
-    })
+    t.deepEqual(result, RESULT)
     postgres.check(t, 'save query logs are equal')
+    t.deepEqual(eventBus.getState(), {
+      events: [{
+        channel: 'models.user.save',
+        message: {
+          query: {
+            data: DATA,
+            params: PARAMS
+          },
+          result: RESULT
+        }
+      }]
+    }, 'the models.user.save event was emitted')
     t.end()
   })
 
