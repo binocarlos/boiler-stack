@@ -78,7 +78,7 @@ returning *
 }
 
 function deleteSQL(table, clauseObj, schema) {
-  if(!clause) throw new Error('clause required')
+  if(!clauseObj) throw new Error('clause required')
   const clause = where(clauseObj, schema)
   const sql = `delete from "${table}"
 where

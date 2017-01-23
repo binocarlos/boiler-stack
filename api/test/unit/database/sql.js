@@ -82,3 +82,18 @@ tape('sql - update', (t) => {
   }, 'the update query is correct')
   t.end()
 })
+
+tape('sql - delete', (t) => {
+  const query = SQL.delete(BASE_TABLE, BASE_WHERE)
+  const CHECK_DELETE = [
+    `delete from "${BASE_TABLE}"`,
+    'where',
+    BASE_SQL(),
+    ''
+  ].join("\n")
+  t.deepEqual(query, {
+    sql: CHECK_DELETE,
+    params: BASE_PARAMS
+  }, 'the delete query is correct')
+  t.end()
+})
