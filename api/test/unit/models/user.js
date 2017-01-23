@@ -47,7 +47,8 @@ tape('register', (t) => {
   const postgres = tools.postgres({
     noParams: true
   })
-  const user = getUser(postgres)
+  const eventBus = tools.eventBus()
+  const user = getUser(postgres, eventBus)
   const userData = apptools.generateUser(USER_ACCOUNT)
 
   postgres.expect({
@@ -58,6 +59,17 @@ tape('register', (t) => {
     if(err) t.error(err)
     t.deepEqual(userData, result, 'user objects are equal')
     postgres.check(t, 'register query logs are equal')
+    t.deepEqual(eventBus.getState(), {
+      events: [{
+        channel: 'models.user.register',
+        message: {
+          query: {
+            data: USER_ACCOUNT
+          },
+          result: userData
+        }
+      }]
+    })
     t.end()
   })
 

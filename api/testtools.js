@@ -1,5 +1,5 @@
 "use strict";
-const EventEmitter2 = require('eventemitter2').EventEmitter2
+const EventBus = require('./src/eventBus')
 const Connection = require('./src/database/connection')
 const objhash = require('object-hash')
 
@@ -14,29 +14,18 @@ const queryHash = (sql, params) => {
 // and can compare against an expected log
 // useful for unit testing the models
 // (which emit events for on the commandBus)
-const EventBus = () => {
+const MockEventBus = () => {
   let state = {
-    count: 0,
-    events: {
-      expected: {
-        db: {},
-        list: []
-      },
-      actual: {
-        db: {},
-        list: []
-      }
-    }
+    events: []
   }
-  const bus = new EventEmitter2({
-    wilcard: true
+  const bus = EventBus()
+  bus.listen((channel, message) => {
+    state.events.push({
+      channel,
+      message
+    })
   })
-  bus.on('*', function(message) {
-    const event = this.event
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.dir(event)
-  })
+  bus.getState = () => state
   return bus
 }
 
@@ -124,6 +113,6 @@ const connection = (postgres) => Connection(postgres)
 
 module.exports = {
   postgres: Postgres,
-  eventBus: EventBus,
+  eventBus: MockEventBus,
   connection
 }
