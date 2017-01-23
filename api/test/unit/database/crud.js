@@ -3,9 +3,8 @@ const tape = require('tape')
 const tools = require('../../../testtools')
 const Crud = require('../../../src/database/crud')
 
-const getCrud = (setup) => {
-  const postgres = tools.postgres()
-  setup && setup(postgres)
+const getCrud = (postgres) => {
+  postgres = postgres || tools.postgres()
   const connection = tools.connection(postgres)
   return Crud(connection, 'fruit')
 }
@@ -28,16 +27,15 @@ tape('select', (t) => {
   const results = [{
     name: 'apples'
   }]
-  let p = null
-  const crud = getCrud(pg => {
-    p = pg
-    pg.expect(query, results)
-  })
+  const postgres = tools.postgres()
+  const crud = getCrud(postgres)
+
+  postgres.expect(query, results)
+  
   crud.select({
     color: 'red'
   }, (err, results) => {
-    console.dir(results)
-    console.log(JSON.stringify(p.getState(), null, 4))
+    postgres.check(t, 'select query is correct')
     t.end()
   })
 })
