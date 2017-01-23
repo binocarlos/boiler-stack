@@ -9,6 +9,11 @@ const USER_ACCOUNT = {
   password: 'apples'
 }
 
+const EMAIL_QUERY = {
+  sql: 'select * from useraccount where email = $1',
+  params: [USER_ACCOUNT.email]
+}
+
 const getUser = (postgres, eventBus) => {
   postgres = postgres || tools.postgres()
   eventBus = eventBus || tools.eventBus()
@@ -19,10 +24,7 @@ const getUser = (postgres, eventBus) => {
 const login = (password, done) => {
   const userData = apptools.generateUser(USER_ACCOUNT)
   const postgres = tools.postgres()
-  postgres.expect({
-    sql: 'select * from useraccount where email = $1',
-    params: [USER_ACCOUNT.email]
-  }, [userData])
+  postgres.expect(EMAIL_QUERY, [userData])
   const user = getUser(postgres)
   user.login(USER_ACCOUNT.email, password, done)
 }
@@ -51,9 +53,12 @@ tape('models.user - register', (t) => {
   const user = getUser(postgres, eventBus)
   const userData = apptools.generateUser(USER_ACCOUNT)
 
+  postgres.expect('BEGIN')
+  postgres.expect(EMAIL_QUERY, [])
   postgres.expect({
     sql: 'insert into useraccount ( email, hashed_password, salt, data ) values ( $1, $2, $3, $4 ) returning *'
   }, [userData])
+  postgres.expect('COMMIT')
 
   user.register(USER_ACCOUNT, (err, result) => {
     if(err) t.error(err)

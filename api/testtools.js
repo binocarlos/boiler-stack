@@ -54,10 +54,7 @@ const Postgres = (opts) => {
     }
   }
 
-  const processParams = (params) => {
-    return opts.noParams ? [] : params
-  }
-
+  const processParams = (params) => opts.noParams ? [] : params
   const processQuery = (sql, params) => {
     sql = strip(sql)
     params = processParams(params || [])
@@ -68,6 +65,12 @@ const Postgres = (opts) => {
   }
 
   const addQuery = (section, q, results) => {
+    if(typeof(q) == 'string') {
+      q = {
+        sql: q,
+        params: []
+      }
+    }
     const query = processQuery(q.sql, q.params)
     const hash = queryHash(query)
     state.queries[section].db[hash] = {
@@ -87,6 +90,7 @@ const Postgres = (opts) => {
   */
   const client = {
     query: (sql, params, done) => {
+      
       if(typeof(params) == 'function') {
         done = params
         params = []

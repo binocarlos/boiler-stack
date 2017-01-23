@@ -1,6 +1,5 @@
 "use strict";
 const async = require('async')
-const Query = require('../database/query')
 const Transaction = require('../database/transaction')
 const SQL = require('../database/sql')
 const selectors = require('../database/selectors')
@@ -35,7 +34,6 @@ const QUERIES = {
 }
 
 const Installation = (connection, eventBus) => {
-  const query = Query(connection)
   const transaction = Transaction(connection)
   const list = (userid, done) => query(QUERIES.byUser(userid), selectors.rows(done))
   
