@@ -6,7 +6,9 @@ const async = require('async')
 
 // join the installations table to the
 // collaborations the user has
-const installationList = `select *
+const userInstallations = (userid) => {
+  const params = [userid]
+  const sql = `select *
 from
   installation
 join
@@ -18,6 +20,11 @@ where
 order by
   installation.name
 `
+  return {
+    sql,
+    params
+  }
+}
 
 // an installation is always created by the owner
 // insert a collaboration alongside the installation for this
