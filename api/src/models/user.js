@@ -18,6 +18,9 @@ const User = (connection) => {
   const user = new EventEmitter()
 
   const login = (email, password, done) => {
+
+
+    
     sql.get({email}, (err, result) => {
       if(err) return done(err)
       if(!result) return done()

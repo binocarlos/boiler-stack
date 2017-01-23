@@ -7,6 +7,7 @@ function Connection(postgres) {
   function getConnection(handler, done) {
     postgres.connect((err, client, returnConnection) => {
       if(err) {
+        returnConnection()
         logger.error(err)
         return done(err)
       }

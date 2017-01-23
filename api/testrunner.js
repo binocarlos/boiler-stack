@@ -3,6 +3,7 @@ const minimist = require('minimist')
 const requireDirectory = require('require-directory')
 const objectPath = require('object-path')
 const fs = require('fs')
+const path = require('path')
 const join = require('path').join
 
 const args = minimist(process.argv, {
@@ -48,7 +49,10 @@ const runTests = (opts) => {
   let pathnames = opts.dir || ''
   const basename = opts.base || ''
 
-  if(typeof(pathnames) == 'string') pathnames = [pathnames]
+  if(typeof(pathnames) == 'string'){
+    if(pathnames=='') pathnames = ''
+    pathnames = [pathnames]
+  }
 
   pathnames
     // prepend the base to the pathname
@@ -57,17 +61,15 @@ const runTests = (opts) => {
       let pathnames = pathname.split('.')
       let parentPathnames = [].concat(pathnames)
       const moduleName = parentPathnames.pop()
+      if(pathname=='undefined') pathname = ''
       let dir = convertPathname(pathname)
       let moduleFilter = null
-
       if(fs.existsSync(join(__dirname, '/test/' + dir + '.js'))){
         dir = convertPathname(parentPathnames.join('.'))
         pathnames = parentPathnames
         moduleFilter = moduleName
       }
-
       dir = './test/' + dir
-
       const subtree = requireDirectory(module, dir)
       const testSuites = getTestSuites(pathnames, subtree)
         .map(suite => {
