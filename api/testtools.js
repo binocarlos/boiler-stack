@@ -23,14 +23,26 @@ const Postgres = () => {
     }
   }
 
-  const addQuery = (section, q) => {
-    const query = { sql: q.sql, params: q.params }
+  const processQuery = (sql, params) => {
+    sql = (sql || '').replace(/\n/g, ' ')
+    params = params || []
+    return {
+      sql,
+      params
+    }
+  }
+
+  const addQuery = (section, q, results) => {
+    const query = processQuery(q.sql, q.params)
     const hash = queryHash(query)
-    state.queries[section].db[hash] = q
+    state.queries[section].db[hash] = {
+      query,
+      results
+    }
     state.queries[section].list.push(hash)
   }
-  const addExpectedQuery = (q) => addQuery('expected', q)
-  const addActualQuery = (q) => addQuery('actual', q)
+  const addExpectedQuery = (q, results) => addQuery('expected', q, results)
+  const addActualQuery = (q, results) => addQuery('actual', q, results)
   const setFinished = () => state.finished = true
 
   /*
@@ -40,46 +52,37 @@ const Postgres = () => {
   */
   const client = {
     query: (sql, params, done) => {
-      const query = { sql, params }
+      const query = processQuery(sql, params)
       const hash = queryHash(query)
+
       const expected = state.queries.expected.db[hash]
       const results = expected ?
         expected.results :
         []
-      addActualQuery(Object.assign({}, query, {
-        results
-      }))
+      addActualQuery(query, results)
       // simulate async
-      setTimeout(() => done(null, results), 10)
+      setTimeout(() => done(null, {
+        rows: results
+      }), 10)
     }
+  }
+
+  const check = (t, msg) => {
+    const queries = state.queries
+    t.deepEqual(queries.expected, queries.actual, msg || 'the query logs are the same')
   }
 
   return {
     connect: (cb) => cb(null, client, setFinished),
     expect: addExpectedQuery,
-    getState: () => state
+    getState: () => state,
+    check: check
   }
 }
 
-const defaultRun = (c, f) => {
-  f(null, [])
-}
-const defaultSetup = () => {}
-const defaultCheck = () => {}
-
-const getConnection = (opts) => {
-  opts = opts || {}
-  const setup = opts.setup || defaultSetup
-  const run = opts.run || defaultRun
-  const check = opts.check || defaultCheck
-  const postgres = Postgres()
-  setup(postgres.expect)
-  const connection = Connection(postgres)
-  connection(run, check)
-  return postgres
-}
+const connection = (postgres) => Connection(postgres)
 
 module.exports = {
   postgres: Postgres,
-  connection: getConnection
+  connection
 }

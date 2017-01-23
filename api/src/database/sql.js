@@ -1,3 +1,4 @@
+"use strict";
 /*
 
   utility functions for generating sql text
@@ -18,7 +19,7 @@ function where(params, schema, offset) {
 }
 
 function selectSQL(table, params, schema) {
-  clause = where(params, schema)
+  const clause = where(params, schema)
   const sql = `select * from "${table}"
 where
 ${clause.sql}
@@ -57,13 +58,13 @@ returning *
 }
 
 function updateSQL(table, data, params, schema) {
-  if(!clause) throw new Error('clause required')
+  if(!params) throw new Error('clause params required')
   data = data || {}
   schema = schema || {}
   const placeholders = Object.keys(data)
     .map((f, i) => `"${f}" = $${i+1}${schema[f] ? '::' + schema[f] : ''}`)
     .join(",\n")
-  clause = where(params, schema, Object.keys(data).length + 1)
+  const clause = where(params, schema, Object.keys(data).length + 1)
   params = Object.keys(data).map(f => data[f]).concat(clause.params)
   const sql = `update "${table}" set
 ${placeholders}
