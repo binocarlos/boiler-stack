@@ -91,6 +91,10 @@ const Postgres = (opts) => {
         done = params
         params = []
       }
+      if(typeof(sql) == 'object') {
+        params = sql.params
+        sql = sql.sql
+      }
       const query = processQuery(sql, params)
       const hash = queryHash(query)
       const expected = state.queries.expected.db[hash]

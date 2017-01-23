@@ -3,19 +3,23 @@ const tape = require('tape')
 const tools = require('../../../testtools')
 const Crud = require('../../../src/database/crud')
 
-const getCrud = (postgres) => {
-  postgres = postgres || tools.postgres()
+const getCrud = (postgres, done) => {
   const connection = tools.connection(postgres)
-  return Crud(connection, 'fruit')
+  connection((client, finish) => {
+    const crud = Crud(client, 'fruit')
+    done(crud)
+  })
 }
 
 tape('crud - sanity', (t) => {
-  const crud = getCrud()
-  crud.select({
-    color: 'red'
-  }, (err, results) => {
-    t.deepEqual(results, [], 'empty array')
-    t.end()
+  const postgres = tools.postgres()
+  getCrud(postgres, crud => {
+    crud.select({
+      color: 'red'
+    }, (err, results) => {
+      t.deepEqual(results, [], 'empty array')
+      t.end()
+    })  
   })
 })
 
@@ -30,15 +34,15 @@ tape('crud - select', (t) => {
     name: 'oranges'
   }]
   const postgres = tools.postgres()
-  const crud = getCrud(postgres)
-
   postgres.expect(query, results)
-  
-  crud.select({
-    color: 'red'
-  }, (err, results) => {
-    postgres.check(t, 'select query is correct')
-    t.end()
+
+  getCrud(postgres, crud => {
+    crud.select({
+      color: 'red'
+    }, (err, results) => {
+      postgres.check(t, 'select query is correct')
+      t.end()
+    })
   })
 })
 
@@ -53,14 +57,15 @@ tape('crud - get', (t) => {
     name: 'oranges'
   }]
   const postgres = tools.postgres()
-  const crud = getCrud(postgres)
-
   postgres.expect(query, results)
-  crud.get({
-    color: 'red'
-  }, (err, results) => {
-    t.equal(results.name, 'apples', 'one result that is object')
-    t.end()
+
+  getCrud(postgres, crud => {
+    crud.get({
+      color: 'red'
+    }, (err, results) => {
+      t.equal(results.name, 'apples', 'one result that is object')
+      t.end()
+    })
   })
 })
 
@@ -70,16 +75,16 @@ tape('crud - insert', (t) => {
     params: ['apples', 'red']
   }
   const postgres = tools.postgres()
-  const crud = getCrud(postgres)
-
   postgres.expect(query)
-  
-  crud.insert({
-    name: 'apples',
-    color: 'red'
-  }, (err, results) => {
-    postgres.check(t, 'insert query is correct')
-    t.end()
+
+  getCrud(postgres, crud => {
+    crud.insert({
+      name: 'apples',
+      color: 'red'
+    }, (err, results) => {
+      postgres.check(t, 'insert query is correct')
+      t.end()
+    })
   })
 })
 
@@ -89,17 +94,17 @@ tape('crud - update', (t) => {
     params: ['green', 'apples']
   }
   const postgres = tools.postgres()
-  const crud = getCrud(postgres)
-
   postgres.expect(query)
-  
-  crud.update({
-    color: 'green'
-  }, {
-    name: 'apples'
-  }, (err, results) => {
-    postgres.check(t, 'update query is correct')
-    t.end()
+
+  getCrud(postgres, crud => {
+    crud.update({
+      color: 'green'
+    }, {
+      name: 'apples'
+    }, (err, results) => {
+      postgres.check(t, 'update query is correct')
+      t.end()
+    })
   })
 })
 
@@ -109,14 +114,14 @@ tape('crud - delete', (t) => {
     params: ['apples']
   }
   const postgres = tools.postgres()
-  const crud = getCrud(postgres)
-
   postgres.expect(query)
-  
-  crud.delete({
-    name: 'apples'
-  }, (err, results) => {
-    postgres.check(t, 'delete query is correct')
-    t.end()
+
+  getCrud(postgres, crud => {
+    crud.delete({
+      name: 'apples'
+    }, (err, results) => {
+      postgres.check(t, 'delete query is correct')
+      t.end()
+    })
   })
 })

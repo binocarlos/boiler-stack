@@ -2,17 +2,19 @@
 const tools = require('../tools')
 const Crud = require('../database/crud')
 
-const User = (connection, eventBus) => {
-
-  const crud = Crud(connection, 'useraccount')
-  
-  const login = (email, password, done) => {
+const login = (email, password, done) => {
     crud.get({email}, (err, result) => {
       if(err) return done(err)
       if(!result) return done()
       done(null, tools.checkUserPassword(result, password) ? result : null)
     })
   }
+  
+const User = (connection, eventBus) => {
+
+  const crud = Crud(connection, 'useraccount')
+  
+  
 
   const register = (data, done) => {
     const userData = tools.generateUser(data)
