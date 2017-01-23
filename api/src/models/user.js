@@ -2,83 +2,69 @@
 
 const async = require('async')
 const tools = require('../tools')
-const Transaction = require('../database/transaction')
-const SQL = require('../database/sql')
 const Crud = require('../database/crud')
-const selectors = require('../database/selectors')
 
 const getCrud = (client) => Crud(client, 'useraccount')
 
-const User = (connection, eventBus) => {
-
-  const transaction = Transaction(connection)
-
-  // login query
-  // 1. load user with email using crud.get
-  // 2. encrypt plain text password using loaded salt
-  // 3. compare both encrypted passwords
-  const login = (email, password, done) => {
-    connection((client, finish) => {
-      const crud = getCrud(client)
-      crud.get({ email }, (err, result) => {
-        if(err) return finish(err)
-        if(!result) return finish()
-        finish(null, tools.checkUserPassword(result, password) ? result : null)
-      })
-    }, done)
-  }
-
-  // models.user.save - register user transaction
-  // 1. check the primary key does not exist
-  // 2. insert
-  const register = (data, done) => {
-    const userData = tools.generateUser(data)
-    let newUser = null
-    transaction((client, finish) => {
-      const crud = getCrud(client)
-      async.waterfall([
-        (next) => crud.get({ email: data.email }, next),
-        (existingUser, next) => {
-          if(existingUser) return next(data.email + ' already exists')
-          crud.insert(userData, next)
-        },
-        (insertedUser, next) => {
-          newUser = insertedUser
-          next()
-        }
-      ], finish)
-    }, (err) => {
-      if(err) return done(err)
-      eventBus.emit('models.user.register', {
-        query: { data },
-        result: newUser
-      })
-      done(null, newUser)
-    })
-  }
-
-  // models.user.save - save command
-  // 1. update 'data' as a JSON string based on params
-  const save = (data, params, done) => {
-    const userData = {data: JSON.stringify(data)}
-    connection((client, finish) => {
-      const crud = getCrud(client)
-      crud.update(userData, params, finish)
-    }, (err, result) => {
-      if(err) return done(err)
-      eventBus.emit('models.user.save', {
-        query: { data, params },
-        result
-      })
-      done(null, result)
-    })
-  }
-
-  return {
-    login,
-    register,
-    save
-  }
+// login query
+// 1. load user with email using crud.get
+// 2. encrypt plain text password using loaded salt
+// 3. compare both encrypted passwords
+const login = (client) => (email, password, done) => {
+  const crud = getCrud(client)
+  crud.get({ email }, (err, result) => {
+    if(err) return done(err)
+    if(!result) return done()
+    done(null, tools.checkUserPassword(result, password) ? result : null)
+  })
 }
 
-module.exports = User
+// models.user.register - register user transaction
+// 1. check the primary key does not exist
+// 2. insert
+const register = (client) => (data, done) => {
+  const userData = tools.generateUser(data)
+  let newUser = null
+  const crud = getCrud(client)
+  async.waterfall([
+    (next) => crud.get({ email: data.email }, next),
+    (existingUser, next) => {
+      if(existingUser) return next(data.email + ' already exists')
+      crud.insert(userData, next)
+    },
+    (insertedUser, next) => {
+      newUser = insertedUser
+      next()
+    }
+  ], (err) => {
+    if(err) return done(err)
+    eventBus.emit('models.user.register', {
+      query: { data },
+      result: newUser
+    })
+    done(null, newUser)
+  }))
+}
+
+// models.user.save - save command
+// 1. update 'data' as a JSON string based on params
+const save = (client) => (data, params, done) => {
+  const userData = {data: JSON.stringify(data)}
+  connection((client, finish) => {
+    const crud = getCrud(client)
+    crud.update(userData, params, finish)
+  }, (err, result) => {
+    if(err) return done(err)
+    eventBus.emit('models.user.save', {
+      query: { data, params },
+      result
+    })
+    done(null, result)
+  })
+}
+
+module.exports = {
+  login,
+  register,
+  save
+}

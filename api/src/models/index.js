@@ -1,4 +1,5 @@
 "use strict";
+
 const User = require('./user')
 const Installation = require('./installation')
 const CommandLog = require('./commandLog')

@@ -15,6 +15,13 @@ tape('models.installation - create', (t) => {
 
   const postgres = tools.postgres()
   const eventBus = tools.eventBus()
+
+  postgres.expect('BEGIN')
+  postgres.expect(EMAIL_QUERY, [])
+  postgres.expect({
+    sql: 'insert into useraccount ( email, hashed_password, salt, data ) values ( $1, $2, $3, $4 ) returning *'
+  }, [userData])
+  postgres.expect('COMMIT')
   
   t.end()
 

@@ -1,17 +1,16 @@
 "use strict";
-const tools = require('../tools')
-const SQL = require('../sql')
-const EventEmitter = require('events')
 
-const CommandLog = (db) => {
-  const sql = SQL(db, 'commandlog')
-  const commandLog = new EventEmitter()
+const Crud = require('../database/crud')
 
-  const create = (data, done) => sql.insertOne(data, done)
+const getCrud = (client) => Crud(client, 'commandlog')
 
-  commandLog.create = create
-
-  return commandLog
+const create = (connection) => (data, done) => {
+  connection((client, finish) => {
+    const crud = getCrud(client)
+    crud.insert(data, finish)
+  }, done)
 }
 
-module.exports = CommandLog
+module.exports = {
+  create
+}
