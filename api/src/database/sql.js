@@ -1,10 +1,15 @@
+/*
+
+  utility functions for generating sql text
+  
+*/
 function where(params, schema) {
   params = params || {}
   schema = schema || {}
   const sql = Object.keys(params)
-    .map((f, i) => `  "${f}" = $${i+1}${schema[f] ? '::' + schema[f] : ''}`)
-    .join("\n  and\n")
-  const params = Object.keys(params).map(f => params[f])
+    .map((f, i) => `"${f}" = $${i+1}${schema[f] ? '::' + schema[f] : ''}`)
+    .join("\nand\n")
+  params = Object.keys(params).map(f => params[f])
   return {
     sql,
     params
