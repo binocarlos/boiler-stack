@@ -1,22 +1,43 @@
+"use strict";
 const tape = require('tape')
 const tools = require('../../../testtools')
 const Crud = require('../../../src/database/crud')
 
-tape('crud', (t) => {
-
-  // this could be loaded from a fixture file as JSON
-  const apples = {
-    sql: 'select * from fruit where',
-    params: [],
-    results: [{
-      id: 10,
-      name: 'red'
-    }]
-  }
-
+const getCrud = (setup) => {
   const postgres = tools.postgres()
+  setup && setup(postgres)
   const connection = tools.connection(postgres)
-  const fruit = Crud(connection, 'fruit')
+  return Crud(connection, 'fruit')
+}
 
-  t.end()
+tape('sanity', (t) => {
+  const crud = getCrud()
+  crud.select({
+    color: 'red'
+  }, (err, results) => {
+    t.deepEqual(results, [], 'empty array')
+    t.end()
+  })
+})
+
+tape('select', (t) => {
+  const query = {
+    sql: 'select * from fruit where color = $1',
+    params: ['red']
+  }
+  const results = [{
+    name: 'apples'
+  }]
+  let p = null
+  const crud = getCrud(pg => {
+    p = pg
+    pg.expect(query, results)
+  })
+  crud.select({
+    color: 'red'
+  }, (err, results) => {
+    console.dir(results)
+    console.log(JSON.stringify(p.getState(), null, 4))
+    t.end()
+  })
 })

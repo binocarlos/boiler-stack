@@ -25,6 +25,8 @@ const Postgres = () => {
 
   const processQuery = (sql, params) => {
     sql = (sql || '').replace(/\n/g, ' ')
+    sql = (sql || '').replace(/\s*$/, '')
+    sql = (sql || '').replace(/"/g, '')
     params = params || []
     return {
       sql,

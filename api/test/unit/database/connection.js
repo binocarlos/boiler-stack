@@ -1,3 +1,4 @@
+"use strict";
 const tape = require('tape')
 const tools = require('../../../testtools')
 
@@ -34,3 +35,5 @@ const testBaseQuery = (name, sql) => {
 testBaseQuery('basic connection')
 testBaseQuery('strip newlines', `select *
 from apples`)
+testBaseQuery('strip spaces', `select * from apples `)
+testBaseQuery('strip double quotes', `select * from "apples"`)
