@@ -29,6 +29,13 @@ const MockEventBus = () => {
   return bus
 }
 
+const strip = (sql) => {
+  sql = (sql || '').replace(/\n/g, ' ')
+  sql = (sql || '').replace(/\s*$/, '')
+  sql = (sql || '').replace(/"/g, '')
+  return sql
+}
+
 // mock postgres that logs the queries
 // and uses a hash to record results / compare
 const Postgres = (opts) => {
@@ -52,9 +59,7 @@ const Postgres = (opts) => {
   }
 
   const processQuery = (sql, params) => {
-    sql = (sql || '').replace(/\n/g, ' ')
-    sql = (sql || '').replace(/\s*$/, '')
-    sql = (sql || '').replace(/"/g, '')
+    sql = strip(sql)
     params = processParams(params || [])
     return {
       sql,
@@ -118,5 +123,6 @@ const connection = (postgres) => Connection(postgres)
 module.exports = {
   postgres: Postgres,
   eventBus: MockEventBus,
-  connection
+  connection,
+  strip
 }

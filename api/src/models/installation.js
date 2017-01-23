@@ -1,12 +1,12 @@
 "use strict";
-const tools = require('../tools')
-const SQL = require('../sql')
-const EventEmitter = require('events')
 const async = require('async')
+const Query = require('../database/query')
+const Transaction = require('../database/transaction')
+const SQL = require('../database/sql')
+const selectors = require('../database/selectors')
 
-// join the installations table to the
-// collaborations the user has
-const userInstallations = (userid) => {
+// join the installations table to the collaborations the user has
+const byUser = (userid) => {
   const params = [userid]
   const sql = `select *
 from
@@ -26,6 +26,36 @@ order by
   }
 }
 
+// transaction query array
+const create = (data, userid) => {
+
+  return [
+    SQL.insert('installation', data),
+    SQL.insert('collaboration', {
+      useraccount: userid,
+      installation: 'lastval()',
+      permission: 'owner'
+    }, {
+      installation: 'raw'
+    })
+  ]
+  async.series([
+    (next) => {
+      client.query(SQL.insert('installation', {
+
+      }))
+    },
+
+    (next) => {
+
+    }
+  ], done)
+}
+
+/*
+const create = (data) => {
+
+}
 // an installation is always created by the owner
 // insert a collaboration alongside the installation for this
 const createInstallation = `BEGIN;
@@ -51,12 +81,18 @@ values
 );
 COMMIT;
 `
+*/
 
-const Installation = (db) => {
-  const sql = SQL(db, 'installation')
-  const installation = new EventEmitter()
+const Installation = (connection, eventBus) => {
+  
+  const query = Query(connection)
+  const transaction = Transaction(connection)
 
-  const list = (userid, done) => sql.raw(installationList, [userid], done)
+  const list = (userid, done) => query(byUser(userid), selectors.rows(done))
+  const create = (data, userid, done) => {
+    transaction()
+  }
+  sql.raw(installationList, [userid], done)
 
   
   const create = (name, userid, done) => {

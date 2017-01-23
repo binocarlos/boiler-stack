@@ -1,5 +1,6 @@
 "use strict";
 const tape = require('tape')
+const tools = require('../../../testtools')
 const SQL = require('../../../src/database/sql')
 
 const BASE_TABLE = 'fruit'
@@ -56,14 +57,32 @@ tape('sql - select', (t) => {
 
 tape('sql - insert', (t) => {
   const query = SQL.insert(BASE_TABLE, BASE_WHERE)
-  const CHECK_INSERT = [
-    `insert into "${BASE_TABLE}"`,
-    '(','"a",','"b"',')','values','(','$1,','$2',')','returning *',''
-  ].join("\n")
-  t.deepEqual(query, {
+  const CHECK_INSERT = tools.strip(`insert into "${BASE_TABLE}"
+( "a", "b" ) values ( $1, $2 ) returning *`)
+  t.deepEqual({
+    sql: tools.strip(query.sql),
+    params: query.params
+  }, {
     sql: CHECK_INSERT,
     params: BASE_PARAMS
   }, 'the insert query is correct')
+  t.end()
+})
+
+tape('sql - insert (raw value)', (t) => {
+  const RAW_WHERE = Object.assign({}, BASE_WHERE, {
+    rawval: 'lastval()'
+  })
+  const query = SQL.insert(BASE_TABLE, RAW_WHERE, {rawval: 'raw'})
+  const CHECK_INSERT = tools.strip(`insert into "${BASE_TABLE}"
+( "a", "b", "rawval" ) values ( $1, $2, lastval() ) returning *`)
+  t.deepEqual({
+    sql: tools.strip(query.sql),
+    params: query.params
+  }, {
+    sql: CHECK_INSERT,
+    params: BASE_PARAMS
+  }, 'the insert + raw query is correct')
   t.end()
 })
 

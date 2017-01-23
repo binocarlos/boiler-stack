@@ -30,16 +30,33 @@ ${clause.sql}
   }
 }
 
-function insertSQL(table, data, schema) {
+function insertSQL(table, data, argSchema) {
   data = data || {}
-  schema = schema || {}
+  let schema = {}
+  let raw = {}
+  Object.keys(argSchema || {}).forEach((key) => {
+    if(argSchema[key] == 'raw') {
+      raw[key] = true
+    }
+    else {
+      schema[key] = argSchema[key]
+    }
+  })
+  let rawCount = 0
   const fields = Object.keys(data)
     .map(f => `"${f}"`)
     .join(",\n")
   const placeholders = Object.keys(data)
-    .map((f, i) => `$${i+1}${schema[f] ? '::' + schema[f] : ''}`)
+    .map((f, i) => {
+      if(raw[f]) {
+        rawCount++
+        return data[f]
+      }
+      return `$${i+1-rawCount}${schema[f] ? '::' + schema[f] : ''}`
+    })
     .join(",\n")
   const params = Object.keys(data)
+    .filter(f => raw[f] ? false : true)
     .map(f => data[f])
   const sql = `insert into "${table}"
 (
@@ -57,10 +74,11 @@ returning *
   }
 }
 
-function updateSQL(table, data, params, schema) {
+function updateSQL(table, data, params, schema, raw) {
   if(!params) throw new Error('clause params required')
   data = data || {}
   schema = schema || {}
+  raw = raw || {}
   const placeholders = Object.keys(data)
     .map((f, i) => `"${f}" = $${i+1}${schema[f] ? '::' + schema[f] : ''}`)
     .join(",\n")

@@ -3,8 +3,8 @@
 const Logger = require('../logger')
 const logger = Logger('connection')
 
-function Connection(postgres) {
-  function getConnection(handler, done) {
+const Connection = (postgres) => {
+  const getConnection = (handler, done) => {
     postgres.connect((err, client, returnConnection) => {
       if(err) {
         returnConnection()
@@ -17,6 +17,13 @@ function Connection(postgres) {
       })
     })
   }
+
+  const runQuery = (query, done) => {
+    getConnection((client, finished) => {
+      client.query(query.sql, query.params, finished)
+    }, done)
+  }
+
   return getConnection
 }
 
