@@ -27,7 +27,7 @@ const login = (password, done) => {
   user.login(USER_ACCOUNT.email, password, done)
 }
 
-tape('login with correct details', (t) => {
+tape('models.user - login with correct details', (t) => {
   login(USER_ACCOUNT.password, (err, user) => {
     if(err) t.error(err)
     t.equal(user.email, USER_ACCOUNT.email, 'user is logged in')
@@ -35,7 +35,7 @@ tape('login with correct details', (t) => {
   })
 })
 
-tape('login with incorrect details', (t) => {
+tape('models.user - login with incorrect details', (t) => {
   login(USER_ACCOUNT.password + 'BAD', (err, user) => {
     if(err) t.error(err)
     t.equal(user, null, 'user is NOTlogged in')
@@ -43,7 +43,7 @@ tape('login with incorrect details', (t) => {
   })
 })
 
-tape('register', (t) => {
+tape('models.user - register', (t) => {
   const postgres = tools.postgres({
     noParams: true
   })
@@ -75,7 +75,7 @@ tape('register', (t) => {
 
 })
 
-tape('save', (t) => {
+tape('models.user - save', (t) => {
   const DATA = { color: 'red' }
   const PARAMS = { id: 3 }
   const RESULT = {

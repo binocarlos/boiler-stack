@@ -32,11 +32,11 @@ const testBaseQuery = (name, sql) => {
   })   
 }
 
-testBaseQuery('basic connection')
-testBaseQuery('strip newlines', `select *
+testBaseQuery('connection - basic')
+testBaseQuery('connection - strip newlines', `select *
 from apples`)
-testBaseQuery('strip spaces', `select * from apples `)
-testBaseQuery('strip double quotes', `select * from "apples"`)
+testBaseQuery('connection - strip spaces', `select * from apples `)
+testBaseQuery('connection - strip double quotes', `select * from "apples"`)
 
 const testNoPar = (name, sql) => {
   sql = sql || BASE_QUERY.query.sql
@@ -55,7 +55,7 @@ const testNoPar = (name, sql) => {
   })   
 }
 
-tape('test with no params', (t) => {
+tape('connection - with no params', (t) => {
   const postgres = tools.postgres({
     noParams: true
   })
@@ -72,7 +72,6 @@ tape('test with no params', (t) => {
     if(err) t.error(err)
 
     // everything should be the same
-    console.log(JSON.stringify(postgres.getState(), null, 4))
     t.deepEqual(results.rows, BASE_QUERY.results, 'the results are equal')
     postgres.check(t)
     t.end()

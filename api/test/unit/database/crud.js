@@ -9,7 +9,7 @@ const getCrud = (postgres) => {
   return Crud(connection, 'fruit')
 }
 
-tape('sanity', (t) => {
+tape('crud - sanity', (t) => {
   const crud = getCrud()
   crud.select({
     color: 'red'
@@ -19,7 +19,7 @@ tape('sanity', (t) => {
   })
 })
 
-tape('select', (t) => {
+tape('crud - select', (t) => {
   const query = {
     sql: 'select * from fruit where color = $1',
     params: ['red']
@@ -42,7 +42,7 @@ tape('select', (t) => {
   })
 })
 
-tape('get', (t) => {
+tape('crud - get', (t) => {
   const query = {
     sql: 'select * from fruit where color = $1',
     params: ['red']
@@ -64,7 +64,7 @@ tape('get', (t) => {
   })
 })
 
-tape('insert', (t) => {
+tape('crud - insert', (t) => {
   const query = {
     sql: 'insert into fruit ( name, color ) values ( $1, $2 ) returning *',
     params: ['apples', 'red']
@@ -83,7 +83,7 @@ tape('insert', (t) => {
   })
 })
 
-tape('update', (t) => {
+tape('crud - update', (t) => {
   const query = {
     sql: 'update fruit set color = $1 where name = $2 returning *',
     params: ['green', 'apples']
@@ -103,7 +103,7 @@ tape('update', (t) => {
   })
 })
 
-tape('delete', (t) => {
+tape('crud - delete', (t) => {
   const query = {
     sql: 'delete from fruit where name = $1',
     params: ['apples']
