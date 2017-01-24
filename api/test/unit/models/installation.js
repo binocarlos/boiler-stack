@@ -9,6 +9,13 @@ const USER_ACCOUNT = {
   password: 'apples'
 }
 
+const runTest = (postgres, handler, done) => {
+  const connection = tools.connection(postgres)
+  connection((client, finish) => {
+    handler(client, finish)
+  }, done)
+}
+
 tape('models.installation - create', (t) => {
   const DATA = { name: 'apples' }
   const USERID = 5
@@ -16,13 +23,18 @@ tape('models.installation - create', (t) => {
   const postgres = tools.postgres()
   const eventBus = tools.eventBus()
 
-  postgres.expect('BEGIN')
-  postgres.expect(EMAIL_QUERY, [])
-  postgres.expect({
-    sql: 'insert into useraccount ( email, hashed_password, salt, data ) values ( $1, $2, $3, $4 ) returning *'
-  }, [userData])
-  postgres.expect('COMMIT')
-  
-  t.end()
+  postgres.expect(Installation.QUERIES.insertInstallation(DATA), [Object.assign({}, DATA, {id:10})])
+  postgres.expect(Installation.QUERIES.insertCollaboration(USERID), [{id:12,useraccount:USERID,installation:10,permission:'owner'}])
 
+  runTest(postgres, (client, finish) => {
+    const create = Installation.create(client, eventBus)
+    create(DATA, USERID, (err, result) => {
+      if(err) t.error(err)
+      postgres.check(t, 'installation create queries are correct')
+      finish()
+    })
+  }, () => {
+    t.end()  
+  })
+  
 })

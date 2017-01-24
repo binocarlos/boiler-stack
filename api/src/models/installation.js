@@ -2,7 +2,7 @@
 const async = require('async')
 const Transaction = require('../database/transaction')
 const Crud = require('../database/crud')
-const SQL = require('../database/crud')
+const SQL = require('../database/sql')
 const selectors = require('../database/selectors')
 
 const QUERIES = {
@@ -24,6 +24,19 @@ order by
       sql,
       params
     }
+  },
+
+  insertInstallation: (data) => {
+    return SQL.insert('installation', data)
+  },
+
+  insertCollaboration: (userid) => {
+    return SQL.insert('collaboration', {
+      'useraccount': userid,
+      'installation': 'lastval()'
+    }, {
+      'installation': 'raw'
+    })
   }
 }
 
@@ -42,28 +55,20 @@ const create = (client, eventBus) => (data, userid, done) => {
     installation: null,
     collaboration: null
   }
-  transaction((client, finish) => {
-    const installations = Crud(client, 'installation')
-    const collaborations = Crud(client, 'collaboration')
-    async.waterfall([
+  
+  async.waterfall([
 
-      (next) => client.query(SQL.insert('installation', data), next),
-      (installation, next) => {
-        newObjects.installation = installation
-        client.query(SQL.insert('collaboration', {
-          'useraccount': userid,
-          'installation': 'lastval()'
-        }, {
-          'installation': 'raw'
-        }), next)
-      },
-      (collaboration, next) => {
-        newObjects.collaboration = collaboration
-        next()
-      }
+    (next) => client.query(QUERIES.insertInstallation(data), next),
+    (installation, next) => {
+      newObjects.installation = installation
+      client.query(QUERIES.insertCollaboration(userid), next)
+    },
+    (collaboration, next) => {
+      newObjects.collaboration = collaboration
+      next()
+    }
 
-    ], finish)
-  }, (err) => {
+  ], (err) => {
     if(err) return done(err)
     eventBus.emit('models.installation.create', {
       query: { data, userid },
@@ -75,5 +80,6 @@ const create = (client, eventBus) => (data, userid, done) => {
 
 module.exports = {
   byUser,
-  create
+  create,
+  QUERIES
 }
