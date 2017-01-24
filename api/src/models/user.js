@@ -33,21 +33,11 @@ const register = (runQuery) => (data, done) => {
       crud.insert(runQuery, userData, next)
     },
     (insertedUser, next) => {
-      console.log('-------------------------------------------');
-      console.log('-------------------------------------------');
-      console.log('inserted')
-      console.dir(insertedUser)
       newUser = insertedUser
       next()
     }
   ], (err) => {
     if(err) return done(err)
-    console.log('-------------------------------------------');
-  console.log('-------------------------------------------');
-  console.log('-------------------------------------------');
-  console.log('-------------------------------------------');
-  console.log('-------------------------------------------');
-  console.dir(newUser)
     done(null, newUser)
   })
 }

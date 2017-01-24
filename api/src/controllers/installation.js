@@ -9,16 +9,16 @@ const InstallationController = (connection, eventBus, InstallationModel) => {
   
   // queries
   const list = (userid, done) => {
-    connection.query((client, finish) => {
-      const handler = InstallationModel.byUser(client)
+    connection.query((query, finish) => {
+      const handler = InstallationModel.byUser(query)
       handler(userid, finish)
     }, done)
   }
 
   // commands
   const create = (data, userid, done) => {
-    connection.transaction((client, finish) => {
-      const handler = InstallationModel.create(client)
+    connection.transaction((query, finish) => {
+      const handler = InstallationModel.create(query)
       handler(data, userid, finish)
     }, (err, result) => {
       if(err) return done(err)
