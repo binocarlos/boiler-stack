@@ -10,37 +10,27 @@ tape('acceptance - installation - default on register', (t) => {
   async.series({
 
     register: (next) => {
-      tools.register(userData, (err, result) => {
-        console.log('-------------------------------------------');
-        console.log('-------------------------------------------');
-        console.dir(result)
-      })
+      tools.register(userData, next)
     },
 
-    pause: (next) => setTimeout(next, 100),
+    pause: (next) => setTimeout(next, 1000),
 
     installations: (next) => {
-      console.log('-------------------------------------------');
-      console.log('-------------------------------------------');
-      console.log('here')
       tools.request({
         method: 'GET',
         url: tools.url('/api/v1/installations'),
         json: true
-      }, (err, res, body) => {
-        if(err) return next(err)
-        next(null, {
-          statusCode: res.statusCode,
-          body: body
-        })
-      })
+      }, tools.wrapResult(next))
     }
 
   }, (err, results) => {
 
     if(err) t.error(err)
 
-    console.log(JSON.stringify(results.installations, null, 4))
+    const installations = results.installations
+
+    t.equal(installations.body.length, 1, 'there is 1 installation')
+    t.equal(installations.body[0].name, 'default', 'it is called default')
 
     t.end()
   })

@@ -20,9 +20,6 @@ const UserData = (count) => {
 }
 
 const register = (userData, done) => {
-  console.log('-------------------------------------------');
-  console.log('-------------------------------------------');
-  console.dir(userData)
   request({
     method: 'POST',
     url: url('/api/v1/register'),
@@ -36,9 +33,18 @@ const register = (userData, done) => {
   })
 }
 
+const wrapResult = (done) => (err, res, body) => {
+  if(err) return done(err)
+  done(null, {
+    statusCode: res.statusCode,
+    body: body
+  })
+}
+
 module.exports = {
   UserData,
   request,
   url,
-  register
+  register,
+  wrapResult
 }

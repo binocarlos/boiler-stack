@@ -14,13 +14,7 @@ tape('acceptance - auth', (t) => {
         method: 'POST',
         url: tools.url('/api/v1/register'),
         json: userData
-      }, (err, res, body) => {
-        if(err) return next(err)
-        next(null, {
-          statusCode: res.statusCode,
-          body: body
-        })
-      })
+      }, tools.wrapResult(next))
     },
 
     status: (next) => {
@@ -28,13 +22,7 @@ tape('acceptance - auth', (t) => {
         method: 'GET',
         url: tools.url('/api/v1/status'),
         json: true
-      }, (err, res, body) => {
-        if(err) return next(err)
-        next(null, {
-          statusCode: res.statusCode,
-          body: body
-        })
-      })
+      }, tools.wrapResult(next))
     },
 
     logout: (next) => {
@@ -42,13 +30,7 @@ tape('acceptance - auth', (t) => {
         method: 'GET',
         url: tools.url('/api/v1/logout'),
         followAllRedirects: true
-      }, (err, res, body) => {
-        if(err) return next(err)
-        next(null, {
-          statusCode: res.statusCode,
-          body: body
-        })
-      })
+      }, tools.wrapResult(next))
     },
 
     nostatus: (next) => {
@@ -56,13 +38,7 @@ tape('acceptance - auth', (t) => {
         method: 'GET',
         url: tools.url('/api/v1/status'),
         json: true
-      }, (err, res, body) => {
-        if(err) return next(err)
-        next(null, {
-          statusCode: res.statusCode,
-          body: body
-        })
-      })
+      }, tools.wrapResult(next))
     },
 
     login: (next) => {
@@ -70,13 +46,7 @@ tape('acceptance - auth', (t) => {
         method: 'POST',
         url: tools.url('/api/v1/login'),
         json: userData
-      }, (err, res, body) => {
-        if(err) return next(err)
-        next(null, {
-          statusCode: res.statusCode,
-          body: body
-        })
-      })
+      }, tools.wrapResult(next))
     },
 
     loginstatus: (next) => {
@@ -84,13 +54,7 @@ tape('acceptance - auth', (t) => {
         method: 'GET',
         url: tools.url('/api/v1/status'),
         json: true
-      }, (err, res, body) => {
-        if(err) return next(err)
-        next(null, {
-          statusCode: res.statusCode,
-          body: body
-        })
-      })
+      }, tools.wrapResult(next))
     },
 
   }, (err, results) => {
