@@ -7,10 +7,19 @@ const logger = Logger('worker:commandlog')
 // for each database mutation
 const CommandLog = (controllers) => (message) => {
   controllers.commandlog.create(message, (err, data) => {
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.log('command log created')
-    console.dir(data)
+    if(err) {
+      logger.error({
+        error: err,
+        message: message
+      })
+    }
+    else {
+      logger({
+        action: 'complete',
+        message,
+        data
+      })
+    }
   })
 }
 

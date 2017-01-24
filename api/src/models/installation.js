@@ -29,10 +29,12 @@ order by
     return SQL.insert('installation', data)
   },
 
-  insertCollaboration: (userid) => {
+  insertCollaboration: (userid, permission) => {
+    permission = permission || 'owner'
     return SQL.insert('collaboration', {
       'useraccount': userid,
-      'installation': 'lastval()'
+      'installation': 'lastval()',
+      'permission': permission
     }, {
       'installation': 'raw'
     })
@@ -46,6 +48,7 @@ const byUser = (runQuery, userid, done) => runQuery(QUERIES.byUser(userid), sele
 // 2. insert the collaboration
 // query:
 //  * data
+//  * userid
 const create = (runQuery, query, done) => {
   const userid = query.userid
   const data = query.data
@@ -56,10 +59,10 @@ const create = (runQuery, query, done) => {
   
   async.waterfall([
 
-    (next) => runQuery(QUERIES.insertInstallation(data), next),
+    (next) => runQuery(QUERIES.insertInstallation(data), selectors.single(next)),
     (installation, next) => {
       newObjects.installation = installation
-      runQuery(QUERIES.insertCollaboration(userid), next)
+      runQuery(QUERIES.insertCollaboration(userid), selectors.single(next))
     },
     (collaboration, next) => {
       newObjects.collaboration = collaboration

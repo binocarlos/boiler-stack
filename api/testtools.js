@@ -113,7 +113,7 @@ const Postgres = (opts) => {
     t.deepEqual(queries.expected, queries.actual, msg || 'the query logs are the same')
   }
 
-  const connect = (handler) => handler(null, runQuery, setFinished)
+  const connect = (handler) => handler(null, {query:runQuery}, setFinished)
 
   return {
     connect,

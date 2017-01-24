@@ -57,12 +57,21 @@ tape('acceptance - auth', (t) => {
       }, tools.wrapResult(next))
     },
 
+    installations: (next) => {
+      tools.request({
+        method: 'GET',
+        url: tools.url('/api/v1/installations'),
+        json: true
+      }, tools.wrapResult(next))
+    }
+
   }, (err, results) => {
 
     if(err) t.error(err)
 
     const register = results.register
     const status = results.status
+    const installations = results.installations
 
     const EXPECTED_STATUS = {
       register: 201
@@ -96,6 +105,10 @@ tape('acceptance - auth', (t) => {
 
     t.equal(register.body.data.hashed_password, undefined, 'no password deets')
     t.equal(status.body.data.hashed_password, undefined, 'no password deets')
+
+    t.equal(installations.body.length, 1, '1 installation')
+    t.equal(installations.body[0].name, 'default', 'default installation')
+
     t.end()
   })
 })

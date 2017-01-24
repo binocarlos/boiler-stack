@@ -19,7 +19,7 @@ function Auth(controller) {
     if(!password) return error(['no password given', 400, errorData])
     async.waterfall([
       (next) => {
-        controller.login({ 
+        controller.login({
           email,
           password
         }, next)

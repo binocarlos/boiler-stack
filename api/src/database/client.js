@@ -2,6 +2,7 @@
 
 const Logger = require('../logger')
 const logger = Logger('postgres:client')
+const async = require('async')
 
 // wrap the pg.query with a single object with {sql,params}
 const QueryFactory = (runner) => (q, done) => {
@@ -47,46 +48,35 @@ const Client = (postgres) => {
   // run queries on the pool directly
   const query = QueryFactory(postgresQuery)
 
-  // wrap the connect method so we pass the query function directly
-  // handle the release function
-  const connection = (handler, done) => {
-    postgresConnect((err, client, release) => {
-      if(err) {
-        returnConnection()
-        return done(err)
-      }
-      
-      // get a query function using the given client
-      const runQuery = QueryFactory(client.query.bind(client))
-      handler(null, runQuery, (err, results) => {
-        release()
-        done(err, results)
-      })
-    })
-  }
-
   // run a transaction with a query object
   const transaction = (handler, done) => {
-    connection((runQuery, finish) => {
+    postgres.connect((err, client, release) => {
+      if(err) {
+        release()
+        return done(err)
+      }
+      const runQuery = QueryFactory(client.query.bind(client))
       async.series({
         begin:   (next) => runQuery('BEGIN', next),
         command: (next) => handler(runQuery, next),
         commit:  (next) => runQuery('COMMIT', next)
       }, (err, results) => {
         if(err) {
-          runQuery('ROLLBACK', () => finish(err))
+          runQuery('ROLLBACK', () => {
+            release()
+            done(err)
+          })
         }
-        else {
-          finish(null, results.command)
+        else{
+          release()
+          done(null, results.command)
         }
       })
-    }, done)
+    })
   }
-
 
   return {
     query,
-    connection,
     transaction
   }
 }

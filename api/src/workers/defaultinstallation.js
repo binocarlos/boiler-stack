@@ -5,15 +5,29 @@ const Logger = require('../logger')
 const logger = Logger('worker:defaultinstallation')
 
 const DefaultInstallation = (controllers) => (message) => {
-
-  console.log('-------------------------------------------');
-  console.log('-------------------------------------------');
-  console.log('-------------------------------------------');
-  console.log('-------------------------------------------');
-  console.log('-------------------------------------------');
-  console.log('-------------------------------------------');
-  console.log('create a new installation!!!')
-  console.log(JSON.stringify(message, null, 4))
+  const query = {
+    data: {
+      name: 'default',
+      data: '{}'
+    },
+    userid: message.result.id
+  }
+  controllers.installation.create(query, (err, data) => {
+    if(err) {
+      logger.error({
+        error: err,
+        message: message
+      })
+    }
+    else {
+      logger({
+        action: 'complete',
+        query,
+        message,
+        data
+      })
+    }
+  })
 }
 
 module.exports = DefaultInstallation

@@ -41,9 +41,7 @@ const UserController = (client, eventBus) => {
   //  * data
   //  * params
   const save = (query, done) => {
-    client.transaction((runQuery, finish) => {
-      UserModel.save(runQuery, query, finish)
-    }, (err, result) => {
+    UserModel.save(client.query, query, (err, result) => {
       if(err) return done(err)
       eventBus.emit('command', {
         name: 'user.save',
