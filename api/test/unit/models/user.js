@@ -14,20 +14,14 @@ const EMAIL_QUERY = {
   params: [USER_ACCOUNT.email]
 }
 
-const runTest = (postgres, handler, done) => {
-  const connection = tools.connection(postgres)
-  connection((client, finish) => {
-    handler(client, finish)
-  }, done)
-}
-
 const login = (password, done) => {
   const userData = apptools.generateUser(USER_ACCOUNT)
   const postgres = tools.postgres()
   postgres.expect(EMAIL_QUERY, [userData])
-  runTest(postgres, (client, finish) => {
-    const login = User.login(client)
-    login(USER_ACCOUNT.email, password, finish)
+  const client = tools.client(postgres)
+  User.login(client.query, {
+    email: USER_ACCOUNT.email,
+    password
   }, done)
 }
 
@@ -58,16 +52,13 @@ tape('models.user - register', (t) => {
     sql: 'insert into useraccount ( email, hashed_password, salt, data ) values ( $1, $2, $3, $4 ) returning *'
   }, [userData])
 
-  runTest(postgres, (client, finish) => {
-    const register = User.register(client)
-    register(USER_ACCOUNT, (err, result) => {
-      if(err) t.error(err)
-      t.deepEqual(userData, result, 'user objects are equal')
-      postgres.check(t, 'register query logs are equal')
-      
-      finish()
-    })
-  }, () => {
+  const client = tools.client(postgres)
+  User.register(client.query, {
+    data: USER_ACCOUNT
+  }, (err, result) => {
+    if(err) t.error(err)
+    t.deepEqual(User.clean(userData), result, 'user objects are equal')
+    postgres.check(t, 'register query logs are equal')
     t.end()
   })
 })
@@ -89,15 +80,15 @@ tape('models.user - save', (t) => {
     data: DATA
   }])
 
-  runTest(postgres, (client, finish) => {
-    const save = User.save(client)
-    save(DATA, PARAMS, (err, result) => {
-      if(err) t.error(err)
-      t.deepEqual(result, RESULT)
-      postgres.check(t, 'save query logs are equal')
-      finish()
-    })
-  }, () => {
+  const client = tools.client(postgres)
+
+  User.save(client.query, {
+    data: DATA,
+    params: PARAMS
+  }, (err, result) => {
+    if(err) t.error(err)
+    t.deepEqual(result, RESULT)
+    postgres.check(t, 'save query logs are equal')
     t.end()
   })
 })

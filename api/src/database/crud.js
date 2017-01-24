@@ -12,11 +12,11 @@ const selectors = require('./selectors')
 // all use either rows or single selectors
 const Crud = (table) => {
 
-  const select = (query, params, done) => query(sql.select(table, params), selectors.rows(done))
-  const get = (query, params, done) => query(sql.select(table, params), selectors.single(done))
-  const insert = (query, data, done) => query(sql.insert(table, data), selectors.single(done))
-  const update = (query, data, params, done) => query(sql.update(table, data, params), selectors.single(done))
-  const del = (query, params, done) => query(sql.delete(table, params), selectors.single(done))
+  const select = (runQuery, params, done) => runQuery(sql.select(table, params), selectors.rows(done))
+  const get = (runQuery, params, done) => runQuery(sql.select(table, params), selectors.single(done))
+  const insert = (runQuery, data, done) => runQuery(sql.insert(table, data), selectors.single(done))
+  const update = (runQuery, data, params, done) => runQuery(sql.update(table, data, params), selectors.single(done))
+  const del = (runQuery, params, done) => runQuery(sql.delete(table, params), selectors.single(done))
 
   return {
     select: select,

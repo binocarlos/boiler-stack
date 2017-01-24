@@ -1,6 +1,6 @@
 "use strict";
 const EventBus = require('./src/eventBus')
-const Connection = require('./src/database/connection')
+const Client = require('./src/database/client')
 const objhash = require('object-hash')
 
 const queryHash = (sql, params) => {
@@ -88,17 +88,14 @@ const Postgres = (opts) => {
     shims
     
   */
-  const query = (sql, params, done) => {
-      
-    if(typeof(params) == 'function') {
-      done = params
-      params = []
+  const runQuery = (query, done) => {
+    if(typeof(query) == 'string'){
+      query = {
+        sql: query,
+        params: []
+      }
     }
-    if(typeof(sql) == 'object') {
-      params = sql.params
-      sql = sql.sql
-    }
-    const query = processQuery(sql, params)
+    query = processQuery(query.sql, query.params)
     const hash = queryHash(query)
     const expected = state.queries.expected.db[hash]
     const results = expected ?
@@ -116,19 +113,26 @@ const Postgres = (opts) => {
     t.deepEqual(queries.expected, queries.actual, msg || 'the query logs are the same')
   }
 
+  const connect = (handler) => {
+    handler(null, {
+      query: runQuery
+    }, setFinished)
+  }
+
   return {
-    connect: (cb) => cb(null, {query}, setFinished),
+    connect,
+    query: runQuery,
     expect: addExpectedQuery,
     getState: () => state,
     check: check
   }
 }
 
-const connection = (postgres) => Connection(postgres)
+const client = (postgres) => Client(postgres)
 
 module.exports = {
   postgres: Postgres,
+  client,
   eventBus: MockEventBus,
-  connection,
   strip
 }

@@ -18,17 +18,26 @@ const UserData = () => {
   }
 }
 
-const login = (userData, done) => {
+const register = (userData, done) => {
+  console.log('-------------------------------------------');
+  console.log('-------------------------------------------');
+  console.dir(userData)
   request({
     method: 'POST',
-    url: tools.url('/api/v1/register'),
+    url: url('/api/v1/register'),
     json: userData
-  }, done)
+  }, (err, res, body) => {
+    if(err) return done(err)
+    done(null, {
+      statusCode: res.statusCode,
+      body
+    })
+  })
 }
 
 module.exports = {
   UserData,
   request,
   url,
-  login
+  register
 }

@@ -21,20 +21,19 @@ tape('models.installation - create', (t) => {
   const USERID = 5
 
   const postgres = tools.postgres()
-  const eventBus = tools.eventBus()
 
   postgres.expect(Installation.QUERIES.insertInstallation(DATA), [Object.assign({}, DATA, {id:10})])
   postgres.expect(Installation.QUERIES.insertCollaboration(USERID), [{id:12,useraccount:USERID,installation:10,permission:'owner'}])
 
-  runTest(postgres, (client, finish) => {
-    const create = Installation.create(client, eventBus)
-    create(DATA, USERID, (err, result) => {
-      if(err) t.error(err)
-      postgres.check(t, 'installation create queries are correct')
-      finish()
-    })
-  }, () => {
-    t.end()  
+  const client = tools.client(postgres)
+
+  Installation.create(client.query, {
+    data: DATA,
+    userid: USERID
+  }, (err, result) => {
+    if(err) t.error(err)
+    postgres.check(t, 'installation create queries are correct')
+    t.end()
   })
   
 })

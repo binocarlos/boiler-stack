@@ -7,8 +7,9 @@ const logger = Logger('postgres')
 
 function Postgres(settings) {
   const config = Object.assign({}, settings, {
-    max: 10,
-    idleTimeoutMillis: 30000
+    max: 20,
+    min: 4,
+    idleTimeoutMillis: 1000
   })
   
   const pool = new pg.Pool(config)

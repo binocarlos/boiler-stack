@@ -3,16 +3,8 @@ const tape = require('tape')
 const async = require('async')
 const tools = require('./tools')
 
-const UserData = () => {
-  const ts = new Date().getTime()
-  return {
-    email: 'user' + ts + '@test.com',
-    password: 'apples'
-  }
-}
-
 tape('acceptance - auth', (t) => {
-  const userData = UserData()
+  const userData = tools.UserData()
 
   async.series({
 
@@ -140,8 +132,6 @@ tape('acceptance - auth', (t) => {
 
     t.equal(register.body.data.hashed_password, undefined, 'no password deets')
     t.equal(status.body.data.hashed_password, undefined, 'no password deets')
-
-    console.log(JSON.stringify(results, null, 4))
 
     t.end()
   })

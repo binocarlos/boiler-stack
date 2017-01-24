@@ -40,17 +40,14 @@ order by
   }
 }
 
-const byUser = (runQuery) => (userid, done) => {
-  connection((client, finish) => {
-    const query = QUERIES.byUser(userid)
-    runQuery(query.sql, query.params, selectors.rows(finish))
-  }, done)
-}
+const byUser = (runQuery, query, done) => runQuery(QUERIES.byUser(query.userid), selectors.rows(done))
 
 // models.installation.create - create an installation for a user a an owner
 // 1. insert the installation
 // 2. insert the collaboration
-const create = (runQuery) => (data, userid, done) => {
+const create = (runQuery, query, done) => {
+  const userid = query.userid
+  const data = query.data
   let newObjects = {
     installation: null,
     collaboration: null

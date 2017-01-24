@@ -1,12 +1,7 @@
 "use strict";
-/*
 
-  wrapper for a bunch of queries using the sql module
-  within a connection / transaction
-  with rollback on any error
-  
-*/
-const async = require('async')
+const Logger = require('../logger')
+const logger = Logger('transaction')
 
 const Transaction = (connection) => (handler, done) => {
   connection((query, finish) => {

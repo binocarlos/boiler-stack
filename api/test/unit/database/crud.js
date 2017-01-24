@@ -7,8 +7,10 @@ const getCrud = () => Crud('fruit')
 
 const runTest = (t, postgres, handler) => {
   postgres = postgres || tools.postgres()
-  const connection = tools.connection(postgres)
-  connection((query, finish) => handler(query, finish), () => t.end())
+  const client = tools.client(postgres)
+  handler(client.query, () => {
+    t.end()
+  })
 }
 
 tape('crud - sanity', (t) => {

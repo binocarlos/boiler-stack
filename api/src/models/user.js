@@ -9,7 +9,7 @@ const PRIVATE_FIELDS = {
   salt: true
 }
 
-const getCrud = () => Crud('useraccount')
+const crud = Crud('useraccount')
 
 // remove sensitive fields
 const clean = (data) => {
@@ -25,8 +25,9 @@ const clean = (data) => {
 // 1. load user with email using crud.get
 // 2. encrypt plain text password using loaded salt
 // 3. compare both encrypted passwords
-const login = (runQuery) => (email, password, done) => {
-  const crud = getCrud()
+const login = (runQuery, query, done) => {
+  const email = query.email
+  const password = query.password
   crud.get(runQuery, { email }, (err, result) => {
     if(err) return done(err)
     if(!result) return done()
@@ -37,8 +38,8 @@ const login = (runQuery) => (email, password, done) => {
 // models.user.register - register user transaction
 // 1. check the primary key does not exist
 // 2. insert
-const register = (runQuery) => (data, done) => {
-  const crud = getCrud()
+const register = (runQuery, query, done) => {
+  const data = query.data
   const userData = tools.generateUser(data)
   let newUser = null
   async.waterfall([
@@ -59,8 +60,9 @@ const register = (runQuery) => (data, done) => {
 
 // models.user.save - save command
 // 1. update 'data' as a JSON string based on params
-const save = (runQuery) => (data, params, done) => {
-  const crud = getCrud()
+const save = (runQuery, query, done) => {
+  const data = query.data
+  const params = query.params
   const userData = {data: JSON.stringify(data)}
   crud.update(runQuery, userData, params, done)
 }
