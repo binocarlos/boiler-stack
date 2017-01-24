@@ -88,14 +88,8 @@ const Postgres = (opts) => {
     shims
     
   */
-  const runQuery = (query, done) => {
-    if(typeof(query) == 'string'){
-      query = {
-        sql: query,
-        params: []
-      }
-    }
-    query = processQuery(query.sql, query.params)
+  const runQuery = (sql, params, done) => {
+    const query = processQuery(sql, params)
     const hash = queryHash(query)
     const expected = state.queries.expected.db[hash]
     const results = expected ?
