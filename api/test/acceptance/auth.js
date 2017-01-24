@@ -3,6 +3,7 @@ const tape = require('tape')
 const async = require('async')
 const tools = require('./tools')
 
+
 tape('acceptance - auth', (t) => {
   const userData = tools.UserData()
 
@@ -126,13 +127,11 @@ tape('acceptance - auth', (t) => {
       })
     })
 
-
     t.equal(register.body.data.email, userData.email, 'register email is correct')
     t.equal(status.body.data.email, userData.email, 'status email is correct')
 
     t.equal(register.body.data.hashed_password, undefined, 'no password deets')
     t.equal(status.body.data.hashed_password, undefined, 'no password deets')
-
     t.end()
   })
 })

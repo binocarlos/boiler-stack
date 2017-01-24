@@ -10,10 +10,11 @@ const url = (path) => {
   return BASE_URL + path
 }
 
-const UserData = () => {
+const UserData = (count) => {
+  count = count || ''
   const ts = new Date().getTime()
   return {
-    email: 'user' + ts + '@test.com',
+    email: 'user' + ts + count + '@test.com',
     password: 'apples'
   }
 }
