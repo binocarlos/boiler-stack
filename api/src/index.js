@@ -17,8 +17,9 @@ const App = require('./webserver/app')
 
 const EventBus = require('./eventBus')
 const Controllers = require('./controllers')
+const Workers = require('./workers')
+const Switchboard = require('./switchboard')
 const Routes = require('./routes')
-
 
 // database setup
 const postgres = Postgres({
@@ -44,6 +45,12 @@ const session = Session(redis, {
 const eventBus = EventBus()
 const client = Client(postgres)
 const controllers = Controllers(client, eventBus)
+const workers = Workers(controllers)
+const switchboard = Switchboard(
+  eventBus,
+  controllers,
+  workers
+)
 
 const passport = Passport(controllers.user)
 const app = App({

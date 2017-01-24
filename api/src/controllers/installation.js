@@ -2,10 +2,9 @@
 
 const async = require('async')
 const tools = require('../tools')
-const Installation = require('../models/installation')
+const InstallationModel = require('../models/installation')
 
-const InstallationController = (client, eventBus, InstallationModel) => {
-  InstallationModel = InstallationModel || Installation
+const InstallationController = (client, eventBus) => {
   
   // queries
   const list = (userid, done) => InstallationModel.byUser(client.query, userid, done)
@@ -18,7 +17,8 @@ const InstallationController = (client, eventBus, InstallationModel) => {
       InstallationModel.create(runQuery, query, finish)
     }, (err, result) => {
       if(err) return done(err)
-      eventBus.emit('installation.create', {
+      eventBus.emit('command', {
+        name: 'installation.create',
         query,
         result
       })

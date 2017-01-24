@@ -1,10 +1,14 @@
 "use strict";
-const UserCreate = require('./usercreate')
+const DefaultInstallation = require('./defaultinstallation')
+const CommandLog = require('./commandlog')
 
-function Workers(models){
-  const userCreate = UserCreate(models)
+function Workers(controllers){
+  const defaultInstallation = DefaultInstallation(controllers)
+  const commandLog = CommandLog(controllers)
+
   return {
-    userCreate
+    defaultInstallation,
+    commandLog
   }
 }
 

@@ -3,13 +3,11 @@
 const async = require('async')
 const tools = require('../tools')
 const Crud = require('../database/crud')
-const User = require('../models/user')
+const UserModel = require('../models/user')
 
 const crud = Crud('useraccount')
 
-const UserController = (client, eventBus, UserModel) => {
-  UserModel = UserModel || User
-
+const UserController = (client, eventBus) => {
   // queries
   // query:
   //  * email
@@ -20,7 +18,7 @@ const UserController = (client, eventBus, UserModel) => {
   const get = (query, done) => {
     crud.get(client.query, query, (err, data) => {
       if(err) return done(err)
-      done(null, User.clean(data))
+      done(null, UserModel.clean(data))
     })
   }
 
@@ -30,7 +28,8 @@ const UserController = (client, eventBus, UserModel) => {
   const register = (query, done) => {
     UserModel.register(client.query, query, (err, result) => {
       if(err) return done(err)
-      eventBus.emit('user.register', {
+      eventBus.emit('command', {
+        name: 'user.register',
         query,
         result
       })
@@ -46,7 +45,8 @@ const UserController = (client, eventBus, UserModel) => {
       UserModel.save(runQuery, query, finish)
     }, (err, result) => {
       if(err) return done(err)
-      eventBus.emit('user.save', {
+      eventBus.emit('command', {
+        name: 'user.save',
         query,
         result
       })

@@ -3,29 +3,39 @@
 const Logger = require('./logger')
 const logger = Logger('switchboard')
 
-// record the commands for each model
-function commandRecorder(models) {
-  Object.keys(models || {}).forEach(key => {
-    const model = models[key]
-    model.on('command', (command) => {
-      models.commandLog.create({
-        data:command
-      }, (err) => {
-        logger({
-          action: 'command',
-          command
-        })
-      })
-    })
-  })
-}
-
 // react to model events and run workers
 // we can easily de-couple the switchboard into a job-queue this way
-function Switchboard(models, workers) {
-  commandRecorder(models)
+function Switchboard(eventBus, controllers, workers) {
+
+  // which workers to run for which commands (can be array or single worker)
+  const COMMANDS = {
+    'user.register': workers.defaultInstallation
+  }
   
-  models.user.on('created', user => workers.userCreate(user))
+  // main event control loop
+  eventBus.listen((channel, message) => {
+    logger({
+      type: 'event',
+      channel,
+      message
+    })
+
+    // a mutating command
+    if(channel == 'command') {
+
+      // record the command
+      workers.commandLog(message)
+
+      // trigger the workers from the COMMANDS mapo
+      let commandWorkers = COMMANDS[message.name]
+      if(commandWorkers) {
+        if(typeof(commandWorkers) == 'function') {
+          commandWorkers = [commandWorkers]
+        }
+        commandWorkers.forEach(commandWorker => commandWorker(message))
+      }
+    }
+  })
 }
 
 module.exports = Switchboard
