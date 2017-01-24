@@ -27,7 +27,7 @@ order by
   }
 }
 
-const byUser = (connection) => (userid, done) => {
+const byUser = (client, eventBus) => (userid, done) => {
   connection((client, finish) => {
     const query = QUERIES.byUser(userid)
     client.query(query.sql, query.params, selectors.rows(finish))
@@ -37,7 +37,7 @@ const byUser = (connection) => (userid, done) => {
 // models.installation.create - create an installation for a user a an owner
 // 1. insert the installation
 // 2. insert the collaboration
-const create = (transaction) => (data, userid, done) => {
+const create = (client, eventBus) => (data, userid, done) => {
   let newObjects = {
     installation: null,
     collaboration: null

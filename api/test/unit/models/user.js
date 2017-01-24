@@ -14,19 +14,21 @@ const EMAIL_QUERY = {
   params: [USER_ACCOUNT.email]
 }
 
-const getUser = (postgres, eventBus) => {
-  postgres = postgres || tools.postgres()
-  eventBus = eventBus || tools.eventBus()
+const runTest = (postgres, handler, done) => {
   const connection = tools.connection(postgres)
-  return User(connection, eventBus)
+  connection((client, finish) => {
+    handler(client, finish)
+  }, done)
 }
 
 const login = (password, done) => {
   const userData = apptools.generateUser(USER_ACCOUNT)
   const postgres = tools.postgres()
   postgres.expect(EMAIL_QUERY, [userData])
-  const user = getUser(postgres)
-  user.login(USER_ACCOUNT.email, password, done)
+  runTest(postgres, (client, finish) => {
+    const login = User.login(client, tools.eventBus())
+    login(USER_ACCOUNT.email, password, finish)
+  }, done)
 }
 
 tape('models.user - login with correct details', (t) => {
@@ -50,34 +52,35 @@ tape('models.user - register', (t) => {
     noParams: true
   })
   const eventBus = tools.eventBus()
-  const user = getUser(postgres, eventBus)
   const userData = apptools.generateUser(USER_ACCOUNT)
 
-  postgres.expect('BEGIN')
   postgres.expect(EMAIL_QUERY, [])
   postgres.expect({
     sql: 'insert into useraccount ( email, hashed_password, salt, data ) values ( $1, $2, $3, $4 ) returning *'
   }, [userData])
-  postgres.expect('COMMIT')
 
-  user.register(USER_ACCOUNT, (err, result) => {
-    if(err) t.error(err)
-    t.deepEqual(userData, result, 'user objects are equal')
-    postgres.check(t, 'register query logs are equal')
-    t.deepEqual(eventBus.getState(), {
-      events: [{
-        channel: 'models.user.register',
-        message: {
-          query: {
-            data: USER_ACCOUNT
-          },
-          result: userData
-        }
-      }]
-    }, 'the models.user.register event was emitted')
+  runTest(postgres, (client, finish) => {
+    const register = User.register(client, eventBus)
+    register(USER_ACCOUNT, (err, result) => {
+      if(err) t.error(err)
+      t.deepEqual(userData, result, 'user objects are equal')
+      postgres.check(t, 'register query logs are equal')
+      t.deepEqual(eventBus.getState(), {
+        events: [{
+          channel: 'models.user.register',
+          message: {
+            query: {
+              data: USER_ACCOUNT
+            },
+            result: userData
+          }
+        }]
+      }, 'the models.user.register event was emitted')
+      finish()
+    })
+  }, () => {
     t.end()
   })
-
 })
 
 tape('models.user - save', (t) => {
@@ -89,7 +92,6 @@ tape('models.user - save', (t) => {
   }
   const postgres = tools.postgres()
   const eventBus = tools.eventBus()
-  const user = getUser(postgres, eventBus)
   
   postgres.expect({
     sql: 'update useraccount set data = $1 where id = $2 returning *',
@@ -99,23 +101,27 @@ tape('models.user - save', (t) => {
     data: DATA
   }])
 
-  user.save(DATA, PARAMS, (err, result) => {
-    if(err) t.error(err)
-    t.deepEqual(result, RESULT)
-    postgres.check(t, 'save query logs are equal')
-    t.deepEqual(eventBus.getState(), {
-      events: [{
-        channel: 'models.user.save',
-        message: {
-          query: {
-            data: DATA,
-            params: PARAMS
-          },
-          result: RESULT
-        }
-      }]
-    }, 'the models.user.save event was emitted')
+  runTest(postgres, (client, finish) => {
+    const save = User.save(client, eventBus)
+    save(DATA, PARAMS, (err, result) => {
+      if(err) t.error(err)
+      t.deepEqual(result, RESULT)
+      postgres.check(t, 'save query logs are equal')
+      t.deepEqual(eventBus.getState(), {
+        events: [{
+          channel: 'models.user.save',
+          message: {
+            query: {
+              data: DATA,
+              params: PARAMS
+            },
+            result: RESULT
+          }
+        }]
+      }, 'the models.user.save event was emitted')
+      finish()
+    })
+  }, () => {
     t.end()
   })
-
 })
