@@ -20,7 +20,10 @@ const UserController = (connection, eventBus, UserModel) => {
 
   const get = (params, done) => {
     connection.query((query, finish) => {
-      crud.get(query, params, finish)
+      crud.get(query, params, (err, data) => {
+        if(err) return done(err)
+        done(null, User.clean(data))
+      })
     }, done)
   }
 

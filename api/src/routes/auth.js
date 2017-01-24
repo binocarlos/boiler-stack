@@ -40,6 +40,7 @@ function Auth(controller) {
       (user, next) => req.login(user, (err) => next(err, user))
     ], (err, user) => {
       if(err) return error(err)
+      res.status(201)
       res.json({
         registered: true,
         data: user
