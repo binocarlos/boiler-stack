@@ -40,41 +40,15 @@ long running processes that are pulling from the event bus)
 
 
 ```
-
-
-      HTTP
+    INGRESS
        |
-       |
+      / \
      ROUTES
+       |       -------> EVENTBUS
+      / \     /            |
+   CONTROLLER              |
+       |      \            |
+     MODELS    <------- WORKER
        |
-       |
-       |
-   CONTROLLER <-------\
-       |                WORKER
-       |                  |
-       |      ------>  EVENTBUS
-     MODEL   /    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      DB
 ```
-
