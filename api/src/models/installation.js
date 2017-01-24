@@ -40,17 +40,17 @@ order by
   }
 }
 
-const byUser = (client) => (userid, done) => {
+const byUser = (runQuery) => (userid, done) => {
   connection((client, finish) => {
     const query = QUERIES.byUser(userid)
-    client.query(query.sql, query.params, selectors.rows(finish))
+    runQuery(query.sql, query.params, selectors.rows(finish))
   }, done)
 }
 
 // models.installation.create - create an installation for a user a an owner
 // 1. insert the installation
 // 2. insert the collaboration
-const create = (client) => (data, userid, done) => {
+const create = (runQuery) => (data, userid, done) => {
   let newObjects = {
     installation: null,
     collaboration: null
@@ -58,10 +58,10 @@ const create = (client) => (data, userid, done) => {
   
   async.waterfall([
 
-    (next) => client.query(QUERIES.insertInstallation(data), next),
+    (next) => runQuery(QUERIES.insertInstallation(data), next),
     (installation, next) => {
       newObjects.installation = installation
-      client.query(QUERIES.insertCollaboration(userid), next)
+      runQuery(QUERIES.insertCollaboration(userid), next)
     },
     (collaboration, next) => {
       newObjects.collaboration = collaboration

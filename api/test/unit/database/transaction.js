@@ -17,10 +17,10 @@ tape('transaction', (t) => {
 
   const apples = SQL.insert('fruit', {name:'apples'})
   const oranges = SQL.insert('fruit', {name:'oranges'})
-  transaction((client, done) => {
+  transaction((query, done) => {
     async.series([
-      (next) => client.query(apples.sql, apples.params, next),
-      (next) => client.query(oranges.sql, oranges.params, next),
+      (next) => query(apples.sql, apples.params, next),
+      (next) => query(oranges.sql, oranges.params, next),
     ], done)
   }, (err, results) => {
     postgres.check(t, 'the transaction query log is correct')

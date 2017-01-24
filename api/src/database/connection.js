@@ -11,19 +11,15 @@ const Connection = (postgres) => {
         logger.error(err)
         return done(err)
       }
-      handler(client, (err, results) => {
+      const query = (sql, params, done) => {
+        client.query(sql, params, done)
+      }
+      handler(query, (err, results) => {
         returnConnection()
         done(err, results)
       })
     })
   }
-
-  const runQuery = (query, done) => {
-    getConnection((client, finished) => {
-      client.query(query.sql, query.params, finished)
-    }, done)
-  }
-
   return getConnection
 }
 

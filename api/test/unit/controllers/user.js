@@ -1,7 +1,7 @@
 "use strict";
 const tape = require('tape')
 const tools = require('../../../testtools')
-const UserController = require('../../../src/controller/user')
+const UserController = require('../../../src/controllers/user')
 
 const USER_MODEL = {
   login: () => (email, password, done) => done(),

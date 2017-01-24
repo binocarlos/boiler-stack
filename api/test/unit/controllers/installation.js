@@ -1,7 +1,7 @@
 "use strict";
 const tape = require('tape')
 const tools = require('../../../testtools')
-const InstallationController = require('../../../src/controller/installation')
+const InstallationController = require('../../../src/controllers/installation')
 
 const INSTALLATION_ID = 5
 const COLLABORATION_ID = 8

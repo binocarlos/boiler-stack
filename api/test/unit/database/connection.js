@@ -21,8 +21,8 @@ const testBaseQuery = (name, sql) => {
     const postgres = tools.postgres()
     const connection = tools.connection(postgres)
     postgres.expect(BASE_QUERY.query, BASE_QUERY.results)
-    connection((client, next) => {
-      client.query(sql, BASE_QUERY.query.params, next)
+    connection((query, next) => {
+      query(sql, BASE_QUERY.query.params, next)
     }, (err, results) => {
       if(err) t.error(err)
       t.deepEqual(results.rows, BASE_QUERY.results, 'the results are equal')
@@ -65,9 +65,9 @@ tape('connection - with no params', (t) => {
     sql: BASE_QUERY.query.sql
   }, BASE_QUERY.results)
 
-  connection((client, next) => {
+  connection((query, next) => {
     // give the params to the actual query like we would be
-    client.query(BASE_QUERY.query.sql, BASE_QUERY.query.params, next)
+    query(BASE_QUERY.query.sql, BASE_QUERY.query.params, next)
   }, (err, results) => {
     if(err) t.error(err)
 

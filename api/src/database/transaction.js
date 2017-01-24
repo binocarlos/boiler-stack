@@ -9,17 +9,17 @@
 const async = require('async')
 
 const Transaction = (connection) => (handler, done) => {
-  connection((client, finish) => {
-    async.series([
-      (next) => client.query('BEGIN', next),
-      (next) => handler(client, next),
-      (next) => client.query('COMMIT', next)
-    ], (err, results) => {
+  connection((query, finish) => {
+    async.series({
+      begin:   (next) => query('BEGIN', next),
+      command: (next) => handler(query, next),
+      commit:  (next) => query('COMMIT', next)
+    }, (err, results) => {
       if(err) {
-        client.query('ROLLBACK', () => finish(err))
+        query('ROLLBACK', () => finish(err))
       }
       else {
-        finish(null, results)
+        finish(null, results.command)
       }
     })
   }, done)

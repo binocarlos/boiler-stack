@@ -1,25 +1,26 @@
 "use strict";
+
+// imports
 const Logger = require('./logger')
 const logger = Logger('core')
 
+const tools = require('./tools')
 const settings = require('./settings')
 
 const Postgres = require('./database/postgres')
-const Query = require('./database/query')
 const Redis = require('./database/redis')
+const Connection = require('./database/connection')
 
 const Session = require('./webserver/session')
 const Passport = require('./webserver/passport')
 const App = require('./webserver/app')
 
-const Switchboard = require('./switchboard')
-const Workers = require('./workers')
-
+const EventBus = require('./eventBus')
+const Controllers = require('./controllers')
 const Routes = require('./routes')
-const Models = require('./models')
 
-const tools = require('./tools')
 
+// database setup
 const postgres = Postgres({
   user: settings.postgresuser,
   database: settings.postgresdatabase,
@@ -27,8 +28,6 @@ const postgres = Postgres({
   host: settings.postgreshost,
   port: settings.postgresport
 })
-
-const query = Query(postgres)
 
 const redis = Redis({
   host: settings.redishost,
@@ -41,22 +40,23 @@ const session = Session(redis, {
   secret: settings.cookiesecret
 })
 
-const models = Models(query)
-const workers = Workers(models)
+// tooling
+const eventBus = EventBus()
+const connection = Connection(postgres)
+const controllers = Controllers(connection, eventBus)
 
-Switchboard(models, workers)
-
-const passport = Passport(models.user)
-const routes = Routes(settings.base, models)
+const passport = Passport(controllers.user)
 const app = App({
   session,
   passport
 })
 
+// routes
+const routes = Routes(settings.base, controllers)
 routes(app)
-
 app.use(tools.errorHandler)
 
+// boot
 app.listen(settings.port, () => logger({
   action: 'booted'
 }))

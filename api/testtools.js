@@ -88,29 +88,27 @@ const Postgres = (opts) => {
     shims
     
   */
-  const client = {
-    query: (sql, params, done) => {
+  const query = (sql, params, done) => {
       
-      if(typeof(params) == 'function') {
-        done = params
-        params = []
-      }
-      if(typeof(sql) == 'object') {
-        params = sql.params
-        sql = sql.sql
-      }
-      const query = processQuery(sql, params)
-      const hash = queryHash(query)
-      const expected = state.queries.expected.db[hash]
-      const results = expected ?
-        expected.results :
-        []
-      addActualQuery(query, results)
-      // simulate async
-      setTimeout(() => done(null, {
-        rows: results
-      }), 10)
+    if(typeof(params) == 'function') {
+      done = params
+      params = []
     }
+    if(typeof(sql) == 'object') {
+      params = sql.params
+      sql = sql.sql
+    }
+    const query = processQuery(sql, params)
+    const hash = queryHash(query)
+    const expected = state.queries.expected.db[hash]
+    const results = expected ?
+      expected.results :
+      []
+    addActualQuery(query, results)
+    // simulate async
+    setTimeout(() => done(null, {
+      rows: results
+    }), 10)
   }
 
   const check = (t, msg) => {
@@ -119,7 +117,7 @@ const Postgres = (opts) => {
   }
 
   return {
-    connect: (cb) => cb(null, client, setFinished),
+    connect: (cb) => cb(null, {query}, setFinished),
     expect: addExpectedQuery,
     getState: () => state,
     check: check

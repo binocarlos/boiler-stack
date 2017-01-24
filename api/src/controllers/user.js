@@ -2,7 +2,10 @@
 
 const async = require('async')
 const tools = require('../tools')
+const Crud = require('../database/crud')
 const User = require('../models/user')
+
+const getCrud = (client) => Crud(client, 'useraccount')
 
 const UserController = (connection, eventBus, UserModel) => {
   UserModel = UserModel || User
@@ -12,6 +15,13 @@ const UserController = (connection, eventBus, UserModel) => {
     connection.query((client, finish) => {
       const handler = UserModel.login(client)
       handler(email, password, finish)
+    }, done)
+  }
+
+  const get = (id, done) => {
+    connection.query((client, finish) => {
+      const crud = getCrud(client)
+      crud.get({id}, finish)
     }, done)
   }
 

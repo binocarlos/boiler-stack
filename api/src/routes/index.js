@@ -7,7 +7,7 @@ const Version = require('./version')
 const Auth = require('./auth')
 const Installations = require('./installation')
 
-const Routes = (base, models) => (app) => {
+const Routes = (base, controllers) => (app) => {
   function bind(method) {
     const methodHandler = app[method]
     if(!methodHandler) throw new Error('unknown method: ' + method)
@@ -32,15 +32,20 @@ const Routes = (base, models) => (app) => {
   const del = bind('delete')
 
   const version = Version()
-  const auth = Auth(models.user)
-  const installations = Installations(models.installation)
+  const auth = Auth(controllers.user)
+  const installations = Installations(controllers.installation)
 
+  // utils
   get('/version', version)
+
+  // auth
   get('/status', auth.status)
   post('/login', auth.login)
   post('/register', auth.register)
   put('/update', protect, auth.update)
   get('/logout', auth.logout)
+
+  // installation
   get('/installations', protect, installations.list)
 }
 

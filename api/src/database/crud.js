@@ -10,13 +10,13 @@ const selectors = require('./selectors')
 
 // CRUD methods
 // all use either rows or single selectors
-const Crud = (client, table) => {
+const Crud = (table) => {
 
-  const select = (params, done) => client.query(sql.select(table, params), selectors.rows(done))
-  const get = (params, done) => client.query(sql.select(table, params), selectors.single(done))
-  const insert = (data, done) => client.query(sql.insert(table, data), selectors.single(done))
-  const update = (data, params, done) => client.query(sql.update(table, data, params), selectors.single(done))
-  const del = (params, done) => client.query(sql.delete(table, params), selectors.single(done))
+  const select = (query, params, done) => query(sql.select(table, params), selectors.rows(done))
+  const get = (query, params, done) => query(sql.select(table, params), selectors.single(done))
+  const insert = (query, data, done) => query(sql.insert(table, data), selectors.single(done))
+  const update = (query, data, params, done) => query(sql.update(table, data, params), selectors.single(done))
+  const del = (query, params, done) => query(sql.delete(table, params), selectors.single(done))
 
   return {
     select: select,
