@@ -3,7 +3,7 @@
 const pg = require('pg')
 const Logger = require('../logger')
 
-const logger = Logger('postgres')
+const logger = Logger('postgres:connection')
 
 function Postgres(settings) {
   const config = Object.assign({}, settings, {
@@ -40,6 +40,19 @@ function Postgres(settings) {
   })
 
   return pool
+
+  
+
+  return {
+    query: runQuery(pool.query.bind(pool)),
+    connect: (handler) => {
+      pool.connect((err, client, release) => {
+        if(err) return handler(err, null, release)
+        const query = runQuery(client.query.bind(client))
+        handler(null, query, release)
+      })
+    }
+  }
 }
 
 module.exports = Postgres

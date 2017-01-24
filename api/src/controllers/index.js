@@ -1,16 +1,11 @@
 "use strict";
 
-const Transaction = require('../database/transaction')
 const User = require('./user')
 const Installation = require('./installation')
 
-const Controllers = (connection, eventBus) => {
-  connection = {
-    query: connection,
-    transaction: Transaction(connection)
-  }
-  const user = User(connection, eventBus)
-  const installation = Installation(connection, eventBus)
+const Controllers = (client, eventBus) => {
+  const user = User(client, eventBus)
+  const installation = Installation(client, eventBus)
   return {
     user,
     installation

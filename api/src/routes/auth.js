@@ -18,7 +18,12 @@ function Auth(controller) {
     if(!email) return error(['no email given', 400, errorData])
     if(!password) return error(['no password given', 400, errorData])
     async.waterfall([
-      (next) => controller.login(email, password, next),
+      (next) => {
+        controller.login({ 
+          email,
+          password
+        }, next)
+      },
       (user, next) => req.login(user, (err) => next(err, user))
     ], (err, user) => {
       if(err) return error(err)
@@ -36,7 +41,14 @@ function Auth(controller) {
     if(!email) return error(['no email given', 400, errorData])
     if(!password) return error(['no password given', 400, errorData])
     async.waterfall([
-      (next) => controller.register({email, password}, next),
+      (next) => {
+        controller.register({
+          data: {
+            email,
+            password
+          }
+        }, next)
+      },
       (user, next) => req.login(user, (err) => next(err, user))
     ], (err, user) => {
       if(err) return error(err)
@@ -52,9 +64,12 @@ function Auth(controller) {
     const data = req.body
     const errorData = {updated: false}
     if(!data) return error(['no data given', 400, errorData])
-    async.waterfall([
-      (next) => controller.save(data, {id:req.user.id}, next)
-    ], (err, user) => {
+    controller.save({
+      data,
+      params: {
+        id: req.user.id
+      }
+    }, (err, user) => {
       if(err) return error(err)
       res.json({
         updated: true,

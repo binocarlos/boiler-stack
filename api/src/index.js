@@ -9,7 +9,7 @@ const settings = require('./settings')
 
 const Postgres = require('./database/postgres')
 const Redis = require('./database/redis')
-const Connection = require('./database/connection')
+const Client = require('./database/client')
 
 const Session = require('./webserver/session')
 const Passport = require('./webserver/passport')
@@ -42,8 +42,8 @@ const session = Session(redis, {
 
 // tooling
 const eventBus = EventBus()
-const connection = Connection(postgres)
-const controllers = Controllers(connection, eventBus)
+const client = Client(postgres)
+const controllers = Controllers(client, eventBus)
 
 const passport = Passport(controllers.user)
 const app = App({

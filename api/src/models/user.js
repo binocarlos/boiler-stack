@@ -25,6 +25,9 @@ const clean = (data) => {
 // 1. load user with email using crud.get
 // 2. encrypt plain text password using loaded salt
 // 3. compare both encrypted passwords
+// query:
+//  * email
+//  * password
 const login = (runQuery, query, done) => {
   const email = query.email
   const password = query.password
@@ -38,6 +41,9 @@ const login = (runQuery, query, done) => {
 // models.user.register - register user transaction
 // 1. check the primary key does not exist
 // 2. insert
+//
+// query:
+//  * data
 const register = (runQuery, query, done) => {
   const data = query.data
   const userData = tools.generateUser(data)
@@ -60,6 +66,9 @@ const register = (runQuery, query, done) => {
 
 // models.user.save - save command
 // 1. update 'data' as a JSON string based on params
+// query:
+//  * data
+//  * params
 const save = (runQuery, query, done) => {
   const data = query.data
   const params = query.params

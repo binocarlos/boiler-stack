@@ -7,49 +7,47 @@ const User = require('../models/user')
 
 const crud = Crud('useraccount')
 
-const UserController = (connection, eventBus, UserModel) => {
+const UserController = (client, eventBus, UserModel) => {
   UserModel = UserModel || User
 
   // queries
-  const login = (email, password, done) => {
-    connection.query((query, finish) => {
-      const handler = UserModel.login(query)
-      handler(email, password, finish)
-    }, done)
-  }
-
-  const get = (params, done) => {
-    connection.query((query, finish) => {
-      crud.get(query, params, (err, data) => {
-        if(err) return done(err)
-        done(null, User.clean(data))
-      })
-    }, done)
+  // query:
+  //  * email
+  //  * password
+  const login = (query, done) => UserModel.login(client.query, query, done)
+  
+  // query {}
+  const get = (query, done) => {
+    crud.get(client.query, query, (err, data) => {
+      if(err) return done(err)
+      done(null, User.clean(data))
+    })
   }
 
   // commands
-  const register = (data, done) => {
-    connection.transaction((query, finish) => {
-      const handler = UserModel.register(query)
-      handler(data, finish)
-    }, (err, result) => {
+  // query:
+  //  * data
+  const register = (query, done) => {
+    UserModel.register(client.query, query, (err, result) => {
       if(err) return done(err)
       eventBus.emit('user.register', {
-        query: { data },
+        query,
         result
       })
       done(null, result)
     })
   }
 
-  const save = (data, params, done) => {
-    connection.transaction((query, finish) => {
-      const handler = UserModel.save(query)
-      handler(data, params, finish)
+  // query:
+  //  * data
+  //  * params
+  const save = (query, done) => {
+    client.transaction((runQuery, finish) => {
+      UserModel.save(runQuery, query, finish)
     }, (err, result) => {
       if(err) return done(err)
       eventBus.emit('user.save', {
-        query: { data, params },
+        query,
         result
       })
       done(null, result)

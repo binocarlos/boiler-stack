@@ -1,6 +1,5 @@
 "use strict";
 const async = require('async')
-const Transaction = require('../database/transaction')
 const Crud = require('../database/crud')
 const SQL = require('../database/sql')
 const selectors = require('../database/selectors')
@@ -40,11 +39,13 @@ order by
   }
 }
 
-const byUser = (runQuery, query, done) => runQuery(QUERIES.byUser(query.userid), selectors.rows(done))
+const byUser = (runQuery, userid, done) => runQuery(QUERIES.byUser(userid), selectors.rows(done))
 
 // models.installation.create - create an installation for a user a an owner
 // 1. insert the installation
 // 2. insert the collaboration
+// query:
+//  * data
 const create = (runQuery, query, done) => {
   const userid = query.userid
   const data = query.data
