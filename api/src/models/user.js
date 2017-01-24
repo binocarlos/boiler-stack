@@ -10,7 +10,7 @@ const getCrud = (client) => Crud(client, 'useraccount')
 // 1. load user with email using crud.get
 // 2. encrypt plain text password using loaded salt
 // 3. compare both encrypted passwords
-const login = (client, eventBus) => (email, password, done) => {
+const login = (client) => (email, password, done) => {
   const crud = getCrud(client)
   crud.get({ email }, (err, result) => {
     if(err) return done(err)
@@ -22,7 +22,7 @@ const login = (client, eventBus) => (email, password, done) => {
 // models.user.register - register user transaction
 // 1. check the primary key does not exist
 // 2. insert
-const register = (client, eventBus) => (data, done) => {
+const register = (client) => (data, done) => {
   const userData = tools.generateUser(data)
   let newUser = null
   const crud = getCrud(client)
@@ -44,17 +44,10 @@ const register = (client, eventBus) => (data, done) => {
 
 // models.user.save - save command
 // 1. update 'data' as a JSON string based on params
-const save = (client, eventBus) => (data, params, done) => {
+const save = (client) => (data, params, done) => {
   const userData = {data: JSON.stringify(data)}
   const crud = getCrud(client)
-  crud.update(userData, params, (err, result) => {
-    if(err) return done(err)
-    eventBus.emit('models.user.save', {
-      query: { data, params },
-      result
-    })
-    done(null, result)
-  })
+  crud.update(userData, params, done)
 }
 
 module.exports = {

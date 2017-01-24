@@ -26,7 +26,7 @@ const login = (password, done) => {
   const postgres = tools.postgres()
   postgres.expect(EMAIL_QUERY, [userData])
   runTest(postgres, (client, finish) => {
-    const login = User.login(client, tools.eventBus())
+    const login = User.login(client)
     login(USER_ACCOUNT.email, password, finish)
   }, done)
 }
@@ -51,7 +51,6 @@ tape('models.user - register', (t) => {
   const postgres = tools.postgres({
     noParams: true
   })
-  const eventBus = tools.eventBus()
   const userData = apptools.generateUser(USER_ACCOUNT)
 
   postgres.expect(EMAIL_QUERY, [])
@@ -60,22 +59,12 @@ tape('models.user - register', (t) => {
   }, [userData])
 
   runTest(postgres, (client, finish) => {
-    const register = User.register(client, eventBus)
+    const register = User.register(client)
     register(USER_ACCOUNT, (err, result) => {
       if(err) t.error(err)
       t.deepEqual(userData, result, 'user objects are equal')
       postgres.check(t, 'register query logs are equal')
-      t.deepEqual(eventBus.getState(), {
-        events: [{
-          channel: 'models.user.register',
-          message: {
-            query: {
-              data: USER_ACCOUNT
-            },
-            result: userData
-          }
-        }]
-      }, 'the models.user.register event was emitted')
+      
       finish()
     })
   }, () => {
@@ -91,7 +80,6 @@ tape('models.user - save', (t) => {
     data: DATA
   }
   const postgres = tools.postgres()
-  const eventBus = tools.eventBus()
   
   postgres.expect({
     sql: 'update useraccount set data = $1 where id = $2 returning *',
@@ -102,23 +90,11 @@ tape('models.user - save', (t) => {
   }])
 
   runTest(postgres, (client, finish) => {
-    const save = User.save(client, eventBus)
+    const save = User.save(client)
     save(DATA, PARAMS, (err, result) => {
       if(err) t.error(err)
       t.deepEqual(result, RESULT)
       postgres.check(t, 'save query logs are equal')
-      t.deepEqual(eventBus.getState(), {
-        events: [{
-          channel: 'models.user.save',
-          message: {
-            query: {
-              data: DATA,
-              params: PARAMS
-            },
-            result: RESULT
-          }
-        }]
-      }, 'the models.user.save event was emitted')
       finish()
     })
   }, () => {

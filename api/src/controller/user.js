@@ -6,18 +6,18 @@ const User = require('../models/user')
 
 const UserController = (connection, eventBus, UserModel) => {
   UserModel = UserModel || User
+
+  // queries
   const login = (email, password, done) => {
-    connection((client, finish) => {
+    connection.query((client, finish) => {
       const handler = UserModel.login(client)
       handler(email, password, finish)
-    }, (err, result) => {
-      if(err) return done(err)
-      done(null, result)
-    })
+    }, done)
   }
 
+  // commands
   const register = (data, done) => {
-    connection((client, finish) => {
+    connection.transaction((client, finish) => {
       const handler = UserModel.register(client)
       handler(data, finish)
     }, (err, result) => {
@@ -31,11 +31,15 @@ const UserController = (connection, eventBus, UserModel) => {
   }
 
   const save = (data, params, done) => {
-    connection((client, finish) => {
+    connection.transaction((client, finish) => {
       const handler = UserModel.save(client)
-      handler(data, finish)
+      handler(data, params, finish)
     }, (err, result) => {
       if(err) return done(err)
+      eventBus.emit('user.save', {
+        query: { data, params },
+        result
+      })
       done(null, result)
     })
   }
