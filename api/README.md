@@ -30,3 +30,51 @@ You can combine multiple model functions into one transaction using a controller
 ## eventBus
 
 The event bus is used for commands not queries - the queries can be logged to stdout and consumed by our logging infrastructure.
+
+It is a job-queue not pub/sub (i.e. at most once)
+
+## workers
+
+long running processes that are pulling from the event bus)
+
+
+
+```
+
+
+      HTTP
+       |
+       |
+     ROUTES
+       |
+       |
+       |
+   CONTROLLER <-------\
+       |                WORKER
+       |                  |
+       |      ------>  EVENTBUS
+     MODEL   /    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```
+

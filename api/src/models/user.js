@@ -38,10 +38,6 @@ const register = (client, eventBus) => (data, done) => {
     }
   ], (err) => {
     if(err) return done(err)
-    eventBus.emit('models.user.register', {
-      query: { data },
-      result: newUser
-    })
     done(null, newUser)
   })
 }
