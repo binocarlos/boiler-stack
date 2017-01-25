@@ -18,7 +18,7 @@ function Postgres(settings) {
 
   pool.on('acquire', client => {
     acquireCount++
-    logger.info({
+    logger.trace({
       msg: 'acquire',
       count: acquireCount
     })
@@ -26,7 +26,7 @@ function Postgres(settings) {
 
   pool.on('connect', client => {
     connectCount++
-    logger.info({
+    logger.trace({
       msg: 'connect',
       count: connectCount
     })

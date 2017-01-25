@@ -21,6 +21,7 @@ const DefaultInstallation = (controllers) => (tracerid, job) => {
     else {
       logger.info({
         msg: 'complete',
+        req: { id: tracerid },
         job,
         query,
         data

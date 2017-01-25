@@ -18,6 +18,7 @@ function Switchboard(eventBus, controllers, workers) {
     // we don't want every event spamming prod?
     logger.debug({
       msg: 'event',
+      req: { id },
       channel,
       id,
       message

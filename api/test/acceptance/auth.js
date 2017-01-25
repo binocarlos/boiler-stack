@@ -3,6 +3,13 @@ const tape = require('tape')
 const async = require('async')
 const tools = require('./tools')
 
+const TRACER_ID = '1234'
+
+const headers = () => {
+  return {
+    'x-tracer-id': TRACER_ID
+  }
+}
 tape('acceptance - register', (t) => {
   const userData = tools.UserData()
 
@@ -12,6 +19,7 @@ tape('acceptance - register', (t) => {
       tools.request({
         method: 'POST',
         url: tools.url('/api/v1/register'),
+        headers: headers(),
         json: userData
       }, tools.wrapResult(next))
     },
@@ -20,6 +28,7 @@ tape('acceptance - register', (t) => {
       tools.request({
         method: 'GET',
         url: tools.url('/api/v1/status'),
+        headers: headers(),
         json: true
       }, tools.wrapResult(next))
     }
@@ -73,6 +82,7 @@ tape('acceptance - status', (t) => {
       tools.request({
         method: 'POST',
         url: tools.url('/api/v1/register'),
+        headers: headers(),
         json: userData
       }, tools.wrapResult(next))
     },
@@ -81,6 +91,7 @@ tape('acceptance - status', (t) => {
       tools.request({
         method: 'GET',
         url: tools.url('/api/v1/status'),
+        headers: headers(),
         json: true
       }, tools.wrapResult(next))
     },
@@ -89,6 +100,7 @@ tape('acceptance - status', (t) => {
       tools.request({
         method: 'GET',
         url: tools.url('/api/v1/logout'),
+        headers: headers(),
         followAllRedirects: true
       }, tools.wrapResult(next))
     },
@@ -97,6 +109,7 @@ tape('acceptance - status', (t) => {
       tools.request({
         method: 'GET',
         url: tools.url('/api/v1/status'),
+        headers: headers(),
         json: true
       }, tools.wrapResult(next))
     },
@@ -105,6 +118,7 @@ tape('acceptance - status', (t) => {
       tools.request({
         method: 'POST',
         url: tools.url('/api/v1/login'),
+        headers: headers(),
         json: userData
       }, tools.wrapResult(next))
     },
@@ -113,6 +127,7 @@ tape('acceptance - status', (t) => {
       tools.request({
         method: 'GET',
         url: tools.url('/api/v1/status'),
+        headers: headers(),
         json: true
       }, tools.wrapResult(next))
     }
@@ -166,6 +181,7 @@ tape('acceptance - installations', (t) => {
       tools.request({
         method: 'POST',
         url: tools.url('/api/v1/register'),
+        headers: headers(),
         json: userData
       }, tools.wrapResult(next))
     },
@@ -174,6 +190,7 @@ tape('acceptance - installations', (t) => {
       tools.request({
         method: 'GET',
         url: tools.url('/api/v1/installations'),
+        headers: headers(),
         json: true
       }, tools.wrapResult(next))
     }

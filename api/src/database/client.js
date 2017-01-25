@@ -53,14 +53,21 @@ const Client = (postgres) => {
   // run queries on the pool directly
   const query = QueryFactory(postgresQuery)
 
+  const tracer = (id, runQuery) => (q, done) => {
+    runQuery = runQuery || query
+    q = processQuery(q)
+    q.id = id
+    runQuery(q, done)
+  }
+
   // run a transaction with a query object
-  const transaction = (handler, done) => {
+  const transaction = (tracerid, handler, done) => {
     postgres.connect((err, client, release) => {
       if(err) {
         release()
         return done(err)
       }
-      const runQuery = QueryFactory(client.query.bind(client))
+      const runQuery = tracer(tracerid, QueryFactory(client.query.bind(client)))
       async.series({
         begin:   (next) => runQuery('BEGIN', next),
         command: (next) => handler(runQuery, next),
@@ -82,12 +89,7 @@ const Client = (postgres) => {
 
   return {
     query,
-    tracer: (id, runQuery) => (q, done) => {
-      runQuery = runQuery || query
-      q = processQuery(q)
-      q.id = id
-      runQuery(q, done)
-    },
+    tracer,
     transaction
   }
 }

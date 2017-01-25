@@ -17,6 +17,7 @@ const CommandLog = (controllers) => (tracerid, job) => {
     else {
       logger.info({
         msg: 'complete',
+        req: { id: tracerid },
         job,
         data
       })
