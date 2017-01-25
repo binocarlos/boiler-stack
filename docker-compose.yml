@@ -14,11 +14,6 @@ services:
       - POSTGRES_USER=boiler
       - POSTGRES_PASSWORD=boiler
       - POSTGRES_DB=boiler
-  digger:
-    image: binocarlos/digger-rest
-    container_name: boiler_digger
-    volumes:
-      - ./.data/digger:/data/db
   router:
     image: binocarlos/noxy
     container_name: boiler_router
@@ -39,14 +34,17 @@ services:
       context: ./api
     container_name: boiler_api
     links:
-      - digger:digger
       - postgres:postgres
       - redis:redis
+    logging: 
+      driver: gelf
+      options: 
+        gelf-address: "udp://172.21.0.4:12201"
     volumes:
       - ./api/src:/app/src
-    entrypoint:
-      - "sleep"
-      - "10000000"
+    #entrypoint:
+    #  - "sleep"
+    #  - "10000000"
     environment:
       NODE_ENV: development
       LOGLEVEL: trace

@@ -17,6 +17,10 @@ compose.rebuild:
 compose.up.dev:
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
 
+.PHONY: compose.up.elk
+compose.up.elk:
+	docker-compose -f docker-compose.elk.yml up
+
 .PHONY: compose.up.prod
 compose.up.prod:
 	docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
