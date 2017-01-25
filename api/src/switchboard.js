@@ -13,14 +13,11 @@ function Switchboard(eventBus, controllers, workers) {
   }
   
   // main event control loop
-  eventBus.listen((channel, id, message) => {
+  eventBus.listen((channel, tracerid, message) => {
 
     // we don't want every event spamming prod?
-    logger.debug({
-      msg: 'event',
-      req: { id },
+    logger.debug('event', tracerid, {
       channel,
-      id,
       message
     })
 

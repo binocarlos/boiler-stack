@@ -19,16 +19,13 @@ const QueryFactory = (runner) => (q, done) => {
   q = processQuery(q)
   runner(q.sql, q.params, (err, results) => {
     if(err) {
-      logger.error({
-        msg: err,
-        req: {id:q.id},
+      logger.error('query', q.id, {
+        error: err.toString(),
         query: q
       })
     }
     else {
-      logger.debug({
-        msg: 'query',
-        req: {id:q.id},
+      logger.debug('query', q.id, {
         query: q,
         results: (results || {}).rows
       })

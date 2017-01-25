@@ -14,8 +14,7 @@ const Routes = (base, controllers) => (app) => {
     function handler() {
       var args = Array.prototype.slice.call(arguments)
       const path = args[0] = base + args[0]
-      logger.debug({
-        'action': 'mount',
+      logger.debug('mount', 'system', {
         'route': method + ' ' + path
       })
       methodHandler.apply(app, args)

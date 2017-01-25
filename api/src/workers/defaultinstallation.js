@@ -13,15 +13,16 @@ const DefaultInstallation = (controllers) => (tracerid, job) => {
     userid: job.result.id
   }
   controllers.installation.create(tracerid, query, (err, data) => {
+
     if(err) {
-      logger.error(err, {
+      logger.error('job', tracerid, {
+        error: err.toString(),
+        query,
         job
       })
     }
     else {
-      logger.info({
-        msg: 'complete',
-        req: { id: tracerid },
+      logger.info('job', tracerid, {
         job,
         query,
         data

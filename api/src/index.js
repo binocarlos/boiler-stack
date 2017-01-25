@@ -65,5 +65,5 @@ app.use(tools.errorHandler)
 // boot
 const logger = Logger('core')
 app.listen(settings.port, () => {
-  logger.info('webserver.booted')
+  logger.info('booted:webserver', 'system')
 })

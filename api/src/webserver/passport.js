@@ -5,10 +5,7 @@ const logger = Logger('passport')
 function Passport(userController) {
 
   passport.serializeUser((req, user, done) => {
-    logger.trace({
-      msg: 'serializeUser',
-      id: user.id,
-      req: { id: req.id },
+    logger.trace('serializeUser', req.id, {
       user
     })
     done(null, user.id)
@@ -17,11 +14,15 @@ function Passport(userController) {
     userController.get(req.id, {
       id
     }, (err, user) => {
-      if(err) return done(err)
-      logger.trace({
-        msg: 'deserializeUser',
-        id,
-        req: { id: req.id },
+      if(err){
+        logger.error('deserializeUser', req.id, {
+          id: id,
+          error: err.toString()
+        })
+        return done(err)
+      }
+      logger.trace('deserializeUser', req.id, {
+        id: id,
         user
       })
       done(null, user)

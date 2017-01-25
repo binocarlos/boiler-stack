@@ -1,5 +1,15 @@
 "use strict";
 const crypto = require('crypto')
+const hat = require('hat')
+const TRACER_KEY = 'x-tracer-id'
+
+const getRequestTracerId = (req) => req.headers[TRACER_KEY]
+const setRequestTracerId = (req) => req.headers[TRACER_KEY] = hat()
+const ensureRequestTracerId = (req) => {
+  getRequestTracerId(req) ?
+    getRequestTracerId(req) :
+    setRequestTracerId(req)
+}
 
 function makeSalt() {
   return Math.round((new Date().valueOf() * Math.random())) + '';
@@ -67,7 +77,11 @@ function errorHandler(err, req, res, next) {
     .json(errorData)
 }
 
+
 module.exports = {
+  getRequestTracerId,
+  setRequestTracerId,
+  ensureRequestTracerId,
   makeSalt,
   encryptPassword,
   checkUserPassword,

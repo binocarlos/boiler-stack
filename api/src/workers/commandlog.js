@@ -10,14 +10,13 @@ const CommandLog = (controllers) => (tracerid, job) => {
     data: job
   }, (err, data) => {
     if(err) {
-      logger.error(err, {
+      logger.error('job', tracerid, {
+        error: err.toString(),
         job
       })
     }
     else {
-      logger.info({
-        msg: 'complete',
-        req: { id: tracerid },
+      logger.info('job', tracerid, {
         job,
         data
       })

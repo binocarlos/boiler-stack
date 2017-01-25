@@ -1,8 +1,18 @@
 "use strict";
-const pino = require('pino')
-const hat = require('hat')
-const TRACER_KEY = 'x-tracer-id'
 
+// numeric levels
+const LEVELS = {
+  fatal: 60,
+  error: 50,
+  warn: 40,
+  info: 30,
+  debug: 20,
+  trace: 10
+}
+
+LEVELS.silent = LEVELS.fatal + 1
+
+// what logging level our env means
 const ENV_LOGLEVELS = {
   production: 'info',
   test: 'silent',
@@ -13,20 +23,35 @@ const NODE_ENV = process.env.NODE_ENV || 'production'
 const ENV_LOGLEVEL = ENV_LOGLEVELS[NODE_ENV]
 const LOGLEVEL = process.env.LOGLEVEL || ENV_LOGLEVELS[process.env.NODE_ENV] || ENV_LOGLEVELS.production
 
-const mainLogger = pino({
-  level: LOGLEVEL
-})
+const dumbLogger = (action, id, message) => {}
 
-const Logger = (data) => {
-  data = typeof(data) == 'string' ?
-    {name:data} :
-    data
-  return mainLogger.child(data)
+const Logger = (name, opts) => {
+  opts = opts || {}
+  const sink = opts.sink || console.log
+  const useLevel = opts.level ?
+    LEVELS[opts.level] :
+    LEVELS[LOGLEVEL]
+  const logger = Object.keys(LEVELS)
+    .reduce((all, level) => {
+      const numericLevel = LEVELS[level]
+      const realLogger = (action, id, message) => {
+        sink(JSON.stringify({
+          level: numericLevel,
+          name,
+          action,
+          id,
+          message
+        }))
+      }
+      const loggingFn = numericLevel >= useLevel ?
+        realLogger :
+        dumbLogger
+      return Object.assign({}, all, {
+        [level]: loggingFn
+      })
+    }, {})
+
+  return logger
 }
-
-// get/set the tracer if on a request
-const tracerid = (req) => req.headers[TRACER_KEY] = req.headers[TRACER_KEY] || hat()
-
-Logger.tracer = tracerid
 
 module.exports = Logger
