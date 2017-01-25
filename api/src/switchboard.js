@@ -25,7 +25,7 @@ function Switchboard(eventBus, controllers, workers) {
     if(channel == 'command') {
 
       // record the command
-      workers.commandLog(id, message)
+      workers.commandLog(tracerid, message)
 
       // trigger the workers from the COMMANDS mapo
       let commandWorkers = COMMANDS[message.name]
@@ -33,7 +33,7 @@ function Switchboard(eventBus, controllers, workers) {
         if(typeof(commandWorkers) == 'function') {
           commandWorkers = [commandWorkers]
         }
-        commandWorkers.forEach(commandWorker => commandWorker(id, message))
+        commandWorkers.forEach(commandWorker => commandWorker(tracerid, message))
       }
     }
   })

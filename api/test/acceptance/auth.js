@@ -186,6 +186,8 @@ tape('acceptance - installations', (t) => {
       }, tools.wrapResult(next))
     },
 
+    pause: (next) => setTimeout(next, 100),
+
     installations: (next) => {
       tools.request({
         method: 'GET',
