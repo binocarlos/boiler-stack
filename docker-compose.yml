@@ -50,16 +50,15 @@ services:
     build:
       context: ./api
     # will reload the app on file change
-    command: app:dev
     container_name: boiler_api
     links:
       - postgres:postgres
       - redis:redis
     volumes:
       - ./api/src:/app/src
-    #entrypoint:
-    #  - "sleep"
-    #  - "10000000"
+    entrypoint:
+      - "sleep"
+      - "10000000"
     environment:
       NODE_ENV: development
       LOGLEVEL: trace

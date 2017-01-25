@@ -76,6 +76,8 @@ const save = (runQuery, query, done) => {
   crud.update(runQuery, userData, params, done)
 }
 
+// update user data (merge - this is NOT atomic)
+const inject = 
 module.exports = {
   login,
   register,

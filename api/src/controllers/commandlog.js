@@ -11,6 +11,7 @@ const crud = Crud('commandlog')
 
 const CommandLogController = (client, eventBus) => {
 
+
   // commands
   // query:
   //  * data

@@ -31,8 +31,8 @@ const Routes = (base, controllers) => (app) => {
   const del = bind('delete')
 
   const version = Version()
-  const auth = Auth(controllers.user)
-  const installations = Installations(controllers.installation)
+  const auth = Auth(controllers)
+  const installations = Installations(controllers)
 
   // utils
   get('/version', version)

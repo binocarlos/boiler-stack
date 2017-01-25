@@ -12,8 +12,8 @@ const DefaultInstallation = (controllers) => (tracerid, job) => {
     },
     userid: job.result.id
   }
-  controllers.installation.create(tracerid, query, (err, data) => {
 
+  controllers.installation.createActive(tracerid, query, (err, data) => {
     if(err) {
       logger.error('job', tracerid, {
         error: err.toString(),
@@ -28,7 +28,7 @@ const DefaultInstallation = (controllers) => (tracerid, job) => {
         data
       })
     }
-  })
+  })  
 }
 
 module.exports = DefaultInstallation

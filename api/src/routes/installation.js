@@ -2,10 +2,12 @@
 const urlparse = require('url').parse
 const async = require('async')
 
-function Installations(controller) {
+function Installations(controllers) {
+
+  const installations = controllers.installation
 
   const list = (req, res, error) => {
-    controller.list(req.id, {
+    installations.list(req.id, {
       userid: req.user.id
     }, (err, items) => {
       if(err) return error(err)

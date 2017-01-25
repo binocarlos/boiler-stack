@@ -195,6 +195,15 @@ tape('acceptance - installations', (t) => {
         headers: headers(),
         json: true
       }, tools.wrapResult(next))
+    },
+
+    status: (next) => {
+      tools.request({
+        method: 'GET',
+        url: tools.url('/api/v1/status'),
+        headers: headers(),
+        json: true
+      }, tools.wrapResult(next))
     }
 
   }, (err, results) => {
@@ -203,9 +212,12 @@ tape('acceptance - installations', (t) => {
 
     const register = results.register
     const installations = results.installations
+    const status = results.status
 
     t.equal(installations.body.length, 1, '1 installation')
     t.equal(installations.body[0].name, 'default', 'default installation')
+
+    t.equal(status.body.data.data.activeInstallation, installations.body[0].id, 'the user the active installation')
 
     t.end()
   })
