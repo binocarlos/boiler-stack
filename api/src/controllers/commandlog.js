@@ -10,9 +10,9 @@ const CommandLogController = (client, eventBus) => {
   // commands
   // query:
   //  * data
-  const create = (data, done) => {
-    crud.insert(client.query, {
-      data: JSON.stringify(data)
+  const create = (tracerid, query, done) => {
+    crud.insert(client.tracer(query.tracerid), {
+      data: JSON.stringify(query.data)
     }, done)
   }
 

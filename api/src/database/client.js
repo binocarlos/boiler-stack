@@ -4,25 +4,31 @@ const Logger = require('../logger')
 const logger = Logger('postgres:client')
 const async = require('async')
 
-// wrap the pg.query with a single object with {sql,params}
-const QueryFactory = (runner) => (q, done) => {
+const processQuery = (q) => {
   if(typeof(q) == 'string') {
     q = {
       sql: q,
       params: []
     }
   }
+  return q
+}
+
+// wrap the pg.query with a single object with {sql,params}
+const QueryFactory = (runner) => (q, done) => {
+  q = processQuery(q)
   runner(q.sql, q.params, (err, results) => {
     if(err) {
       logger.error({
-        type: 'query',
-        query: q,
-        error: err
+        msg: err,
+        req: {id:q.id},
+        query: q
       })
     }
     else {
-      logger({
-        type: 'query',
+      logger.debug({
+        msg: 'query',
+        req: {id:q.id},
         query: q,
         results: (results || {}).rows
       })
@@ -33,7 +39,6 @@ const QueryFactory = (runner) => (q, done) => {
 
 // returns an api with:
 //  * query({sql,params}, done)        - one off query, client returned automatically    
-//  * connection(handler, done)        - all queries via same client - manual return
 //  * transaction(handler, done)       - connection wrapped in BEGIN/COMMIT/ROLLBACK
 // 
 // handler(query, done)                - query is same ({sql,params},done)
@@ -77,6 +82,12 @@ const Client = (postgres) => {
 
   return {
     query,
+    tracer: (id, runQuery) => (q, done) => {
+      runQuery = runQuery || query
+      q = processQuery(q)
+      q.id = id
+      runQuery(q, done)
+    },
     transaction
   }
 }

@@ -18,23 +18,23 @@ function Postgres(settings) {
 
   pool.on('acquire', client => {
     acquireCount++
-    logger({
-      action: 'acquire',
+    logger.info({
+      msg: 'acquire',
       count: acquireCount
     })
   })
 
   pool.on('connect', client => {
     connectCount++
-    logger({
-      action: 'connect',
+    logger.info({
+      msg: 'connect',
       count: connectCount
     })
   })
 
   pool.on('error', function (error, client) {
     logger.error({
-      message: error.message,
+      msg: error.message,
       stack: error.stack
     })
   })

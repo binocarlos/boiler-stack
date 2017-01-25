@@ -4,7 +4,7 @@
 function EventBus() {
   const listeners = []
   const bus = {
-    emit: (channel, message) => listeners.forEach(handler => handler(channel, message)),
+    emit: (channel, id, message) => listeners.forEach(handler => handler(channel, id, message)),
     listen: (handler) => listeners.push(handler)
   }
   return bus

@@ -1,28 +1,32 @@
 "use strict";
 const pino = require('pino')
+const hat = require('hat')
+const TRACER_KEY = 'x-tracer-id'
 
-const SILENT_ENVS = {
-  production: true,
-  test: true
+const ENV_LOGLEVELS = {
+  production: 'info',
+  test: 'silent',
+  development: 'trace'
 }
 
-const shouldLog = () => SILENT_ENVS[process.env.NODE_ENV] ? false : true
+const NODE_ENV = process.env.NODE_ENV || 'production'
+const ENV_LOGLEVEL = ENV_LOGLEVELS[NODE_ENV]
+const LOGLEVEL = process.env.LOGLEVEL || ENV_LOGLEVELS[process.env.NODE_ENV] || ENV_LOGLEVELS.production
 
-const Logger = (name) => {
-  const logger = pino()
-  const log = (data) => {
-    if(!shouldLog()) return
-    logger.info(Object.assign({}, data, {
-      name: name
-    }))
-  }
+const mainLogger = pino({
+  level: LOGLEVEL
+})
 
-  log.error = (err) => {
-    if(!shouldLog()) return
-    logger.error(err)    
-  }
-  
-  return log
+const Logger = (data) => {
+  data = typeof(data) == 'string' ?
+    {name:data} :
+    data
+  return mainLogger.child(data)
 }
+
+// get/set the tracer if on a request
+const tracerid = (req) => req.headers[TRACER_KEY] = req.headers[TRACER_KEY] || hat()
+
+Logger.tracer = tracerid
 
 module.exports = Logger

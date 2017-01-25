@@ -2,7 +2,6 @@
 
 // imports
 const Logger = require('./logger')
-const logger = Logger('core')
 
 const tools = require('./tools')
 const settings = require('./settings')
@@ -64,6 +63,7 @@ routes(app)
 app.use(tools.errorHandler)
 
 // boot
-app.listen(settings.port, () => logger({
-  action: 'booted'
-}))
+const logger = Logger('core')
+app.listen(settings.port, () => {
+  logger.info('webserver.booted')
+})

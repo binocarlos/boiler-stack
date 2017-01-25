@@ -5,7 +5,9 @@ const async = require('async')
 function Installations(controller) {
 
   const list = (req, res, error) => {
-    controller.list(req.user.id, (err, items) => {
+    controller.list(req.id, {
+      userid: req.user.id
+    }, (err, items) => {
       if(err) return error(err)
       res.json(items)
     })

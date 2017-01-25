@@ -41,7 +41,7 @@ order by
   }
 }
 
-const byUser = (runQuery, userid, done) => runQuery(QUERIES.byUser(userid), selectors.rows(done))
+const byUser = (runQuery, query, done) => runQuery(QUERIES.byUser(query.userid), selectors.rows(done))
 
 // models.installation.create - create an installation for a user a an owner
 // 1. insert the installation

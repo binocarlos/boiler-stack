@@ -4,26 +4,25 @@
 const Logger = require('../logger')
 const logger = Logger('worker:defaultinstallation')
 
-const DefaultInstallation = (controllers) => (message) => {
+const DefaultInstallation = (controllers) => (tracerid, job) => {
   const query = {
     data: {
       name: 'default',
       data: '{}'
     },
-    userid: message.result.id
+    userid: job.result.id
   }
-  controllers.installation.create(query, (err, data) => {
+  controllers.installation.create(tracerid, query, (err, data) => {
     if(err) {
-      logger.error({
-        error: err,
-        message: message
+      logger.error(err, {
+        job
       })
     }
     else {
-      logger({
-        action: 'complete',
+      logger.info({
+        msg: 'complete',
+        job,
         query,
-        message,
         data
       })
     }

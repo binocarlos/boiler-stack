@@ -19,7 +19,7 @@ function Auth(controller) {
     if(!password) return error(['no password given', 400, errorData])
     async.waterfall([
       (next) => {
-        controller.login({
+        controller.login(req.id, {
           email,
           password
         }, next)
@@ -42,7 +42,7 @@ function Auth(controller) {
     if(!password) return error(['no password given', 400, errorData])
     async.waterfall([
       (next) => {
-        controller.register({
+        controller.register(req.id, {
           data: {
             email,
             password
@@ -64,7 +64,7 @@ function Auth(controller) {
     const data = req.body
     const errorData = {updated: false}
     if(!data) return error(['no data given', 400, errorData])
-    controller.save({
+    controller.save(req.id, {
       data,
       params: {
         id: req.user.id

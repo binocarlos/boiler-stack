@@ -2,7 +2,9 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
+
 const pino = require('express-pino-logger')
+const Logger = require('../logger')
 
 function App(settings) {
   const session = settings.session
@@ -10,7 +12,9 @@ function App(settings) {
 
   const app = express()
 
-  app.use(pino())
+  app.use(pino({
+    genReqId: (req) => Logger.tracer(req)
+  }))
   app.use(bodyParser.urlencoded({
     extended: true
   }))

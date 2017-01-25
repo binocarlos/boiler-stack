@@ -48,6 +48,8 @@ services:
       - "sleep"
       - "10000000"
     environment:
+      NODE_ENV: development
+      LOGLEVEL: trace
       DIGGER_SERVICE_HOST: digger
       DIGGER_SERVICE_PORT: 80
       REDIS_SERVICE_HOST: redis

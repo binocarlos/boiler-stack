@@ -12,11 +12,11 @@ const UserController = (client, eventBus) => {
   // query:
   //  * email
   //  * password
-  const login = (query, done) => UserModel.login(client.query, query, done)
+  const login = (tracerid, query, done) => UserModel.login(client.tracer(query.tracerid), query, done)
   
   // query {}
-  const get = (query, done) => {
-    crud.get(client.query, query, (err, data) => {
+  const get = (tracerid, query, done) => {
+    crud.get(client.tracer(query.tracerid), query, (err, data) => {
       if(err) return done(err)
       done(null, UserModel.clean(data))
     })
@@ -25,10 +25,10 @@ const UserController = (client, eventBus) => {
   // commands
   // query:
   //  * data
-  const register = (query, done) => {
-    UserModel.register(client.query, query, (err, result) => {
+  const register = (tracerid, query, done) => {
+    UserModel.register(client.tracer(query.tracerid), query, (err, result) => {
       if(err) return done(err)
-      eventBus.emit('command', {
+      eventBus.emit('command', query.tracerid, {
         name: 'user.register',
         query,
         result
@@ -40,10 +40,10 @@ const UserController = (client, eventBus) => {
   // query:
   //  * data
   //  * params
-  const save = (query, done) => {
-    UserModel.save(client.query, query, (err, result) => {
+  const save = (tracerid, query, done) => {
+    UserModel.save(client.tracer(query.tracerid), query, (err, result) => {
       if(err) return done(err)
-      eventBus.emit('command', {
+      eventBus.emit('command', query.tracerid, {
         name: 'user.save',
         query,
         result
