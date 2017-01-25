@@ -35,7 +35,7 @@ const Middleware = (opts) => {
       this.removeListener('error', onResFinished)
 
       const responseTime = Date.now() - this.startTime
-      const resJSON = serializeReq(res, responseTime)
+      const resJSON = serializeRes(res, responseTime)
 
       if (err) {
         log.error('request', id, {

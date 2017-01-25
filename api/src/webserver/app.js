@@ -13,10 +13,10 @@ function App(settings) {
   const passport = settings.passport
 
   const app = express()
-/*
+
   app.use(LogMiddleware({
     logger
-  }))*/
+  }))
   app.use(bodyParser.urlencoded({
     extended: true
   }))

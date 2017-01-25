@@ -3,12 +3,13 @@ const crypto = require('crypto')
 const hat = require('hat')
 const TRACER_KEY = 'x-tracer-id'
 
-const getRequestTracerId = (req) => req.headers[TRACER_KEY]
-const setRequestTracerId = (req) => req.headers[TRACER_KEY] = hat()
 const ensureRequestTracerId = (req) => {
-  getRequestTracerId(req) ?
-    getRequestTracerId(req) :
-    setRequestTracerId(req)
+  const existing = req.headers[TRACER_KEY]
+  if(!existing) {
+    existing = hat()
+    req.headers[TRACER_KEY] = existing
+  }
+  return existing
 }
 
 function makeSalt() {
@@ -79,8 +80,6 @@ function errorHandler(err, req, res, next) {
 
 
 module.exports = {
-  getRequestTracerId,
-  setRequestTracerId,
   ensureRequestTracerId,
   makeSalt,
   encryptPassword,
