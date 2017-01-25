@@ -3,6 +3,10 @@
 const async = require('async')
 const tools = require('../tools')
 const Crud = require('../database/crud')
+
+const Logger = require('../logger')
+const logger = Logger('controller:commandlog')
+
 const crud = Crud('commandlog')
 
 const CommandLogController = (client, eventBus) => {
@@ -13,7 +17,19 @@ const CommandLogController = (client, eventBus) => {
   const create = (tracerid, query, done) => {
     crud.insert(client.tracer(tracerid), {
       data: JSON.stringify(query.data)
-    }, done)
+    }, (err, result) => {
+      if(err) {
+        logger.error('create', tracerid, {
+          error: err.toString,
+          query
+        })
+        return done(err)
+      }
+      logger.trace('create', tracerid, {
+        query,
+        result
+      })
+    })
   }
 
   return {

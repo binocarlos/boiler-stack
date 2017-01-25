@@ -5,6 +5,9 @@ const tools = require('../tools')
 const Crud = require('../database/crud')
 const UserModel = require('../models/user')
 
+const Logger = require('../logger')
+const logger = Logger('controller:user')
+
 const crud = Crud('useraccount')
 
 const UserController = (client, eventBus) => {
@@ -27,7 +30,17 @@ const UserController = (client, eventBus) => {
   //  * data
   const register = (tracerid, query, done) => {
     UserModel.register(client.tracer(tracerid), query, (err, result) => {
-      if(err) return done(err)
+      if(err) {
+        logger.error('create', tracerid, {
+          error: err.toString,
+          query
+        })
+        return done(err)
+      }
+      logger.trace('create', tracerid, {
+        query,
+        result
+      })
       eventBus.emit('command', tracerid, {
         name: 'user.register',
         query,
@@ -42,7 +55,17 @@ const UserController = (client, eventBus) => {
   //  * params
   const save = (tracerid, query, done) => {
     UserModel.save(client.tracer(tracerid), query, (err, result) => {
-      if(err) return done(err)
+      if(err) {
+        logger.error('create', tracerid, {
+          error: err.toString,
+          query
+        })
+        return done(err)
+      }
+      logger.trace('create', tracerid, {
+        query,
+        result
+      })
       eventBus.emit('command', tracerid, {
         name: 'user.save',
         query,

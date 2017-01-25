@@ -5,9 +5,7 @@ const serializeReq = (req) => {
   return {
     method: req.method,
     url: req.url,
-    headers: req.headers,
-    remoteAddress: req.connection.remoteAddress,
-    remotePort: req.connection.remotePort
+    headers: req.headers
   }
 }
 
@@ -30,13 +28,13 @@ const Middleware = (opts) => {
 
     const useLevel = opts.level || 'info'
     const id = tools.ensureRequestTracerId(req)
+    const reqJSON = serializeReq(req)
 
     function onResFinished (err) {
       this.removeListener('finish', onResFinished)
       this.removeListener('error', onResFinished)
 
       const responseTime = Date.now() - this.startTime
-      const reqJSON = serializeReq(req)
       const resJSON = serializeReq(res, responseTime)
 
       if (err) {

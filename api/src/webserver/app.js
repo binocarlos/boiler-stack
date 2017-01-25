@@ -4,6 +4,8 @@ const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 
 const Logger = require('../logger')
+const LogMiddleware = require('./logMiddleware')
+
 const logger = Logger('webserver')
 
 function App(settings) {
@@ -11,12 +13,10 @@ function App(settings) {
   const passport = settings.passport
 
   const app = express()
-
 /*
-  app.use(pino({
-    genReqId: (req) => Logger.tracer(req)
-  }))
-*/
+  app.use(LogMiddleware({
+    logger
+  }))*/
   app.use(bodyParser.urlencoded({
     extended: true
   }))
