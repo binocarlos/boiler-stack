@@ -14,6 +14,8 @@ tape('basic logger', (t) => {
   t.equal(logs.length, 1, 'there is one log')
 
   const logData = JSON.parse(logs[0])
+
+  delete(logData.timestamp)
   
   t.deepEqual(logData, {
     level: 30,

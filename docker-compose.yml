@@ -3,6 +3,8 @@ services:
   redis:
     image: redis
     container_name: boiler_redis
+    environment:
+      LOGSPOUT: ignore
     volumes:
       - ./.data/redis:/data
   postgres:
@@ -11,9 +13,10 @@ services:
     volumes:
       - ./.data/postgres:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=boiler
-      - POSTGRES_PASSWORD=boiler
-      - POSTGRES_DB=boiler
+      POSTGRES_USER: boiler
+      POSTGRES_PASSWORD: boiler
+      POSTGRES_DB: boiler
+      LOGSPOUT: ignore
   router:
     image: binocarlos/noxy
     container_name: boiler_router
@@ -29,17 +32,29 @@ services:
       NOXY_API_FRONT: /api/v1
       NOXY_API_HOST: api
       NOXY_DEFAULT_HOST: frontend
+      LOGSPOUT: ignore
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    image: boilerstack_frontend_dev
+    container_name: boilerstack_frontend_dev
+    environment:
+      LOGSPOUT: ignore
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/www:/app/www
+      - ./frontend/test:/app/test
+      - ./frontend/dist:/app/dist
   api:
     build:
       context: ./api
+    # will reload the app on file change
+    command: app:dev
     container_name: boiler_api
     links:
       - postgres:postgres
       - redis:redis
-    logging: 
-      driver: gelf
-      options: 
-        gelf-address: "udp://172.21.0.4:12201"
     volumes:
       - ./api/src:/app/src
     #entrypoint:

@@ -36,6 +36,7 @@ const Logger = (name, opts) => {
       const numericLevel = LEVELS[level]
       const realLogger = (action, id, message) => {
         sink(JSON.stringify({
+          timestamp: new Date().getTime(),
           level: numericLevel,
           id,
           name,

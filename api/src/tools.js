@@ -4,7 +4,7 @@ const hat = require('hat')
 const TRACER_KEY = 'x-tracer-id'
 
 const ensureRequestTracerId = (req) => {
-  const existing = req.headers[TRACER_KEY]
+  let existing = req.headers[TRACER_KEY]
   if(!existing) {
     existing = hat()
     req.headers[TRACER_KEY] = existing

@@ -8,17 +8,19 @@ services:
       - "9300:9300"
     environment:
       ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+      LOGSPOUT: ignore
     volumes:
-      - ./data/elasticsearch:/usr/share/elasticsearch/data
+      - ./.data/elasticsearch:/usr/share/elasticsearch/data
   logstash:
     build: ./elk/logstash
     container_name: boiler_logstash
     command: -f /etc/logstash/conf.d/
+    environment:
+      LOGSPOUT: ignore
     volumes:
       - ./elk/logstash/config:/etc/logstash/conf.d
     ports:
       - "5000:5000"
-      - "12201:12201/udp"
     depends_on:
       - elasticsearch
     links:
@@ -26,6 +28,8 @@ services:
   kibana:
     build: ./elk/kibana
     container_name: boiler_kibana
+    environment:
+      LOGSPOUT: ignore
     volumes:
       - ./elk/kibana/config/:/etc/kibana/
     ports:
@@ -34,3 +38,14 @@ services:
       - elasticsearch
     links:
       - elasticsearch:elasticsearch
+  logspout:
+    image: gliderlabs/logspout
+    container_name: boiler_logspout
+    command: tcp://logstash:5000
+    restart: always
+    depends_on:
+      - logstash
+    links:
+      - logstash:logstash
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
