@@ -9,8 +9,8 @@ const installationDropdown = InstallationDropdownPlugin({
   loadTrigger: installation.table.actions.list.request,
   userActions: user.actions,
   selectors: {
-    userrecord: user.selectors.status.record,
-    userdata: user.selectors.status.data,
+    loggedIn: user.selectors.status.loggedIn,
+    activeInstallation: user.selectors.status.activeInstallation,
     installations: installation.table.selectors.items
   }
 })

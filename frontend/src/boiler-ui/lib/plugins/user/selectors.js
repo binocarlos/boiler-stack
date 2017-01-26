@@ -14,15 +14,17 @@ export const userAuthSelectors = (raw) => {
 export const userStatusSelectors = (raw) => {
   const api = (state) => raw(state).api
   const record = (state) => raw(state).record
-  const data = (state) => record(state).userdata || {}
+  const data = (state) => record(state).meta || {}
   return {
     raw,
     api,
     record,
     data,
+    meta: data,
     loggedIn: (state) => record(state).loggedIn,
     loaded: (state) => record(state).request_count > 0,
-    currentInstallation: (state) => data(state).currentInstallation
+    currentInstallation: (state) => data(state).activeInstallation,
+    activeInstallation: (state) => data(state).activeInstallation
   }
 }
 

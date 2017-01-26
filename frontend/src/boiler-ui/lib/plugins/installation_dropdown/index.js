@@ -8,7 +8,8 @@ import Container from './Container'
 const REQUIRED_SETTINGS = [
   'base',
   'userActions',
-  'selectors.userdata',
+  'selectors.loggedIn',
+  'selectors.activeInstallation',
   'selectors.installations'
 ]
 

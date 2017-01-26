@@ -1,13 +1,5 @@
 import CrudAjax from '../boiler-ui/lib/api/crudajax'
-import { MongoCodec } from '../boiler-ui/lib/api/codecs'
 import URLS from './config/urls'
-
-const MongoCrud = (opts = {}) => {
-  return CrudAjax(Object.assign({}, opts, {
-    encode: MongoCodec.encode,
-    decode: MongoCodec.decode
-  }))
-}
 
 const UserApis = (urls = {}) => {
   return {
@@ -38,17 +30,17 @@ export const user = UserApis({
   update: () => URLS.user.update
 })
 
-export const installation = MongoCrud({
+export const installation = CrudAjax({
   name: 'installation',
   getUrl: () => URLS.installation
 })
 
-export const client = MongoCrud({
+export const client = CrudAjax({
   name: 'client',
   getUrl: (query) => [URLS.client, query.currentInstallation].join('/')
 })
 
-export const project = MongoCrud({
+export const project = CrudAjax({
   name: 'project',
   getUrl: (query) => [URLS.project, query.currentInstallation].join('/')
 })

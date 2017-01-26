@@ -23,19 +23,19 @@ class InstallationDropdown extends Component {
         label={ 'active ' + (this.props.title || 'installation') }
         data={ data }
         onChange={ this.props.onChange }
-        value={ this.props.currentInstallation }
+        value={ this.props.activeInstallation }
       />
     )
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const userData = ownProps.selectors.userdata(state) || {}
-  const userRecord = ownProps.selectors.userrecord(state)
-  const installations = ownProps.selectors.installations(state)
+  const loggedIn = ownProps.selectors.loggedIn(state)
+  const activeInstallation = ownProps.selectors.activeInstallation(state)
+  const installations = ownProps.selectors.installations(state) || []
   return {
-    active: userRecord.loggedIn ? true : false,
-    currentInstallation: userData.currentInstallation,
+    active: loggedIn ? true : false,
+    activeInstallation: activeInstallation,
     installations
   }
 }

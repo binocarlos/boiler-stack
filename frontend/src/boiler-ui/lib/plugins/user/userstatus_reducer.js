@@ -8,7 +8,7 @@ export const DEFAULT_STATE = {
   loggedIn: false,
   id: null,
   username: null,
-  userdata: {}
+  meta: {}
 }
 
 const REQUIRED_TYPES = [
@@ -24,10 +24,10 @@ const reduceUser = (state, user) => {
       $set: user.id
     },
     username: {
-      $set: user.email || user.username
+      $set: user.username || user.email
     },
-    userdata: {
-      $set: user.data || {}
+    meta: {
+      $set: user.meta || {}
     },
     request_count: {
       $set: state.request_count + 1
@@ -46,7 +46,7 @@ const reduceGuest = (state) => {
     username: {
       $set: null
     },
-    userdata: {
+    meta: {
       $set: {}
     },
     request_count: {

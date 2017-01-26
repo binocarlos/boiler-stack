@@ -65,11 +65,13 @@ function Auth(controllers) {
 
     }, (err, user) => {
       if(err) return error(err)
+      
       res.status(201)
       res.json({
         registered: true,
         data: user
       })
+      
     })
     
   }

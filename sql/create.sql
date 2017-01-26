@@ -14,30 +14,30 @@ create table "installation" (
 
 create table "collaboration" (
   "id"                serial primary key not null,
-  "useraccount"       int references "useraccount" (id),
-  "installation"      int references "installation" (id),
+  "useraccount"       int references "useraccount" (id)  on delete cascade,
+  "installation"      int references "installation" (id) on delete cascade,
   "permission"        text not null
 );
 
 create table "client" (
   "id"                serial primary key not null,
-  "installation"      int references "installation" (id),
+  "installation"      int references "installation" (id) on delete cascade,
   "name"              text not null,
   "meta"              json
 );
 
 create table "project" (
   "id"                serial primary key not null,
-  "installation"      int references "installation" (id),
-  "client"            int references "client" (id),
+  "installation"      int references "installation" (id) on delete cascade,
+  "client"            int references "client" (id) on delete cascade,
   "name"              text not null,
   "meta"              json
 );
 
 create table "quote" (
   "id"                serial primary key not null,
-  "installation"      int references "installation" (id),
-  "project"           int references "project" (id),
+  "installation"      int references "installation" (id) on delete cascade,
+  "project"           int references "project" (id) on delete cascade,
   "name"              text not null,
   "store"             json
 );

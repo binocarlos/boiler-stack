@@ -180,3 +180,68 @@ tape('acceptance - save installation', (t) => {
     t.end()
   })
 })
+
+tape('acceptance - delete installation', (t) => {
+  const userData = tools.UserData()
+  const INSTALLATION_NAME = 'apples install'
+  let obj = null
+
+  async.series({
+
+    register: (next) => {
+      tools.request({
+        method: 'POST',
+        url: tools.url('/api/v1/register'),
+        headers: headers(),
+        json: userData
+      }, tools.wrapResult(next))
+    },
+
+    pause: (next) => setTimeout(next, 100),
+
+    create: (next) => {
+      tools.request({
+        method: 'POST',
+        url: tools.url('/api/v1/installations'),
+        headers: headers(),
+        json: {
+          name: INSTALLATION_NAME,
+          meta: {
+            fruit: 'apples'
+          }
+        }
+      }, tools.wrapResult((err, result) => {
+        if(err) return next(err)
+        obj = result.body
+        next(err, result)
+      }))
+    },
+
+    del: (next) => {
+      tools.request({
+        method: 'DELETE',
+        url: tools.url('/api/v1/installations/' + obj.id),
+        headers: headers()
+      }, tools.wrapResult(next))
+    },
+
+    installations: (next) => {
+      tools.request({
+        method: 'GET',
+        url: tools.url('/api/v1/installations'),
+        headers: headers(),
+        json: true
+      }, tools.wrapResult(next))
+    }
+
+  }, (err, results) => {
+
+    if(err) t.error(err)
+
+    const installations = results.installations.body
+
+    t.equal(installations.length, 1, 'only 1 installation')
+    t.equal(installations[0].name, 'default', 'the only one is the default')
+    t.end()
+  })
+})

@@ -44,7 +44,7 @@ function Installations(controllers) {
 
   const del = (req, res, error) => {
     transaction(req.id, (db, finish) => {
-      installations.delete(req.id, {
+      installations.delete(db, {
         id: req.params.id
       }, finish)
     }, tools.jsonCallback(res, error))
