@@ -46,6 +46,9 @@ const Routes = (base, controllers) => (app) => {
 
   // installation
   get('/installations', protect, installations.list)
+  post('/installations', protect, installations.create)
+  put('/installations/:id', protect, installations.save)
+  del('/installations/:id', protect, installations.delete)
 }
 
 module.exports = Routes

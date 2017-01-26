@@ -5,11 +5,17 @@ const Installation = require('./installation')
 const CommandLog = require('./commandlog')
 
 const Controllers = (client, eventBus) => {
-  const user = User(client, eventBus)
-  const installation = Installation(client, eventBus)
-  const commandlog = CommandLog(client, eventBus)
-  
+
+  const connection = client.connection
+  const transaction = client.transaction
+
+  const user = User(eventBus)
+  const installation = Installation(eventBus)
+  const commandlog = CommandLog(eventBus)
+
   return {
+    connection,
+    transaction,
     user,
     installation,
     commandlog

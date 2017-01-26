@@ -51,7 +51,7 @@ const switchboard = Switchboard(
   workers
 )
 
-const passport = Passport(controllers.user)
+const passport = Passport(controllers)
 const app = App({
   session,
   passport

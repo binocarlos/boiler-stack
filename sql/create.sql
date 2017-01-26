@@ -3,13 +3,13 @@ CREATE TABLE "useraccount" (
   "email"             text not null unique,
   "hashed_password"   text not null,
   "salt"              text not null,
-  "data"              json
+  "meta"              json
 );
 
 create table "installation" (
   "id"                serial primary key not null,
   "name"              text not null,
-  "data"              json
+  "meta"              json
 );
 
 create table "collaboration" (
@@ -23,7 +23,7 @@ create table "client" (
   "id"                serial primary key not null,
   "installation"      int references "installation" (id),
   "name"              text not null,
-  "data"              json
+  "meta"              json
 );
 
 create table "project" (
@@ -31,7 +31,7 @@ create table "project" (
   "installation"      int references "installation" (id),
   "client"            int references "client" (id),
   "name"              text not null,
-  "data"              json
+  "meta"              json
 );
 
 create table "quote" (
@@ -39,7 +39,7 @@ create table "quote" (
   "installation"      int references "installation" (id),
   "project"           int references "project" (id),
   "name"              text not null,
-  "data"              json
+  "store"             json
 );
 
 create table "commandlog" (

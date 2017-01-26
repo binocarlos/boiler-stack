@@ -2,146 +2,81 @@
 
 const async = require('async')
 const tools = require('../tools')
-const Crud = require('../database/crud')
-const InstallationModel = require('../models/installation')
-const UserModel = require('../models/user')
-
 const Logger = require('../logger')
 const logger = Logger('controller:installation')
 
-const usercrud = Crud('useraccount')
+const InstallationModel = require('../models/installation')
+const UserModel = require('../models/user')
 
-const InstallationController = (client, eventBus) => {
+const InstallationController = (eventBus) => {
   
   // queries
-  const list = (tracerid, query, done) => InstallationModel.byUser(client.tracer(tracerid), query, done)
+  const list = (db, query, done) => InstallationModel.byUser(db.run, query, done)
 
   // commands
-  const CreateHandler = (runQuery, tracerid, query, done) => {
-    InstallationModel.create(runQuery, query, (err, result) => {
-      if(err) {
-        logger.error('create', tracerid, {
-          error: err.toString,
-          query
-        })
-        return done(err)
-      }
-      logger.trace('create', tracerid, {
-        query,
-        result
-      })
-      eventBus.emit('command', tracerid, {
-        name: 'installation.create',
-        query,
-        result
-      })
-      done(null, result)
-    })
+  const create = (db, query, done) => {
+    InstallationModel.create(db.run, query, eventBus.emitWrapper({
+      logger,
+      tracerid: db.id,
+      query,
+      eventName: 'installation.create'
+    }, done))
   }
 
   // update the user with a 'active' installation (written to the user data)
   // query:
   //   * installationid
   //   * userid
-  const ActivateHandler = (runQuery, tracerid, query, done) => {
-    //const runQuery = client.tracer(tracerid)
-
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.log('activate')
-    
+  const activate = (db, query, done) => {
     async.waterfall([
-      (next) => usercrud.get(runQuery, {id: query.userid}, next),
+      (next) => UserModel.get(db.run, {id: query.userid}, next),
       (user, next) => {
-        console.log('-------------------------------------------');
-        console.log('-------------------------------------------');
-        console.log('-------------------------------------------');
-        console.dir(user)
-        const newData = Object.assign({}, user.data, {
+        const newMeta = Object.assign({}, user.meta, {
           activeInstallation: query.installationid
         })
-
-        console.log('-------------------------------------------');
-        console.log('-------------------------------------------');
-        console.dir(newData)
-        UserModel.save(runQuery, {
-          data: newData,
+        UserModel.save(db.run, {
+          data: {
+            meta: newMeta
+          },
           params: {
             id: query.userid
           }
         }, next)
       }
-    ], (err, result) => {
-      if(err) {
-        logger.error('activate', tracerid, {
-          error: err.toString,
-          query
-        })
-        return done(err)
-      }
-      logger.trace('activate', tracerid, {
-        query,
-        result
-      })
-      eventBus.emit('command', tracerid, {
-        name: 'installation.activate',
-        query,
-        result
-      })
-      done(null, result)
-    })
+    ], eventBus.emitWrapper({
+      logger,
+      tracerid: db.id,
+      query,
+      eventName: 'installation.activate'
+    }, done))
   }
 
-
-  // query:
-  //  * userid
-  //  * data
-  const create = (tracerid, query, done) => {
-    client.transaction(tracerid, (runQuery, finish) => {
-      CreateHandler(runQuery, tracerid, query, finish)
-    }, done)
+  // * data
+  // * params
+  const save = (db, query, done) => {
+    InstallationModel.save(db.run, query, eventBus.emitWrapper({
+      logger,
+      tracerid: db.id,
+      query,
+      eventName: 'installation.save'
+    }, done))
   }
 
-  // query:
-  //  * installationid
-  //  * userid
-  const activate = (tracerid, query, done) => {
-    client.transaction(tracerid, (runQuery, finish) => {
-      ActivateHandler(runQuery, tracerid, query, finish)
-    }, done)
+  const del = (db, query, done) => {
+    InstallationModel.delete(db.run, query, eventBus.emitWrapper({
+      logger,
+      tracerid: db.id,
+      query,
+      eventName: 'installation.delete'
+    }, done))
   }
-
-  // query:
-  //  * userid
-  //  * data
-  const createActive = (tracerid, query, done) => {
-    client.transaction(tracerid, (runQuery, finish) => {
-      let results = null
-      async.waterfall([
-        (next) => CreateHandler(runQuery, tracerid, query, next),
-        (r, next) => {
-          results = r
-          ActivateHandler(runQuery, tracerid, {
-            installationid: results.installation.id,
-            userid: query.userid
-          }, next)
-        }
-      ], (err, user) => {
-        if(err) return finish(err)
-        results.user = user
-        finish(null, results)
-      })
-    }, done)
-  }
-
-  
 
   return {
     list,
     create,
     activate,
-    createActive
+    save,
+    delete: del
   }
 }
 

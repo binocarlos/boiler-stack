@@ -2,77 +2,47 @@
 
 const async = require('async')
 const tools = require('../tools')
-const Crud = require('../database/crud')
-const UserModel = require('../models/user')
-
 const Logger = require('../logger')
 const logger = Logger('controller:user')
 
-const crud = Crud('useraccount')
+const UserModel = require('../models/user')
 
-const UserController = (client, eventBus) => {
-  // queries
+const UserController = (eventBus) => {
+
+  // QUERIES
+
   // query:
   //  * email
   //  * password
-  const login = (tracerid, query, done) => UserModel.login(client.tracer(tracerid), query, done)
+  const login = (db, query, done) => UserModel.login(db.run, query, done)
   
-  // query {}
-  const get = (tracerid, query, done) => {
-    crud.get(client.tracer(tracerid), query, (err, data) => {
-      if(err) return done(err)
-      done(null, UserModel.clean(data))
-    })
-  }
+  // query
+  //  * {email,id}
+  const get = (db, query, done) => UserModel.getClean(db.run, query, done)
 
-  // commands
+  // COMMANDS
+
   // query:
   //  * data
-  const register = (tracerid, query, done) => {
-    UserModel.register(client.tracer(tracerid), query, (err, result) => {
-      if(err) {
-        logger.error('create', tracerid, {
-          error: err.toString,
-          query
-        })
-        return done(err)
-      }
-      logger.trace('create', tracerid, {
-        query,
-        result
-      })
-      eventBus.emit('command', tracerid, {
-        name: 'user.register',
-        query,
-        result
-      })
-      done(null, result)
-    })
+  const register = (db, query, done) => {
+    UserModel.register(db.run, query, eventBus.emitWrapper({
+      logger,
+      tracerid: db.id,
+      query,
+      eventName: 'user.register'
+    }, done))
   }
 
   // query:
   //  * data
   //  * params
-  const save = (tracerid, query, done) => {
-    UserModel.save(client.tracer(tracerid), query, (err, result) => {
-      if(err) {
-        logger.error('create', tracerid, {
-          error: err.toString,
-          query
-        })
-        return done(err)
-      }
-      logger.trace('create', tracerid, {
-        query,
-        result
-      })
-      eventBus.emit('command', tracerid, {
-        name: 'user.save',
-        query,
-        result
-      })
-      done(null, result)
-    })
+  const save = (db, query, done) => {
+    UserModel.save(db.run, query, eventBus.emitWrapper({
+      logger,
+      tracerid: db.id,
+      query,
+      eventName: 'user.save'
+    }, done))
   }
 
   return {

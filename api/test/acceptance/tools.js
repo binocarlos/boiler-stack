@@ -5,6 +5,14 @@ const request = Request.defaults({jar: true})
 
 const BASE_URL = process.env.BASE_URL || 'http://127.0.0.1:80'
 
+const TRACER_ID = '1234'
+
+const headers = () => {
+  return {
+    'x-tracer-id': TRACER_ID
+  }
+}
+
 const url = (path) => {
   path = path || ''
   return BASE_URL + path
@@ -46,5 +54,6 @@ module.exports = {
   request,
   url,
   register,
-  wrapResult
+  wrapResult,
+  headers
 }

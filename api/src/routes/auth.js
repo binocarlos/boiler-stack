@@ -5,6 +5,10 @@ const async = require('async')
 function Auth(controllers) {
 
   const users = controllers.user
+  const query = controllers.query
+
+  const connection = controllers.connection
+  const transaction = controllers.transaction
 
   const status = (req, res) => {
     res.json({
@@ -21,7 +25,7 @@ function Auth(controllers) {
     if(!password) return error(['no password given', 400, errorData])
     async.waterfall([
       (next) => {
-        users.login(req.id, {
+        users.login(connection(req.id), {
           email,
           password
         }, next)
@@ -42,17 +46,24 @@ function Auth(controllers) {
     const errorData = {registered: false}
     if(!email) return error(['no email given', 400, errorData])
     if(!password) return error(['no password given', 400, errorData])
-    async.waterfall([
-      (next) => {
-        users.register(req.id, {
-          data: {
-            email,
-            password
-          }
-        }, next)
-      },
-      (user, next) => req.login(user, (err) => next(err, user))
-    ], (err, user) => {
+
+    transaction(req.id, (db, finish) => {
+      async.waterfall([
+
+        (next) => {
+          users.register(db, {
+            data: {
+              email,
+              password
+            }
+          }, next)
+        },
+
+        (user, next) => req.login(user, (err) => next(err, user))
+
+      ], finish)
+
+    }, (err, user) => {
       if(err) return error(err)
       res.status(201)
       res.json({
@@ -60,17 +71,23 @@ function Auth(controllers) {
         data: user
       })
     })
+    
   }
 
   const update = (req, res, error) => {
     const data = req.body
     const errorData = {updated: false}
     if(!data) return error(['no data given', 400, errorData])
-    users.save(req.id, {
-      data,
-      params: {
-        id: req.user.id
-      }
+
+    transaction(req.id, (db, finish) => {
+
+      users.save(db, {
+        data,
+        params: {
+          id: req.user.id
+        }
+      }, finish)
+
     }, (err, user) => {
       if(err) return error(err)
       res.json({

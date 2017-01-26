@@ -3,13 +3,8 @@ const tape = require('tape')
 const async = require('async')
 const tools = require('./tools')
 
-const TRACER_ID = '1234'
+const headers = tools.headers
 
-const headers = () => {
-  return {
-    'x-tracer-id': TRACER_ID
-  }
-}
 tape('acceptance - register', (t) => {
   const userData = tools.UserData()
 
@@ -166,58 +161,6 @@ tape('acceptance - status', (t) => {
         t.equal(result.body[field], expected[field], key + ' - body - ' + field + ' = ' + expected[field])
       })
     })
-
-    t.end()
-  })
-})
-
-
-tape('acceptance - installations', (t) => {
-  const userData = tools.UserData()
-
-  async.series({
-
-    register: (next) => {
-      tools.request({
-        method: 'POST',
-        url: tools.url('/api/v1/register'),
-        headers: headers(),
-        json: userData
-      }, tools.wrapResult(next))
-    },
-
-    pause: (next) => setTimeout(next, 100),
-
-    installations: (next) => {
-      tools.request({
-        method: 'GET',
-        url: tools.url('/api/v1/installations'),
-        headers: headers(),
-        json: true
-      }, tools.wrapResult(next))
-    },
-
-    status: (next) => {
-      tools.request({
-        method: 'GET',
-        url: tools.url('/api/v1/status'),
-        headers: headers(),
-        json: true
-      }, tools.wrapResult(next))
-    }
-
-  }, (err, results) => {
-
-    if(err) t.error(err)
-
-    const register = results.register
-    const installations = results.installations
-    const status = results.status
-
-    t.equal(installations.body.length, 1, '1 installation')
-    t.equal(installations.body[0].name, 'default', 'default installation')
-
-    t.equal(status.body.data.data.activeInstallation, installations.body[0].id, 'the user the active installation')
 
     t.end()
   })

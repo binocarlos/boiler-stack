@@ -40,7 +40,7 @@ function generateUser(user) {
     email: user.email,
     hashed_password: encryptedPassword,
     salt: salt,
-    data: JSON.stringify(user.data || {})
+    meta: JSON.stringify(user.meta || {})
   }
 }
 
@@ -78,6 +78,23 @@ function errorHandler(err, req, res, next) {
     .json(errorData)
 }
 
+const jsonCallback = (res, error, statusCode) => (err, results) => {
+  if(err) return error(err)
+  statusCode = statusCode || 200
+  res.status(statusCode)
+  res.json(results)
+}
+
+const jobLogger = (logger, tracerid, opts) => {
+  return (err, data) => {
+    if(err) {
+      logger.error('job', tracerid, Object.assign({}, opts, {error: err.toString()}))
+    }
+    else {
+      logger.info('job', tracerid, Object.assign({}, opts, {data}))
+    }
+  }
+}
 
 module.exports = {
   ensureRequestTracerId,
@@ -85,5 +102,7 @@ module.exports = {
   encryptPassword,
   checkUserPassword,
   generateUser,
-  errorHandler
+  errorHandler,
+  jsonCallback,
+  jobLogger
 }

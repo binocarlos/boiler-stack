@@ -65,13 +65,17 @@ const Client = (postgres) => {
         return done(err)
       }
       const runQuery = tracer(tracerid, QueryFactory(client.query.bind(client)))
+      const db = {
+        id: tracerid,
+        run: runQuery
+      }
       async.series({
-        begin:   (next) => runQuery('BEGIN', next),
-        command: (next) => handler(runQuery, next),
-        commit:  (next) => runQuery('COMMIT', next)
+        begin:   (next) => db.run('BEGIN', next),
+        command: (next) => handler(db, next),
+        commit:  (next) => db.run('COMMIT', next)
       }, (err, results) => {
         if(err) {
-          runQuery('ROLLBACK', () => {
+          db.run('ROLLBACK', () => {
             release()
             done(err)
           })
@@ -85,9 +89,14 @@ const Client = (postgres) => {
   }
 
   return {
-    query,
     tracer,
-    transaction
+    transaction,
+    connection: (tracerid) => {
+      return {
+        id: tracerid,
+        run: tracer(tracerid)
+      }
+    }
   }
 }
 

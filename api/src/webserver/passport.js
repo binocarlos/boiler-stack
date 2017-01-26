@@ -2,7 +2,10 @@
 const passport = require('passport')
 const Logger = require('../logger')
 const logger = Logger('passport')
-function Passport(userController) {
+function Passport(controllers) {
+
+  const users = controllers.user
+  const connection = controllers.connection
 
   passport.serializeUser((req, user, done) => {
     logger.trace('serializeUser', req.id, {
@@ -11,7 +14,7 @@ function Passport(userController) {
     done(null, user.id)
   })
   passport.deserializeUser((req, id, done) => {
-    userController.get(req.id, {
+    users.get(connection(req.id), {
       id
     }, (err, user) => {
       if(err){

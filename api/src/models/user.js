@@ -2,17 +2,23 @@
 
 const async = require('async')
 const tools = require('../tools')
-const Crud = require('../database/crud')
+const SQL = require('../database/sql')
+const selectors = require('../database/selectors')
 
 const PRIVATE_FIELDS = {
   hashed_password: true,
   salt: true
 }
 
-const crud = Crud('useraccount')
+const QUERIES = {
+  get: (params) => SQL.select('useraccount', params),
+  insert: (data) => SQL.insert('useraccount', data),
+  update: (data, params) => SQL.update('useraccount', data, params),
+  delete: (params) => SQL.delete('useraccount', params),
+}
 
 // remove sensitive fields
-const clean = (data) => {
+const cleanData = (data) => {
   return Object.keys(data || {})
     .filter(f => PRIVATE_FIELDS[f] ? false : true)
     .reduce((all, key) => {
@@ -20,6 +26,22 @@ const clean = (data) => {
       return all
     }, {})
 }
+
+const prepareData = (user) => {
+  const meta = user.meta || {}
+  return Object.assign({}, user, {
+    meta: JSON.stringify(meta)
+  })
+}
+
+const get = (runQuery, params, done) => runQuery(QUERIES.get(params), selectors.single(done))
+const getClean = (runQuery, params, done) => get(runQuery, params, (err, user) => {
+  if(err) return done(err)
+  done(null, cleanData(user))
+})
+const insert = (runQuery, data, done) => runQuery(QUERIES.insert(data), selectors.single(done))
+const update = (runQuery, data, params, done) => runQuery(QUERIES.update(data, params), selectors.single(done))
+const del = (runQuery, params, done) => runQuery(QUERIES.delete(params), selectors.single(done))
 
 // login query
 // 1. load user with email using crud.get
@@ -31,56 +53,46 @@ const clean = (data) => {
 const login = (runQuery, query, done) => {
   const email = query.email
   const password = query.password
-  crud.get(runQuery, { email }, (err, result) => {
+
+  get(runQuery, {email}, (err, user) => {
     if(err) return done(err)
-    if(!result) return done()
-    done(null, tools.checkUserPassword(result, password) ? clean(result) : null)
+    if(!user) return done()
+    done(null, tools.checkUserPassword(user, password) ? cleanData(user) : null)
   })
 }
 
 // models.user.register - register user transaction
 // 1. check the primary key does not exist
 // 2. insert
-//
 // query:
 //  * data
 const register = (runQuery, query, done) => {
   const data = query.data
   const userData = tools.generateUser(data)
-  let newUser = null
   async.waterfall([
-    (next) => crud.get(runQuery, { email: data.email }, next),
+    (next) => get(runQuery, { email: data.email }, next),
     (existingUser, next) => {
       if(existingUser) return next(data.email + ' already exists')
-      crud.insert(runQuery, userData, next)
-    },
-    (insertedUser, next) => {
-      newUser = insertedUser
-      next()
+      insert(runQuery, userData, next)
     }
-  ], (err) => {
+  ], (err, newUser) => {
     if(err) return done(err)
-    done(null, clean(newUser))
+    done(null, cleanData(newUser))
   })
 }
 
-// models.user.save - save command
-// 1. update 'data' as a JSON string based on params
-// query:
 //  * data
+//    * email
+//    * meta
 //  * params
-const save = (runQuery, query, done) => {
-  const data = query.data
-  const params = query.params
-  const userData = {data: JSON.stringify(data)}
-  crud.update(runQuery, userData, params, done)
-}
+const save = (runQuery, query, done) => update(runQuery, prepareData(query.data), query.params, done)
 
-// update user data (merge - this is NOT atomic)
-const inject = 
 module.exports = {
   login,
   register,
   save,
-  clean
+  get: get,
+  delete: del,
+  getClean: getClean,
+  clean: cleanData
 }

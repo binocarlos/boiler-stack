@@ -2,35 +2,28 @@
 
 const async = require('async')
 const tools = require('../tools')
-const Crud = require('../database/crud')
-
 const Logger = require('../logger')
 const logger = Logger('controller:commandlog')
 
-const crud = Crud('commandlog')
+const CommandLogModel = require('../models/commandlog')
 
-const CommandLogController = (client, eventBus) => {
+const CommandLogController = (eventBus) => {
 
-
-  // commands
-  // query:
   //  * data
-  const create = (tracerid, query, done) => {
-    crud.insert(client.tracer(tracerid), {
+  const create = (db, query, done) => {
+    CommandLogModel.create(db.run, {
       data: JSON.stringify(query.data)
-    }, (err, result) => {
-      if(err) {
-        logger.error('create', tracerid, {
-          error: err.toString,
-          query
-        })
-        return done(err)
-      }
-      logger.trace('create', tracerid, {
-        query,
-        result
-      })
-    })
+    }, eventBus.emitWrapper({
+      logger,
+      tracerid: db.id,
+      query,
+      // remove this and there an infinite loop of
+      // commandlogs being created because commandlogs
+      // have been created (command logs are created for)
+      // eventType = 'command'
+      eventType: 'commandlog',
+      eventName: 'commandlog.create'
+    }, done))
   }
 
   return {

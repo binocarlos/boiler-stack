@@ -49,7 +49,6 @@ services:
   api:
     build:
       context: ./api
-    # will reload the app on file change
     container_name: boiler_api
     links:
       - postgres:postgres
