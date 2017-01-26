@@ -31,6 +31,7 @@ order by
     }
   },
 
+  get: (params) => SQL.select('installation', params),
   save: (data, params) => SQL.update('installation', data, params),
   delete: (params) => SQL.delete('installation', params),
   insert: (data) => SQL.insert('installation', data),
@@ -45,6 +46,8 @@ order by
     })
   }
 }
+
+const get = (runQuery, params, done) => runQuery(QUERIES.get(params), selectors.single(done))
 
 //  * userid
 const byUser = (runQuery, query, done) => runQuery(QUERIES.byUser(query.userid), selectors.rows(done))
@@ -96,6 +99,7 @@ const del = (runQuery, query, done) => {
 
 module.exports = {
   QUERIES,
+  get: get,
   byUser,
   create,
   save,

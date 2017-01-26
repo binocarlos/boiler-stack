@@ -11,6 +11,7 @@ const UserModel = require('../models/user')
 const InstallationController = (eventBus) => {
   
   // queries
+  const get = (db, query, done) => InstallationModel.get(db.run, query, done)
   const list = (db, query, done) => InstallationModel.byUser(db.run, query, done)
 
   // commands
@@ -76,7 +77,8 @@ const InstallationController = (eventBus) => {
     create,
     activate,
     save,
-    delete: del
+    delete: del,
+    get: get
   }
 }
 

@@ -10,6 +10,12 @@ function Installations(controllers) {
   const connection = controllers.connection
   const transaction = controllers.transaction
 
+  const get = (req, res, error) => {
+    installations.get(connection(req.id), {
+      id: req.params.id
+    }, tools.jsonCallback(res, error))
+  }
+
   const list = (req, res, error) => {
     installations.list(connection(req.id), {
       userid: req.user.id
@@ -29,7 +35,9 @@ function Installations(controllers) {
     transaction(req.id, (db, finish) => {
       installations.save(db, {
         data: req.body,
-        id: req.params.id
+        params: {
+          id: req.params.id  
+        }
       }, finish)
     }, tools.jsonCallback(res, error))
   }
@@ -43,6 +51,7 @@ function Installations(controllers) {
   }
 
   return {
+    get: get,
     list,
     create,
     save,

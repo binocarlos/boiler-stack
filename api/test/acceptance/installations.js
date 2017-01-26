@@ -55,7 +55,7 @@ tape('acceptance - installations', (t) => {
     t.end()
   })
 })
-/*
+
 tape('acceptance - create installation', (t) => {
   const userData = tools.UserData()
   const INSTALLATION_NAME = 'apples install'
@@ -110,7 +110,7 @@ tape('acceptance - create installation', (t) => {
 tape('acceptance - save installation', (t) => {
   const userData = tools.UserData()
   const INSTALLATION_NAME = 'apples install'
-  let ID = null
+  let obj = null
 
   async.series({
 
@@ -131,12 +131,14 @@ tape('acceptance - save installation', (t) => {
         url: tools.url('/api/v1/installations'),
         headers: headers(),
         json: {
-          name: INSTALLATION_NAME
+          name: INSTALLATION_NAME,
+          meta: {
+            fruit: 'apples'
+          }
         }
       }, tools.wrapResult((err, result) => {
         if(err) return next(err)
-        const data = result.body
-        ID = data.id
+        obj = result.body
         next(err, result)
       }))
     },
@@ -144,18 +146,21 @@ tape('acceptance - save installation', (t) => {
     save: (next) => {
       tools.request({
         method: 'PUT',
-        url: tools.url('/api/v1/installations'),
+        url: tools.url('/api/v1/installations/' + obj.id),
         headers: headers(),
         json: {
-          name: INSTALLATION_NAME
+          name: INSTALLATION_NAME + '2',
+          meta: Object.assign({}, obj.meta, {
+            color: 'oranges'
+          })
         }
       }, tools.wrapResult(next))
     },
 
-    installations: (next) => {
+    installation: (next) => {
       tools.request({
         method: 'GET',
-        url: tools.url('/api/v1/installations'),
+        url: tools.url('/api/v1/installations/' + obj.id),
         headers: headers(),
         json: true
       }, tools.wrapResult(next))
@@ -165,12 +170,13 @@ tape('acceptance - save installation', (t) => {
 
     if(err) t.error(err)
 
-    const installations = results.installations.body
+    const installation = results.installation.body
 
-    const createdInstallation = installations.filter(i => i.name == INSTALLATION_NAME)
-
-    t.equal(createdInstallation.length, 1, 'the installation was created')
-
+    t.equal(installation.id, obj.id, 'id sanity')
+    t.deepEqual(installation.meta, {
+      fruit: 'apples',
+      color: 'oranges'
+    }, 'merged meta-data')
     t.end()
   })
-})*/
+})
