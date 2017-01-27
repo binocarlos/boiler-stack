@@ -3,6 +3,7 @@ import deepCheck from 'deep-check-error'
 import { takeLatest } from 'redux-saga'
 import { put, call, select } from 'redux-saga/effects'
 
+import SystemActions from '../actions/system'
 // TODO: this should not be importing this
 import UserSelectors from '../plugins/user/selectors'
 
@@ -40,10 +41,21 @@ const ApiSagaFactory = (settings = {}) => {
       logger('error', e.message, e.stack)
 
       const body = e.response.data
+      const statusCode = e.response.status
 
       const message = body && body.error ?
         body.error :
         e.message
+
+      let disableErrorMessage = settings.disableErrors ? true : false
+
+      if(statusCode == 403 && message == 'user required') {
+        disableErrorMessage = true
+      }
+
+      if(!disableErrorMessage) {
+        yield put(SystemActions.error({message}))
+      }
 
       yield put(actions.failure(message, action.query))
     }

@@ -9,17 +9,20 @@ import Container from './Container'
 
 const REQUIRED_SETTINGS = [
   'base',
-  'selector' 
+  'selector',
+  'triggers'
 ]
 
 const SnackbarPlugin = (settings = {}) => {
   deepCheck(settings, REQUIRED_SETTINGS)
 
+  const triggers = settings.triggers
   const actions = Actions(settings.base)
   const reducer = Reducer(actions)
   const selectors = Selectors(settings.selector)
   const saga = Saga({
-    actions
+    actions,
+    triggers
   })
 
   const getContainer = () => {

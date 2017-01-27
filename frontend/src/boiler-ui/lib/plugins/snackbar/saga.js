@@ -4,25 +4,29 @@ import deepCheck from 'deep-check-error'
 import { takeLatest } from 'redux-saga'
 import { fork, put, take, select } from 'redux-saga/effects'
 
-import systemActions from '../../actions/system'
-
 const REQUIRED_SETTINGS = [
-  'actions'
+  'actions',
+  'triggers'
 ]
 
 const SnackbarPluginSaga = (settings = {}) => {
   const actions = settings.actions
+  const triggers = settings.triggers
+
   const logger = Logger('saga:snackbar')
 
   const sagas = [
 
     // listen for any system mutations and display a snackbar
     function* listenForMutation() {
-      function* mutationSnackbar(action) {
+      function* openSnackbar(action) {
         yield put(actions.open(action.payload))
       }
-      logger('listening: ' + systemActions.types.mutation)
-      yield takeLatest(systemActions.types.mutation, mutationSnackbar)
+      triggers.forEach(trigger => {
+        logger('listening: ' + trigger)
+      })
+      
+      yield takeLatest(triggers, openSnackbar)
     }
 
   ]

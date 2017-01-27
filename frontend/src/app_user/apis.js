@@ -1,6 +1,7 @@
 import CrudAjax from '../boiler-ui/lib/api/crudajax'
 import URLS from './config/urls'
 
+
 const UserApis = (urls = {}) => {
   return {
     status: CrudAjax({
