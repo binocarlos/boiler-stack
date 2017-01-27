@@ -65,10 +65,6 @@ function Auth(controllers) {
 
     }, (err, user) => {
       
-      console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.dir(err)
       if(err) return error(err)
 
       res.status(201)

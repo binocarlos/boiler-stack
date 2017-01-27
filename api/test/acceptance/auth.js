@@ -165,3 +165,37 @@ tape('acceptance - status', (t) => {
     t.end()
   })
 })
+
+
+tape('acceptance - account exists', (t) => {
+  const userData = tools.UserData()
+
+  async.series({
+
+    register: (next) => {
+      tools.request({
+        method: 'POST',
+        url: tools.url('/api/v1/register'),
+        headers: headers(),
+        json: userData
+      }, tools.wrapResult(next))
+    },
+
+    exists: (next) => {
+      tools.request({
+        method: 'POST',
+        url: tools.url('/api/v1/register'),
+        headers: headers(),
+        json: userData
+      }, tools.wrapResult(next))
+    }
+  }, (err, results) => {
+
+    if(err) t.error(err)
+
+    t.equal(results.exists.statusCode, 500, '500 status')
+    t.equal(results.exists.body.error, userData.email + ' already exists', 'error message')
+
+    t.end()
+  })
+})
