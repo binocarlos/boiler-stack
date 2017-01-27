@@ -42,6 +42,15 @@ function Installations(controllers) {
     }, tools.jsonCallback(res, error))
   }
 
+  const activate = (req, res, error) => {
+    transaction(req.id, (db, finish) => {
+      installations.activate(db, {
+        installationid: req.params.id,
+        userid: req.user.id
+      }, finish)
+    }, tools.jsonCallback(res, error))
+  }
+
   const del = (req, res, error) => {
     transaction(req.id, (db, finish) => {
       installations.delete(db, {
@@ -55,6 +64,7 @@ function Installations(controllers) {
     list,
     create,
     save,
+    activate,
     delete: del
   }
 }

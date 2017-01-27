@@ -38,7 +38,7 @@ const Middleware = (opts) => {
       const resJSON = serializeRes(res, responseTime)
 
       if (err) {
-        log.error('request', id, {
+        logger.error('request', id, {
           error: err.toString(),
           stack: err.stack,
           req: reqJSON,

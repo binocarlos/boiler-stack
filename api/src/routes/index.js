@@ -21,7 +21,7 @@ const Routes = (base, controllers) => (app) => {
     }
     return handler
   }
-  const protect = (req, res, next) => {
+  const protect = (opts) => (req, res, next) => {
     if(!req.user) return next(['user required', 403])
     next()
   }
@@ -45,11 +45,12 @@ const Routes = (base, controllers) => (app) => {
   get('/logout', auth.logout)
 
   // installation
-  get('/installations', protect, installations.list)
-  get('/installations/:id', protect, installations.get)
-  post('/installations', protect, installations.create)
-  put('/installations/:id', protect, installations.save)
-  del('/installations/:id', protect, installations.delete)
+  get('/installations', protect(), installations.list)
+  post('/installations', protect(), installations.create)
+  get('/installations/:id', protect(), installations.get)
+  put('/installations/:id', protect(), installations.save)
+  del('/installations/:id', protect(), installations.delete)
+  put('/installations/:id/activate', protect(), installations.activate)
 }
 
 module.exports = Routes
