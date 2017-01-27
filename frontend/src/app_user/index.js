@@ -19,6 +19,8 @@ import Sagas from './sagas'
 // the 'router' will be automatically injected by redux-little-router
 import reducer from './reducer'
 
+import settings from './config/core'
+
 // we keep the route info and fragments in the same file for readability
 // the route info is what is reduced when the route is active
 // the fragments control what container shows for what route
@@ -33,7 +35,7 @@ import {
 import Wrapper from './containers/Wrapper'
 
 // the base URL where the app is hosted - this is removed from paths
-const BASE_PATH = '/app'
+const BASE_PATH = settings.basepath
 
 // if we are using server side rendering - this will be populated
 const INITIAL_STATE = window.__INITIAL_STATE__

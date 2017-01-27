@@ -10,7 +10,7 @@ const installationDropdown = InstallationDropdownPlugin({
   userActions: user.actions,
   selectors: {
     loggedIn: user.selectors.status.loggedIn,
-    activeInstallation: user.selectors.status.activeInstallation,
+    currentInstallation: user.selectors.status.currentInstallation,
     installations: installation.table.selectors.items
   }
 })

@@ -9,7 +9,7 @@ const REQUIRED_SETTINGS = [
   'base',
   'userActions',
   'selectors.loggedIn',
-  'selectors.activeInstallation',
+  'selectors.currentInstallation',
   'selectors.installations'
 ]
 

@@ -6,6 +6,7 @@ import Page from '../../boiler-ui/lib/components/Page'
 import FormFields from '../../boiler-ui/lib/components/FormFields'
 
 import Link from './Link'
+import { getRoute } from '../tools'
 
 class Login extends Component {
 
@@ -31,7 +32,7 @@ class Login extends Component {
           <CardActions>
             <Button 
               label="Cancel" 
-              onClick={() => this.props.redirect('/')}
+              onClick={() => this.props.redirect(getRoute('/'))}
             />
             <Button 
               label="Submit" 

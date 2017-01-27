@@ -31,7 +31,7 @@ class InstallationDropdown extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const loggedIn = ownProps.selectors.loggedIn(state)
-  const activeInstallation = ownProps.selectors.activeInstallation(state)
+  const activeInstallation = ownProps.selectors.currentInstallation(state)
   const installations = ownProps.selectors.installations(state) || []
   return {
     active: loggedIn ? true : false,
