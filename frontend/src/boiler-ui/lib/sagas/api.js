@@ -4,8 +4,6 @@ import { takeLatest } from 'redux-saga'
 import { put, call, select } from 'redux-saga/effects'
 
 import SystemActions from '../actions/system'
-// TODO: this should not be importing this
-import UserSelectors from '../plugins/user/selectors'
 
 const REQUIRED_SETTINGS = [
   'api',
@@ -28,13 +26,13 @@ const ApiSagaFactory = (settings = {}) => {
 
   function* apiSaga(action) {
     logger('request', action)
+    const state = yield select(state => state)
+
+    // the api factory returns the actual runner
+    // then it can look at the state to decide on the url
+    const apiRunner = api(state)
     try {
-      const currentInstallation = yield select(userSelectors.status.currentInstallation)
-      // inject the currentInstallation into all api queries
-      const query = Object.assign({}, action.query, {
-        currentInstallation
-      })
-      const result = yield api(query, action.payload)
+      const result = yield apiRunner(query, action.payload)
       logger('response', result)
       yield put(actions.success(result, action.query))
     } catch (e) {

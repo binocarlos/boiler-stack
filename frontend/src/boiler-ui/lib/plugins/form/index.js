@@ -18,7 +18,10 @@ const REQUIRED_SETTINGS = [
   // the form fields describes what to actually render for the form
   'getFormFields',
   'routes.success',
-  'routes.cancel'
+  'routes.cancel',
+  'apis.get',
+  'apis.put',
+  'apis.post'
 ]
 
 const FormPlugin = (settings = {}) => {

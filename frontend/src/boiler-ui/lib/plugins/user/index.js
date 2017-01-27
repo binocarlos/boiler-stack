@@ -10,7 +10,9 @@ const REQUIRED_SETTINGS = [
   'successRedirect',
   'getLoginSchema',
   'getRegisterSchema',
-  'apis',
+  'apis.status',
+  'apis.login',
+  'apis.register',
   'selector'
 ]
 

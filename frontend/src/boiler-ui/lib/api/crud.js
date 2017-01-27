@@ -1,28 +1,35 @@
-import Ajax from './ajax'
+/*
 
-const crudAjaxFactory = (settings = {}) => {
-
-  const getUrl = (query) => {
-    return settings.getUrl ?
-      settings.getUrl(query) :
-      settings.url
-  }
-
-  const ajaxClient = Ajax({
-    name:settings.name
-  })
+  common crud methods based on id
   
-  const encode = settings.encode ?
-    settings.encode :
-    (data) => data
+*/
 
+import deepCheck from 'deep-check-error'
+
+const REQUIRED_SETTINGS = [
+  'getUrl',
+  'ajaxClient'
+]
+
+const crudFactory = (settings = {}) => {
+
+  deepCheck(settings, REQUIRED_SETTINGS)
+
+  const getUrl = settings.getUrl
+  const ajaxClient = settings.ajaxClient
+  
   return {
-    get:(query = {}) => {
+    get:(state) => (query = {}, payload) => {
+
+      const url = getUrl(state)
+
       query = query || {}
       const url = query.id ?
         getUrl(query) + '/' + query.id :
         getUrl(query)
-      return ajaxClient
+      return ajaxClient({
+
+      })
         .get(url)
         .then(encode)
     },
@@ -35,19 +42,19 @@ const crudAjaxFactory = (settings = {}) => {
         .get(url)
         .then(result => result.map(encode))
     },
-    post:(query = {}, data) => {
+    post:(query = {}, payload) => {
       query = query || {}
       return ajaxClient
-        .post(getUrl(query), data)
+        .post(getUrl(query), payload)
         .then(encode)
     },
-    put:(query = {}, data) => {
+    put:(query = {}, payload) => {
       query = query || {}
       const url = query.id ?
         getUrl(query) + '/' + query.id :
         getUrl(query)
       return ajaxClient
-        .put(url, data)
+        .put(url, payload)
         .then(encode)
     },
     delete:(query = {}) => {
@@ -68,4 +75,4 @@ const crudAjaxFactory = (settings = {}) => {
   }
 }
 
-export default crudAjaxFactory
+export default crudFactory

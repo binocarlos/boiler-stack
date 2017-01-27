@@ -15,7 +15,9 @@ const REQUIRED_SETTINGS = [
   'icon',
   'getTableFields',
   'routes.add',
-  'routes.edit'
+  'routes.edit',
+  'apis.list',
+  'apis.delete'
 ]
 
 const TablePlugin = (settings = {}) => {

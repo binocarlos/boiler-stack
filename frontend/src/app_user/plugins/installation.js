@@ -15,7 +15,10 @@ const installation = {
 
   table: TablePlugin({
     name: 'INSTALLATION_TABLE',
-    apis: apis.installation,
+    apis: {
+      list: apis.installation.list,
+      delete: apis.installation.delete
+    },
     selector: state => state.installation.table,
     title: 'Companies',
     icon: icons.installation,
@@ -36,6 +39,11 @@ const installation = {
   
   form: FormPlugin({
     name: 'INSTALLATION_FORM',
+    apis: {
+      get: apis.installation.get,
+      put: apis.installation.put,
+      post: apis.installation.post
+    },
     apis: apis.installation,
     selector: state => state.installation.form,
     title: 'Company',

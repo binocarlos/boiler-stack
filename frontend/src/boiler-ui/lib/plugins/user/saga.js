@@ -16,7 +16,9 @@ const REQUIRED_SETTINGS = [
   'getRegisterSchema',
   'actions',
   'selectors',
-  'apis'
+  'apis.status',
+  'apis.login',
+  'apis.register'
 ]
 
 const UserSaga = (settings = {}) => {
@@ -89,26 +91,20 @@ const UserSaga = (settings = {}) => {
 
     // GET /auth/v1/status
     ApiSaga({
-      api: apis.status.get,
+      api: apis.status,
       actions: actions.status.api
     }),
 
     // POST /auth/v1/login
     ApiSaga({
-      api: apis.login.post,
+      api: apis.login,
       actions: actions.login.api
     }),
 
     // POST /auth/v1/register
     ApiSaga({
-      api: apis.register.post,
+      api: apis.register,
       actions: actions.register.api
-    }),
-
-    // PUT /api/v1/currentuser
-    ApiSaga({
-      api: apis.update.put,
-      actions: actions.update
     }),
 
     // submit login form

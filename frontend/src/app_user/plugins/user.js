@@ -9,7 +9,11 @@ const user = UserPlugin({
   successRedirect: getRoute('/'),
   getLoginSchema: schemas.login,
   getRegisterSchema: schemas.register,
-  apis: apis.user,
+  apis: {
+    status: apis.user.status,
+    login: apis.user.login,
+    register: apis.user.register
+  },
   selector: state => state.user
 })
 

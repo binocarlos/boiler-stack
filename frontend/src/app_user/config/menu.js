@@ -1,4 +1,4 @@
-import URLS from './urls'
+import URLS from '../urls'
 import icons from './icons'
 import { getRoute } from './core'
 

@@ -22,7 +22,7 @@ const ApiTriggerSagaFactory = (settings = {}) => {
   deepCheck(settings, REQUIRED_SETTINGS)
 
   const trigger = settings.trigger
-  const handler = settings.handler
+  const actionCreator = settings.handler
   const selectors = settings.selectors
   const logger = Logger('saga : apitrigger : ' + trigger.toLowerCase())
   
@@ -32,7 +32,7 @@ const ApiTriggerSagaFactory = (settings = {}) => {
 
     logger('trigger api (payload, query): ', payload, query)
 
-    yield put(handler(payload, query))
+    yield put(actionCreator(payload, query))
   }
 
   function* root() {
