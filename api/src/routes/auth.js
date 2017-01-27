@@ -64,8 +64,13 @@ function Auth(controllers) {
       ], finish)
 
     }, (err, user) => {
-      if(err) return error(err)
       
+      console.log('-------------------------------------------');
+    console.log('-------------------------------------------');
+    console.log('-------------------------------------------');
+    console.dir(err)
+      if(err) return error(err)
+
       res.status(201)
       res.json({
         registered: true,

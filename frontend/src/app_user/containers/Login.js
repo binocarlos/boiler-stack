@@ -15,6 +15,7 @@ class LoginContainer extends Component {
         formComponent={ Login }
         getFields={ formfields.login }
         selector={ plugins.user.selectors.login.form }
+        apiSelector={ plugins.user.selectors.login.api }
         actions={ plugins.user.actions.login.form }
       />
     )

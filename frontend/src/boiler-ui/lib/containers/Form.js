@@ -37,9 +37,11 @@ const REQUIRED_PROPS = [
 const mapStateToProps = (state, ownProps) => {
   deepCheck(ownProps, REQUIRED_PROPS)
   const formState = ownProps.selector(state)
+  const apiState = ownProps.apiSelector(state)
   return Object.assign({}, formState, {
     valid: doesFormHaveError(formState.meta) ? false : true,
-    form_touched: formState.meta.form_touched
+    form_touched: formState.meta.form_touched,
+    error: apiState.error
   })
 }
 

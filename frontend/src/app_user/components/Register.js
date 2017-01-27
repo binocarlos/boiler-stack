@@ -5,8 +5,10 @@ import { Button } from 'react-toolbox/lib/button'
 import Page from '../../boiler-ui/lib/components/Page'
 import FormFields from '../../boiler-ui/lib/components/FormFields'
 
-import Link from './Link'
 import { getRoute } from '../tools'
+import Link from './Link'
+import ErrorCardText from './ErrorCardText'
+
 
 class Register extends Component {
 
@@ -29,6 +31,7 @@ class Register extends Component {
               touch={this.props.touch}
             />
           </CardText>
+          <ErrorCardText error={this.props.error} />
           <CardActions>
             <Button 
               label="Cancel" 

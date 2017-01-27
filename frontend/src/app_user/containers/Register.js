@@ -15,6 +15,7 @@ class RegisterContainer extends Component {
         formComponent={ Register }
         getFields={ formfields.register }
         selector={ plugins.user.selectors.register.form }
+        apiSelector={ plugins.user.selectors.register.api }
         actions={ plugins.user.actions.register.form }
       />
     )
