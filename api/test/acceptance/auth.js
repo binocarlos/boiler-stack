@@ -10,23 +10,9 @@ tape('acceptance - register', (t) => {
 
   async.series({
 
-    register: (next) => {
-      tools.request({
-        method: 'POST',
-        url: tools.url('/api/v1/register'),
-        headers: headers(),
-        json: userData
-      }, tools.wrapResult(next))
-    },
+    register: (next) => tools.register(userData, next),
+    status: (next) => tools.status(next)
 
-    status: (next) => {
-      tools.request({
-        method: 'GET',
-        url: tools.url('/api/v1/status'),
-        headers: headers(),
-        json: true
-      }, tools.wrapResult(next))
-    }
   }, (err, results) => {
 
     if(err) t.error(err)
@@ -73,59 +59,12 @@ tape('acceptance - status', (t) => {
 
   async.series({
 
-    register: (next) => {
-      tools.request({
-        method: 'POST',
-        url: tools.url('/api/v1/register'),
-        headers: headers(),
-        json: userData
-      }, tools.wrapResult(next))
-    },
-
-    status: (next) => {
-      tools.request({
-        method: 'GET',
-        url: tools.url('/api/v1/status'),
-        headers: headers(),
-        json: true
-      }, tools.wrapResult(next))
-    },
-
-    logout: (next) => {
-      tools.request({
-        method: 'GET',
-        url: tools.url('/api/v1/logout'),
-        headers: headers(),
-        followAllRedirects: true
-      }, tools.wrapResult(next))
-    },
-
-    nostatus: (next) => {
-      tools.request({
-        method: 'GET',
-        url: tools.url('/api/v1/status'),
-        headers: headers(),
-        json: true
-      }, tools.wrapResult(next))
-    },
-
-    login: (next) => {
-      tools.request({
-        method: 'POST',
-        url: tools.url('/api/v1/login'),
-        headers: headers(),
-        json: userData
-      }, tools.wrapResult(next))
-    },
-
-    loginstatus: (next) => {
-      tools.request({
-        method: 'GET',
-        url: tools.url('/api/v1/status'),
-        headers: headers(),
-        json: true
-      }, tools.wrapResult(next))
-    }
+    register: (next) => tools.register(userData, next),
+    status: (next) => tools.status(next),
+    logout: (next) => tools.logout(next),
+    nostatus: (next) => tools.status(next),
+    login: (next) => tools.login(userData, next),
+    loginstatus: (next) => tools.status(next)
 
   }, (err, results) => {
 
@@ -172,23 +111,9 @@ tape('acceptance - account exists', (t) => {
 
   async.series({
 
-    register: (next) => {
-      tools.request({
-        method: 'POST',
-        url: tools.url('/api/v1/register'),
-        headers: headers(),
-        json: userData
-      }, tools.wrapResult(next))
-    },
+    register: (next) => tools.register(userData, next),
+    exists: (next) => tools.register(userData, next)
 
-    exists: (next) => {
-      tools.request({
-        method: 'POST',
-        url: tools.url('/api/v1/register'),
-        headers: headers(),
-        json: userData
-      }, tools.wrapResult(next))
-    }
   }, (err, results) => {
 
     if(err) t.error(err)

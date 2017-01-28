@@ -13,13 +13,14 @@ const DefaultInstallation = (controllers) => {
 
   return (tracerid, job) => {
 
-    const userid = job.result.id
+    // the result is the user from account creation
+    const accountid = job.result.id
     const query = {
       data: {
-        name: 'default',
+        name: 'My First Company',
         meta: {}
       },
-      userid: userid
+      accountid: accountid
     }
 
     transaction(tracerid, (db, finish) => {
@@ -34,7 +35,7 @@ const DefaultInstallation = (controllers) => {
           results = installationData
           installation.activate(db, {
             installationid: installationData.id,
-            userid: userid
+            accountid: accountid
           }, next)
         },
 

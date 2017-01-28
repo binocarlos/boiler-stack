@@ -1,4 +1,4 @@
-import Ajax from '../boiler-ui/lib/api/ajax'
+import Ajax from '../boiler-ui/lib/ajax'
 import UserSelectors from '../boiler-ui/lib/plugins/user/selectors'
 
 import URLS from './urls'
@@ -6,11 +6,14 @@ import URLS from './urls'
 const userSelectors = UserSelectors(state => state.user)
 const activeInstallation = (state) => userSelectors.status.currentInstallation(state)
 
-// a chance to modify the query before we send it
-// this is where the JWT auth header can go
-// and where the = iid (installation id) parameter is set
+// inject the 'i' query parameter
+// this tells the api server which installation we are loading from
 const runQuery = (state, query) => {
-  return Ajax(query)
+  const params = query.params || {}
+  params.i = activeInstallation(state)
+  return Ajax(Object.assign({}, query, {
+    params
+  })
 }
 
 const List = (getUrl) => (state) => (query, payload) => runQuery(state, {

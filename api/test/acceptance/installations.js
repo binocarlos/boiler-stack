@@ -10,34 +10,10 @@ tape('acceptance - installations', (t) => {
 
   async.series({
 
-    register: (next) => {
-      tools.request({
-        method: 'POST',
-        url: tools.url('/api/v1/register'),
-        headers: headers(),
-        json: userData
-      }, tools.wrapResult(next))
-    },
-
+    register: (next) => tools.register(userData, next),
     pause: (next) => setTimeout(next, 100),
-
-    installations: (next) => {
-      tools.request({
-        method: 'GET',
-        url: tools.url('/api/v1/installations'),
-        headers: headers(),
-        json: true
-      }, tools.wrapResult(next))
-    },
-
-    status: (next) => {
-      tools.request({
-        method: 'GET',
-        url: tools.url('/api/v1/status'),
-        headers: headers(),
-        json: true
-      }, tools.wrapResult(next))
-    }
+    installations: (next) => tools.installations(next),
+    status: (next) => tools.status(next)
 
   }, (err, results) => {
 
@@ -48,7 +24,7 @@ tape('acceptance - installations', (t) => {
     const status = results.status
 
     t.equal(installations.body.length, 1, '1 installation')
-    t.equal(installations.body[0].name, 'default', 'default installation')
+    t.equal(installations.body[0].name, 'My First Company', 'default installation')
 
     t.equal(status.body.data.meta.activeInstallation, installations.body[0].id, 'the user the active installation')
 
@@ -59,39 +35,15 @@ tape('acceptance - installations', (t) => {
 tape('acceptance - create installation', (t) => {
   const userData = tools.UserData()
   const INSTALLATION_NAME = 'apples install'
-
+  const DATA = {
+    name: INSTALLATION_NAME
+  }
   async.series({
 
-    register: (next) => {
-      tools.request({
-        method: 'POST',
-        url: tools.url('/api/v1/register'),
-        headers: headers(),
-        json: userData
-      }, tools.wrapResult(next))
-    },
-
+    register: (next) => tools.register(userData, next),
     pause: (next) => setTimeout(next, 100),
-
-    create: (next) => {
-      tools.request({
-        method: 'POST',
-        url: tools.url('/api/v1/installations'),
-        headers: headers(),
-        json: {
-          name: INSTALLATION_NAME
-        }
-      }, tools.wrapResult(next))
-    },
-
-    installations: (next) => {
-      tools.request({
-        method: 'GET',
-        url: tools.url('/api/v1/installations'),
-        headers: headers(),
-        json: true
-      }, tools.wrapResult(next))
-    }
+    create: (next) => tools.createInstallation(DATA, next),
+    installations: (next) => tools.installations(next)
 
   }, (err, results) => {
 
@@ -110,61 +62,33 @@ tape('acceptance - create installation', (t) => {
 tape('acceptance - save installation', (t) => {
   const userData = tools.UserData()
   const INSTALLATION_NAME = 'apples install'
+  const DATA = {
+    name: INSTALLATION_NAME,
+    meta: {
+      fruit: 'apples'
+    }
+  }
+  const SAVE_DATA = (obj) => {
+    return {
+      name: INSTALLATION_NAME + '2',
+      meta: Object.assign({}, obj.meta, {
+        color: 'oranges'
+      })
+    }
+  }
   let obj = null
 
   async.series({
 
-    register: (next) => {
-      tools.request({
-        method: 'POST',
-        url: tools.url('/api/v1/register'),
-        headers: headers(),
-        json: userData
-      }, tools.wrapResult(next))
-    },
-
+    register: (next) => tools.register(userData, next),
     pause: (next) => setTimeout(next, 100),
-
-    create: (next) => {
-      tools.request({
-        method: 'POST',
-        url: tools.url('/api/v1/installations'),
-        headers: headers(),
-        json: {
-          name: INSTALLATION_NAME,
-          meta: {
-            fruit: 'apples'
-          }
-        }
-      }, tools.wrapResult((err, result) => {
-        if(err) return next(err)
-        obj = result.body
-        next(err, result)
-      }))
-    },
-
-    save: (next) => {
-      tools.request({
-        method: 'PUT',
-        url: tools.url('/api/v1/installations/' + obj.id),
-        headers: headers(),
-        json: {
-          name: INSTALLATION_NAME + '2',
-          meta: Object.assign({}, obj.meta, {
-            color: 'oranges'
-          })
-        }
-      }, tools.wrapResult(next))
-    },
-
-    installation: (next) => {
-      tools.request({
-        method: 'GET',
-        url: tools.url('/api/v1/installations/' + obj.id),
-        headers: headers(),
-        json: true
-      }, tools.wrapResult(next))
-    }
+    create: (next) => tools.createInstallation(DATA, (err, r) => {
+      if(err) return next(err)
+      obj = r.body
+      next()
+    }),
+    save: (next) => tools.saveInstallation(obj.id, SAVE_DATA(obj), next),
+    installation: (next) => tools.getInstallation(obj.id, next)
 
   }, (err, results) => {
 
@@ -180,59 +104,32 @@ tape('acceptance - save installation', (t) => {
     t.end()
   })
 })
-
+/*
 tape('acceptance - delete installation', (t) => {
   const userData = tools.UserData()
   const INSTALLATION_NAME = 'apples install'
+  const DATA = {
+    name: INSTALLATION_NAME,
+    meta: {
+      fruit: 'apples'
+    }
+  }
   let obj = null
 
   async.series({
 
-    register: (next) => {
-      tools.request({
-        method: 'POST',
-        url: tools.url('/api/v1/register'),
-        headers: headers(),
-        json: userData
-      }, tools.wrapResult(next))
-    },
+    register: (next) => tools.register(userData, next),
 
     pause: (next) => setTimeout(next, 100),
 
-    create: (next) => {
-      tools.request({
-        method: 'POST',
-        url: tools.url('/api/v1/installations'),
-        headers: headers(),
-        json: {
-          name: INSTALLATION_NAME,
-          meta: {
-            fruit: 'apples'
-          }
-        }
-      }, tools.wrapResult((err, result) => {
-        if(err) return next(err)
-        obj = result.body
-        next(err, result)
-      }))
-    },
+    create: (next) => tools.createInstallation(DATA, (err, r) => {
+      if(err) return next(err)
+      obj = r.body
+      next()
+    }),
 
-    del: (next) => {
-      tools.request({
-        method: 'DELETE',
-        url: tools.url('/api/v1/installations/' + obj.id),
-        headers: headers()
-      }, tools.wrapResult(next))
-    },
-
-    installations: (next) => {
-      tools.request({
-        method: 'GET',
-        url: tools.url('/api/v1/installations'),
-        headers: headers(),
-        json: true
-      }, tools.wrapResult(next))
-    }
+    del: (next) => tools.deleteInstallation(obj.id, next),
+    installations: (next) => tools.installations(next)
 
   }, (err, results) => {
 
@@ -250,54 +147,26 @@ tape('acceptance - activate installation', (t) => {
   const userData = tools.UserData()
   const INSTALLATION_NAME = 'apples install'
   let obj = null
-
+  const DATA = {
+    name: INSTALLATION_NAME,
+    meta: {
+      fruit: 'apples'
+    }
+  }
   async.series({
 
-    register: (next) => {
-      tools.request({
-        method: 'POST',
-        url: tools.url('/api/v1/register'),
-        headers: headers(),
-        json: userData
-      }, tools.wrapResult(next))
-    },
+    register: (next) => tools.register(userData, next),
 
     pause: (next) => setTimeout(next, 100),
 
-    create: (next) => {
-      tools.request({
-        method: 'POST',
-        url: tools.url('/api/v1/installations'),
-        headers: headers(),
-        json: {
-          name: INSTALLATION_NAME,
-          meta: {
-            fruit: 'apples'
-          }
-        }
-      }, tools.wrapResult((err, result) => {
-        if(err) return next(err)
-        obj = result.body
-        next(err, result)
-      }))
-    },
+    create: (next) => tools.createInstallation(DATA, (err, r) => {
+      if(err) return next(err)
+      obj = r.body
+      next()
+    }),
 
-    del: (next) => {
-      tools.request({
-        method: 'PUT',
-        url: tools.url('/api/v1/installations/' + obj.id + '/activate'),
-        headers: headers()
-      }, tools.wrapResult(next))
-    },
-
-    status: (next) => {
-      tools.request({
-        method: 'GET',
-        url: tools.url('/api/v1/status'),
-        headers: headers(),
-        json: true
-      }, tools.wrapResult(next))
-    }
+    activate: (next) => tools.activateInstallation(obj.id, next),
+    status: (next) => tools.status(next)
 
   }, (err, results) => {
 
@@ -307,4 +176,4 @@ tape('acceptance - activate installation', (t) => {
     
     t.end()
   })
-})
+})*/

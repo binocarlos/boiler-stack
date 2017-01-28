@@ -19,25 +19,24 @@ create table "collaboration" (
   "permission"        text not null
 );
 
-create table "client" (
+create table "job" (
   "id"                serial primary key not null,
   "installation"      int references "installation" (id) on delete cascade,
   "name"              text not null,
   "meta"              json
 );
 
-create table "project" (
+create table "job_collaboration" (
   "id"                serial primary key not null,
-  "installation"      int references "installation" (id) on delete cascade,
-  "client"            int references "client" (id) on delete cascade,
-  "name"              text not null,
-  "meta"              json
+  "useraccount"       int references "useraccount" (id)  on delete cascade,
+  "job"               int references "installation" (id) on delete cascade,
+  "permission"        text not null
 );
 
 create table "quote" (
   "id"                serial primary key not null,
   "installation"      int references "installation" (id) on delete cascade,
-  "project"           int references "project" (id) on delete cascade,
+  "job"               int references "job" (id) on delete cascade,
   "name"              text not null,
   "store"             json
 );

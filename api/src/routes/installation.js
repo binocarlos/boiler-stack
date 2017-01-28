@@ -18,14 +18,14 @@ function Installations(controllers) {
 
   const list = (req, res, error) => {
     installations.list(connection(req.id), {
-      userid: req.user.id
+      accountid: req.user.id
     }, tools.jsonCallback(res, error))
   }
 
   const create = (req, res, error) => {
     transaction(req.id, (db, finish) => {
       installations.create(db, {
-        userid: req.user.id,
+        accountid: req.user.id,
         data: req.body
       }, finish)
     }, tools.jsonCallback(res, error, 201))
@@ -52,7 +52,7 @@ function Installations(controllers) {
     transaction(req.id, (db, finish) => {
       installations.activate(db, {
         installationid: installationID,
-        userid: req.user.id
+        accountid: req.user.id
       }, finish)
     }, tools.jsonCallback(res, error))
   }

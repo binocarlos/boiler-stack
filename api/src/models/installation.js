@@ -11,8 +11,9 @@ const prepareData = (installation) => {
 }
 
 const QUERIES = {
-  byUser: (userid) => {
-    const params = [userid]
+
+  byUser: (accountid) => {
+    const params = [accountid]
     const sql = `select *
 from
   installation
@@ -30,15 +31,15 @@ order by
       params
     }
   },
-
   get: (params) => SQL.select('installation', params),
   save: (data, params) => SQL.update('installation', data, params),
   delete: (params) => SQL.delete('installation', params),
   insert: (data) => SQL.insert('installation', data),
-  insertCollaboration: (userid, permission) => {
+  getCollaboration: (params) => SQL.select('collaboration', params),
+  insertCollaboration: (accountid, permission) => {
     permission = permission || 'owner'
     return SQL.insert('collaboration', {
-      'useraccount': userid,
+      'useraccount': accountid,
       'installation': 'lastval()',
       'permission': permission
     }, {
@@ -49,15 +50,22 @@ order by
 
 const get = (runQuery, params, done) => runQuery(QUERIES.get(params), selectors.single(done))
 
-//  * userid
-const byUser = (runQuery, query, done) => runQuery(QUERIES.byUser(query.userid), selectors.rows(done))
+const accessLevel = (runQuery, params, done) => {
+  runQuery(QUERIES.getCollaboration({
+    useraccount: params.accountid,
+    installation: params.installationid
+  }), selectors.field('permission', done))
+}
+
+//  * accountid
+const byUser = (runQuery, query, done) => runQuery(QUERIES.byUser(query.accountid), selectors.rows(done))
 
 //  * data
 //    * name
 //    * meta
-//  * userid
+//  * accountid
 const create = (runQuery, query, done) => {
-  const userid = query.userid
+  const accountid = query.accountid
   const data = prepareData(query.data)
   let newObjects = {
     installation: null,
@@ -69,7 +77,7 @@ const create = (runQuery, query, done) => {
     (next) => runQuery(QUERIES.insert(data), selectors.single(next)),
     (installation, next) => {
       newObjects.installation = installation
-      runQuery(QUERIES.insertCollaboration(userid), selectors.single(next))
+      runQuery(QUERIES.insertCollaboration(accountid), selectors.single(next))
     },
     (collaboration, next) => {
       newObjects.collaboration = collaboration
@@ -101,6 +109,7 @@ module.exports = {
   QUERIES,
   get: get,
   byUser,
+  accessLevel,
   create,
   save,
   delete: del

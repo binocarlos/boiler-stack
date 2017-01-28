@@ -13,6 +13,7 @@ const InstallationController = (eventBus) => {
   // queries
   const get = (db, query, done) => InstallationModel.get(db.run, query, done)
   const list = (db, query, done) => InstallationModel.byUser(db.run, query, done)
+  const accessLevel = (db, query, done) => InstallationModel.accessLevel(db.run, query, done)
 
   // commands
   const create = (db, query, done) => {
@@ -27,10 +28,10 @@ const InstallationController = (eventBus) => {
   // update the user with a 'active' installation (written to the user data)
   // query:
   //   * installationid
-  //   * userid
+  //   * accountid
   const activate = (db, query, done) => {
     async.waterfall([
-      (next) => UserModel.get(db.run, {id: query.userid}, next),
+      (next) => UserModel.get(db.run, {id: query.accountid}, next),
       (user, next) => {
         const newMeta = Object.assign({}, user.meta, {
           activeInstallation: query.installationid
@@ -40,7 +41,7 @@ const InstallationController = (eventBus) => {
             meta: newMeta
           },
           params: {
-            id: query.userid
+            id: query.accountid
           }
         }, next)
       }
@@ -74,6 +75,7 @@ const InstallationController = (eventBus) => {
 
   return {
     list,
+    accessLevel,
     create,
     activate,
     save,
