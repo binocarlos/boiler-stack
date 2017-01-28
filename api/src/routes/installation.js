@@ -32,11 +32,14 @@ function Installations(controllers) {
   }
 
   const save = (req, res, error) => {
+    const installationID = parseInt(req.params.id)
+    if(isNaN(installationID)) return error('id was not an int')
+
     transaction(req.id, (db, finish) => {
       installations.save(db, {
         data: req.body,
         params: {
-          id: req.params.id  
+          id: installationID
         }
       }, finish)
     }, tools.jsonCallback(res, error))

@@ -53,7 +53,10 @@ const Routes = (base, controllers) => (app) => {
 
   // installation
   const installationAccess = (accessLevel) => access.installation({
-    getId: req => req.params.id,
+    getId: req => {
+      const id = parseInt(req.params.id)
+      return isNaN(id) ? null : id
+    },
     accessLevel
   })
 

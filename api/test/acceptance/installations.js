@@ -11,7 +11,7 @@ tape('acceptance - installations', (t) => {
   async.series({
 
     register: (next) => tools.register(userData, next),
-    pause: (next) => setTimeout(next, 100),
+    pause: (next) => setTimeout(next, 300),
     installations: (next) => tools.installations(next),
     status: (next) => tools.status(next)
 
@@ -41,7 +41,7 @@ tape('acceptance - create installation', (t) => {
   async.series({
 
     register: (next) => tools.register(userData, next),
-    pause: (next) => setTimeout(next, 100),
+    pause: (next) => setTimeout(next, 300),
     create: (next) => tools.createInstallation(DATA, next),
     installations: (next) => tools.installations(next)
 
@@ -81,7 +81,7 @@ tape('acceptance - save installation', (t) => {
   async.series({
 
     register: (next) => tools.register(userData, next),
-    pause: (next) => setTimeout(next, 100),
+    pause: (next) => setTimeout(next, 300),
     create: (next) => tools.createInstallation(DATA, (err, r) => {
       if(err) return next(err)
       obj = r.body
@@ -104,7 +104,7 @@ tape('acceptance - save installation', (t) => {
     t.end()
   })
 })
-/*
+
 tape('acceptance - delete installation', (t) => {
   const userData = tools.UserData()
   const INSTALLATION_NAME = 'apples install'
@@ -120,7 +120,7 @@ tape('acceptance - delete installation', (t) => {
 
     register: (next) => tools.register(userData, next),
 
-    pause: (next) => setTimeout(next, 100),
+    pause: (next) => setTimeout(next, 300),
 
     create: (next) => tools.createInstallation(DATA, (err, r) => {
       if(err) return next(err)
@@ -138,7 +138,7 @@ tape('acceptance - delete installation', (t) => {
     const installations = results.installations.body
 
     t.equal(installations.length, 1, 'only 1 installation')
-    t.equal(installations[0].name, 'default', 'the only one is the default')
+    t.equal(installations[0].name, 'My First Company', 'the only one is the default')
     t.end()
   })
 })
@@ -157,7 +157,7 @@ tape('acceptance - activate installation', (t) => {
 
     register: (next) => tools.register(userData, next),
 
-    pause: (next) => setTimeout(next, 100),
+    pause: (next) => setTimeout(next, 300),
 
     create: (next) => tools.createInstallation(DATA, (err, r) => {
       if(err) return next(err)
@@ -176,4 +176,141 @@ tape('acceptance - activate installation', (t) => {
     
     t.end()
   })
-})*/
+})
+
+tape('acceptance - dont overwrite installation meta', (t) => {
+  const userData = tools.UserData()
+  const INSTALLATION_NAME = 'apples install'
+  const DATA = {
+    name: INSTALLATION_NAME,
+    meta: {
+      fruit: 'apples'
+    }
+  }
+  const SAVE_DATA = (obj) => {
+    return {
+      name: INSTALLATION_NAME + '2'
+    }
+  }
+  let obj = null
+
+  async.series({
+
+    register: (next) => tools.register(userData, next),
+    pause: (next) => setTimeout(next, 100),
+    create: (next) => tools.createInstallation(DATA, (err, r) => {
+      if(err) return next(err)
+      obj = r.body
+      next()
+    }),
+    save: (next) => tools.saveInstallation(obj.id, SAVE_DATA(obj), next),
+    installation: (next) => tools.getInstallation(obj.id, next)
+
+  }, (err, results) => {
+
+    if(err) t.error(err)
+
+    const installation = results.installation.body
+
+    t.equal(installation.meta.fruit, 'apples', 'meta still intact')
+
+    t.end()
+  })
+})
+
+tape('acceptance - access control - different user', (t) => {
+  const userData1 = tools.UserData(1)
+  const userData2 = tools.UserData(2)
+  const INSTALLATION_NAME = 'apples install'
+
+  let installationid = null
+  let obj = null
+  let users = null
+  let status1 = null
+  const DATA = {
+    name: INSTALLATION_NAME,
+    meta: {
+      fruit: 'apples'
+    }
+  }
+  async.series({
+
+    user1: (next) => tools.register(userData1, next),
+
+    pause: (next) => setTimeout(next, 300),
+
+    status1: (next) => tools.status((err, s) => {
+      if(err) return next(err)
+      status1 = s
+      installationid = s.body.data.meta.activeInstallation
+      next()
+    }),
+
+    get1: (next) => tools.getInstallation(installationid, next),
+    put1: (next) => tools.saveInstallation(installationid, {name:'updated1'}, next),
+
+    logout: (next) => tools.logout(next),
+
+    user2: (next) => tools.register(userData2, next),
+
+    get2: (next) => tools.getInstallation(installationid, next),
+    put2: (next) => tools.saveInstallation(installationid, {name:'updated2'}, next)
+
+  }, (err, results) => {
+
+    if(err) t.error(err)
+
+    t.equal(results.get1.statusCode, 200, 'get1 200')
+    t.equal(results.get2.statusCode, 403, 'get2 403')
+
+    t.equal(results.put1.statusCode, 200, 'put1 200')
+    t.equal(results.put2.statusCode, 403, 'put2 403')
+    
+    t.end()
+  })
+})
+
+tape('acceptance - access control - no user', (t) => {
+  const userData1 = tools.UserData(1)
+  const userData2 = tools.UserData(2)
+  const INSTALLATION_NAME = 'apples install'
+
+  let installationid = null
+  let obj = null
+  let users = null
+  let status1 = null
+  const DATA = {
+    name: INSTALLATION_NAME,
+    meta: {
+      fruit: 'apples'
+    }
+  }
+  async.series({
+
+    user1: (next) => tools.register(userData1, next),
+
+    pause: (next) => setTimeout(next, 300),
+
+    status1: (next) => tools.status((err, s) => {
+      if(err) return next(err)
+      status1 = s
+      installationid = s.body.data.meta.activeInstallation
+      next()
+    }),
+
+    put1: (next) => tools.saveInstallation(installationid, {name:'updated1'}, next),
+
+    logout: (next) => tools.logout(next),
+
+    put2: (next) => tools.saveInstallation(installationid, {name:'updated2'}, next),
+
+  }, (err, results) => {
+
+    if(err) t.error(err)
+
+    t.equal(results.put1.statusCode, 200, 'get1 200')
+    t.equal(results.put2.statusCode, 403, 'get2 403')
+    
+    t.end()
+  })
+})

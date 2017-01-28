@@ -2,18 +2,19 @@
 
 const ACCESS_LEVELS = {
   write: 20,
-  read: 10
+  read: 10,
+  none: 0
 }
 
 const ACCESS_NAMES = {
-  owner: 'create',
+  owner: 'write',
   editor: 'write',
   viewer: 'read'
 }
 
-const DEFAULT_ACCESS_LEVEL = 'editor'
+const DEFAULT_ACCESS_LEVEL = 'viewer'
 
-const getAccessLevel = (level) => ACCESS_LEVELS[ACCESS_NAMES[level]]
+const getAccessLevel = (level) => ACCESS_LEVELS[ACCESS_NAMES[level] || 'none']
 
 // authorization rules
 const AccessControl = (controllers) => {
@@ -38,12 +39,14 @@ const AccessControl = (controllers) => {
       const accountid = req.user.id
       const installationid = opts.getId(req)
       if(!installationid) return next(['installation id required', 403])
+
+      
       installationAccessLevel(connection(req.id), {
         accountid,
         installationid
       }, (err, userAccess) => {
         if(err) return next([err.toString(), 500])
-        if(getAccessLevel(requiredAccess) > getAccessLevel(userAccess)) {
+        if(getAccessLevel(userAccess) < getAccessLevel(requiredAccess)) {
           return next(['insufficient access level', 403])
         }
         next()

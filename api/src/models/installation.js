@@ -4,10 +4,11 @@ const SQL = require('../database/sql')
 const selectors = require('../database/selectors')
 
 const prepareData = (installation) => {
-  const meta = installation.meta || {}
-  return Object.assign({}, installation, {
-    meta: JSON.stringify(meta)
-  })
+  return installation.meta ?
+    Object.assign({}, installation, {
+      meta: JSON.stringify(installation.meta)
+    }) :
+    installation
 }
 
 const QUERIES = {
