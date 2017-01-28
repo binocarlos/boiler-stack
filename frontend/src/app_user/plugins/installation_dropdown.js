@@ -7,7 +7,8 @@ const installationDropdown = InstallationDropdownPlugin({
   base: 'INSTALLATION_DROPDOWN',
   title: 'company',
   loadTrigger: installation.table.actions.list.request,
-  userActions: user.actions,
+  reloadUserAction: user.actions.status.api,
+  activateAction: installation.activate.action,
   selectors: {
     loggedIn: user.selectors.status.loggedIn,
     currentInstallation: user.selectors.status.currentInstallation,

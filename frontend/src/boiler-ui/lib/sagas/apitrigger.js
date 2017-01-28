@@ -30,9 +30,9 @@ const ApiTriggerSagaFactory = (settings = {}) => {
     const payload = yield select(selectors.payload)
     const query = yield select(selectors.query)
 
-    logger('trigger api (payload, query): ', payload, query)
+    logger('trigger api (query, payload): ', query, payload)
 
-    yield put(actionCreator(payload, query))
+    yield put(actionCreator(query, payload))
   }
 
   function* root() {

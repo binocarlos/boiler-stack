@@ -7,15 +7,17 @@ import { fork, put, take, select } from 'redux-saga/effects'
 import systemActions from '../../actions/system'
 
 const REQUIRED_SETTINGS = [
-  'actions',
-  'userActions',
+  'trigger',
+  'reloadUserAction',
+  'activateAction',
   'selectors.userdata',
   'selectors.installations'
 ]
 
 const InstallationDropdownSaga = (settings = {}) => {
-  const actions = settings.actions
-  const userActions = settings.userActions
+  const trigger = settings.trigger
+  const reloadUserAction = settings.reloadUserAction
+  const activateAction = settings.activateAction
   const selectors = settings.selectors
   const logger = Logger('saga:installation_dropdown')
 
@@ -23,32 +25,27 @@ const InstallationDropdownSaga = (settings = {}) => {
 
     // listen for any system mutations and display a snackbar
     function* listenForDropdownChange() {
-      function* updateUser(action) {
-        const userData = yield select(selectors.userdata)
+      function* activateInstallation(action) {
         const installations = yield select(selectors.installations)
-        const currentInstallationId = action.payload
 
-        const currentInstallationObj = installations
-          .filter(installation => installation.id == currentInstallationId)[0]
-          
-        const installationTitle = currentInstallationObj ?
-          currentInstallationObj.name :
+        const activeInstallationId = action.payload
+        const activeInstallationObj = installations
+          .filter(installation => installation.id == activeInstallationId)[0]
+        const installationTitle = activeInstallationObj ?
+          activeInstallationObj.name :
           ''
 
-        const newUserData = Object.assign({}, userData, {
-          currentInstallation: currentInstallationId
-        })
-        yield put(userActions.update.request({
-          data: newUserData
+        yield put(activateAction.request({
+          id: activeInstallationId
         }))
-        yield take(userActions.update.types.success)
-        yield put(userActions.status.api.request())
+        yield take(activateAction.types.success)
+        yield put(reloadUserAction.request())
         yield put(systemActions.mutation({
           message: installationTitle + ' activated'
         }))
       }
-      logger('listening: ' + actions.types.trigger)
-      yield takeLatest(actions.types.trigger, updateUser)
+      logger('listening: ' + trigger)
+      yield takeLatest(trigger, activateInstallation)
     }
 
   ]

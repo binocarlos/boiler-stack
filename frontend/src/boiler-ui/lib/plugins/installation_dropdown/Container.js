@@ -33,9 +33,10 @@ const mapStateToProps = (state, ownProps) => {
   const loggedIn = ownProps.selectors.loggedIn(state)
   const activeInstallation = ownProps.selectors.currentInstallation(state)
   const installations = ownProps.selectors.installations(state) || []
+
   return {
     active: loggedIn ? true : false,
-    activeInstallation: activeInstallation,
+    activeInstallation,
     installations
   }
 }

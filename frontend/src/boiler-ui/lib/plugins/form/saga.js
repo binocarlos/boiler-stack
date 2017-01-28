@@ -86,7 +86,7 @@ const FormPluginSaga = (settings = {}) => {
       
         // the put or post actions
         const apiActions = actions[page.api]
-        yield put(apiActions.request(payload, query))
+        yield put(apiActions.request(query, payload))
 
         // wait for the error/success response
         const responseAction = yield take([

@@ -7,7 +7,8 @@ import Container from './Container'
 
 const REQUIRED_SETTINGS = [
   'base',
-  'userActions',
+  'reloadUserAction',
+  'activateAction',
   'selectors.loggedIn',
   'selectors.currentInstallation',
   'selectors.installations'
@@ -17,11 +18,13 @@ const InstallationDropdownPlugin = (settings = {}) => {
   deepCheck(settings, REQUIRED_SETTINGS)
 
   const actions = Actions(settings.base)
-  const userActions = settings.userActions
+  const reloadUserAction = settings.reloadUserAction
+  const activateAction = settings.activateAction
   const selectors = settings.selectors
   const saga = Saga({
-    actions,
-    userActions,
+    trigger: actions.types.trigger,
+    reloadUserAction,
+    activateAction,
     selectors
   })
 

@@ -13,6 +13,7 @@ const getSagas = (apis = {}) => {
     plugins.snackbar.saga,
     plugins.installation.table.saga,
     plugins.installation.form.saga,
+    plugins.installation.activate.saga,
     plugins.installationDropdown.saga,
     plugins.client.table.saga,
     plugins.client.form.saga,

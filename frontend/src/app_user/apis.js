@@ -81,7 +81,12 @@ const user = {
   })
 }
 
-const installation = Crud(state => URLS.installation)
+const installation = Object.assign({}, Crud(state => URLS.installation), {
+  activate: (state) => (query, payload) => runQuery(state, {
+    method: 'put',
+    url: URLS.installation + '/' + query.id + '/activate'
+  })
+})
 const client = Crud(state => URLS.client)
 const project = Crud(state => URLS.project)
 

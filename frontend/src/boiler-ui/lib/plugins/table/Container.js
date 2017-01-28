@@ -111,7 +111,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     openDeleteWindow: () => dispatch(actions.deleteWindow.open()),
     closeDeleteWindow: () => dispatch(actions.deleteWindow.close()),
     // send an 'ids' property to the query and we can do multi-delete
-    confirmDelete: (ids, message) => dispatch(actions.delete.request(null, {ids, message}))
+    confirmDelete: (ids, message) => dispatch(actions.delete.request({ids, message}))
   }
 }
 

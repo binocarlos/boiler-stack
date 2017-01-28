@@ -43,9 +43,15 @@ function Installations(controllers) {
   }
 
   const activate = (req, res, error) => {
+
+    // we are writing JSON data so lets write the id as the int
+    // that it is
+    const installationID = parseInt(req.params.id)
+    if(isNaN(installationID)) return error('id was not an int')
+
     transaction(req.id, (db, finish) => {
       installations.activate(db, {
-        installationid: req.params.id,
+        installationid: installationID,
         userid: req.user.id
       }, finish)
     }, tools.jsonCallback(res, error))

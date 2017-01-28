@@ -7,7 +7,6 @@ import bows from 'bows'
 import deepCheck from 'deep-check-error'
 
 import Store from './store'
-import messages from './messages'
 
 import {
   getFunctionName
@@ -29,8 +28,6 @@ const boilerapp = (settings = {}) => {
   const sagas = settings.sagas
   const middleware = settings.middleware || []
   const initialState = settings.initialState
-
-  messages.boot()
 
   const store = Store({
     reducer,

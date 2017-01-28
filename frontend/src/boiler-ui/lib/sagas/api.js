@@ -33,7 +33,7 @@ const ApiSagaFactory = (settings = {}) => {
     try {
       const result = yield apiRunner(action.query, action.payload)
       logger('response', result)
-      yield put(actions.success(result, action.query))
+      yield put(actions.success(action.query, result))
     } catch (e) {
       logger('error', e.message, e.stack)
 
