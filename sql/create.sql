@@ -26,10 +26,10 @@ create table "job" (
   "meta"              json
 );
 
-create table "job_collaboration" (
+create table "job_access" (
   "id"                serial primary key not null,
   "useraccount"       int references "useraccount" (id)  on delete cascade,
-  "job"               int references "installation" (id) on delete cascade,
+  "job"               int references "job" (id) on delete cascade,
   "permission"        text not null
 );
 

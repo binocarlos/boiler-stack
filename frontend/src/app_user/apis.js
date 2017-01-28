@@ -13,7 +13,7 @@ const runQuery = (state, query) => {
   params.i = activeInstallation(state)
   return Ajax(Object.assign({}, query, {
     params
-  })
+  }))
 }
 
 const List = (getUrl) => (state) => (query, payload) => runQuery(state, {

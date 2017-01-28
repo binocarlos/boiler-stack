@@ -12,6 +12,7 @@ const TooltipButton = Tooltip(Button)
 const INSTALLATION_TABLE = {
   schema: {
     name: {type: String},
+    access: {},
     status: {},
     actions: {}
   },
@@ -33,6 +34,7 @@ const INSTALLATION_TABLE = {
     return {
       id: item.id,
       name: item.name,
+      access: item.permission,
       status: (
         <div style={{
           display: 'flex',
