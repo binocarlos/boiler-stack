@@ -13,46 +13,52 @@ const runQuery = (state, query) => {
   return Ajax(query)
 }
 
+const List = (getUrl) => (state) => (query, payload) => runQuery(state, {
+  method: 'get',
+  url: getUrl(state)
+})
+
+const Get = (getUrl) => (state) => (query, payload) => runQuery(state, {
+  method: 'get',
+  url: getUrl(state) + '/' + query.id
+})
+
+const Post = (getUrl) => (state) => (query, payload) => runQuery(state, {
+  method: 'post',
+  url: getUrl(state),
+  data: payload
+})
+
+const Put = (getUrl) => (state) => (query, payload) => runQuery(state, {
+  method: 'get',
+  url: getUrl(state) + '/' + query.id,
+  data: payload
+})
+
+const Delete = (getUrl) => (state) => (query, payload) => {
+  if(query.id) {
+    return runQuery(state, {
+      method: 'delete',
+      url: getUrl(state) + '/' + query.id
+    })
+  }
+  else if (query.ids) {
+    return query.ids.map(id => {
+      return runQuery(state, {
+        method: 'delete',
+        url: getUrl(state) + '/' + id
+      })
+    })
+  }
+}
+
 const Crud = (getUrl) => {
   return {
-    list: (state) => (query, payload) => runQuery(state, {
-      method: 'get',
-      url: getUrl(state)
-    }),
-
-    post: (state) => (query, payload) => runQuery(state, {
-      method: 'post',
-      url: getUrl(state),
-      data: payload
-    }),
-
-    get: (state) => (query, payload) => runQuery(state, {
-      method: 'get',
-      url: getUrl(state) + '/' + query.id
-    }),
-
-    put: (state) => (query, payload) => runQuery(state, {
-      method: 'put',
-      url: getUrl(state) + '/' + query.id,
-      data: payload
-    }),
-
-    delete: (state) => (query, payload) => {
-      if(query.id) {
-        return runQuery(state, {
-          method: 'delete',
-          url: getUrl(state) + '/' + query.id
-        })
-      }
-      else if (query.ids) {
-        return query.ids.map(id => {
-          return runQuery(state, {
-            method: 'delete',
-            url: getUrl(state) + '/' + id
-          })
-        })
-      }
-    }
+    list: List(getUrl),
+    get: Get(getUrl),
+    post: Post(getUrl),
+    put: Put(getUrl),
+    delete: Delete(getUrl)
   }
 }
 
