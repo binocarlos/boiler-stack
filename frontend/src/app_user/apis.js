@@ -4,124 +4,80 @@ import UserSelectors from '../boiler-ui/lib/plugins/user/selectors'
 import URLS from './urls'
 
 const userSelectors = UserSelectors(state => state.user)
-
-/*
-      const currentInstallation = yield select(userSelectors.status.currentInstallation)
-      // inject the currentInstallation into all api queries
-      const query = Object.assign({}, action.query, {
-        currentInstallation
-      })
-
-
-      status: () => URLS.user.status,
-  login: () => URLS.user.login,
-  register: () => URLS.user.register,
-  update: () => URLS.user.update
-
-  const ajaxClient = Ajax({
-  name: 'ajax client'
-})
-*/
-
-// append the current installation id
 const activeInstallation = (state) => userSelectors.status.currentInstallation(state)
+
+// a chance to modify the query before we send it
+// this is where the JWT auth header can go
+// and where the = iid (installation id) parameter is set
+const runQuery = (state, query) => {
+  return Ajax(query)
+}
 
 const Crud = (getUrl) => {
   return {
-
-    list: (state) => (query, payload) => Ajax({
+    list: (state) => (query, payload) => runQuery(state, {
       method: 'get',
       url: getUrl(state)
     }),
 
-    post: (state) => (query, payload) => Ajax({
+    post: (state) => (query, payload) => runQuery(state, {
       method: 'post',
-      url: URLS.installation,
+      url: getUrl(state),
       data: payload
     }),
 
-    get: (state) => (query, payload) => Ajax({
+    get: (state) => (query, payload) => runQuery(state, {
       method: 'get',
-      url: URLS.installation + '/' + query.id
+      url: getUrl(state) + '/' + query.id
     }),
 
-    put: (state) => (query, payload) => Ajax({
+    put: (state) => (query, payload) => runQuery(state, {
       method: 'put',
-      url: URLS.installation + '/' + query.id,
+      url: getUrl(state) + '/' + query.id,
       data: payload
     }),
 
-    delete: (state) => (query, payload) => Ajax({
-      method: 'delete',
-      url: URLS.installation + '/' + query.id
-    })
+    delete: (state) => (query, payload) => {
+      if(query.id) {
+        return runQuery(state, {
+          method: 'delete',
+          url: getUrl(state) + '/' + query.id
+        })
+      }
+      else if (query.ids) {
+        return query.ids.map(id => {
+          return runQuery(state, {
+            method: 'delete',
+            url: getUrl(state) + '/' + id
+          })
+        })
+      }
+    }
   }
-
 }
 
 const user = {
-  status: (state) => (query, payload) => Ajax({
+  status: (state) => (query, payload) => runQuery(state, {
     method: 'get',
     url: URLS.user.status
   }),
 
-  login: (state) => (query, payload) => Ajax({
+  login: (state) => (query, payload) => runQuery(state, {
     method: 'post',
     url: URLS.user.login,
     data: payload
   }),
 
-  register: (state) => (query, payload) => Ajax({
+  register: (state) => (query, payload) => runQuery(state, {
     method: 'post',
     url: URLS.user.register,
     data: payload
   })
 }
 
-const installation = Crud((state) => {
-
-})
-\{
-
-  list: (state) => (query, payload) => Ajax({
-    method: 'get',
-    url: URLS.installation
-  }),
-
-  post: (state) => (query, payload) => Ajax({
-    method: 'post',
-    url: URLS.installation,
-    data: payload
-  }),
-
-  get: (state) => (query, payload) => Ajax({
-    method: 'get',
-    url: URLS.installation + '/' + query.id
-  }),
-
-  put: (state) => (query, payload) => Ajax({
-    method: 'put',
-    url: URLS.installation + '/' + query.id,
-    data: payload
-  }),
-
-  delete: (state) => (query, payload) => Ajax({
-    method: 'delete',
-    url: URLS.installation + '/' + query.id
-  })
-}
-
-/*
-export const client = CrudAjax({
-  name: 'client',
-  getUrl: (query) => [URLS.client, query.currentInstallation].join('/')
-})
-
-export const project = CrudAjax({
-  name: 'project',
-  getUrl: (query) => [URLS.project, query.currentInstallation].join('/')
-})
-*/
+const installation = Crud(state => URLS.installation)
+const client = Crud(state => URLS.client)
+const project = Crud(state => URLS.project)
 
 
 const apis = {

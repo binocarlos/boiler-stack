@@ -20,7 +20,6 @@ const ApiSagaFactory = (settings = {}) => {
   const actions = settings.actions
   const api = settings.api
   const trigger = actions.types.request
-  const userSelectors = UserSelectors(state => state.user)
 
   const logger = Logger('saga : api : ' + actions.base.toLowerCase())
 
@@ -32,27 +31,31 @@ const ApiSagaFactory = (settings = {}) => {
     // then it can look at the state to decide on the url
     const apiRunner = api(state)
     try {
-      const result = yield apiRunner(query, action.payload)
+      const result = yield apiRunner(action.query, action.payload)
       logger('response', result)
       yield put(actions.success(result, action.query))
     } catch (e) {
       logger('error', e.message, e.stack)
 
-      const body = e.response.data
-      const statusCode = e.response.status
+      let message = e.message
 
-      const message = body && body.error ?
-        body.error :
-        e.message
+      if(e.response) {
+        const body = e.response.data
+        const statusCode = e.response.status
 
-      let disableErrorMessage = settings.disableErrors ? true : false
+        message = body && body.error ?
+          body.error :
+          e.message
 
-      if(statusCode == 403 && message == 'user required') {
-        disableErrorMessage = true
-      }
+        let disableErrorMessage = settings.disableErrors ? true : false
 
-      if(!disableErrorMessage) {
-        yield put(SystemActions.error({message}))
+        if(statusCode == 403) {
+          disableErrorMessage = true
+        }
+
+        if(!disableErrorMessage) {
+          yield put(SystemActions.error({message}))
+        }
       }
 
       yield put(actions.failure(message, action.query))
