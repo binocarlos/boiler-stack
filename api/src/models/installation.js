@@ -11,6 +11,16 @@ const prepareData = (installation) => {
     installation
 }
 
+const defaultInstallation = (accountid) => {
+  return {
+    data: {
+      name: 'My First Company',
+      meta: {}
+    },
+    accountid: accountid
+  }
+}
+
 const QUERIES = {
 
   byUser: (accountid) => {
@@ -67,7 +77,12 @@ const byUser = (runQuery, query, done) => runQuery(QUERIES.byUser(query.accounti
 //  * accountid
 const create = (runQuery, query, done) => {
   const accountid = query.accountid
-  const data = prepareData(query.data)
+
+  let data = query.data == 'default' ?
+    defaultInstallation(accountid) :
+    query.data
+
+  data = prepareData(data)
   let newObjects = {
     installation: null,
     collaboration: null

@@ -13,10 +13,10 @@ function Switchboard(eventBus, controllers, workers) {
   }
   
   // main event control loop
-  eventBus.listen((channel, tracerid, message) => {
+  eventBus.listen((channel, tracer, message) => {
 
     // we don't want every event spamming prod?
-    logger.debug('event', tracerid, {
+    logger.debug('event', tracer, {
       channel,
       message
     })
@@ -25,7 +25,7 @@ function Switchboard(eventBus, controllers, workers) {
     if(channel == 'command') {
 
       // record the command
-      workers.commandLog(tracerid, message)
+      workers.commandLog(tracer, message)
 
       // trigger the workers from the COMMANDS mapo
       let commandWorkers = COMMANDS[message.name]
@@ -33,7 +33,7 @@ function Switchboard(eventBus, controllers, workers) {
         if(typeof(commandWorkers) == 'function') {
           commandWorkers = [commandWorkers]
         }
-        commandWorkers.forEach(commandWorker => commandWorker(tracerid, message))
+        commandWorkers.forEach(commandWorker => commandWorker(tracer, message))
       }
     }
   })

@@ -25,6 +25,10 @@ function App(settings) {
   app.use(session)
   app.use(passport.initialize())
   app.use(passport.session())
+  app.use((req, res, next) => {
+    req.userid = req.user ? req.user.id : null
+    next()
+  })
 
   return app
 }

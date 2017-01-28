@@ -19,13 +19,13 @@ const QueryFactory = (runner) => (q, done) => {
   q = processQuery(q)
   runner(q.sql, q.params, (err, results) => {
     if(err) {
-      logger.error('query', q.id, {
+      logger.error('query', q.tracer, {
         error: err.toString(),
         query: q
       })
     }
     else {
-      logger.debug('query', q.id, {
+      logger.debug('query', q.tracer, {
         query: q,
         results: (results || {}).rows
       })
@@ -50,25 +50,38 @@ const Client = (postgres) => {
   // run queries on the pool directly
   const query = QueryFactory(postgresQuery)
 
-  const tracer = (id, runQuery) => (q, done) => {
+  const tracer = (tracerData, runQuery) => (q, done) => {
     runQuery = runQuery || query
     q = processQuery(q)
-    q.id = id
+    q.tracer = tracerData
     runQuery(q, done)
   }
 
   // run a transaction with a query object
-  const transaction = (tracerid, handler, done) => {
+  const transaction = (reqid, userid, handler, done) => {
+
+    let tracerData = {
+      id: reqid,
+      user: userid
+    }
+
+    if(typeof(reqid) == 'object'){
+      tracerData = reqid
+      handler = userid
+      done = handler 
+    }
+
     postgres.connect((err, client, release) => {
       if(err) {
         release()
         return done(err)
       }
-      const runQuery = tracer(tracerid, QueryFactory(client.query.bind(client)))
+
       const db = {
-        id: tracerid,
-        run: runQuery
+        tracer: tracerData,
+        run: tracer(tracerData, QueryFactory(client.query.bind(client)))
       }
+
       async.series({
         begin:   (next) => db.run('BEGIN', next),
         command: (next) => handler(db, next),
@@ -91,10 +104,16 @@ const Client = (postgres) => {
   return {
     tracer,
     transaction,
-    connection: (tracerid) => {
+    connection: (reqid, userid) => {
+      const tracerData = typeof(reqid) == 'object' ? 
+        reqid :
+        {
+          id: reqid,
+          user: userid
+        }
       return {
-        id: tracerid,
-        run: tracer(tracerid)
+        tracer: tracerData,
+        run: tracer(tracerData)
       }
     }
   }

@@ -11,19 +11,19 @@ function Installations(controllers) {
   const transaction = controllers.transaction
 
   const get = (req, res, error) => {
-    installations.get(connection(req.id), {
+    installations.get(connection(req.id, req.userid), {
       id: req.params.id
     }, tools.jsonCallback(res, error))
   }
 
   const list = (req, res, error) => {
-    installations.list(connection(req.id), {
+    installations.list(connection(req.id, req.userid), {
       accountid: req.user.id
     }, tools.jsonCallback(res, error))
   }
 
   const create = (req, res, error) => {
-    transaction(req.id, (db, finish) => {
+    transaction(req.id, req.userid, (db, finish) => {
       installations.create(db, {
         accountid: req.user.id,
         data: req.body
@@ -35,7 +35,7 @@ function Installations(controllers) {
     const installationID = parseInt(req.params.id)
     if(isNaN(installationID)) return error('id was not an int')
 
-    transaction(req.id, (db, finish) => {
+    transaction(req.id, req.userid, (db, finish) => {
       installations.save(db, {
         data: req.body,
         params: {
@@ -52,7 +52,7 @@ function Installations(controllers) {
     const installationID = parseInt(req.params.id)
     if(isNaN(installationID)) return error('id was not an int')
 
-    transaction(req.id, (db, finish) => {
+    transaction(req.id, req.userid, (db, finish) => {
       installations.activate(db, {
         installationid: installationID,
         accountid: req.user.id
@@ -61,7 +61,7 @@ function Installations(controllers) {
   }
 
   const del = (req, res, error) => {
-    transaction(req.id, (db, finish) => {
+    transaction(req.id, req.userid, (db, finish) => {
       installations.delete(db, {
         id: req.params.id
       }, finish)

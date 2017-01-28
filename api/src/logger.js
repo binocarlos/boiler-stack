@@ -23,7 +23,7 @@ const NODE_ENV = process.env.NODE_ENV || 'production'
 const ENV_LOGLEVEL = ENV_LOGLEVELS[NODE_ENV]
 const LOGLEVEL = process.env.LOGLEVEL || ENV_LOGLEVELS[process.env.NODE_ENV] || ENV_LOGLEVELS.production
 
-const dumbLogger = (action, id, message) => {}
+const dumbLogger = (action, tracer, message) => {}
 
 const Logger = (name, opts) => {
   opts = opts || {}
@@ -34,11 +34,13 @@ const Logger = (name, opts) => {
   const logger = Object.keys(LEVELS)
     .reduce((all, level) => {
       const numericLevel = LEVELS[level]
-      const realLogger = (action, id, message) => {
+      const realLogger = (action, tracer, message) => {
+
+        tracer = typeof(tracer) == 'string' ? {id:tracer} : tracer
         sink(JSON.stringify({
           timestamp: new Date().getTime(),
           level: numericLevel,
-          id,
+          tracer,
           name,
           action,
           message

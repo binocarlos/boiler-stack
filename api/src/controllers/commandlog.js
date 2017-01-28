@@ -13,9 +13,8 @@ const CommandLogController = (eventBus) => {
   const create = (db, query, done) => {
     CommandLogModel.create(db.run, {
       data: JSON.stringify(query.data)
-    }, eventBus.emitWrapper({
+    }, eventBus.emitWrapper(db.tracer, {
       logger,
-      tracerid: db.id,
       query,
       // remove this and there an infinite loop of
       // commandlogs being created because commandlogs

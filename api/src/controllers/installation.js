@@ -17,9 +17,11 @@ const InstallationController = (eventBus) => {
 
   // commands
   const create = (db, query, done) => {
-    InstallationModel.create(db.run, query, eventBus.emitWrapper({
+    console.log('-------------------------------------------');
+    console.log('-------------------------------------------');
+    console.dir(db.tracer)
+    InstallationModel.create(db.run, query, eventBus.emitWrapper(db.tracer, {
       logger,
-      tracerid: db.id,
       query,
       eventName: 'installation.create'
     }, done))
@@ -45,9 +47,8 @@ const InstallationController = (eventBus) => {
           }
         }, next)
       }
-    ], eventBus.emitWrapper({
+    ], eventBus.emitWrapper(db.tracer, {
       logger,
-      tracerid: db.id,
       query,
       eventName: 'installation.activate'
     }, done))
@@ -56,18 +57,16 @@ const InstallationController = (eventBus) => {
   // * data
   // * params
   const save = (db, query, done) => {
-    InstallationModel.save(db.run, query, eventBus.emitWrapper({
+    InstallationModel.save(db.run, query, eventBus.emitWrapper(db.tracer, {
       logger,
-      tracerid: db.id,
       query,
       eventName: 'installation.save'
     }, done))
   }
 
   const del = (db, query, done) => {
-    InstallationModel.delete(db.run, query, eventBus.emitWrapper({
+    InstallationModel.delete(db.run, query, eventBus.emitWrapper(db.tracer, {
       logger,
-      tracerid: db.id,
       query,
       eventName: 'installation.delete'
     }, done))

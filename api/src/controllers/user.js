@@ -25,9 +25,8 @@ const UserController = (eventBus) => {
   // query:
   //  * data
   const register = (db, query, done) => {
-    UserModel.register(db.run, query, eventBus.emitWrapper({
+    UserModel.register(db.run, query, eventBus.emitWrapper(db.tracer, {
       logger,
-      tracerid: db.id,
       query,
       eventName: 'user.register'
     }, done))
@@ -37,9 +36,8 @@ const UserController = (eventBus) => {
   //  * data
   //  * params
   const save = (db, query, done) => {
-    UserModel.save(db.run, query, eventBus.emitWrapper({
+    UserModel.save(db.run, query, eventBus.emitWrapper(db.tracer, {
       logger,
-      tracerid: db.id,
       query,
       eventName: 'user.save'
     }, done))

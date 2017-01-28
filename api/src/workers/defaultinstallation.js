@@ -11,7 +11,7 @@ const DefaultInstallation = (controllers) => {
   const installation = controllers.installation
   const transaction = controllers.transaction
 
-  return (tracerid, job) => {
+  return (tracer, job) => {
 
     // the result is the user from account creation
     const accountid = job.result.id
@@ -23,14 +23,14 @@ const DefaultInstallation = (controllers) => {
       accountid: accountid
     }
 
-    transaction(tracerid, (db, finish) => {
+    transaction(tracer.id, tracer.user, (db, finish) => {
 
       let results = null
       
       async.waterfall([
 
         (next) => installation.create(db, query, next),
-
+          
         (installationData, next) => {
           results = installationData
           installation.activate(db, {
@@ -43,7 +43,7 @@ const DefaultInstallation = (controllers) => {
 
       ], finish)
 
-    }, tools.jobLogger(logger, tracerid, {
+    }, tools.jobLogger(logger, tracer, {
       job,
       query
     }))

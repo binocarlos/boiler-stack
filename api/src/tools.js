@@ -85,13 +85,13 @@ const jsonCallback = (res, error, statusCode) => (err, results) => {
   res.json(results)
 }
 
-const jobLogger = (logger, tracerid, opts) => {
+const jobLogger = (logger, tracer, opts) => {
   return (err, data) => {
     if(err) {
-      logger.error('job', tracerid, Object.assign({}, opts, {error: err.toString()}))
+      logger.error('job', tracer, Object.assign({}, opts, {error: err.toString()}))
     }
     else {
-      logger.info('job', tracerid, Object.assign({}, opts, {data}))
+      logger.info('job', tracer, Object.assign({}, opts, {data}))
     }
   }
 }

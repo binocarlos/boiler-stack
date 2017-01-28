@@ -9,18 +9,18 @@ const CommandLog = (controllers) => {
   const commandlog = controllers.commandlog
   const connection = controllers.connection
 
-  return (tracerid, job) => {
-    commandlog.create(connection(tracerid), {
+  return (tracer, job) => {
+    commandlog.create(connection(tracer.id, tracer.user), {
       data: job
     }, (err, data) => {
       if(err) {
-        logger.error('job', tracerid, {
+        logger.error('job', tracer, {
           error: err.toString(),
           job
         })
       }
       else {
-        logger.info('job', tracerid, {
+        logger.info('job', tracer, {
           job,
           data
         })
