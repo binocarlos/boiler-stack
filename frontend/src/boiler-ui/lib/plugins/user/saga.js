@@ -1,4 +1,3 @@
-import Logger from '../../logger'
 import deepCheck from 'deep-check-error'
 
 import { takeLatest } from 'redux-saga'
@@ -30,7 +29,6 @@ const UserSaga = (settings = {}) => {
   const selectors = settings.selectors
   const apis = settings.apis
   const successRedirect = settings.successRedirect
-  const logger = Logger('saga:user')
 
   // recurse over the parent routes until one says '{requireUser, requireGuest}'
   function doesRouteRequireProp(route, prop) {
@@ -133,7 +131,6 @@ const UserSaga = (settings = {}) => {
         actions.login.api.types.success,
         actions.register.api.types.success
       ]
-      types.forEach(type => logger('listening: ' + type))
       yield takeLatest(types, triggerUserReloadThenRedirect)
     },
 
@@ -146,7 +143,6 @@ const UserSaga = (settings = {}) => {
         actions.status.api.types.success,
         routerActions.types.changed
       ]
-      types.forEach(type => logger('listening: ' + type))
       yield takeLatest(types, checkCurrentRoute)
     },
 

@@ -1,4 +1,3 @@
-import Logger from '../logger'
 import deepCheck from 'deep-check-error'
 import { takeLatest } from 'redux-saga'
 import { put, call, select } from 'redux-saga/effects'
@@ -21,10 +20,8 @@ const ApiSagaFactory = (settings = {}) => {
   const api = settings.api
   const trigger = actions.types.request
 
-  const logger = Logger('saga : api : ' + actions.base.toLowerCase())
-
   function* apiSaga(action) {
-    logger('request', action)
+
     const state = yield select(state => state)
 
     // the api factory returns the actual runner
@@ -32,11 +29,8 @@ const ApiSagaFactory = (settings = {}) => {
     const apiRunner = api(state)
     try {
       const result = yield apiRunner(action.query, action.payload)
-      logger('response', result)
       yield put(actions.success(action.query, result))
     } catch (e) {
-      logger('error', e.message, e.stack)
-
       let message = e.message
 
       if(e.response) {
@@ -63,7 +57,6 @@ const ApiSagaFactory = (settings = {}) => {
   }
 
   function* listen() {
-    logger('listening: ' + trigger)
     yield takeLatest(trigger, apiSaga)
   }
 

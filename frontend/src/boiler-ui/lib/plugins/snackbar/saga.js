@@ -1,4 +1,3 @@
-import Logger from '../../logger'
 import deepCheck from 'deep-check-error'
 
 import { takeLatest } from 'redux-saga'
@@ -13,8 +12,6 @@ const SnackbarPluginSaga = (settings = {}) => {
   const actions = settings.actions
   const triggers = settings.triggers
 
-  const logger = Logger('saga:snackbar')
-
   const sagas = [
 
     // listen for any system mutations and display a snackbar
@@ -22,10 +19,6 @@ const SnackbarPluginSaga = (settings = {}) => {
       function* openSnackbar(action) {
         yield put(actions.open(action.payload))
       }
-      triggers.forEach(trigger => {
-        logger('listening: ' + trigger)
-      })
-      
       yield takeLatest(triggers, openSnackbar)
     }
 

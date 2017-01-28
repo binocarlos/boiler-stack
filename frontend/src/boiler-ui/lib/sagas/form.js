@@ -43,7 +43,6 @@
   }
 
 */
-import Logger from '../logger'
 import deepCheck from 'deep-check-error'
 import { takeLatest, takeEvery } from 'redux-saga'
 import { put, call, fork, select  } from 'redux-saga/effects'
@@ -68,7 +67,6 @@ const FormSagaFactory = (settings = {}) => {
   const getSchema = settings.getSchema
   const selector = settings.selector
   const triggers = actions.types
-  const logger = Logger('saga : form : ' + actions.base.toLowerCase())
 
   // this is populated by settings.getSchema using the data
   // given to initalize or load
@@ -117,27 +115,22 @@ const FormSagaFactory = (settings = {}) => {
   function* root() {
 
     function* listenInitialize() {
-      logger('listening:initialize: ' + triggers.initialize)
       yield takeEvery(triggers.initialize, initializeSaga)  
     }
 
     function* listenLoad() {
-      logger('listening:load: ' + triggers.load)
       yield takeEvery(triggers.load, loadSaga)  
     }
 
     function* listenUpdate() {
-      logger('listening:update: ' + triggers.update)
       yield takeEvery(triggers.update, updateSaga)  
     }
 
     function* listenTouch() {
-      logger('listening:touch: ' + triggers.touch)
       yield takeEvery(triggers.touch, touchSaga)  
     }
 
     function* listenTouchform() {
-      logger('listening:touchform: ' + triggers.touchform)
       yield takeEvery(triggers.touchform, touchformSaga)  
     }
 

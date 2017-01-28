@@ -1,4 +1,3 @@
-import Logger from '../../logger'
 import deepCheck from 'deep-check-error'
 
 import { takeLatest } from 'redux-saga'
@@ -31,7 +30,6 @@ const FormPluginSaga = (settings = {}) => {
   const selectors = settings.selectors
   const apis = settings.apis
   const successRedirect = settings.successRedirect
-  const logger = Logger('saga:form')
 
   const sagas = [
 
@@ -65,7 +63,6 @@ const FormPluginSaga = (settings = {}) => {
       function* triggerLoad(action) {
         yield put(actions.fields.load(action.payload))
       }
-      logger('listening: ' + actions.get.types.success)
       yield takeLatest(actions.get.types.success, triggerLoad)
     },
 
@@ -103,7 +100,6 @@ const FormPluginSaga = (settings = {}) => {
           yield put(routerActions.push(successRedirect))
         }
       }
-      logger('listening: ' + trigger)
       yield takeLatest(trigger, submitForm)
     }
 

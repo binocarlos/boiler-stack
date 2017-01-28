@@ -9,7 +9,7 @@ import bows from 'bows'
 
 const AjaxRequest = (req = {}) => {
 
-  const logger = bows('folderui:api:ajax:' + req.method + ':' + req.url)
+  const logger = bows(req.method + ' ' + req.url)
   
   let reqOpts = {
     method: req.method,
@@ -42,7 +42,8 @@ const AjaxRequest = (req = {}) => {
         url: req.url,
         headers: req.headers,
         data: req.data,
-        error: err.message
+        error: err.message,
+        stack: err.stack
       })
       throw err
     })

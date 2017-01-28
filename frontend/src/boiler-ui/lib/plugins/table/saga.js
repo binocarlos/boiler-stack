@@ -1,4 +1,3 @@
-import Logger from '../../logger'
 import deepCheck from 'deep-check-error'
 
 import { takeLatest, takeEvery } from 'redux-saga'
@@ -21,8 +20,6 @@ const TablePluginSaga = (settings = {}) => {
   
   const actions = settings.actions
   const apis = settings.apis
-
-  const logger = Logger('saga:form')
 
   const sagas = [
 

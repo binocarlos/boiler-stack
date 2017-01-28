@@ -5,7 +5,6 @@
 
 
 */
-import Logger from '../logger'
 import deepCheck from 'deep-check-error'
 import { takeLatest } from 'redux-saga'
 import { put, call, fork, select  } from 'redux-saga/effects'
@@ -24,19 +23,14 @@ const ApiTriggerSagaFactory = (settings = {}) => {
   const trigger = settings.trigger
   const actionCreator = settings.handler
   const selectors = settings.selectors
-  const logger = Logger('saga : apitrigger : ' + trigger.toLowerCase())
   
   function* triggerApi(action) {
     const payload = yield select(selectors.payload)
     const query = yield select(selectors.query)
-
-    logger('trigger api (query, payload): ', query, payload)
-
     yield put(actionCreator(query, payload))
   }
 
   function* root() {
-    logger('listening: ' + trigger)
     yield takeLatest(trigger, triggerApi)
   }
 

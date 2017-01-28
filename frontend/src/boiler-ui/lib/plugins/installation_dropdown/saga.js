@@ -1,4 +1,3 @@
-import Logger from '../../logger'
 import deepCheck from 'deep-check-error'
 
 import { takeLatest } from 'redux-saga'
@@ -19,7 +18,6 @@ const InstallationDropdownSaga = (settings = {}) => {
   const reloadUserAction = settings.reloadUserAction
   const activateAction = settings.activateAction
   const selectors = settings.selectors
-  const logger = Logger('saga:installation_dropdown')
 
   const sagas = [
 
@@ -44,7 +42,6 @@ const InstallationDropdownSaga = (settings = {}) => {
           message: installationTitle + ' activated'
         }))
       }
-      logger('listening: ' + trigger)
       yield takeLatest(trigger, activateInstallation)
     }
 

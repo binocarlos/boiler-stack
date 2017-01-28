@@ -36,7 +36,6 @@ const RouteTriggerSaga = (settings = {}) => {
   function* processInitialTriggers() {
     const initialTriggers = triggers.initial
     if(initialTriggers){
-      logger('processing initial triggers')
       if(initialTriggers.constructor === Array) {
         yield initialTriggers.map(action => put(action))
       }
@@ -65,8 +64,6 @@ const RouteTriggerSaga = (settings = {}) => {
   }
 
   function* root() {
-    logger('listening: ' + ROUTER_CHANGED)
-    logger('listening: ' + settings.userLoadedActionType)
     yield [
       takeLatest(ROUTER_CHANGED, processRoute),
       takeLatest(settings.userLoadedActionType, processInitialTriggers)
