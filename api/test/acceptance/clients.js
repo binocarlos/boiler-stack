@@ -12,24 +12,22 @@ tape('acceptance - clients', (t) => {
   const userData = tools.UserData()
   let user = null
 
-  async.series({
+  tools.register(userData, (err, user) => {
 
-    register: (next) => tools.register(userData, (err, u) => {
-      if(err) return next(err)
-      user = u
-    
-    console.log(JSON.stringify(user, null, 4))
-      next()
-    })/*,
-    addclient: (next) => tools.createClient(CLIENTDATA, next),
-    clients: (next) => tools.clients(next)*/
+    const installationid = user.body.data.meta.activeInstallation
 
-  }, (err, results) => {
+    async.series({
+      addclient: (next) => tools.createClient(installationid, CLIENTDATA, next),
+      clients: (next) => tools.listClients(installationid, next)
 
-    if(err) t.error(err)
+    }, (err, results) => {
 
-    console.log(JSON.stringify(results, null, 4))
-    
-    t.end()
+      if(err) t.error(err)
+
+      console.log(JSON.stringify(results, null, 4))
+      
+      t.end()
+    })
   })
+  
 })

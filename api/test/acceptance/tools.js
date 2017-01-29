@@ -124,12 +124,23 @@ const activateInstallation = (id, next) => {
   }, wrapResult(next))
 }
 
-const createclient = (iid, data, next) => {
+const createClient = (installation, data, next) => {
   request({
     method: 'POST',
     url: url('/api/v1/clients'),
     qs: {
-      i: iid
+      i: installation
+    },
+    headers: headers()
+  }, wrapResult(next)) 
+}
+
+const listClients = (installation, next) => {
+  request({
+    method: 'GET',
+    url: url('/api/v1/clients'),
+    qs: {
+      i: installation
     },
     headers: headers()
   }, wrapResult(next)) 
@@ -151,5 +162,7 @@ module.exports = {
   saveInstallation,
   getInstallation,
   deleteInstallation,
-  activateInstallation
+  activateInstallation,
+  createClient,
+  listClients
 }
