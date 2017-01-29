@@ -10,12 +10,16 @@ function Auth(controllers) {
   const connection = controllers.connection
   const transaction = controllers.transaction
 
+  // QUERIES
+
   const status = (req, res) => {
     res.json({
       loggedIn: req.user ? true : false,
       data: req.user
     })
   }
+
+  // COMMANDS
 
   const login = (req, res, error) => {
     const email = req.body.email

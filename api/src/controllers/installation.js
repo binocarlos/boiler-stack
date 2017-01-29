@@ -17,14 +17,24 @@ const InstallationController = (eventBus) => {
 
   // commands
   const create = (db, query, done) => {
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.dir(db.tracer)
-    InstallationModel.create(db.run, query, eventBus.emitWrapper(db.tracer, {
-      logger,
-      query,
-      eventName: 'installation.create'
-    }, done))
+
+    async.waterfall([
+
+      (next) => {
+        InstallationModel.create(db.run, query, next)
+      },
+
+      (result, next) => {
+        eventBus.emit(db, {
+          type: 'command',
+          channel: 'installation.create',
+          query,
+          result
+        }, next)
+      }
+
+    ], done)
+    
   }
 
   // update the user with a 'active' installation (written to the user data)
@@ -32,8 +42,13 @@ const InstallationController = (eventBus) => {
   //   * installationid
   //   * accountid
   const activate = (db, query, done) => {
+
     async.waterfall([
-      (next) => UserModel.get(db.run, {id: query.accountid}, next),
+
+      (next) => {
+        UserModel.get(db.run, {id: query.accountid}, next)
+      },
+
       (user, next) => {
         const newMeta = Object.assign({}, user.meta, {
           activeInstallation: query.installationid
@@ -46,30 +61,59 @@ const InstallationController = (eventBus) => {
             id: query.accountid
           }
         }, next)
+      },
+
+      (result, next) => {
+        eventBus.emit(db, {
+          type: 'command',
+          channel: 'installation.activate',
+          query,
+          result
+        }, next)
       }
-    ], eventBus.emitWrapper(db.tracer, {
-      logger,
-      query,
-      eventName: 'installation.activate'
-    }, done))
+      
+    ], done)
   }
 
   // * data
   // * params
   const save = (db, query, done) => {
-    InstallationModel.save(db.run, query, eventBus.emitWrapper(db.tracer, {
-      logger,
-      query,
-      eventName: 'installation.save'
-    }, done))
+
+    async.waterfall([
+
+      (next) => {
+        InstallationModel.save(db.run, query, next)
+      },
+
+      (result, next) => {
+        eventBus.emit(db, {
+          type: 'command',
+          channel: 'installation.save',
+          query,
+          result
+        }, next)
+      }
+    ], done)
   }
 
   const del = (db, query, done) => {
-    InstallationModel.delete(db.run, query, eventBus.emitWrapper(db.tracer, {
-      logger,
-      query,
-      eventName: 'installation.delete'
-    }, done))
+
+    async.waterfall([
+
+      (next) => {
+        InstallationModel.delete(db.run, query, next)
+      },
+
+      (result, next) => {
+        eventBus.emit(db, {
+          type: 'command',
+          channel: 'installation.delete',
+          query,
+          result
+        }, next)
+      }
+    ], done)
+    
   }
 
   return {

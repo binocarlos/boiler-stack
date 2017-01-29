@@ -25,33 +25,49 @@ const UserController = (eventBus) => {
   // query:
   //  * data
   const register = (db, query, done) => {
-    UserModel.register(db.run, query, (err, result) => {
-      // inject the userid that just registered
-      const tracer = err || !result.id ?
-        db.tracer :
-        Object.assign({}, db.tracer, {
-          user: result.id
-        })
 
-      const emitWrapper = eventBus.emitWrapper(tracer, {
-        logger,
-        query,
-        eventName: 'user.register'
-      }, done)
+    async.waterfall([
 
-      emitWrapper(err, result)
-    })
+      (next) => {
+        UserModel.register(db.run, query, next)
+      },
+
+      (result, next) => {
+        db.tracer.user = result.id
+        eventBus.emit(db, {
+          type: 'command',
+          channel: 'user.register',
+          query,
+          result
+        }, next)
+      }
+
+    ], done)
+
   }
 
   // query:
   //  * data
   //  * params
   const save = (db, query, done) => {
-    UserModel.save(db.run, query, eventBus.emitWrapper(db.tracer, {
-      logger,
-      query,
-      eventName: 'user.save'
-    }, done))
+
+    async.waterfall([
+
+      (next) => {
+        UserModel.save(db.run, query, next)
+      },
+
+      (result, next) => {
+        eventBus.emit(db, {
+          type: 'command',
+          channel: 'user.save',
+          query,
+          result
+        }, next)
+      }
+
+    ], done)
+
   }
 
   return {

@@ -11,7 +11,6 @@ tape('acceptance - installations', (t) => {
   async.series({
 
     register: (next) => tools.register(userData, next),
-    pause: (next) => setTimeout(next, 300),
     installations: (next) => tools.installations(next),
     status: (next) => tools.status(next)
 
@@ -41,7 +40,6 @@ tape('acceptance - create installation', (t) => {
   async.series({
 
     register: (next) => tools.register(userData, next),
-    pause: (next) => setTimeout(next, 300),
     create: (next) => tools.createInstallation(DATA, next),
     installations: (next) => tools.installations(next)
 
@@ -81,7 +79,6 @@ tape('acceptance - save installation', (t) => {
   async.series({
 
     register: (next) => tools.register(userData, next),
-    pause: (next) => setTimeout(next, 300),
     create: (next) => tools.createInstallation(DATA, (err, r) => {
       if(err) return next(err)
       obj = r.body
@@ -120,8 +117,6 @@ tape('acceptance - delete installation', (t) => {
 
     register: (next) => tools.register(userData, next),
 
-    pause: (next) => setTimeout(next, 300),
-
     create: (next) => tools.createInstallation(DATA, (err, r) => {
       if(err) return next(err)
       obj = r.body
@@ -156,8 +151,6 @@ tape('acceptance - activate installation', (t) => {
   async.series({
 
     register: (next) => tools.register(userData, next),
-
-    pause: (next) => setTimeout(next, 300),
 
     create: (next) => tools.createInstallation(DATA, (err, r) => {
       if(err) return next(err)
@@ -197,7 +190,6 @@ tape('acceptance - dont overwrite installation meta', (t) => {
   async.series({
 
     register: (next) => tools.register(userData, next),
-    pause: (next) => setTimeout(next, 100),
     create: (next) => tools.createInstallation(DATA, (err, r) => {
       if(err) return next(err)
       obj = r.body
@@ -236,8 +228,6 @@ tape('acceptance - access control - different user', (t) => {
   async.series({
 
     user1: (next) => tools.register(userData1, next),
-
-    pause: (next) => setTimeout(next, 300),
 
     status1: (next) => tools.status((err, s) => {
       if(err) return next(err)
@@ -288,8 +278,6 @@ tape('acceptance - access control - no user', (t) => {
   async.series({
 
     user1: (next) => tools.register(userData1, next),
-
-    pause: (next) => setTimeout(next, 300),
 
     status1: (next) => tools.status((err, s) => {
       if(err) return next(err)

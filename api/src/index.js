@@ -16,7 +16,6 @@ const App = require('./webserver/app')
 
 const EventBus = require('./eventBus')
 const Controllers = require('./controllers')
-const Workers = require('./workers')
 const Switchboard = require('./switchboard')
 const Routes = require('./routes')
 
@@ -44,12 +43,7 @@ const session = Session(redis, {
 const eventBus = EventBus()
 const client = Client(postgres)
 const controllers = Controllers(client, eventBus)
-const workers = Workers(controllers)
-const switchboard = Switchboard(
-  eventBus,
-  controllers,
-  workers
-)
+const switchboard = Switchboard(controllers, eventBus)
 
 const passport = Passport(controllers)
 const app = App({

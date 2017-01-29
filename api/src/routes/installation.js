@@ -10,6 +10,8 @@ function Installations(controllers) {
   const connection = controllers.connection
   const transaction = controllers.transaction
 
+  // QUERIES
+
   const get = (req, res, error) => {
     installations.get(connection(req.id, req.userid), {
       id: req.params.id
@@ -21,6 +23,8 @@ function Installations(controllers) {
       accountid: req.user.id
     }, tools.jsonCallback(res, error))
   }
+
+  // COMMANDS
 
   const create = (req, res, error) => {
     transaction(req.id, req.userid, (db, finish) => {

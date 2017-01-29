@@ -11,13 +11,10 @@ const prepareData = (installation) => {
     installation
 }
 
-const defaultInstallation = (accountid) => {
+const defaultInstallation = () => {
   return {
-    data: {
-      name: 'My First Company',
-      meta: {}
-    },
-    accountid: accountid
+    name: 'My First Company',
+    meta: {}
   }
 }
 
@@ -87,7 +84,7 @@ const create = (runQuery, query, done) => {
     installation: null,
     collaboration: null
   }
-  
+
   async.waterfall([
 
     (next) => runQuery(QUERIES.insert(data), selectors.single(next)),

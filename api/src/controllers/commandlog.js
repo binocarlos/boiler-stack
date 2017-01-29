@@ -9,20 +9,14 @@ const CommandLogModel = require('../models/commandlog')
 
 const CommandLogController = (eventBus) => {
 
+  // we don't emit an event for this because
+  // otherwise we would get an infinite loop
+  // of command log creating command log creating command log
   //  * data
   const create = (db, query, done) => {
     CommandLogModel.create(db.run, {
       data: JSON.stringify(query.data)
-    }, eventBus.emitWrapper(db.tracer, {
-      logger,
-      query,
-      // remove this and there an infinite loop of
-      // commandlogs being created because commandlogs
-      // have been created (command logs are created for)
-      // eventType = 'command'
-      eventType: 'commandlog',
-      eventName: 'commandlog.create'
-    }, done))
+    }, done)
   }
 
   return {
