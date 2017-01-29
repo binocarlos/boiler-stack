@@ -25,7 +25,8 @@ tape('acceptance - installations', (t) => {
     t.equal(installations.body.length, 1, '1 installation')
     t.equal(installations.body[0].name, 'My First Company', 'default installation')
 
-    t.equal(status.body.data.meta.activeInstallation, installations.body[0].id, 'the user the active installation')
+    t.equal(register.body.data.meta.activeInstallation, installations.body[0].id, 'the user the active installation from the register request')
+    t.equal(status.body.data.meta.activeInstallation, installations.body[0].id, 'the user the active installation from the status request')
 
     t.end()
   })

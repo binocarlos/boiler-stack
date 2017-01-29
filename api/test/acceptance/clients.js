@@ -17,8 +17,8 @@ tape('acceptance - clients', (t) => {
     register: (next) => tools.register(userData, (err, u) => {
       if(err) return next(err)
       user = u
-    console.log('-------------------------------------------');
-    console.dir(user)
+    
+    console.log(JSON.stringify(user, null, 4))
       next()
     })/*,
     addclient: (next) => tools.createClient(CLIENTDATA, next),

@@ -40,6 +40,12 @@ const UserController = (eventBus) => {
           query,
           result
         }, next)
+      },
+
+      (result, next) => {
+        UserModel.getClean(db.run, {
+          id: result.id
+        }, next)
       }
 
     ], done)
