@@ -3,6 +3,10 @@ const crypto = require('crypto')
 const hat = require('hat')
 const TRACER_KEY = 'x-tracer-id'
 
+const settings = require('./settings')
+
+const getRandomEmail = () => 'user' + hat() + '@' + settings.emaildomain
+
 const ensureRequestTracerId = (req) => {
   let existing = req.headers[TRACER_KEY]
   if(!existing) {

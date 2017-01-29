@@ -3,6 +3,8 @@ const args = require('minimist')(process.argv, {
   default:{
     port: process.env.PORT || 80,
     base: process.env.BASE || '/api/v1',
+    domain: process.env.DOMAIN || 'localhost',
+    emaildomain: process.env.EMAIL_DOMAIN || 'localhost',
     diggerhost: process.env.DIGGER_SERVICE_HOST || 'digger',
     diggerport: process.env.DIGGER_SERVICE_PORT || 80,
     postgreshost: process.env.POSTGRES_SERVICE_HOST || 'postgres',
