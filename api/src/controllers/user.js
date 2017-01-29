@@ -25,11 +25,22 @@ const UserController = (eventBus) => {
   // query:
   //  * data
   const register = (db, query, done) => {
-    UserModel.register(db.run, query, eventBus.emitWrapper(db.tracer, {
-      logger,
-      query,
-      eventName: 'user.register'
-    }, done))
+    UserModel.register(db.run, query, (err, result) => {
+      // inject the userid that just registered
+      const tracer = err || !result.id ?
+        db.tracer :
+        Object.assign({}, db.tracer, {
+          user: result.id
+        })
+
+      const emitWrapper = eventBus.emitWrapper(tracer, {
+        logger,
+        query,
+        eventName: 'user.register'
+      }, done)
+
+      emitWrapper(err, result)
+    })
   }
 
   // query:

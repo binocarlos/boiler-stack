@@ -22,11 +22,19 @@ function connect() {
 }
 
 function psql() {
-  local file="${1}"
-  local cmd="psql --host ${POSTGRES_HOST} --username ${POSTGRES_USER} --dbname ${POSTGRES_DATABASE}"
+  local cmd="psql --host ${POSTGRES_HOST} --username ${POSTGRES_USER} --dbname ${POSTGRES_DATABASE} $@"
   if [ -t 0 ]; then
     echo 'connecting to postgres'
     export EXTRA_DOCKER_ARGS="${EXTRA_DOCKER_ARGS} -t "
+  fi
+  connect ${cmd}
+}
+
+function psqlfile() {
+  local file="${1}"
+  local cmd=""
+  if [ -t 0 ]; then
+    echo "loading sql file ${file}"
   else
     cat > ${TEMP_FILE}
     file="${TEMP_FILE}"
@@ -35,13 +43,14 @@ function psql() {
     export EXTRA_DOCKER_ARGS="${EXTRA_DOCKER_ARGS} -v ${file}:/tmp/command.sql "
     cmd="${cmd} --file /tmp/command.sql"
   fi
-  connect ${cmd}
+  psql ${cmd}
 }
 
 function usage() {
 cat <<EOF
 Usage:
   psql                 run connected psql
+  psqlfile             pipe stdin or $1 = filepath
   help                 display this message
 EOF
   exit 1
@@ -50,6 +59,7 @@ EOF
 function main() {
   case "$1" in
   psql)            shift; psql $@;;
+  psqlfile)        shift; psqlfile $@;;
   help)            shift; usage $@;;
   *)               psql $@;;
   esac

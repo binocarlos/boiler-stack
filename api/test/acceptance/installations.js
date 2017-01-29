@@ -10,15 +10,18 @@ tape('acceptance - installations', (t) => {
 
   async.series({
 
-    register: (next) => tools.register(userData, next),
+    register: (next) => tools.register(userData, next)/*,
     pause: (next) => setTimeout(next, 300),
     installations: (next) => tools.installations(next),
-    status: (next) => tools.status(next)
+    status: (next) => tools.status(next)*/
 
   }, (err, results) => {
 
     if(err) t.error(err)
 
+    console.log(JSON.stringify(results, null, 4))
+
+  /*
     const register = results.register
     const installations = results.installations
     const status = results.status
@@ -27,11 +30,11 @@ tape('acceptance - installations', (t) => {
     t.equal(installations.body[0].name, 'My First Company', 'default installation')
 
     t.equal(status.body.data.meta.activeInstallation, installations.body[0].id, 'the user the active installation')
-
+*/
     t.end()
   })
 })
-
+/*
 tape('acceptance - create installation', (t) => {
   const userData = tools.UserData()
   const INSTALLATION_NAME = 'apples install'
@@ -313,4 +316,4 @@ tape('acceptance - access control - no user', (t) => {
     
     t.end()
   })
-})
+})*/
