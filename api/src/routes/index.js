@@ -13,8 +13,22 @@ const Installations = require('./installation')
 const reqQuery = (req) => urlparse(req.url, true)
 const reqParam = (req, name) => reqQuery(req)[name]
 
+const INSTALLATIONID_QUERY_FIELDS = ['i', 'installation', 'installationid']
+const extractors = {
+  path: (req) => {
+    const id = parseInt(req.params.id)
+    return isNaN(id) ? null : id
+  },
+  query: (req) => {
+    const qs = urlparse(req, true).query
+    return INSTALLATIONID_QUERY_FIELDS
+      .map(f => qs[f])
+      .filter(v => v)[0]
+  }
+}
+
 const Routes = (base, controllers) => (app) => {
-  const access = AccessControl(controllers)
+  
   const bind = (method) => {
     const methodHandler = app[method]
     if(!methodHandler) throw new Error('unknown method: ' + method)
@@ -28,10 +42,28 @@ const Routes = (base, controllers) => (app) => {
     }
     return handler
   }
-  const protect = (opts) => (req, res, next) => {
-    if(!req.user) return next(['user required', 403])
-    next()
+
+  const access = AccessControl(controllers)
+
+  const installationAccess = (extractor, accessLevel) => access.installation({
+    extractor,
+    accessLevel
+  })
+
+  const protectors = {
+    user: access.user(),
+    installation: {
+      path: {
+        read: installationAccess(extractors.path, 'viewer'),
+        write: installationAccess(extractors.path, 'editor')
+      },
+      query: {
+        read: installationAccess(extractors.query, 'viewer'),
+        write: installationAccess(extractors.query, 'editor')
+      }
+    }
   }
+  
   const get = bind('get')
   const post = bind('post')
   const put = bind('put')
@@ -48,29 +80,22 @@ const Routes = (base, controllers) => (app) => {
   get('/status', auth.status)
   post('/login', auth.login)
   post('/register', auth.register)
-  put('/update', protect, auth.update)
+  put('/update', protectors.user, auth.update)
   get('/logout', auth.logout)
 
   // installation
-  const installationAccess = (accessLevel) => access.installation({
-    getId: req => {
-      const id = parseInt(req.params.id)
-      return isNaN(id) ? null : id
-    },
-    accessLevel
-  })
 
   // auth handled by the collaboration links
-  get('/installations', access.user(), installations.list)
-  post('/installations', access.user(), installations.create)
+  get('/installations', protectors.user, installations.list)
+  post('/installations', protectors.user, installations.create)
 
   // need to check access levels for these routes
-  get('/installations/:id', installationAccess(), installations.get)
-  put('/installations/:id', installationAccess('editor'), installations.save)
-  del('/installations/:id', installationAccess('editor'), installations.delete)
+  get('/installations/:id', protectors.installation.path.read, installations.get)
+  put('/installations/:id', protectors.installation.path.write, installations.save)
+  del('/installations/:id', protectors.installation.path.write, installations.delete)
 
   // thie is read-only because we are updating their user record
-  put('/installations/:id/activate', installationAccess(), installations.activate)
+  put('/installations/:id/activate', protectors.installation.path.read, installations.activate)
 }
 
 module.exports = Routes

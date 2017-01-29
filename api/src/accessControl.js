@@ -32,16 +32,15 @@ const AccessControl = (controllers) => {
     if(typeof(opts) == 'string') opts = {
       accessLevel: opts
     }
-    if(!opts.getId) throw new Error('getId required')
+    if(!opts.extractor) throw new Error('extractor required')
+    const extractor = opts.extractor
     const requiredAccess = opts.accessLevel || DEFAULT_ACCESS_LEVEL
     return (req, res, next) => {
       if(!req.user) return next(['user required', 403])
       const accountid = req.user.id
-      const installationid = opts.getId(req)
+      const installationid = extractor(req)
       if(!installationid) return next(['installation id required', 403])
-
-      
-      installationAccessLevel(connection(req.id), {
+      installationAccessLevel(connection(req.id, accountid), {
         accountid,
         installationid
       }, (err, userAccess) => {

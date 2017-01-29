@@ -124,6 +124,17 @@ const activateInstallation = (id, next) => {
   }, wrapResult(next))
 }
 
+const createclient = (iid, data, next) => {
+  request({
+    method: 'POST',
+    url: url('/api/v1/clients'),
+    qs: {
+      i: iid
+    },
+    headers: headers()
+  }, wrapResult(next)) 
+}
+
 module.exports = {
   UserData,
   request,
