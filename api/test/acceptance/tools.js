@@ -196,6 +196,36 @@ const newClientData = (next) => {
   }, wrapResult(next)) 
 }
 
+const saveClient = (installation, id, data, next) => {
+  if(process.env.TRACE_TEST) {
+    console.log('saveClient')
+  }
+  request({
+    method: 'PUT',
+    url: url('/api/v1/clients/' + id),
+    qs: {
+      i: installation
+    },
+    headers: headers(),
+    json: data
+  }, wrapResult(next))
+}
+
+const deleteClient = (installation, id, next) => {
+  if(process.env.TRACE_TEST) {
+    console.log('deleteClient')
+  }
+  request({
+    method: 'DELETE',
+    url: url('/api/v1/clients/' + id),
+    qs: {
+      i: installation
+    },
+    headers: headers()
+  }, wrapResult(next))
+}
+
+
 module.exports = {
   UserData,
   request,
@@ -215,5 +245,7 @@ module.exports = {
   activateInstallation,
   createClient,
   listClients,
-  newClientData
+  newClientData,
+  saveClient,
+  deleteClient
 }

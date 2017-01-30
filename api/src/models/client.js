@@ -44,6 +44,14 @@ order by
       params
     }
   },
+  // does an account have a client collaboration on an installation?
+  hasInstallation: (clientid, installationid) => {
+    return SQL.select('collaboration', {
+      'useraccount': clientid,
+      'installation': installationid,
+      'permission': 'client'
+    })
+  },
   insertCollaboration: (accountid, installationid) => {
     return SQL.insert('collaboration', {
       'useraccount': accountid,
@@ -55,13 +63,12 @@ order by
 
 const get = (runQuery, params, done) => runQuery(SQL.select('useraccount', params), selectors.single(done, UserModel.clean))
 
+//  * clientid
 //  * installationid
-const list = (runQuery, params, done) => {
-  console.log('-------------------------------------------');
-  console.log('-------------------------------------------');
-  console.dir(params)
-  runQuery(QUERIES.list(params.installationid), selectors.rows(done, UserModel.clean))
-}
+const hasInstallation = (runQuery, params, done) => runQuery(QUERIES.hasInstallation(params.clientid, params.installationid), selectors.nonzero(done))
+
+//  * installationid
+const list = (runQuery, params, done) => runQuery(QUERIES.list(params.installationid), selectors.rows(done, UserModel.clean))
 
 //  * data
 //    * email
@@ -113,6 +120,7 @@ module.exports = {
   QUERIES,
   get: get,
   list,
+  hasInstallation,
   create,
   save,
   delete: del

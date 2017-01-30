@@ -22,11 +22,17 @@ const field = (name, done) => (err, results) => {
   done(null, row[name])
 }
 
+const nonzero = (done) => (err, results) => {
+  if(err) return done(err)
+  const rows = getrows(results)
+  done(null, rows.length > 0)
+}
 const selectors = {
   // return rows from the raw result
   rows,
   single,
-  field
+  field,
+  nonzero
 }
 
 module.exports = selectors

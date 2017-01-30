@@ -55,18 +55,18 @@ const Routes = (base, controllers) => (app) => {
   post('/installations', access.user(), installations.create)
 
   // need to check access levels for these routes
-  get('/installations/:id', access.pathInstallation('viewer'), installations.get)
-  put('/installations/:id', access.pathInstallation('editor'), installations.save)
-  del('/installations/:id', access.pathInstallation('editor'), installations.delete)
+  get('/installations/:id', access.installation('viewer', 'path'), installations.get)
+  put('/installations/:id', access.installation('editor', 'path'), installations.save)
+  del('/installations/:id', access.installation('editor', 'path'), installations.delete)
 
   // thie is read-only because we are updating their user record
-  put('/installations/:id/activate', access.pathInstallation('viewer'), installations.activate)
+  put('/installations/:id/activate', access.installation('viewer', 'path'), installations.activate)
 
   // client
-  get('/clients', access.queryInstallation('viewer'), clients.list)
+  get('/clients', access.installation(), clients.list)
   get('/clients/new', access.user(), clients.newdata)
-  post('/clients', access.queryInstallation('editor'), clients.create)
-  get('/clients/:id', access.client('viewer'), clients.get)
+  post('/clients', access.installation('editor'), clients.create)
+  get('/clients/:id', access.client(), clients.get)
   put('/clients/:id', access.client('editor'), clients.save)
   del('/clients/:id', access.client('editor'), clients.delete)
 }

@@ -92,6 +92,7 @@ const ClientController = (eventBus) => {
   return {
     newData: newData,
     get: get,
+    hasInstallation,
     list,
     create,
     save,

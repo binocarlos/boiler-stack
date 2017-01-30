@@ -10,24 +10,6 @@ const CLIENTDATA = {
   }
 }
 
-tape('acceptance - default client data', (t) => {
-
-  const userData = tools.UserData()
-  let user = null
-
-  async.series({
-    user: (nextp) => tools.register(userData, nextp),
-    client: (nextp) => tools.newClientData(nextp)
-  }, (err, results) => {
-    const data = results.client.body
-    t.ok(data.email.indexOf('@') > 0, 'we have a client email')
-    t.equal(typeof(data.password), 'string', 'default password is string')
-    t.ok(data.password.length > 6, 'default password > 6 chars')
-    t.end()
-  })
-  
-})
-
 const createClient = (done) => {
   const userData = tools.UserData()
   let user = null
@@ -52,6 +34,24 @@ const createClient = (done) => {
   })
 }
 
+tape('acceptance - default client data', (t) => {
+
+  const userData = tools.UserData()
+  let user = null
+
+  async.series({
+    user: (nextp) => tools.register(userData, nextp),
+    client: (nextp) => tools.newClientData(nextp)
+  }, (err, results) => {
+    const data = results.client.body
+    t.ok(data.email.indexOf('@') > 0, 'we have a client email')
+    t.equal(typeof(data.password), 'string', 'default password is string')
+    t.ok(data.password.length > 6, 'default password > 6 chars')
+    t.end()
+  })
+  
+})
+
 tape('acceptance - create client', (t) => {
 
   createClient((err, results) => {
@@ -63,6 +63,21 @@ tape('acceptance - create client', (t) => {
     t.end()
 
   })
+  
+})
+
+tape('acceptance - list clients - no installation id', (t) => {
+
+  async.waterfall([
+    createClient,
+    (results, next) => tools.listClients(null, next)
+  ], (err, results) => {
+    if(err) t.error(err)
+
+    t.equal(results.statusCode, 403, '403 status no installation id')
+    t.end()
+  })
+
   
 })
 
@@ -86,39 +101,55 @@ tape('acceptance - list clients', (t) => {
   
 })
 
-/*
-tape('acceptance - create client', (t) => {
-  const userData = tools.UserData()
-  let user = null
 
-  async.series({
-    user: (nextp) => tools.register(userData, nextp),
-    client: (nextp) => tools.newClientData(nextp)
-  }, (err, data) => {
+tape('acceptance - save client - no installation id', (t) => {
+
+  async.waterfall([
+    createClient,
+    (results, next) => {
+      const client = results.client.body
+      const clientid = client.id
+      delete(client.id)
+
+      client.email = 'bob@bob123.com'
+      client.meta.fruit = 'oranges'
+
+      tools.saveClient(null, clientid, client, next)
+    }
+  ], (err, results) => {
     if(err) t.error(err)
 
-    const user = data.user.body.data
-    const installationid = user.meta.activeInstallation 
-    const clientData = Object.assign({}, data.client.body, CLIENTDATA)
+    t.equal(results.statusCode, 403, '403 status no installation id')
 
-    async.series({
-
-      addclient: (next) => tools.createClient(installationid, clientData, next),
-      clients: (next) => tools.listClients(installationid, next)
-
-    }, (err, results) => {
-
-      if(err) t.error(err)
-
-      const clients = results.clients.body
-
-      console.log(JSON.stringify(clients, null, 4))
-
-      console.log(clients.length)
-
-      t.end()
-    })
-
+    t.end()
   })
 
-})*/
+  
+})
+
+tape('acceptance - save client', (t) => {
+
+  async.waterfall([
+    createClient,
+    (results, next) => {
+      const client = results.client.body
+      const clientid = client.id
+      delete(client.id)
+
+      client.email = 'SAVED' + client.email
+      client.meta.fruit = 'oranges'
+
+      tools.saveClient(results.installationid, clientid, client, next)
+    }
+  ], (err, results) => {
+    if(err) t.error(err)
+
+    const client = results.body
+    t.equal(client.email.indexOf('SAVED'), 0, 'saved email')
+    t.equal(client.meta.fruit, 'oranges', 'saved meta')
+
+    t.end()
+  })
+
+  
+})
