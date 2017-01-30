@@ -64,10 +64,6 @@ const InstallationController = (eventBus) => {
           installationAccess: accessLevel
         })
 
-        console.log('-------------------------------------------');
-        console.log('-------------------------------------------');
-        console.dir(newMeta)
-
         UserModel.save(db.run, {
           data: {
             meta: newMeta
