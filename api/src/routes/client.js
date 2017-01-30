@@ -57,7 +57,9 @@ function Clients(controllers) {
   const del = (req, res, error) => {
     transaction(req.id, req.userid, (db, finish) => {
       clients.delete(db, {
-        id: req.params.id
+        params: {
+          id: req.params.id  
+        }
       }, finish)
     }, tools.jsonCallback(res, error))
   }

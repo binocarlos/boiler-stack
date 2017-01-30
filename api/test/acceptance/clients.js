@@ -153,3 +153,34 @@ tape('acceptance - save client', (t) => {
 
   
 })
+
+tape('acceptance - delete client', (t) => {
+
+  let createresults = null
+  let deleteresults = null
+  async.waterfall([
+    createClient,
+    (results, next) => {
+      const client = results.client.body
+      const clientid = client.id
+      delete(client.id)
+      createresults = results
+      tools.deleteClient(createresults.installationid, clientid, next)
+    },
+    (results, next) =>  {
+      deleteresults = results
+      next(null, deleteresults)
+    },
+    (deleteresults, next) => tools.listClients(createresults.installationid, next)
+  ], (err, listresults) => {
+    if(err) t.error(err)
+
+    t.equal(listresults.statusCode, 200, '200 status code for list')
+    t.equal(deleteresults.statusCode, 200, '200 status code for deleteresults')
+    t.equal(listresults.body.length, 0, 'no clients in list')
+
+    t.end()
+  })
+
+  
+})
