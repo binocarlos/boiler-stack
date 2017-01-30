@@ -2,8 +2,6 @@
 
 const async = require('async')
 const tools = require('../tools')
-const Logger = require('../logger')
-const logger = Logger('controller:installation')
 
 const InstallationModel = require('../models/installation')
 const UserModel = require('../models/user')

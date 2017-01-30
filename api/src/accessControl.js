@@ -1,5 +1,8 @@
 "use strict";
 
+const urlparse = require('url').parse
+const async = require('async')
+
 const ACCESS_LEVELS = {
   write: 20,
   read: 10,
@@ -20,42 +23,123 @@ const getAccessLevel = (level) => ACCESS_LEVELS[ACCESS_NAMES[level] || 'none']
 const AccessControl = (controllers) => {
   
   const connection = controllers.connection
-  const installationAccessLevel = controllers.installation.accessLevel
+  const installations = controllers.installation
+  const clients = controllers.clients
   
+  /*
+  
+    tools
+    
+  */
+  const hasReqUser = (req) => req.user ? true : false
+
+  const replyNoUser = (next) => next(['user required', 403])
+  const replyNoInstallation = (next) => next(['installation id required', 403])
+  const replyNoAccess = (next) => next(['insufficient access level', 403])
+  const replyError = (err, next) => next([err.toString(), 500])
+
+  const installationPathID = (req) => {
+    const id = parseInt(req.params.id)
+    return isNaN(id) ? null : id
+  }
+  const installationQueryID = (req) => {
+    const qs = urlparse(req, true).query
+    return INSTALLATIONID_QUERY_FIELDS
+      .map(f => qs[f])
+      .filter(v => v)[0]
+  }
+
+  /*
+  
+    database queries
+    
+  */
+  const installationAccess = (opts, done) => {
+    const requiredAccess = opts.accessLevel
+    installations.accessLevel(connection(opts.req.id, opts.accountid), {
+      accountid: opts.accountid,
+      installationid: opts.installationid
+    }, (err, userAccess) => {
+      if(err) return replyError(err, done)
+      if(getAccessLevel(userAccess) < getAccessLevel(requiredAccess)) return replyNoAccess(done)
+      opts.req.installationid = installationid
+      opts.req.installationAccess = userAccess
+      next()
+    })
+  }
+
+  const hasInstallationClient = (opts, done) => {
+    clients.hasInstallation(connection(opts.req.id, opts.accountid), {
+      clientid: opts.clientid,
+      installationid: opts.installationid
+    }, done)
+  }
+
+  /*
+  
+    access control handlers
+    
+  */
+
+  // a logged in user is required
   const user = (opts) => (req, res, next) => {
-    if(!req.user) return next(['user required', 403])
+    if(!hasReqUser(req)) return replyNoUser(next)
     next()
   }
 
-  const installation = (opts) => {
-    opts = opts || {}
-    if(typeof(opts) == 'string') opts = {
-      accessLevel: opts
-    }
-    if(!opts.extractor) throw new Error('extractor required')
-    const extractor = opts.extractor
-    const requiredAccess = opts.accessLevel || DEFAULT_ACCESS_LEVEL
+  const installation = (accessLevel, extractor) => {
     return (req, res, next) => {
-      if(!req.user) return next(['user required', 403])
-      const accountid = req.user.id
+      if(!hasReqUser(req)) return replyNoUser(next)
       const installationid = extractor(req)
-      if(!installationid) return next(['installation id required', 403])
-      installationAccessLevel(connection(req.id, accountid), {
-        accountid,
-        installationid
-      }, (err, userAccess) => {
-        if(err) return next([err.toString(), 500])
-        if(getAccessLevel(userAccess) < getAccessLevel(requiredAccess)) {
-          return next(['insufficient access level', 403])
-        }
-        next()
+      if(!installationid) return replyNoInstallation(next)
+      installationAccess({
+        req: req,
+        accountid: req.user.id,
+        installationid,
+        accessLevel
+      }, next)
+    }
+  }
+
+  const pathInstallation = (accessLevel) => installation(accessLevel, installationPathID)
+  const queryInstallation = (accessLevel) => installation(accessLevel, installationQueryID)
+
+
+  // checking the client means:
+  //
+  //  * check for access level to the installation
+  //  * check the client lives in the installation
+  const client = (accessLevel, extractor) => {
+    const installationChecker = queryInstallation(accessLevel)
+    extractor = extractor || installationQueryID
+    return (req, res, next) => {
+      if(!hasReqUser(req)) return replyNoUser(next)
+      const installationid = extractor(req)
+      if(!installationid) return replyNoInstallation(next)
+
+      // first check the users access to the installation itself
+      installationChecker(req, res, (err) => {
+        if(err) return replyError(err, done)
+
+        // now check that the given user lives in that installation
+        hasInstallationClient({
+          req: req,
+          accountid: req.user.id,
+          installationid
+        }, (err, hasClient) => {
+          if(err) return replyError(err, done)
+          if(!hasClient) return replyNoAccess(done)
+          done()
+        })
       })
     }
   }
 
   return {
     user,
-    installation
+    pathInstallation,
+    queryInstallation,
+    client
   }
 }
 
