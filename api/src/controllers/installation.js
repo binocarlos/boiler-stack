@@ -46,13 +46,28 @@ const InstallationController = (eventBus) => {
     async.waterfall([
 
       (next) => {
-        UserModel.get(db.run, {id: query.accountid}, next)
+        async.parallel({
+          user: (pnext) => UserModel.get(db.run, {id: query.accountid}, pnext),
+          accessLevel: (pnext) => InstallationModel.accessLevel(db.run, {
+            accountid: query.accountid,
+            installationid: query.installationid
+          }, pnext)
+        }, next)
       },
 
-      (user, next) => {
+      (results, next) => {
+        const user = results.user
+        const accessLevel = results.accessLevel
+
         const newMeta = Object.assign({}, user.meta, {
-          activeInstallation: query.installationid
+          activeInstallation: query.installationid,
+          installationAccess: accessLevel
         })
+
+        console.log('-------------------------------------------');
+        console.log('-------------------------------------------');
+        console.dir(newMeta)
+
         UserModel.save(db.run, {
           data: {
             meta: newMeta

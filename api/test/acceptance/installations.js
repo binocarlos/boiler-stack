@@ -28,6 +28,9 @@ tape('acceptance - installations', (t) => {
     t.equal(register.body.data.meta.activeInstallation, installations.body[0].id, 'the user the active installation from the register request')
     t.equal(status.body.data.meta.activeInstallation, installations.body[0].id, 'the user the active installation from the status request')
 
+
+    t.equal(register.body.data.meta.installationAccess, 'owner', 'the owns the active installation')
+
     t.end()
   })
 })
