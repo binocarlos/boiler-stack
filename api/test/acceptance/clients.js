@@ -260,3 +260,65 @@ tape('acceptance - cross installation get client', (t) => {
 
   
 })
+
+
+tape('acceptance - cross installation save client', (t) => {
+
+  const userData1 = tools.UserData('bob1')
+  const userData2 = tools.UserData('bob2')
+
+  let users = null
+
+  async.waterfall([
+
+    (next) => {
+      async.series({
+        user1: (unext) => createClient(userData1, unext),
+        user2: (unext) => createClient(userData2, unext)
+      }, next)
+    },
+
+    (results, next) => {
+      const installationid1 = results.user1.user.body.data.meta.activeInstallation
+      const installationid2 = results.user2.user.body.data.meta.activeInstallation
+      const clientid1 = results.user1.client.body.id
+      const clientid2 = results.user2.client.body.id
+
+      const client1 = results.user1.client.body
+      const client2 = results.user1.client.body
+
+      client1.meta.fruit = 'oranges'
+      client2.meta.fruit = 'oranges'
+
+      users = {
+        installationid1,
+        installationid2,
+        clientid1,
+        clientid2,
+        client1,
+        client2
+      }
+
+      tools.login(userData1, next)
+    },
+
+    (login, next) => {
+
+      async.series({
+        canaccess: (nexts) => tools.saveClient(users.installationid1, users.clientid1, users.client1, nexts),
+        cantaccess: (nexts) => tools.saveClient(users.installationid1, users.clientid2, users.client2, nexts),
+      }, next)
+
+    }
+
+  ], (err, results) => {
+    if(err) t.error(err)
+
+    t.equal(results.canaccess.statusCode, 200, '200 can access')
+    t.equal(results.cantaccess.statusCode, 403, '403 cant access')
+
+    t.end()
+  })
+
+  
+})
