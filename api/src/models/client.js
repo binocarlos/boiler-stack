@@ -3,6 +3,8 @@ const async = require('async')
 const SQL = require('../database/sql')
 const selectors = require('../database/selectors')
 
+const UserModel = require('./user')
+
 /*
 
   a client is a useraccount with a 'client' collaboration
@@ -12,88 +14,81 @@ const selectors = require('../database/selectors')
   in the installatiom
   
 */
-const prepareData = (client) => {
-  return client.meta ?
-    Object.assign({}, client, {
-      meta: JSON.stringify(client.meta)
-    }) :
-    client
-}
 
 const QUERIES = {
 
   list: (installationid) => {
-    const params = [installationid]
-    const sql = `select *
+    const sql = `select useraccount.*
 from
-  installation
+  useraccount
 join
   collaboration
 on
-  (collaboration.installation = installation.id)
+(
+  collaboration.useraccount = useraccount.id
+)
 where
-  collaboration.useraccount = $1
+(
+  collaboration.installation = $1
+  and
+  collaboration.permission = 'client'
+)
 order by
-  installation.name
+  useraccount.email
 `
+
+    const params = [installationid]
+
     return {
       sql,
       params
     }
   },
-  get: (params) => SQL.select('installation', params),
-  save: (data, params) => SQL.update('installation', data, params),
-  delete: (params) => SQL.delete('installation', params),
-  insert: (data) => SQL.insert('installation', data),
-  getCollaboration: (params) => SQL.select('collaboration', params),
-  insertCollaboration: (accountid, permission) => {
-    permission = permission || 'owner'
+  insertCollaboration: (accountid, installationid) => {
     return SQL.insert('collaboration', {
       'useraccount': accountid,
-      'installation': 'lastval()',
-      'permission': permission
-    }, {
-      'installation': 'raw'
+      'installation': installationid,
+      'permission': 'client'
     })
   }
 }
 
-const get = (runQuery, params, done) => runQuery(QUERIES.get(params), selectors.single(done))
+const get = (runQuery, params, done) => runQuery(SQL.select('useraccount', params), selectors.single(done, UserModel.clean))
 
-const accessLevel = (runQuery, params, done) => {
-  runQuery(QUERIES.getCollaboration({
-    useraccount: params.accountid,
-    installation: params.installationid
-  }), selectors.field('permission', done))
+//  * installationid
+const list = (runQuery, params, done) => {
+  console.log('-------------------------------------------');
+  console.log('-------------------------------------------');
+  console.dir(params)
+  runQuery(QUERIES.list(params.installationid), selectors.rows(done, UserModel.clean))
 }
 
-//  * accountid
-const byUser = (runQuery, query, done) => runQuery(QUERIES.byUser(query.accountid), selectors.rows(done))
-
 //  * data
-//    * name
+//    * email
+//    * password
 //    * meta
-//  * accountid
+//  * params
+//    * installationid
 const create = (runQuery, query, done) => {
-  const accountid = query.accountid
 
-  let data = query.data == 'default' ?
-    defaultInstallation(accountid) :
-    query.data
-
-  data = prepareData(data)
   let newObjects = {
-    installation: null,
+    client: null,
     collaboration: null
   }
 
   async.waterfall([
 
-    (next) => runQuery(QUERIES.insert(data), selectors.single(next)),
-    (installation, next) => {
-      newObjects.installation = installation
-      runQuery(QUERIES.insertCollaboration(accountid), selectors.single(next))
+    (next) => {
+      UserModel.register(runQuery, {
+        data: query.data
+      }, next)
     },
+
+    (client, next) => {
+      newObjects.client = client
+      runQuery(QUERIES.insertCollaboration(client.id, query.params.installationid), selectors.single(next))
+    },
+
     (collaboration, next) => {
       newObjects.collaboration = collaboration
       next()
@@ -101,30 +96,23 @@ const create = (runQuery, query, done) => {
 
   ], (err) => {
     if(err) return done(err)
-    done(null, newObjects.installation)
+    done(null, newObjects.client)
   })
 }
 
-//  * params
 //  * data
-//    * name
+//    * email
 //    * meta
-const save = (runQuery, query, done) => {
-  const data = prepareData(query.data)
-  const params = query.params
-  runQuery(QUERIES.save(data, params), selectors.single(done))
-}
+//  * params
+const save = (runQuery, query, done) => UserModel.save(runQuery, query, done)
 
 //  * id
-const del = (runQuery, query, done) => {
-  runQuery(QUERIES.delete(query), selectors.single(done))
-}
+const del = (runQuery, query, done) => UserModel.delete(runQuery, query, done)
 
 module.exports = {
   QUERIES,
   get: get,
-  byUser,
-  accessLevel,
+  list,
   create,
   save,
   delete: del

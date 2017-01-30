@@ -19,6 +19,8 @@ function Clients(controllers) {
     }, tools.jsonCallback(res, error))
   }
 
+  const newdata = (req, res, error) => res.json(clients.newData())
+
   const list = (req, res, error) => {
     clients.list(connection(req.id, req.userid), {
       installationid: req.installationid
@@ -30,7 +32,9 @@ function Clients(controllers) {
   const create = (req, res, error) => {
     transaction(req.id, req.userid, (db, finish) => {
       clients.create(db, {
-        installationid: req.installationid,
+        params: {
+          installationid: req.installationid  
+        },
         data: req.body
       }, finish)
     }, tools.jsonCallback(res, error, 201))
@@ -60,6 +64,7 @@ function Clients(controllers) {
 
   return {
     get: get,
+    newdata,
     list,
     create,
     save,

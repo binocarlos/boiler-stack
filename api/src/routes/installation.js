@@ -29,8 +29,10 @@ function Installations(controllers) {
   const create = (req, res, error) => {
     transaction(req.id, req.userid, (db, finish) => {
       installations.create(db, {
-        accountid: req.user.id,
-        data: req.body
+        data: req.body,
+        params: {
+          accountid: req.user.id,  
+        }
       }, finish)
     }, tools.jsonCallback(res, error, 201))
   }
@@ -58,8 +60,10 @@ function Installations(controllers) {
 
     transaction(req.id, req.userid, (db, finish) => {
       installations.activate(db, {
-        installationid: installationID,
-        accountid: req.user.id
+        params: {
+          installationid: installationID,
+          accountid: req.user.id  
+        }
       }, finish)
     }, tools.jsonCallback(res, error))
   }
@@ -67,7 +71,9 @@ function Installations(controllers) {
   const del = (req, res, error) => {
     transaction(req.id, req.userid, (db, finish) => {
       installations.delete(db, {
-        id: req.params.id
+        params: {
+          id: req.params.id  
+        }
       }, finish)
     }, tools.jsonCallback(res, error))
   }

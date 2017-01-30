@@ -1,6 +1,6 @@
 DROP TABLE "quote";
-DROP TABLE "project";
-DROP TABLE "client";
+DROP TABLE "job_access";
+DROP TABLE "job";
 DROP TABLE "collaboration";
 DROP TABLE "installation";
 DROP TABLE "useraccount";

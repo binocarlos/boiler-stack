@@ -1,17 +1,19 @@
 "use strict";
-const getrows = (result) => {
+const getrows = (result, mapfn) => {
   result = result || {}
-  return result.rows || []
+  return mapfn ?
+    (result.rows || []).map(mapfn) :
+    (result.rows || [])
 }
 
-const rows = (done) => (err, results) => {
+const rows = (done, mapfn) => (err, results) => {
   if(err) return done(err)
-  done(null, getrows(results))
+  done(null, getrows(results, mapfn))
 }
 
-const single = (done) => (err, results) => {
+const single = (done, mapfn) => (err, results) => {
   if(err) return done(err)
-  done(null, getrows(results)[0])
+  done(null, getrows(results, mapfn)[0])
 }
 
 const field = (name, done) => (err, results) => {

@@ -4,28 +4,11 @@ const urlparse = require('url').parse
 const Logger = require('../logger')
 const logger = Logger('routes')
 
-const AccessControl = require('../accessControl')
-
+const AccessControl = require('./accessControl')
 const Version = require('./version')
 const Auth = require('./auth')
 const Installations = require('./installation')
-
-const reqQuery = (req) => urlparse(req.url, true)
-const reqParam = (req, name) => reqQuery(req)[name]
-
-const INSTALLATIONID_QUERY_FIELDS = ['i', 'installation', 'installationid']
-const extractors = {
-  path: (req) => {
-    const id = parseInt(req.params.id)
-    return isNaN(id) ? null : id
-  },
-  query: (req) => {
-    const qs = urlparse(req, true).query
-    return INSTALLATIONID_QUERY_FIELDS
-      .map(f => qs[f])
-      .filter(v => v)[0]
-  }
-}
+const Clients = require('./client')
 
 const Routes = (base, controllers) => (app) => {
   
@@ -62,7 +45,7 @@ const Routes = (base, controllers) => (app) => {
   get('/status', auth.status)
   post('/login', auth.login)
   post('/register', auth.register)
-  put('/update', protectors.user, auth.update)
+  put('/update', access.user(), auth.update)
   get('/logout', auth.logout)
 
   // installation
@@ -81,6 +64,7 @@ const Routes = (base, controllers) => (app) => {
 
   // client
   get('/clients', access.queryInstallation('viewer'), clients.list)
+  get('/clients/new', access.user(), clients.newdata)
   post('/clients', access.queryInstallation('editor'), clients.create)
   get('/clients/:id', access.client('viewer'), clients.get)
   put('/clients/:id', access.client('editor'), clients.save)

@@ -16,14 +16,19 @@ const DefaultInstallation = (controllers) => {
       (next) => {
         installation.create(db, {
           data: 'default',
-          accountid
+          params: {
+            accountid  
+          }
         }, next)
       },
         
       (installationData, next) => {
+
         installation.activate(db, {
-          installationid: installationData.id,
-          accountid
+          params: {
+            installationid: installationData.id,
+            accountid  
+          }
         }, next)
       }
 

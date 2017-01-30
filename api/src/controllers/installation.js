@@ -9,9 +9,9 @@ const UserModel = require('../models/user')
 const InstallationController = (eventBus) => {
   
   // queries
-  const get = (db, query, done) => InstallationModel.get(db.run, query, done)
-  const list = (db, query, done) => InstallationModel.byUser(db.run, query, done)
-  const accessLevel = (db, query, done) => InstallationModel.accessLevel(db.run, query, done)
+  const get = (db, params, done) => InstallationModel.get(db.run, params, done)
+  const list = (db, params, done) => InstallationModel.byUser(db.run, params, done)
+  const accessLevel = (db, params, done) => InstallationModel.accessLevel(db.run, params, done)
 
   // commands
   const create = (db, query, done) => {
@@ -37,29 +37,19 @@ const InstallationController = (eventBus) => {
 
   // update the user with a 'active' installation (written to the user data)
   // query:
-  //   * installationid
-  //   * accountid
+  //   * params
+  //     * installationid
+  //     * accountid
   const activate = (db, query, done) => {
 
     async.waterfall([
 
-      (next) => {
-        async.parallel({
-          user: (pnext) => UserModel.get(db.run, {id: query.accountid}, pnext),
-          accessLevel: (pnext) => InstallationModel.accessLevel(db.run, {
-            accountid: query.accountid,
-            installationid: query.installationid
-          }, pnext)
-        }, next)
-      },
+      (next) => UserModel.get(db.run, {id: query.params.accountid}, next),
 
-      (results, next) => {
-        const user = results.user
-        const accessLevel = results.accessLevel
-
+      (user, next) => {
+      
         const newMeta = Object.assign({}, user.meta, {
-          activeInstallation: query.installationid,
-          installationAccess: accessLevel
+          activeInstallation: query.params.installationid
         })
 
         UserModel.save(db.run, {
@@ -67,7 +57,7 @@ const InstallationController = (eventBus) => {
             meta: newMeta
           },
           params: {
-            id: query.accountid
+            id: query.params.accountid
           }
         }, next)
       },

@@ -27,11 +27,14 @@ function Auth(controllers) {
     const errorData = {loggedIn: false}
     if(!email) return error(['no email given', 400, errorData])
     if(!password) return error(['no password given', 400, errorData])
+    const db = connection(req.id, req.userid)
     async.waterfall([
       (next) => {
-        users.login(connection(req.id, req.userid), {
-          email,
-          password
+        users.login(db, {
+          data: {
+            email,
+            password  
+          }
         }, next)
       },
       (user, next) => req.login(user, (err) => next(err, user))

@@ -22,7 +22,7 @@ const QUERIES = {
 
   byUser: (accountid) => {
     const params = [accountid]
-    const sql = `select *
+    const sql = `select installation.*
 from
   installation
 join
@@ -44,14 +44,12 @@ order by
   delete: (params) => SQL.delete('installation', params),
   insert: (data) => SQL.insert('installation', data),
   getCollaboration: (params) => SQL.select('collaboration', params),
-  insertCollaboration: (accountid, permission) => {
+  insertCollaboration: (accountid, installationid, permission) => {
     permission = permission || 'owner'
     return SQL.insert('collaboration', {
       'useraccount': accountid,
-      'installation': 'lastval()',
+      'installation': installationid,
       'permission': permission
-    }, {
-      'installation': 'raw'
     })
   }
 }
@@ -66,14 +64,15 @@ const accessLevel = (runQuery, params, done) => {
 }
 
 //  * accountid
-const byUser = (runQuery, query, done) => runQuery(QUERIES.byUser(query.accountid), selectors.rows(done))
+const byUser = (runQuery, params, done) => runQuery(QUERIES.byUser(params.accountid), selectors.rows(done))
 
 //  * data
 //    * name
 //    * meta
-//  * accountid
+//  * params
+//    * accountid
 const create = (runQuery, query, done) => {
-  const accountid = query.accountid
+  const accountid = query.params.accountid
 
   let data = query.data == 'default' ?
     defaultInstallation(accountid) :
@@ -90,7 +89,7 @@ const create = (runQuery, query, done) => {
     (next) => runQuery(QUERIES.insert(data), selectors.single(next)),
     (installation, next) => {
       newObjects.installation = installation
-      runQuery(QUERIES.insertCollaboration(accountid), selectors.single(next))
+      runQuery(QUERIES.insertCollaboration(accountid, installation.id), selectors.single(next))
     },
     (collaboration, next) => {
       newObjects.collaboration = collaboration
@@ -107,16 +106,11 @@ const create = (runQuery, query, done) => {
 //  * data
 //    * name
 //    * meta
-const save = (runQuery, query, done) => {
-  const data = prepareData(query.data)
-  const params = query.params
-  runQuery(QUERIES.save(data, params), selectors.single(done))
-}
+const save = (runQuery, query, done) => runQuery(SQL.update('installation', prepareData(query.data), query.params), done)
 
-//  * id
-const del = (runQuery, query, done) => {
-  runQuery(QUERIES.delete(query), selectors.single(done))
-}
+//  * params
+//    * id
+const del = (runQuery, query, done) => runQuery(SQL.delete('installation', query.params), selectors.single(done))
 
 module.exports = {
   QUERIES,

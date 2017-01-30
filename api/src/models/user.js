@@ -13,7 +13,7 @@ const PRIVATE_FIELDS = {
 const QUERIES = {
   get: (params) => SQL.select('useraccount', params),
   insert: (data) => SQL.insert('useraccount', data),
-  update: (data, params) => SQL.update('useraccount', data, params),
+  update: (params, data) => SQL.update('useraccount', data, params),
   delete: (params) => SQL.delete('useraccount', params),
 }
 
@@ -30,30 +30,31 @@ const cleanData = (data) => {
 const prepareData = (user) => {
   const meta = user.meta || {}
   return Object.assign({}, user, {
-    meta: JSON.stringify(meta)
+    meta: typeof(meta) == 'string' ?
+      meta :
+      JSON.stringify(meta)
   })
 }
 
+// QUERIES
+
 const get = (runQuery, params, done) => runQuery(QUERIES.get(params), selectors.single(done))
-const getClean = (runQuery, params, done) => get(runQuery, params, (err, user) => {
-  if(err) return done(err)
-  done(null, cleanData(user))
-})
-const insert = (runQuery, data, done) => runQuery(QUERIES.insert(data), selectors.single(done))
-const update = (runQuery, data, params, done) => runQuery(QUERIES.update(data, params), selectors.single(done))
-const del = (runQuery, params, done) => runQuery(QUERIES.delete(params), selectors.single(done))
+const getClean = (runQuery, params, done) => runQuery(QUERIES.get(params), selectors.single(done, cleanData))
+
+// COMMANDS
 
 // login query
 // 1. load user with email using crud.get
 // 2. encrypt plain text password using loaded salt
 // 3. compare both encrypted passwords
 // query:
-//  * email
-//  * password
+//  * data
+//    * email
+//    * password
 const login = (runQuery, query, done) => {
-  const email = query.email
-  const password = query.password
-
+  const data = query.data
+  const email = data.email
+  const password = data.password
   get(runQuery, {email}, (err, user) => {
     if(err) return done(err)
     if(!user) return done()
@@ -66,6 +67,8 @@ const login = (runQuery, query, done) => {
 // 2. insert
 // query:
 //  * data
+//    * email
+//    * password
 const register = (runQuery, query, done) => {
   const data = query.data
   const userData = tools.generateUser(data)
@@ -73,7 +76,7 @@ const register = (runQuery, query, done) => {
     (next) => get(runQuery, { email: data.email }, next),
     (existingUser, next) => {
       if(existingUser) return next(data.email + ' already exists')
-      insert(runQuery, userData, next)
+      runQuery(QUERIES.insert(prepareData(userData)), selectors.single(next))
     }
   ], (err, newUser) => {
     if(err) return done(err)
@@ -85,7 +88,8 @@ const register = (runQuery, query, done) => {
 //    * email
 //    * meta
 //  * params
-const save = (runQuery, query, done) => update(runQuery, prepareData(query.data), query.params, done)
+const save = (runQuery, query, done) => runQuery(QUERIES.update(query.params, query.data), selectors.single(done, cleanData))
+const del = (runQuery, query, done) => runQuery(QUERIES.delete(query.params), selectors.single(done, cleanData))
 
 module.exports = {
   login,

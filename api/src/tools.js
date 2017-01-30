@@ -5,7 +5,9 @@ const TRACER_KEY = 'x-tracer-id'
 
 const settings = require('./settings')
 
-const getRandomEmail = () => 'user' + hat() + '@' + settings.emaildomain
+const littleid = () => hat().substring(0,8)
+const getRandomEmail = () => littleid() + '@' + settings.emaildomain
+const getRandomPassword = () => littleid()
 
 const ensureRequestTracerId = (req) => {
   let existing = req.headers[TRACER_KEY]
@@ -108,5 +110,7 @@ module.exports = {
   generateUser,
   errorHandler,
   jsonCallback,
-  jobLogger
+  jobLogger,
+  getRandomEmail,
+  getRandomPassword
 }

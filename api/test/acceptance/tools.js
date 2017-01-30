@@ -37,6 +37,9 @@ const wrapResult = (done) => (err, res, body) => {
 }
 
 const register = (user, next) => {
+  if(process.env.TRACE_TEST) {
+    console.log('register')
+  }
   request({
     method: 'POST',
     url: url('/api/v1/register'),
@@ -46,6 +49,9 @@ const register = (user, next) => {
 }
 
 const login = (user, next) => {
+  if(process.env.TRACE_TEST) {
+    console.log('login')
+  }
   request({
     method: 'POST',
     url: url('/api/v1/login'),
@@ -55,6 +61,9 @@ const login = (user, next) => {
 }
 
 const logout = (next) => {
+  if(process.env.TRACE_TEST) {
+    console.log('logout')
+  }
   request({
     method: 'GET',
     url: url('/api/v1/logout'),
@@ -64,6 +73,9 @@ const logout = (next) => {
 }
 
 const status = (next) => {
+  if(process.env.TRACE_TEST) {
+    console.log('status')
+  }
   request({
     method: 'GET',
     url: url('/api/v1/status'),
@@ -73,6 +85,9 @@ const status = (next) => {
 }
 
 const installations = (next) => {
+  if(process.env.TRACE_TEST) {
+    console.log('installations')
+  }
   request({
     method: 'GET',
     url: url('/api/v1/installations'),
@@ -82,6 +97,9 @@ const installations = (next) => {
 }
 
 const createInstallation = (data, next) => {
+  if(process.env.TRACE_TEST) {
+    console.log('createInstallation')
+  }
   request({
     method: 'POST',
     url: url('/api/v1/installations'),
@@ -91,6 +109,9 @@ const createInstallation = (data, next) => {
 }
 
 const saveInstallation = (id, data, next) => {
+  if(process.env.TRACE_TEST) {
+    console.log('saveInstallation')
+  }
   request({
     method: 'PUT',
     url: url('/api/v1/installations/' + id),
@@ -100,6 +121,9 @@ const saveInstallation = (id, data, next) => {
 }
 
 const getInstallation = (id, next) => {
+  if(process.env.TRACE_TEST) {
+    console.log('getInstallation')
+  }
   request({
     method: 'GET',
     url: url('/api/v1/installations/' + id),
@@ -109,6 +133,9 @@ const getInstallation = (id, next) => {
 }
 
 const deleteInstallation = (id, next) => {
+  if(process.env.TRACE_TEST) {
+    console.log('deleteInstallation')
+  }
   request({
     method: 'DELETE',
     url: url('/api/v1/installations/' + id),
@@ -117,6 +144,9 @@ const deleteInstallation = (id, next) => {
 }
 
 const activateInstallation = (id, next) => {
+  if(process.env.TRACE_TEST) {
+    console.log('activateInstallation')
+  }
   request({
     method: 'PUT',
     url: url('/api/v1/installations/' + id + '/activate'),
@@ -125,24 +155,44 @@ const activateInstallation = (id, next) => {
 }
 
 const createClient = (installation, data, next) => {
+  if(process.env.TRACE_TEST) {
+    console.log('createClient')
+  }
   request({
     method: 'POST',
     url: url('/api/v1/clients'),
     qs: {
       i: installation
     },
-    headers: headers()
+    headers: headers(),
+    json: data
   }, wrapResult(next)) 
 }
 
 const listClients = (installation, next) => {
+  if(process.env.TRACE_TEST) {
+    console.log('listClients')
+  }
   request({
     method: 'GET',
     url: url('/api/v1/clients'),
     qs: {
       i: installation
     },
-    headers: headers()
+    headers: headers(),
+    json: true
+  }, wrapResult(next)) 
+}
+
+const newClientData = (next) => {
+  if(process.env.TRACE_TEST) {
+    console.log('newClientData')
+  }
+  request({
+    method: 'GET',
+    url: url('/api/v1/clients/new'),
+    headers: headers(),
+    json: true
   }, wrapResult(next)) 
 }
 
@@ -164,5 +214,6 @@ module.exports = {
   deleteInstallation,
   activateInstallation,
   createClient,
-  listClients
+  listClients,
+  newClientData
 }

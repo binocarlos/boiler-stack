@@ -9,11 +9,24 @@ const UserModel = require('../models/user')
 const ClientController = (eventBus) => {
   
   // queries
-  const get = (db, query, done) => ClientModel.get(db.run, query, done)
-  const list = (db, query, done) => ClientModel.list(db.run, query, done)
-  const hasInstallation = (db, query, done) => ClientModel.hasInstallation(db.run, query, done)
-  
+  const get = (db, params, done) => ClientModel.get(db.run, params, done)
+  const list = (db, params, done) => ClientModel.list(db.run, params, done)
+  const hasInstallation = (db, params, done) => ClientModel.hasInstallation(db.run, params, done)
+
+  // data for a new client
+  const newData = () => {
+    return {
+      email: tools.getRandomEmail(),
+      password: tools.getRandomPassword()
+    }
+  }
   // commands
+  //   * params
+  //     * installationid
+  //   * data
+  //     * email
+  //     * password
+  //     * meta
   const create = (db, query, done) => {
 
     async.waterfall([
@@ -77,7 +90,8 @@ const ClientController = (eventBus) => {
   }
 
   return {
-    get,
+    newData: newData,
+    get: get,
     list,
     create,
     save,

@@ -9,16 +9,17 @@ const UserController = (eventBus) => {
 
   // QUERIES
 
-  // query:
-  //  * email
-  //  * password
-  const login = (db, query, done) => UserModel.login(db.run, query, done)
-  
-  // query
+  // params
   //  * {email,id}
-  const get = (db, query, done) => UserModel.getClean(db.run, query, done)
+  const get = (db, params, done) => UserModel.getClean(db.run, params, done)
 
   // COMMANDS
+
+  // query
+  //  * params:
+  //    * email
+  //    * password
+  const login = (db, query, done) => UserModel.login(db.run, query, done)
 
   // query:
   //  * data

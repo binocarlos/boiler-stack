@@ -16,6 +16,7 @@ const ACCESS_NAMES = {
 }
 
 const DEFAULT_ACCESS_LEVEL = 'viewer'
+const INSTALLATIONID_QUERY_FIELDS = ['i', 'installation', 'installationid']
 
 const getAccessLevel = (level) => ACCESS_LEVELS[ACCESS_NAMES[level] || 'none']
 
@@ -43,10 +44,12 @@ const AccessControl = (controllers) => {
     return isNaN(id) ? null : id
   }
   const installationQueryID = (req) => {
-    const qs = urlparse(req, true).query
-    return INSTALLATIONID_QUERY_FIELDS
+    const qs = urlparse(req.url, true).query
+    let id = INSTALLATIONID_QUERY_FIELDS
       .map(f => qs[f])
       .filter(v => v)[0]
+    id =  parseInt(id)
+    return isNaN(id) ? null : id
   }
 
   /*
@@ -62,9 +65,9 @@ const AccessControl = (controllers) => {
     }, (err, userAccess) => {
       if(err) return replyError(err, done)
       if(getAccessLevel(userAccess) < getAccessLevel(requiredAccess)) return replyNoAccess(done)
-      opts.req.installationid = installationid
+      opts.req.installationid = opts.installationid
       opts.req.installationAccess = userAccess
-      next()
+      done()
     })
   }
 
