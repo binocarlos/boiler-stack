@@ -14,8 +14,7 @@ function Clients(controllers) {
 
   const get = (req, res, error) => {
     clients.get(connection(req.id, req.userid), {
-      id: req.params.id,
-      installationid: req.installationid
+      id: req.params.id
     }, tools.jsonCallback(res, error))
   }
 

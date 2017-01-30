@@ -184,6 +184,22 @@ const listClients = (installation, next) => {
   }, wrapResult(next)) 
 }
 
+const getClient = (installation, id, next) => {
+  if(process.env.TRACE_TEST) {
+    console.log('getClient')
+  }
+  request({
+    method: 'GET',
+    url: url('/api/v1/clients/' + id),
+    qs: {
+      i: installation
+    },
+    headers: headers(),
+    json: true
+  }, wrapResult(next)) 
+}
+
+
 const newClientData = (next) => {
   if(process.env.TRACE_TEST) {
     console.log('newClientData')
@@ -245,6 +261,7 @@ module.exports = {
   activateInstallation,
   createClient,
   listClients,
+  getClient,
   newClientData,
   saveClient,
   deleteClient

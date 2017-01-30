@@ -10,8 +10,11 @@ const CLIENTDATA = {
   }
 }
 
-const createClient = (done) => {
-  const userData = tools.UserData()
+const createClient = (userData, done) => {
+  if(!done) {
+    done = userData
+    userData = tools.UserData() 
+  }
   let user = null
 
   async.series({
@@ -127,6 +130,26 @@ tape('acceptance - save client - no installation id', (t) => {
   
 })
 
+
+tape('acceptance - get client', (t) => {
+
+  async.waterfall([
+    createClient,
+    (results, next) => tools.getClient(results.installationid, results.client.body.id, next)
+  ], (err, results) => {
+    if(err) t.error(err)
+
+    const client = results.body
+
+    t.equal(client.meta.name, CLIENTDATA.meta.name, 'get client name correct')
+
+    t.end()
+  })
+
+  
+})
+
+
 tape('acceptance - save client', (t) => {
 
   async.waterfall([
@@ -178,6 +201,59 @@ tape('acceptance - delete client', (t) => {
     t.equal(listresults.statusCode, 200, '200 status code for list')
     t.equal(deleteresults.statusCode, 200, '200 status code for deleteresults')
     t.equal(listresults.body.length, 0, 'no clients in list')
+
+    t.end()
+  })
+
+  
+})
+
+tape('acceptance - cross installation get client', (t) => {
+
+  const userData1 = tools.UserData('bob1')
+  const userData2 = tools.UserData('bob2')
+
+  let users = null
+
+  async.waterfall([
+
+    (next) => {
+      async.series({
+        user1: (unext) => createClient(userData1, unext),
+        user2: (unext) => createClient(userData2, unext)
+      }, next)
+    },
+
+    (results, next) => {
+      const installationid1 = results.user1.user.body.data.meta.activeInstallation
+      const installationid2 = results.user2.user.body.data.meta.activeInstallation
+      const clientid1 = results.user1.client.body.id
+      const clientid2 = results.user2.client.body.id
+
+      users = {
+        installationid1,
+        installationid2,
+        clientid1,
+        clientid2
+      }
+
+      tools.login(userData1, next)
+    },
+
+    (login, next) => {
+
+      async.series({
+        canaccess: (nexts) => tools.getClient(users.installationid1, users.clientid1, nexts),
+        cantaccess: (nexts) => tools.getClient(users.installationid1, users.clientid2, nexts),
+      }, next)
+
+    }
+
+  ], (err, results) => {
+    if(err) t.error(err)
+
+    t.equal(results.canaccess.statusCode, 200, '200 can access')
+    t.equal(results.cantaccess.statusCode, 403, '403 cant access')
 
     t.end()
   })
