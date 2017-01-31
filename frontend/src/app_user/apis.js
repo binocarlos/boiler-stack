@@ -1,4 +1,5 @@
-import Ajax from '../boiler-ui/lib/ajax'
+import Ajax from '../boiler-ui/lib/api/ajax'
+import Crud from '../boiler-ui/lib/api/crud'
 import UserSelectors from '../boiler-ui/lib/plugins/user/selectors'
 
 import URLS from './urls'
@@ -6,93 +7,46 @@ import URLS from './urls'
 const userSelectors = UserSelectors(state => state.user)
 const activeInstallation = (state) => userSelectors.status.currentInstallation(state)
 
-// inject the 'i' query parameter
-// this tells the api server which installation we are loading from
-const runQuery = (state, query) => {
-  const params = query.params || {}
-  params.i = activeInstallation(state)
-  return Ajax(Object.assign({}, query, {
-    params
-  }))
+const urlInjector = getUrl => (req, query) => {
+  req.url = getUrl(req.url)
+  return req
 }
 
-const List = (getUrl) => (state) => (query, payload) => runQuery(state, {
-  method: 'get',
-  url: getUrl(state)
-})
-
-const Get = (getUrl) => (state) => (query, payload) => runQuery(state, {
-  method: 'get',
-  url: getUrl(state) + '/' + query.id
-})
-
-const Post = (getUrl) => (state) => (query, payload) => runQuery(state, {
-  method: 'post',
-  url: getUrl(state),
-  data: payload
-})
-
-const Put = (getUrl) => (state) => (query, payload) => runQuery(state, {
-  method: 'get',
-  url: getUrl(state) + '/' + query.id,
-  data: payload
-})
-
-const Delete = (getUrl) => (state) => (query, payload) => {
-  if(query.id) {
-    return runQuery(state, {
-      method: 'delete',
-      url: getUrl(state) + '/' + query.id
-    })
-  }
-  else if (query.ids) {
-    return query.ids.map(id => {
-      return runQuery(state, {
-        method: 'delete',
-        url: getUrl(state) + '/' + id
-      })
-    })
-  }
-}
-
-const Crud = (getUrl) => {
-  return {
-    list: List(getUrl),
-    get: Get(getUrl),
-    post: Post(getUrl),
-    put: Put(getUrl),
-    delete: Delete(getUrl)
-  }
+const installationInjector = getUrl => (req, query) => {
+  req.url = getUrl(req.url)
+  req.params = Object.assign({}, req.params, {
+    i: activeInstallation(query.state)
+  })
 }
 
 const user = {
-  status: (state) => (query, payload) => runQuery(state, {
+  status: (query) => Ajax({
     method: 'get',
-    url: URLS.user.status
+    url: URLS.user.status()
   }),
 
-  login: (state) => (query, payload) => runQuery(state, {
+  login: (query) => Ajax({
     method: 'post',
-    url: URLS.user.login,
-    data: payload
+    url: URLS.user.login(),
+    data: query.data
   }),
 
-  register: (state) => (query, payload) => runQuery(state, {
+  register: (query) => Ajax({
     method: 'post',
-    url: URLS.user.register,
-    data: payload
+    url: URLS.user.register(),
+    data: query.data
   })
 }
 
-const installation = Object.assign({}, Crud(state => URLS.installation), {
-  activate: (state) => (query, payload) => runQuery(state, {
+const installation = Crud(urlInjector(URLS.installation), {
+  activate: (query) => Ajax({
     method: 'put',
-    url: URLS.installation + '/' + query.id + '/activate'
+    url: URLS.installation('/' + query.params.id + '/activate')
   })
 })
-const client = Crud(state => URLS.client)
-const project = Crud(state => URLS.project)
 
+const client = Crud(installationInjector(URLS.client))
+const project = Crud(installationInjector(URLS.project))
 
 const apis = {
   user,

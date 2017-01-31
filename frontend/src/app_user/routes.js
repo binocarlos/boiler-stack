@@ -109,15 +109,15 @@ export const triggers = {
   addProject: (routerState) => plugins.project.form.actions.fields.initialize({}),
   editInstallation: (routerState) => [
     plugins.installation.form.actions.fields.initialize({}),
-    plugins.installation.form.actions.get.request(null, routerState.params)
+    plugins.installation.form.actions.get.request(routerState.params)
   ],
   editClient: (routerState) => [
     plugins.client.form.actions.fields.initialize({}),
-    plugins.client.form.actions.get.request(null, routerState.params)
+    plugins.client.form.actions.get.request(routerState.params)
   ],
   editProject: (routerState) => [
     plugins.project.form.actions.fields.initialize({}),
-    plugins.project.form.actions.get.request(null, routerState.params)
+    plugins.project.form.actions.get.request(routerState.params)
   ]
 }
 

@@ -85,3 +85,8 @@ export const HomeRouteMatcher = (BASEPATH) => {
     return false
   }
 }
+
+export const developmentError = (e) => {
+  if(process.env.NODE_ENV != 'development') return
+  console.log(e.stack)
+}

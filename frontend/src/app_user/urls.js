@@ -1,6 +1,6 @@
 const URL = (base) => (path = '') => base + path
 
-const auth = URL('/api/v1')
+const auth = (base) => URL('/api/v1' + base)
 const installation = URL('/api/v1/installations')
 const client = URL('/api/v1/clients')
 const project = URL('/api/v1/projects')
@@ -12,9 +12,9 @@ const URLS = {
     register: auth('/register'),
     logout: auth('/logout?redirect=/app')
   },
-  installation: installation(),
-  client: client(),
-  project: project()
+  installation: installation,
+  client: client,
+  project: project
 }
 
 export default URLS

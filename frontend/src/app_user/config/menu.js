@@ -21,6 +21,6 @@ export const user = [
   ['About', icons.about, getRoute('/about')],
   '-',
   ['Logout', icons.logout, () => {
-    document.location = URLS.user.logout
+    document.location = URLS.user.logout()
   }]
 ]

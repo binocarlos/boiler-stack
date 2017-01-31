@@ -12,8 +12,8 @@ import { put, call, fork, select  } from 'redux-saga/effects'
 const REQUIRED_SETTINGS = [
   'trigger',
   'handler',
-  'selectors.payload',
-  'selectors.query'
+  'selectors.params',
+  'selectors.data'
 ]
 
 const ApiTriggerSagaFactory = (settings = {}) => {
@@ -25,9 +25,9 @@ const ApiTriggerSagaFactory = (settings = {}) => {
   const selectors = settings.selectors
   
   function* triggerApi(action) {
-    const payload = yield select(selectors.payload)
-    const query = yield select(selectors.query)
-    yield put(actionCreator(query, payload))
+    const params = yield select(selectors.params)
+    const data = yield select(selectors.data)
+    yield put(actionCreator(params, data))
   }
 
   function* root() {

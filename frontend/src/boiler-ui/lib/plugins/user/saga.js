@@ -110,8 +110,8 @@ const UserSaga = (settings = {}) => {
       trigger: actions.login.form.types.submit,
       handler: actions.login.api.request,
       selectors: {
-        payload: selectors.login.formdata,
-        query: (state) => null
+        data: selectors.login.formdata,
+        params: (state) => null
       }
     }),
 
@@ -120,8 +120,8 @@ const UserSaga = (settings = {}) => {
       trigger: actions.register.form.types.submit,
       handler: actions.register.api.request,
       selectors: {
-        payload: selectors.register.formdata,
-        query: (state) => null
+        data: selectors.register.formdata,
+        params: (state) => null
       }
     }),
 

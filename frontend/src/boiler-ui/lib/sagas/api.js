@@ -2,6 +2,7 @@ import deepCheck from 'deep-check-error'
 import { takeLatest } from 'redux-saga'
 import { put, call, select } from 'redux-saga/effects'
 
+import { developmentError } from '../tools'
 import SystemActions from '../actions/system'
 
 const REQUIRED_SETTINGS = [
@@ -24,15 +25,24 @@ const ApiSagaFactory = (settings = {}) => {
 
     const state = yield select(state => state)
 
-    // the api factory returns the actual runner
-    // then it can look at the state to decide on the url
-    const apiRunner = api(state)
+    /*
+    
+      query    < - >   params
+      payload  < - >   data
+      
+    */
     try {
-      const result = yield apiRunner(action.query, action.payload)
-      yield put(actions.success(action.query, result))
+      const results = yield api({
+        params: action.query,
+        data: action.payload,
+        state: state
+      })
+      yield put(actions.success(action.query, results))
     } catch (e) {
       let message = e.message
 
+      // we want to notify the user of HTTP type errors
+      // so they know the network is broken or whatever
       if(e.response) {
         const body = e.response.data
         const statusCode = e.response.status
@@ -52,7 +62,8 @@ const ApiSagaFactory = (settings = {}) => {
         }
       }
 
-      yield put(actions.failure(message, action.query))
+      yield put(actions.failure(action.query, message))
+      developmentError(e)
     }
   }
 
