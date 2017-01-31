@@ -48,8 +48,10 @@ tape('acceptance - create resource', (t) => {
   createSingleResource(userData, (err, base) => {
 
     const folder = base.folder
+
     t.equal(folder.statusCode, 201, '201 code')
     t.equal(folder.body.name, NODE.name, 'resource name')
+    t.equal(folder.body.meta.price, NODE.meta.price, 'resource meta')
 
     t.end()
   })
@@ -234,4 +236,3 @@ tape('acceptance - cross installation get resource', (t) => {
 
   
 })
-

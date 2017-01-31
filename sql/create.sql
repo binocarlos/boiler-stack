@@ -17,14 +17,14 @@ create table "installation" (
 
 create table "collaboration" (
   "id"                serial primary key not null,
-  "useraccount"       int references "useraccount" (id)  on delete cascade,
-  "installation"      int references "installation" (id) on delete cascade,
+  "useraccount"       int not null references "useraccount" (id)  on delete cascade,
+  "installation"      int not null references "installation" (id) on delete cascade,
   "permission"        text not null
 );
 
 create table "resource" (
   "id"                serial primary key not null,
-  "installation"      int references "installation" (id) on delete cascade,
+  "installation"      int not null references "installation" (id) on delete cascade,
   "parent"            int references "resource" (id) on delete cascade,
   "path"              ltree,
   "namespace"         text default 'resources',
@@ -36,23 +36,23 @@ create table "resource" (
 
 create table "job" (
   "id"                serial primary key not null,
-  "installation"      int references "installation" (id) on delete cascade,
+  "installation"      int not null references "installation" (id) on delete cascade,
   "name"              text not null,
   "meta"              json
 );
 
 create table "job_access" (
   "id"                serial primary key not null,
-  "installation"      int references "installation" (id) on delete cascade,
-  "useraccount"       int references "useraccount" (id)  on delete cascade,
-  "job"               int references "job" (id) on delete cascade,
+  "installation"      int not null references "installation" (id) on delete cascade,
+  "useraccount"       int not null references "useraccount" (id)  on delete cascade,
+  "job"               int not null references "job" (id) on delete cascade,
   "permission"        text not null
 );
 
 create table "quote" (
   "id"                serial primary key not null,
-  "installation"      int references "installation" (id) on delete cascade,
-  "job"               int references "job" (id) on delete cascade,
+  "installation"      int not null references "installation" (id) on delete cascade,
+  "job"               int not null references "job" (id) on delete cascade,
   "name"              text not null,
   "store"             json
 );

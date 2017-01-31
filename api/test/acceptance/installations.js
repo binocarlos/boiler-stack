@@ -36,7 +36,10 @@ tape('acceptance - create installation', (t) => {
   const userData = tools.UserData()
   const INSTALLATION_NAME = 'apples install'
   const DATA = {
-    name: INSTALLATION_NAME
+    name: INSTALLATION_NAME,
+    meta: {
+      fruit: 'pears'
+    }
   }
   async.series({
 

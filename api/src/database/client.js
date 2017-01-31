@@ -23,12 +23,24 @@ const QueryFactory = (runner) => (q, done) => {
         error: err.toString(),
         query: q
       })
+      if(process.env.LOGSQL) {
+        console.log('-------------------------------------------');
+        console.log('sql error')
+        console.dir(q)
+        console.log(err)
+      }
     }
     else {
       logger.debug('query', q.tracer, {
         query: q,
         results: (results || {}).rows
       })
+      if(process.env.LOGSQL) {
+        console.log('-------------------------------------------');
+        console.log('sql results')
+        console.dir(q)
+        console.dir(results.rows)
+      }
     }
     if(err) return done(err.toString())
     done(null, results)

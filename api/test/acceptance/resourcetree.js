@@ -47,7 +47,23 @@ tape('acceptance - create resource tree', (t) => {
 
   createResourceTree(userData, (err, base) => {
 
-    console.log(JSON.stringify(base, null, 4))
+    const topfolder = base.folder.body
+    const middlefolder = topfolder.children[0]
+    const lowerfolder = middlefolder.children[0]
+
+    t.equal(topfolder.type, 'folder', 'top is folder')
+    t.equal(middlefolder.type, 'folder', 'top is folder')
+    t.equal(lowerfolder.type, 'folder', 'top is folder')
+
+    t.equal(topfolder.parent, null, 'top has no parent')
+    t.equal(middlefolder.parent, topfolder.id, 'top is middle parent')
+    t.equal(lowerfolder.parent, middlefolder.id, 'middle is lower parent')
+
+    t.equal(topfolder.path, 'root', 'top has root path')
+    t.equal(middlefolder.path, topfolder.path + '.' + topfolder.id, 'middle path')
+    t.equal(lowerfolder.path, middlefolder.path + '.' + middlefolder.id, 'lowerpath')
+
+    t.equal(topfolder.meta.price, 10, 'top price is correct')
 
     t.end()
   })

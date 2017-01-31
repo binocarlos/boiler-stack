@@ -5,6 +5,12 @@ const selectors = require('../database/selectors')
 
 // https://www.postgresql.org/docs/9.3/static/ltree.html
 
+// fields we never update using standard crud methods
+const STRIP_SAVE_FIELDS = {
+  'installation': true,
+  'children': true
+}
+
 const prepareData = (resource, installation) => {
   const meta = resource.meta || {}
   return Object.assign({}, resource, {
@@ -20,7 +26,7 @@ const prepareChildren = (resource, installation) => {
   const children = obj.children || []
   delete(obj.children)
   return {
-    data: prepareData(obj),
+    data: prepareData(obj, installation),
     children
   }
 }
@@ -76,7 +82,15 @@ order by
     }
   },
 
-  update: (params, data) => SQL.update('resource', data, params),
+  update: (params, data) => {
+    data = Object.keys(data || {}).reduce((all, f) => {
+      if(STRIP_SAVE_FIELDS[f]) return all
+      return Object.assign({}, all, {
+        [f]: data[f]
+      })
+    }, {})
+    return SQL.update('resource', data, params)
+  },
   delete: (params) => SQL.delete('resource', params),
 }
 
@@ -88,21 +102,17 @@ const get = (runQuery, query, done) => runQuery(SQL.select('resource', query.par
 //     * installationid
 const list = (runQuery, query, done) => runQuery(QUERIES.list(query.params), selectors.rows(done))
 
-// create a single resource
-const createSingle = (runQuery, query, done) => {
-  runQuery(SQL.insert('resource', prepareData(query.data, query.params.installationid)), selectors.single(done))
-}
-
 // create resource with children
 const createChildren = (runQuery, parent, query, done) => {
+
   const resource = prepareChildren(assignChildToParent(parent, query.data), query.params.installationid)
 
-  runQuery(SQL.insert('resource', resource.data), selectors.single((err, parent) => {
+  runQuery(SQL.insert('resource', resource.data), selectors.single((err, childResult) => {
     if(err) return done(err)
 
     const childCreators = resource.children.map(child => next => {
 
-      createChildren(runQuery, parent, {
+      createChildren(runQuery, childResult, {
         params: query.params,
         data: child
       }, next)
@@ -110,7 +120,7 @@ const createChildren = (runQuery, parent, query, done) => {
 
     async.parallel(childCreators, (err, children) => {
       if(err) return done(err)
-      done(null, Object.assign({}, resource, {
+      done(null, Object.assign({}, childResult, {
         children
       }))
     })
@@ -139,7 +149,7 @@ const create = (runQuery, query, done) => {
       else {
         runQuery(SQL.select('resource', {
           id: query.params.parentid
-        }), selectors.single(done))
+        }), selectors.single(next))
       }
     },
 
@@ -150,7 +160,10 @@ const create = (runQuery, query, done) => {
 
 }
 
-const save = (runQuery, query, done) => runQuery(QUERIES.update(query.params, query.data), selectors.single(done))
+const save = (runQuery, query, done) => {
+  const resource = prepareChildren(query.data, query.params.installationid)
+  runQuery(QUERIES.update(query.params, resource.data), selectors.single(done))
+}
 const del = (runQuery, query, done) => runQuery(QUERIES.delete(query.params), selectors.single(done))
 
 module.exports = {
