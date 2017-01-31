@@ -79,6 +79,35 @@ const InstallationController = (eventBus) => {
     ], done)
   }
 
+  // * params
+  //    * accountid
+  const createDefault = (db, query, done) => {
+    const accountid = query.params.accountid
+
+    async.waterfall([
+
+      (next) => {
+        create(db, {
+          data: 'default',
+          params: {
+            accountid  
+          }
+        }, next)
+      },
+        
+      (installationData, next) => {
+
+        activate(db, {
+          params: {
+            installationid: installationData.id,
+            accountid  
+          }
+        }, next)
+      }
+
+    ], done)
+  }
+
   // * data
   // * params
   const save = (db, query, done) => {
@@ -124,6 +153,7 @@ const InstallationController = (eventBus) => {
     list,
     accessLevel,
     create,
+    createDefault,
     activate,
     save,
     delete: del,

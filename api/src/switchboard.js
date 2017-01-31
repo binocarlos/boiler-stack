@@ -1,9 +1,7 @@
 "use strict";
 
 const async = require('async')
-
-const Logger = require('../logger')
-const DefaultInstallation = require('./defaultinstallation')
+const Logger = require('./logger')
 
 const logger = Logger('switchboard')
 
@@ -13,13 +11,15 @@ function Switchboard(controllers, eventBus) {
   const installation = controllers.installation
   const user = controllers.user
 
-  const defaultInstallation = DefaultInstallation(controllers)
-
   const COMMANDS = {
+
+    // when the user registers - create a default installation
     'user.register': [
       (db, event, next) => {
-        defaultInstallation(db, {
-          accountid: event.result.id
+        installation.createDefault(db, {
+          params: {
+            accountid: event.result.id  
+          }
         }, next)
       }
     ]
