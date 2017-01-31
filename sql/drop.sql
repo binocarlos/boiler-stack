@@ -6,3 +6,4 @@ DROP TABLE "collaboration";
 DROP TABLE "installation";
 DROP TABLE "useraccount";
 DROP TABLE "commandlog";
+DROP EXTENSION ltree;

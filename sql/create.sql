@@ -1,3 +1,5 @@
+CREATE EXTENSION ltree;
+
 CREATE TABLE "useraccount" (
   "id"                serial primary key not null,
   "email"             text not null unique,
@@ -9,6 +11,7 @@ CREATE TABLE "useraccount" (
 create table "installation" (
   "id"                serial primary key not null,
   "name"              text not null,
+  "type"              text default 'user',
   "meta"              json
 );
 
@@ -22,6 +25,9 @@ create table "collaboration" (
 create table "resource" (
   "id"                serial primary key not null,
   "installation"      int references "installation" (id) on delete cascade,
+  "parent"            int references "resource" (id) on delete cascade,
+  "path"              ltree,
+  "namespace"         text default 'resources',
   "name"              text not null,
   "type"              text not null,
   "labels"            text[][],

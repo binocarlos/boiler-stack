@@ -31,10 +31,17 @@ function Resources(controllers) {
   // COMMANDS
 
   const create = (req, res, error) => {
+    const parentID = null
+    if(req.params.id) {
+      parentID = parseInt(req.params.id)
+      if(isNaN(parentID)) return error('id was not an int')
+    }
+    
     transaction(req.id, req.userid, (db, finish) => {
       resources.create(db, {
         params: {
-          installationid: req.installationid  
+          installationid: req.installationid,
+          parentid: parentID
         },
         data: req.body
       }, finish)
