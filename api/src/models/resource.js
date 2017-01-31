@@ -11,6 +11,70 @@ const STRIP_SAVE_FIELDS = {
   'children': true
 }
 
+const QUERIES = {
+
+  list: (p) => {
+    const sql = `select resource.*
+from
+  resource
+where
+(
+  resource.installation = $1
+)
+order by
+  resource.name
+`
+
+    const params = [p.installationid]
+
+    return {
+      sql,
+      params
+    }
+  },
+
+  children: (p) => {
+
+    const params = p.id ?
+      [p.installationid, p.id] :
+      [p.installationid]
+
+    const idClause = p.id ?
+      '= $2'
+      : 'is null'
+
+    const sql = `select resource.*
+from
+  resource
+where
+(
+  resource.installation = $1
+  and
+  resource.parent ${idClause}
+)
+order by
+  resource.name
+`
+
+    return {
+      sql,
+      params
+    }
+  },
+
+  update: (params, data) => {
+    data = Object.keys(data || {}).reduce((all, f) => {
+      if(STRIP_SAVE_FIELDS[f]) return all
+      return Object.assign({}, all, {
+        [f]: data[f]
+      })
+    }, {})
+    return SQL.update('resource', data, params)
+  },
+  delete: (params) => SQL.delete('resource', params),
+}
+
+
 const prepareData = (resource, installation) => {
   const meta = resource.meta || {}
   return Object.assign({}, resource, {
@@ -60,39 +124,7 @@ const getRootParent = (installation) => {
   }
 }
 
-const QUERIES = {
 
-  list: (p) => {
-    const sql = `select resource.*
-from
-  resource
-where
-(
-  resource.installation = $1
-)
-order by
-  resource.name
-`
-
-    const params = [p.installationid]
-
-    return {
-      sql,
-      params
-    }
-  },
-
-  update: (params, data) => {
-    data = Object.keys(data || {}).reduce((all, f) => {
-      if(STRIP_SAVE_FIELDS[f]) return all
-      return Object.assign({}, all, {
-        [f]: data[f]
-      })
-    }, {})
-    return SQL.update('resource', data, params)
-  },
-  delete: (params) => SQL.delete('resource', params),
-}
 
 //   * params
 //     * id
@@ -101,6 +133,11 @@ const get = (runQuery, query, done) => runQuery(SQL.select('resource', query.par
 //   * params
 //     * installationid
 const list = (runQuery, query, done) => runQuery(QUERIES.list(query.params), selectors.rows(done))
+
+//   * params
+//     * id
+//     * installationid
+const children = (runQuery, query, done) => runQuery(QUERIES.children(query.params), selectors.rows(done))
 
 // create resource with children
 const createChildren = (runQuery, parent, query, done) => {
@@ -170,6 +207,7 @@ module.exports = {
   QUERIES,
   get: get,
   list,
+  children,
   create,
   save,
   delete: del

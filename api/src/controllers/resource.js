@@ -10,6 +10,7 @@ const ResourceController = (eventBus) => {
   // queries
   const get = (db, query, done) => ResourceModel.get(db.run, query, done)
   const list = (db, query, done) => ResourceModel.list(db.run, query, done)
+  const children = (db, query, done) => ResourceModel.children(db.run, query, done)
 
   // commands
   //   * params
@@ -85,6 +86,7 @@ const ResourceController = (eventBus) => {
   return {
     get: get,
     list,
+    children,
     create,
     save,
     delete: del

@@ -28,10 +28,25 @@ function Resources(controllers) {
     }, tools.jsonCallback(res, error))
   }
 
+  const children = (req, res, error) => {
+    let parentID = null
+    if(req.params.id) {
+      parentID = parseInt(req.params.id)
+      if(isNaN(parentID)) return error('id was not an int')
+    }
+
+    resources.children(connection(req.id, req.userid), {
+      params: {
+        installationid: req.installationid,
+        id: parentID
+      }
+    }, tools.jsonCallback(res, error))
+  }
+
   // COMMANDS
 
   const create = (req, res, error) => {
-    const parentID = null
+    let parentID = null
     if(req.params.id) {
       parentID = parseInt(req.params.id)
       if(isNaN(parentID)) return error('id was not an int')
@@ -75,6 +90,7 @@ function Resources(controllers) {
   return {
     get: get,
     list,
+    children,
     create,
     save,
     delete: del

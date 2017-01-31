@@ -74,6 +74,8 @@ const Routes = (base, controllers) => (app) => {
 
   // resource
   get('/resources', access.installation(), resources.list)
+  get('/resources/children', access.installation(), resources.children)
+  get('/resources/children/:id', access.installation_link('resource'), resources.children)
   post('/resources', access.installation('editor'), resources.create)
   post('/resources/:id', access.installation_link('resource', 'editor'), resources.create)
   get('/resources/:id', access.installation_link('resource'), resources.get)

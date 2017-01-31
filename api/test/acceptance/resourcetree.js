@@ -94,3 +94,38 @@ tape('acceptance - delete resource tree', (t) => {
 
   })
 })
+
+tape('acceptance - get children', (t) => {
+  const userData = tools.UserData()
+
+  createResourceTree(userData, (err, base) => {
+
+    const topfolder = base.folder.body
+    const middlefolder = topfolder.children[0]
+    const lowerfolder = middlefolder.children[0]
+
+    async.series({
+      root: (next) => tools.resourceChildren(base.installationid, null, next), 
+      top: (next) => tools.resourceChildren(base.installationid, topfolder.id, next),
+      middle: (next) => tools.resourceChildren(base.installationid, middlefolder.id, next),
+      lower: (next) => tools.resourceChildren(base.installationid, lowerfolder.id, next)
+    }, (err, results) => {
+      if(err) t.error(err)
+
+      const children = {
+        root: results.root.body[0],
+        top: results.top.body[0],
+        middle: results.middle.body[0],
+        lower: results.lower.body[0]
+      }
+
+      t.equal(children.root.id, topfolder.id, 'root -> top')
+      t.equal(children.top.id, middlefolder.id, 'top -> middle')
+      t.equal(children.middle.id, lowerfolder.id, 'middle -> lower')
+      t.equal(results.lower.body.length, 0, 'no children for lower')
+
+      t.end()
+    })
+
+  })
+})

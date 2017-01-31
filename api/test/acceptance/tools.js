@@ -286,6 +286,21 @@ const getResource = (installation, id, next) => {
   }, wrapResult(next))
 }
 
+const resourceChildren = (installation, id, next) => {
+  if(process.env.TRACE_TEST) {
+    console.log('listResources')
+  }
+  request({
+    method: 'GET',
+    url: url('/api/v1/resources/children' + (id ? '/' + id : '')),
+    qs: {
+      i: installation
+    },
+    headers: headers(),
+    json: true
+  }, wrapResult(next))
+}
+
 const saveResource = (installation, id, data, next) => {
   if(process.env.TRACE_TEST) {
     console.log('saveResource')
@@ -343,5 +358,6 @@ module.exports = {
   saveResource,
   listResources,
   getResource,
+  resourceChildren,
   deleteResource
 }
