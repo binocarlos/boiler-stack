@@ -49,6 +49,8 @@ function Installations(controllers) {
     const installationID = tools.getIdParam(req)
     if(!installationID) return error('installation id required')
 
+    req.installationid = installationID
+  
     transaction(req, (db, finish) => {
       installations.save(db, {
         data: req.body,
@@ -64,6 +66,8 @@ function Installations(controllers) {
     const installationID = tools.getIdParam(req)
     if(!installationID) return error('installation id required')
 
+    req.installationid = installationID
+
     transaction(req, (db, finish) => {
       installations.activate(db, {
         params: {
@@ -78,6 +82,8 @@ function Installations(controllers) {
 
     const installationID = tools.getIdParam(req)
     if(!installationID) return error('installation id required')
+
+    req.installationid = installationID
 
     transaction(req, (db, finish) => {
       installations.delete(db, {

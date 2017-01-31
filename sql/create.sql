@@ -59,8 +59,11 @@ create table "quote" (
 
 create table "commandlog" (
   "id"                serial primary key not null,
-  "installation"      int not null references "installation" (id),
-  "useraccount"       int references "useraccount" (id),
+  "installation"      int,
+  "useraccount"       int,
+  "tracerid"          text not null,
+  "type"              text not null,
+  "channel"           text not null,
   "timestamp"         timestamp without time zone default (now() at time zone 'utc'),
   "data"              json
 );

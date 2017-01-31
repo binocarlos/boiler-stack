@@ -47,6 +47,15 @@ const QueryFactory = (runner) => (q, done) => {
   })
 }
 
+const getTracerFromReq = (req) => {
+  const userid = req.user ? req.user.id : null
+  return {
+    tracerid: req.id,
+    installationid: req.installationid,
+    userid
+  }
+}
+
 // returns an api with:
 //  * query({sql,params}, done)        - one off query, client returned automatically    
 //  * transaction(handler, done)       - connection wrapped in BEGIN/COMMIT/ROLLBACK
@@ -70,18 +79,10 @@ const Client = (postgres) => {
     runQuery(q, done)
   }
 
-  const getTracerFromReq = (req) => {
-    const userid = req.user ? req.user.id : null
-    return {
-      id: req.id,
-      installationid: req.installationid,
-      userid
-    }
-  }
-
   // run a transaction with a query object
   const transaction = (req, handler, done) => {
     const tracerData = getTracerFromReq(req)
+
     postgres.connect((err, client, release) => {
       if(err) {
         release()
@@ -90,6 +91,7 @@ const Client = (postgres) => {
 
       const db = {
         tracer: tracerData,
+        setValue: (f, v) => tracerData[f] = v,
         run: tracer(tracerData, QueryFactory(client.query.bind(client)))
       }
 
@@ -119,6 +121,7 @@ const Client = (postgres) => {
       const tracerData = getTracerFromReq(req)
       return {
         tracer: tracerData,
+        setValue: (f, v) => tracerData[f] = v,
         run: tracer(tracerData)
       }
     }

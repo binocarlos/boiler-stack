@@ -23,6 +23,7 @@ const InstallationController = (eventBus) => {
       },
 
       (result, next) => {
+        db.setValue('installationid', result.id)
         eventBus.emit(db, {
           type: 'command',
           channel: 'installation.create',

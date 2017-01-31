@@ -1,0 +1,7 @@
+* commandLog insert userid/installationid
+* commandLog api - list user/installation
+* move default installation into controller
+* tree based gui widgets
+* make api into a package
+* package and upload boiler-ui and boiler-api
+* use demin for boiler-stack project template

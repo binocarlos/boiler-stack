@@ -32,7 +32,7 @@ const UserController = (eventBus) => {
       },
 
       (result, next) => {
-        db.tracer.user = result.id
+        db.tracer.userid = result.id
         eventBus.emit(db, {
           type: 'command',
           channel: 'user.register',

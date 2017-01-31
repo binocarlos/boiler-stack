@@ -15,11 +15,15 @@ const CommandLogController = (eventBus) => {
   //  * data
   const create = (db, query, done) => {
 
-    console.log('-------------------------------------------');
-    console.log(JSON.stringify(db.tracer, null, 4))
-    console.log(JSON.stringify(query, null, 4))
+    const tracer = db.tracer
+
     CommandLogModel.create(db.run, {
       data: {
+        type: query.data.type,
+        channel: query.data.channel,
+        tracerid: tracer.tracerid,
+        installation: tracer.installationid,
+        useraccount: tracer.userid,
         data: JSON.stringify(query.data)
       }
     }, done)
