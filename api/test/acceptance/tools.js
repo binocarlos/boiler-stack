@@ -256,6 +256,21 @@ const createResource = (installation, data, next) => {
   }, wrapResult(next))
 }
 
+const listResources = (installation, next) => {
+  if(process.env.TRACE_TEST) {
+    console.log('listResources')
+  }
+  request({
+    method: 'GET',
+    url: url('/api/v1/resources'),
+    qs: {
+      i: installation
+    },
+    headers: headers(),
+    json: true
+  }, wrapResult(next))
+}
+
 const getResource = (installation, id, next) => {
   if(process.env.TRACE_TEST) {
     console.log('getResource')
@@ -326,6 +341,7 @@ module.exports = {
   deleteClient,
   createResource,
   saveResource,
+  listResources,
   getResource,
   deleteResource
 }

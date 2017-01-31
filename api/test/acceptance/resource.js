@@ -61,7 +61,27 @@ tape('acceptance - get resource', (t) => {
   createSingleResource(userData, (err, base) => {
 
     tools.getResource(base.installationid, base.folder.body.id, (err, results) => {
-      console.log(JSON.stringify(results, null, 4))
+
+      const folder = results
+      t.equal(folder.statusCode, 200, '200 code')
+      t.equal(folder.body.name, NODE.name, 'resource name')
+      
+      t.end()
+    })
+
+  })
+})
+
+tape('acceptance - list resources', (t) => {
+  const userData = tools.UserData()
+
+  createSingleResource(userData, (err, base) => {
+
+    tools.listResources(base.installationid, (err, results) => {
+
+      t.equal(results.statusCode, 200, '200 code')
+      t.equal(results.body[0].name, NODE.name, 'resource name')
+      
       t.end()
     })
 
