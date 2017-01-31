@@ -30,7 +30,8 @@ const QueryFactory = (runner) => (q, done) => {
         results: (results || {}).rows
       })
     }
-    done(err, results)
+    if(err) return done(err.toString())
+    done(null, results)
   })
 }
 

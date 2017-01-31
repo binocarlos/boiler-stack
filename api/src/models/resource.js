@@ -3,6 +3,8 @@ const async = require('async')
 const SQL = require('../database/sql')
 const selectors = require('../database/selectors')
 
+// https://www.postgresql.org/docs/9.3/static/ltree.html
+
 const prepareData = (resource, installation) => {
   const meta = resource.meta || {}
   return Object.assign({}, resource, {
@@ -55,7 +57,9 @@ const list = (runQuery, query, done) => runQuery(QUERIES.list(query.params), sel
 //     * labels[][]
 //     * meta
 //     * children[resource]
-const create = (runQuery, query, done) => runQuery(SQL.insert('resource', prepareData(query.data, query.params.installationid)), selectors.single(done))
+const create = (runQuery, query, done) => {
+  runQuery(SQL.insert('resource', prepareData(query.data, query.params.installationid)), selectors.single(done))
+}
 const save = (runQuery, query, done) => runQuery(QUERIES.update(query.params, query.data), selectors.single(done))
 const del = (runQuery, query, done) => runQuery(QUERIES.delete(query.params), selectors.single(done))
 

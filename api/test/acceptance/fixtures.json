@@ -13,6 +13,22 @@
     "labels": [["color","red"],["size","small"]],
     "meta": {
       "price": 10
-    }
+    },
+    "children": [{
+      "name": "middle folder",
+      "type": "folder",
+      "labels": [["color","green"],["size","medium"]],
+      "meta": {
+        "price": 20
+      },
+      "children": [{
+        "name": "lower folder",
+        "type": "folder",
+        "labels": [["color","yellow"],["size","big"]],
+        "meta": {
+          "price": 30
+        }
+      }]
+    }]
   }
 }
