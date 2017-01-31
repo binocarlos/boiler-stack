@@ -87,3 +87,59 @@ tape('acceptance - list resources', (t) => {
 
   })
 })
+
+tape('acceptance - save resource', (t) => {
+
+  const userData = tools.UserData()
+
+  createSingleResource(userData, (err, base) => {
+
+    let resource = base.folder.body
+    const resourceid = resource.id
+    delete(resource.id)
+
+    resource.meta.height = 20
+
+    tools.saveResource(base.installationid, resourceid, resource, (err, results) => {
+
+      t.equal(results.statusCode, 200, '200 code')
+      t.equal(results.body.meta.height, 20, 'resource updated')
+      
+      t.end()
+    })
+
+  })
+
+})
+
+tape('acceptance - delete resource', (t) => {
+
+  const userData = tools.UserData()
+
+  let createresults = null
+  let deleteresults = null
+  async.waterfall([
+    (next) => createSingleResource(userData, next),
+    (base, next) => {
+      const resource = base.folder.body
+      const resourceid = resource.id
+      createresults = base
+      tools.deleteResource(base.installationid, resourceid, next)
+    },
+    (results, next) =>  {
+      deleteresults = results
+      next(null, deleteresults)
+    },
+    (deleteresults, next) => tools.listResources(createresults.installationid, next)
+  ], (err, delresults) => {
+    if(err) t.error(err)
+
+    t.equal(delresults.statusCode, 200, '200 code')
+    t.equal(delresults.body.length, 0, 'no resources in list')
+
+    t.end()
+  })
+
+  
+})
+

@@ -56,8 +56,8 @@ const list = (runQuery, query, done) => runQuery(QUERIES.list(query.params), sel
 //     * meta
 //     * children[resource]
 const create = (runQuery, query, done) => runQuery(SQL.insert('resource', prepareData(query.data, query.params.installationid)), selectors.single(done))
-const save = (runQuery, query, done) => runQuery(QUERIES.update(query.params, query.data), selectors.single(done, cleanData))
-const del = (runQuery, query, done) => runQuery(QUERIES.delete(query.params), selectors.single(done, cleanData))
+const save = (runQuery, query, done) => runQuery(QUERIES.update(query.params, query.data), selectors.single(done))
+const del = (runQuery, query, done) => runQuery(QUERIES.delete(query.params), selectors.single(done))
 
 module.exports = {
   QUERIES,
