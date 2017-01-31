@@ -75,12 +75,12 @@ const Routes = (base, controllers) => (app) => {
   // resource
   get('/resources', access.installation(), resources.list)
   get('/resources/children', access.installation(), resources.children)
-  get('/resources/children/:id', access.installation_link('resource'), resources.children)
+  get('/resources/children/:id', access.installationLink('resource'), resources.children)
   post('/resources', access.installation('editor'), resources.create)
-  post('/resources/:id', access.installation_link('resource', 'editor'), resources.create)
-  get('/resources/:id', access.installation_link('resource'), resources.get)
-  put('/resources/:id', access.installation_link('resource', 'editor'), resources.save)
-  del('/resources/:id', access.installation_link('resource', 'editor'), resources.delete)
+  post('/resources/:id', access.installationLink('resource', 'editor'), resources.create)
+  get('/resources/:id', access.installationLink('resource'), resources.get)
+  put('/resources/:id', access.installationLink('resource', 'editor'), resources.save)
+  del('/resources/:id', access.installationLink('resource', 'editor'), resources.delete)
 }
 
 module.exports = Routes

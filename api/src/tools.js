@@ -102,6 +102,13 @@ const jobLogger = (logger, tracer, opts) => {
   }
 }
 
+// extract a numeric named path parameter from the route (e.g. /:id)
+const getIdParam = (req, name) => {
+  name = name || 'id'
+  const val = parseInt(req.params[name])
+  return isNaN(val) ? null : val
+}
+
 module.exports = {
   ensureRequestTracerId,
   makeSalt,
@@ -112,5 +119,6 @@ module.exports = {
   jsonCallback,
   jobLogger,
   getRandomEmail,
-  getRandomPassword
+  getRandomPassword,
+  getIdParam
 }

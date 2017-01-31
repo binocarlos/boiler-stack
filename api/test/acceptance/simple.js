@@ -12,7 +12,6 @@ tape('acceptance - simple', (t) => {
 
     if(err) t.error(err)
 
-    console.log(JSON.stringify(results, null, 4))
     t.end()
   })
 })

@@ -70,20 +70,18 @@ const Client = (postgres) => {
     runQuery(q, done)
   }
 
+  const getTracerFromReq = (req) => {
+    const userid = req.user ? req.user.id : null
+    return {
+      id: req.id,
+      installationid: req.installationid,
+      userid
+    }
+  }
+
   // run a transaction with a query object
-  const transaction = (reqid, userid, handler, done) => {
-
-    let tracerData = {
-      id: reqid,
-      user: userid
-    }
-
-    if(typeof(reqid) == 'object'){
-      tracerData = reqid
-      handler = userid
-      done = handler 
-    }
-
+  const transaction = (req, handler, done) => {
+    const tracerData = getTracerFromReq(req)
     postgres.connect((err, client, release) => {
       if(err) {
         release()
@@ -117,13 +115,8 @@ const Client = (postgres) => {
   return {
     tracer,
     transaction,
-    connection: (reqid, userid) => {
-      const tracerData = typeof(reqid) == 'object' ? 
-        reqid :
-        {
-          id: reqid,
-          user: userid
-        }
+    connection: (req) => {
+      const tracerData = getTracerFromReq(req)
       return {
         tracer: tracerData,
         run: tracer(tracerData)

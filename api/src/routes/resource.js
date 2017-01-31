@@ -13,15 +13,17 @@ function Resources(controllers) {
   // QUERIES
 
   const get = (req, res, error) => {
-    resources.get(connection(req.id, req.userid), {
+    const resourceID = tools.getIdParam(req)
+    if(!resourceID) return error('resource id required')
+    resources.get(connection(req), {
       params: {
-        id: req.params.id
+        id: resourceID
       }
     }, tools.jsonCallback(res, error))
   }
 
   const list = (req, res, error) => {
-    resources.list(connection(req.id, req.userid), {
+    resources.list(connection(req), {
       params: {
         installationid: req.installationid
       }
@@ -29,13 +31,10 @@ function Resources(controllers) {
   }
 
   const children = (req, res, error) => {
-    let parentID = null
-    if(req.params.id) {
-      parentID = parseInt(req.params.id)
-      if(isNaN(parentID)) return error('id was not an int')
-    }
 
-    resources.children(connection(req.id, req.userid), {
+    const parentID = tools.getIdParam(req)
+
+    resources.children(connection(req), {
       params: {
         installationid: req.installationid,
         id: parentID
@@ -46,13 +45,9 @@ function Resources(controllers) {
   // COMMANDS
 
   const create = (req, res, error) => {
-    let parentID = null
-    if(req.params.id) {
-      parentID = parseInt(req.params.id)
-      if(isNaN(parentID)) return error('id was not an int')
-    }
-    
-    transaction(req.id, req.userid, (db, finish) => {
+    const parentID = tools.getIdParam(req)
+
+    transaction(req, (db, finish) => {
       resources.create(db, {
         params: {
           installationid: req.installationid,
@@ -64,10 +59,10 @@ function Resources(controllers) {
   }
 
   const save = (req, res, error) => {
-    const resourceID = parseInt(req.params.id)
-    if(isNaN(resourceID)) return error('id was not an int')
+    const resourceID = tools.getIdParam(req)
+    if(!resourceID) return error('resource id required')
 
-    transaction(req.id, req.userid, (db, finish) => {
+    transaction(req, (db, finish) => {
       resources.save(db, {
         data: req.body,
         params: {
@@ -78,10 +73,12 @@ function Resources(controllers) {
   }
 
   const del = (req, res, error) => {
-    transaction(req.id, req.userid, (db, finish) => {
+    const resourceID = tools.getIdParam(req)
+    if(!resourceID) return error('resource id required')
+    transaction(req, (db, finish) => {
       resources.delete(db, {
         params: {
-          id: req.params.id  
+          id: resourceID
         }
       }, finish)
     }, tools.jsonCallback(res, error))

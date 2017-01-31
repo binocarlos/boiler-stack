@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser')
 
 const Logger = require('../logger')
 const LogMiddleware = require('./logMiddleware')
+const ParamMiddleware = require('./paramMiddleware')
 
 const logger = Logger('webserver')
 
@@ -25,10 +26,7 @@ function App(settings) {
   app.use(session)
   app.use(passport.initialize())
   app.use(passport.session())
-  app.use((req, res, next) => {
-    req.userid = req.user ? req.user.id : null
-    next()
-  })
+  app.use(ParamMiddleware())
 
   return app
 }

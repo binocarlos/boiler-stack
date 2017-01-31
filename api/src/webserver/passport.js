@@ -14,7 +14,12 @@ function Passport(controllers) {
     done(null, user.id)
   })
   passport.deserializeUser((req, id, done) => {
-    users.get(connection(req.id, id), {
+    users.get(connection({
+      id: req.id,
+      user: {
+        id
+      }
+    }), {
       params: {
         id  
       }

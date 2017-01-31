@@ -13,17 +13,21 @@ function Installations(controllers) {
   // QUERIES
 
   const get = (req, res, error) => {
-    installations.get(connection(req.id, req.userid), {
+
+    const installationID = tools.getIdParam(req)
+    if(!installationID) return error('installation id required')
+    
+    installations.get(connection(req), {
       params: {
-        id: req.params.id
+        id: installationID
       }
     }, tools.jsonCallback(res, error))
   }
 
   const list = (req, res, error) => {
-    installations.list(connection(req.id, req.userid), {
+    installations.list(connection(req), {
       params: {
-        accountid: req.user.id
+        accountid: req.userid
       }
     }, tools.jsonCallback(res, error))
   }
@@ -31,21 +35,21 @@ function Installations(controllers) {
   // COMMANDS
 
   const create = (req, res, error) => {
-    transaction(req.id, req.userid, (db, finish) => {
+    transaction(req, (db, finish) => {
       installations.create(db, {
         data: req.body,
         params: {
-          accountid: req.user.id,  
+          accountid: req.userid,  
         }
       }, finish)
     }, tools.jsonCallback(res, error, 201))
   }
 
   const save = (req, res, error) => {
-    const installationID = parseInt(req.params.id)
-    if(isNaN(installationID)) return error('id was not an int')
+    const installationID = tools.getIdParam(req)
+    if(!installationID) return error('installation id required')
 
-    transaction(req.id, req.userid, (db, finish) => {
+    transaction(req, (db, finish) => {
       installations.save(db, {
         data: req.body,
         params: {
@@ -57,26 +61,28 @@ function Installations(controllers) {
 
   const activate = (req, res, error) => {
 
-    // we are writing JSON data so lets write the id as the int
-    // that it is
-    const installationID = parseInt(req.params.id)
-    if(isNaN(installationID)) return error('id was not an int')
+    const installationID = tools.getIdParam(req)
+    if(!installationID) return error('installation id required')
 
-    transaction(req.id, req.userid, (db, finish) => {
+    transaction(req, (db, finish) => {
       installations.activate(db, {
         params: {
           installationid: installationID,
-          accountid: req.user.id  
+          accountid: req.userid  
         }
       }, finish)
     }, tools.jsonCallback(res, error))
   }
 
   const del = (req, res, error) => {
-    transaction(req.id, req.userid, (db, finish) => {
+
+    const installationID = tools.getIdParam(req)
+    if(!installationID) return error('installation id required')
+
+    transaction(req, (db, finish) => {
       installations.delete(db, {
         params: {
-          id: req.params.id  
+          id: installationID
         }
       }, finish)
     }, tools.jsonCallback(res, error))

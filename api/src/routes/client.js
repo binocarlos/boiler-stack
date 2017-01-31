@@ -13,9 +13,12 @@ function Clients(controllers) {
   // QUERIES
 
   const get = (req, res, error) => {
-    clients.get(connection(req.id, req.userid), {
+    const clientID = tools.getIdParam(req)
+    if(!clientID) return error('client id required')
+    
+    clients.get(connection(req), {
       params: {
-        id: req.params.id
+        id: clientID
       }
     }, tools.jsonCallback(res, error))
   }
@@ -23,7 +26,7 @@ function Clients(controllers) {
   const newdata = (req, res, error) => res.json(clients.newData())
 
   const list = (req, res, error) => {
-    clients.list(connection(req.id, req.userid), {
+    clients.list(connection(req), {
       params: {
         installationid: req.installationid
       }
@@ -33,7 +36,7 @@ function Clients(controllers) {
   // COMMANDS
 
   const create = (req, res, error) => {
-    transaction(req.id, req.userid, (db, finish) => {
+    transaction(req, (db, finish) => {
       clients.create(db, {
         params: {
           installationid: req.installationid  
@@ -44,10 +47,10 @@ function Clients(controllers) {
   }
 
   const save = (req, res, error) => {
-    const clientID = parseInt(req.params.id)
-    if(isNaN(clientID)) return error('id was not an int')
+    const clientID = tools.getIdParam(req)
+    if(!clientID) return error('client id required')
 
-    transaction(req.id, req.userid, (db, finish) => {
+    transaction(req, (db, finish) => {
       clients.save(db, {
         data: req.body,
         params: {
@@ -58,10 +61,13 @@ function Clients(controllers) {
   }
 
   const del = (req, res, error) => {
-    transaction(req.id, req.userid, (db, finish) => {
+    const clientID = tools.getIdParam(req)
+    if(!clientID) return error('client id required')
+
+    transaction(req, (db, finish) => {
       clients.delete(db, {
         params: {
-          id: req.params.id  
+          id: clientID
         }
       }, finish)
     }, tools.jsonCallback(res, error))
