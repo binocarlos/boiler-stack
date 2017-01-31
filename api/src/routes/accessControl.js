@@ -26,7 +26,7 @@ const AccessControl = (controllers) => {
   const connection = controllers.connection
   const installations = controllers.installation
   const clients = controllers.client
-  const tools = controllers.tools
+  const utils = controllers.utils
   
   /*
   
@@ -186,8 +186,7 @@ const AccessControl = (controllers) => {
         // return the plain error because the installation checker has already processed it
         if(err) return next(err)
 
-
-        tools.entityInstallationId(connection(req.id, req.user.id), {
+        utils.entityInstallationId(connection(req.id, req.user.id), {
           params: {
             table,
             id

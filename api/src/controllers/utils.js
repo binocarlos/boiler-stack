@@ -3,9 +3,9 @@
 const async = require('async')
 const tools = require('../tools')
 
-const ToolsModel = require('../models/user')
+const UtilsModel = require('../models/utils')
 
-const ToolsController = (eventBus) => {
+const UtilsController = (eventBus) => {
   
   // queries
 
@@ -14,14 +14,11 @@ const ToolsController = (eventBus) => {
   // * params
   //   * table
   //   * id
-  const entityInstallationId = (db, query, done) => {
-    ToolsModel.entityInstallationId(db.run, query, done)
-  }
-  
+  const entityInstallationId = (db, query, done) => UtilsModel.entityInstallationId(db.run, query, done)
 
   return {
     entityInstallationId
   }
 }
 
-module.exports = ToolsController
+module.exports = UtilsController

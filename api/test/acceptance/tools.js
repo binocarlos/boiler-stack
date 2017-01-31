@@ -243,7 +243,7 @@ const deleteClient = (installation, id, next) => {
 
 const createResource = (installation, data, next) => {
   if(process.env.TRACE_TEST) {
-    console.log('creatResource')
+    console.log('createResource')
   }
   request({
     method: 'POST',
@@ -253,6 +253,51 @@ const createResource = (installation, data, next) => {
     },
     headers: headers(),
     json: data
+  }, wrapResult(next))
+}
+
+const getResource = (installation, id, next) => {
+  if(process.env.TRACE_TEST) {
+    console.log('getResource')
+  }
+  request({
+    method: 'GET',
+    url: url('/api/v1/resources/' + id),
+    qs: {
+      i: installation
+    },
+    headers: headers(),
+    json: true
+  }, wrapResult(next))
+}
+
+const saveResource = (installation, id, data, next) => {
+  if(process.env.TRACE_TEST) {
+    console.log('saveResource')
+  }
+  request({
+    method: 'PUT',
+    url: url('/api/v1/resources/' + id),
+    qs: {
+      i: installation
+    },
+    headers: headers(),
+    json: data
+  }, wrapResult(next))
+}
+
+const deleteResource = (installation, id, next) => {
+  if(process.env.TRACE_TEST) {
+    console.log('deleteResource')
+  }
+  request({
+    method: 'DELETE',
+    url: url('/api/v1/resources/' + id),
+    qs: {
+      i: installation
+    },
+    headers: headers(),
+    json: true
   }, wrapResult(next))
 }
 
@@ -279,5 +324,8 @@ module.exports = {
   newClientData,
   saveClient,
   deleteClient,
-  createResource
+  createResource,
+  saveResource,
+  getResource,
+  deleteResource
 }

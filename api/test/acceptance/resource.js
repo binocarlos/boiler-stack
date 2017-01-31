@@ -30,22 +30,40 @@ const register = (userData, done) => {
   })
 }
 
-tape('acceptance - resources', (t) => {
-  const userData = tools.UserData()
-
+const createSingleResource = (userData, done) => {
   register(userData, (err, base) => {
     if(err) t.error(err)
     tools.createResource(base.installationid, NODE, (err, results) => {
-      if(err) t.error(err)
+      if(err) return done(err)
+      done(null, Object.assign({}, base, {
+        folder: results
+      }))
+    })
+  })
+}
 
-      const folder = results.body
-      
-      t.equal(results.statusCode, 201, '201 code')
-      t.equal(folder.name, NODE.name, 'resource name')
+tape('acceptance - create resource', (t) => {
+  const userData = tools.UserData()
 
+  createSingleResource(userData, (err, base) => {
+
+    const folder = base.folder
+    t.equal(folder.statusCode, 201, '201 code')
+    t.equal(folder.body.name, NODE.name, 'resource name')
+
+    t.end()
+  })
+})
+
+tape('acceptance - get resource', (t) => {
+  const userData = tools.UserData()
+
+  createSingleResource(userData, (err, base) => {
+
+    tools.getResource(base.installationid, base.folder.body.id, (err, results) => {
+      console.log(JSON.stringify(results, null, 4))
       t.end()
     })
-    
-  })
 
+  })
 })

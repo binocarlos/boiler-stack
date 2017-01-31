@@ -5,6 +5,7 @@ const Installation = require('./installation')
 const Client = require('./client')
 const CommandLog = require('./commandlog')
 const Resource = require('./resource')
+const Utils = require('./utils')
 
 const Controllers = (dbclient, eventBus) => {
 
@@ -16,6 +17,7 @@ const Controllers = (dbclient, eventBus) => {
   const client = Client(eventBus)
   const commandlog = CommandLog(eventBus)
   const resource = Resource(eventBus)
+  const utils = Utils(eventBus)
 
   return {
     connection,
@@ -24,7 +26,8 @@ const Controllers = (dbclient, eventBus) => {
     installation,
     client,
     commandlog,
-    resource
+    resource,
+    utils
   }
 }
 
