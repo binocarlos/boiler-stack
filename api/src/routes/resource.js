@@ -4,16 +4,16 @@ const async = require('async')
 
 const tools = require('../tools')
 
-function Installations(controllers) {
+function Resources(controllers) {
 
-  const installations = controllers.installation
+  const resources = controllers.resource
   const connection = controllers.connection
   const transaction = controllers.transaction
 
   // QUERIES
 
   const get = (req, res, error) => {
-    installations.get(connection(req.id, req.userid), {
+    resources.get(connection(req.id, req.userid), {
       params: {
         id: req.params.id
       }
@@ -21,9 +21,9 @@ function Installations(controllers) {
   }
 
   const list = (req, res, error) => {
-    installations.list(connection(req.id, req.userid), {
+    resources.list(connection(req.id, req.userid), {
       params: {
-        accountid: req.user.id
+        installationid: req.installationid
       }
     }, tools.jsonCallback(res, error))
   }
@@ -32,41 +32,24 @@ function Installations(controllers) {
 
   const create = (req, res, error) => {
     transaction(req.id, req.userid, (db, finish) => {
-      installations.create(db, {
-        data: req.body,
+      resources.create(db, {
         params: {
-          accountid: req.user.id,  
-        }
+          installationid: req.installationid  
+        },
+        data: req.body
       }, finish)
     }, tools.jsonCallback(res, error, 201))
   }
 
   const save = (req, res, error) => {
-    const installationID = parseInt(req.params.id)
-    if(isNaN(installationID)) return error('id was not an int')
+    const resourceID = parseInt(req.params.id)
+    if(isNaN(resourceID)) return error('id was not an int')
 
     transaction(req.id, req.userid, (db, finish) => {
-      installations.save(db, {
+      resources.save(db, {
         data: req.body,
         params: {
-          id: installationID
-        }
-      }, finish)
-    }, tools.jsonCallback(res, error))
-  }
-
-  const activate = (req, res, error) => {
-
-    // we are writing JSON data so lets write the id as the int
-    // that it is
-    const installationID = parseInt(req.params.id)
-    if(isNaN(installationID)) return error('id was not an int')
-
-    transaction(req.id, req.userid, (db, finish) => {
-      installations.activate(db, {
-        params: {
-          installationid: installationID,
-          accountid: req.user.id  
+          id: resourceID
         }
       }, finish)
     }, tools.jsonCallback(res, error))
@@ -74,7 +57,7 @@ function Installations(controllers) {
 
   const del = (req, res, error) => {
     transaction(req.id, req.userid, (db, finish) => {
-      installations.delete(db, {
+      resources.delete(db, {
         params: {
           id: req.params.id  
         }
@@ -87,9 +70,8 @@ function Installations(controllers) {
     list,
     create,
     save,
-    activate,
     delete: del
   }
 }
 
-module.exports = Installations
+module.exports = Resources

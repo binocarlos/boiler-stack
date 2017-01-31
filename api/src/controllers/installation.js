@@ -9,9 +9,9 @@ const UserModel = require('../models/user')
 const InstallationController = (eventBus) => {
   
   // queries
-  const get = (db, params, done) => InstallationModel.get(db.run, params, done)
-  const list = (db, params, done) => InstallationModel.byUser(db.run, params, done)
-  const accessLevel = (db, params, done) => InstallationModel.accessLevel(db.run, params, done)
+  const get = (db, query, done) => InstallationModel.get(db.run, query, done)
+  const list = (db, query, done) => InstallationModel.byUser(db.run, query, done)
+  const accessLevel = (db, query, done) => InstallationModel.accessLevel(db.run, query, done)
 
   // commands
   const create = (db, query, done) => {
@@ -44,7 +44,11 @@ const InstallationController = (eventBus) => {
 
     async.waterfall([
 
-      (next) => UserModel.get(db.run, {id: query.params.accountid}, next),
+      (next) => UserModel.get(db.run, {
+        params: {
+          id: query.params.accountid
+        }
+      }, next),
 
       (user, next) => {
       

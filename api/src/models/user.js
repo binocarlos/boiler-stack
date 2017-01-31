@@ -11,7 +11,10 @@ const PRIVATE_FIELDS = {
 }
 
 const QUERIES = {
-  get: (params) => SQL.select('useraccount', params),
+  get: (params) => {
+    if(!params) throw new Error('no params for query')
+    return SQL.select('useraccount', params)
+  },
   insert: (data) => SQL.insert('useraccount', data),
   update: (params, data) => SQL.update('useraccount', data, params),
   delete: (params) => SQL.delete('useraccount', params),
@@ -38,8 +41,8 @@ const prepareData = (user) => {
 
 // QUERIES
 
-const get = (runQuery, params, done) => runQuery(QUERIES.get(params), selectors.single(done))
-const getClean = (runQuery, params, done) => runQuery(QUERIES.get(params), selectors.single(done, cleanData))
+const get = (runQuery, query, done) => runQuery(QUERIES.get(query.params), selectors.single(done))
+const getClean = (runQuery, query, done) => runQuery(QUERIES.get(query.params), selectors.single(done, cleanData))
 
 // COMMANDS
 
@@ -55,7 +58,11 @@ const login = (runQuery, query, done) => {
   const data = query.data
   const email = data.email
   const password = data.password
-  get(runQuery, {email}, (err, user) => {
+  get(runQuery, {
+    params: {
+      email
+    }
+  }, (err, user) => {
     if(err) return done(err)
     if(!user) return done()
     done(null, tools.checkUserPassword(user, password) ? cleanData(user) : null)
@@ -73,7 +80,11 @@ const register = (runQuery, query, done) => {
   const data = query.data
   const userData = tools.generateUser(data)
   async.waterfall([
-    (next) => get(runQuery, { email: data.email }, next),
+    (next) => {
+      runQuery(QUERIES.get({ 
+        email: data.email
+      }), selectors.single(next))
+    },
     (existingUser, next) => {
       if(existingUser) return next(data.email + ' already exists')
       runQuery(QUERIES.insert(prepareData(userData)), selectors.single(next))

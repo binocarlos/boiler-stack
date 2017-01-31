@@ -1,0 +1,18 @@
+{
+  "resourceNode": {
+    "name": "top folder",
+    "type": "folder",
+    "labels": [["color","red"],["size","small"]],
+    "meta": {
+      "price": 10
+    }
+  },
+  "resourceTree": {
+    "name": "top folder",
+    "type": "folder",
+    "labels": [["color","red"],["size","small"]],
+    "meta": {
+      "price": 10
+    }
+  }
+}

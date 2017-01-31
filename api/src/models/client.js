@@ -61,14 +61,16 @@ order by
   }
 }
 
-const get = (runQuery, params, done) => runQuery(SQL.select('useraccount', params), selectors.single(done, UserModel.clean))
+const get = (runQuery, query, done) => runQuery(SQL.select('useraccount', query.params), selectors.single(done, UserModel.clean))
 
-//  * clientid
-//  * installationid
-const hasInstallation = (runQuery, params, done) => runQuery(QUERIES.hasInstallation(params.clientid, params.installationid), selectors.nonzero(done))
+//  * params
+//    * clientid
+//    * installationid
+const hasInstallation = (runQuery, query, done) => runQuery(QUERIES.hasInstallation(query.params.clientid, query.params.installationid), selectors.nonzero(done))
 
-//  * installationid
-const list = (runQuery, params, done) => runQuery(QUERIES.list(params.installationid), selectors.rows(done, UserModel.clean))
+//  * params
+//    * installationid
+const list = (runQuery, query, done) => runQuery(QUERIES.list(query.params.installationid), selectors.rows(done, UserModel.clean))
 
 //  * data
 //    * email

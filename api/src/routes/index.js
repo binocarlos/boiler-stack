@@ -9,6 +9,7 @@ const Version = require('./version')
 const Auth = require('./auth')
 const Installations = require('./installation')
 const Clients = require('./client')
+const Resources = require('./resource')
 
 const Routes = (base, controllers) => (app) => {
   
@@ -37,6 +38,7 @@ const Routes = (base, controllers) => (app) => {
   const auth = Auth(controllers)
   const installations = Installations(controllers)
   const clients = Clients(controllers)
+  const resources = Resources(controllers)
 
   // utils
   get('/version', version)
@@ -69,6 +71,13 @@ const Routes = (base, controllers) => (app) => {
   get('/clients/:id', access.client(), clients.get)
   put('/clients/:id', access.client('editor'), clients.save)
   del('/clients/:id', access.client('editor'), clients.delete)
+
+  // resource
+  get('/resources', access.installation(), resources.list)
+  post('/resources', access.installation('editor'), resources.create)
+  get('/resources/:id', access.installation_link('resource'), resources.get)
+  put('/resources/:id', access.installation_link('resource', 'editor'), resources.save)
+  del('/resources/:id', access.installation_link('resource', 'editor'), resources.delete)
 }
 
 module.exports = Routes

@@ -7,7 +7,7 @@ const QUERIES = {
   insert: (data) => SQL.insert('commandlog', data)
 }
 
-const create = (runQuery, data, done) => runQuery(QUERIES.insert(data), selectors.single(done))
+const create = (runQuery, query, done) => runQuery(QUERIES.insert(query.data), selectors.single(done))
 
 module.exports = {
   create

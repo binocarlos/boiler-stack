@@ -241,6 +241,20 @@ const deleteClient = (installation, id, next) => {
   }, wrapResult(next))
 }
 
+const createResource = (installation, data, next) => {
+  if(process.env.TRACE_TEST) {
+    console.log('creatResource')
+  }
+  request({
+    method: 'POST',
+    url: url('/api/v1/resources'),
+    qs: {
+      i: installation
+    },
+    headers: headers(),
+    json: data
+  }, wrapResult(next))
+}
 
 module.exports = {
   UserData,
@@ -264,5 +278,6 @@ module.exports = {
   getClient,
   newClientData,
   saveClient,
-  deleteClient
+  deleteClient,
+  createResource
 }

@@ -11,7 +11,7 @@ const UserController = (eventBus) => {
 
   // params
   //  * {email,id}
-  const get = (db, params, done) => UserModel.getClean(db.run, params, done)
+  const get = (db, query, done) => UserModel.getClean(db.run, query, done)
 
   // COMMANDS
 
@@ -43,7 +43,9 @@ const UserController = (eventBus) => {
 
       (result, next) => {
         UserModel.getClean(db.run, {
-          id: result.id
+          params: {
+            id: result.id  
+          }
         }, next)
       }
 

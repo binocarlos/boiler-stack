@@ -14,7 +14,9 @@ function Clients(controllers) {
 
   const get = (req, res, error) => {
     clients.get(connection(req.id, req.userid), {
-      id: req.params.id
+      params: {
+        id: req.params.id
+      }
     }, tools.jsonCallback(res, error))
   }
 
@@ -22,7 +24,9 @@ function Clients(controllers) {
 
   const list = (req, res, error) => {
     clients.list(connection(req.id, req.userid), {
-      installationid: req.installationid
+      params: {
+        installationid: req.installationid
+      }
     }, tools.jsonCallback(res, error))
   }
 

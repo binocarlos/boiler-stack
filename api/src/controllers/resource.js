@@ -3,43 +3,35 @@
 const async = require('async')
 const tools = require('../tools')
 
-const ClientModel = require('../models/client')
-const UserModel = require('../models/user')
+const ResourceModel = require('../models/resource')
 
-const ClientController = (eventBus) => {
+const ResourceController = (eventBus) => {
   
   // queries
-  const get = (db, query, done) => ClientModel.get(db.run, query, done)
-  const list = (db, query, done) => ClientModel.list(db.run, query, done)
-  const hasInstallation = (db, query, done) => ClientModel.hasInstallation(db.run, query, done)
+  const get = (db, query, done) => ResourceModel.get(db.run, query, done)
+  const list = (db, query, done) => ResourceModel.list(db.run, query, done)
 
-  // data for a new client
-  const newData = () => {
-    return {
-      email: tools.getRandomEmail(),
-      password: tools.getRandomPassword()
-    }
-  }
-  
   // commands
   //   * params
   //     * installationid
   //   * data
-  //     * email
-  //     * password
+  //     * name
+  //     * type
+  //     * labels[][]
   //     * meta
+  //     * children[resource]
   const create = (db, query, done) => {
 
     async.waterfall([
 
       (next) => {
-        ClientModel.create(db.run, query, next)
+        ResourceModel.create(db.run, query, next)
       },
 
       (result, next) => {
         eventBus.emit(db, {
           type: 'command',
-          channel: 'client.create',
+          channel: 'resource.create',
           query,
           result
         }, next)
@@ -56,13 +48,13 @@ const ClientController = (eventBus) => {
     async.waterfall([
 
       (next) => {
-        ClientModel.save(db.run, query, next)
+        ResourceModel.save(db.run, query, next)
       },
 
       (result, next) => {
         eventBus.emit(db, {
           type: 'command',
-          channel: 'client.save',
+          channel: 'resource.save',
           query,
           result
         }, next)
@@ -75,13 +67,13 @@ const ClientController = (eventBus) => {
     async.waterfall([
 
       (next) => {
-        ClientModel.delete(db.run, query, next)
+        ResourceModel.delete(db.run, query, next)
       },
 
       (result, next) => {
         eventBus.emit(db, {
           type: 'command',
-          channel: 'client.delete',
+          channel: 'resource.delete',
           query,
           result
         }, next)
@@ -91,9 +83,7 @@ const ClientController = (eventBus) => {
   }
 
   return {
-    newData: newData,
     get: get,
-    hasInstallation,
     list,
     create,
     save,
@@ -101,4 +91,4 @@ const ClientController = (eventBus) => {
   }
 }
 
-module.exports = ClientController
+module.exports = ResourceController

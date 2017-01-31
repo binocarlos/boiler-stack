@@ -54,6 +54,7 @@ tape('acceptance - register', (t) => {
   })
 })
 
+
 tape('acceptance - status', (t) => {
   const userData = tools.UserData()
 

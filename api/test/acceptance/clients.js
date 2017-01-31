@@ -21,7 +21,7 @@ const createClient = (userData, done) => {
     user: (next) => tools.register(userData, next),
     clientData: (next) => tools.newClientData(next)
   }, (err, results) => {
-    if(err) t.error(err)
+    if(err) return done(err)
 
     const user = results.user.body.data
     const installationid = user.meta.activeInstallation 
@@ -46,6 +46,7 @@ tape('acceptance - default client data', (t) => {
     user: (nextp) => tools.register(userData, nextp),
     client: (nextp) => tools.newClientData(nextp)
   }, (err, results) => {
+    if(err) t.error(err)
     const data = results.client.body
     t.ok(data.email.indexOf('@') > 0, 'we have a client email')
     t.equal(typeof(data.password), 'string', 'default password is string')

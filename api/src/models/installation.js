@@ -54,17 +54,17 @@ order by
   }
 }
 
-const get = (runQuery, params, done) => runQuery(QUERIES.get(params), selectors.single(done))
+const get = (runQuery, query, done) => runQuery(QUERIES.get(query.params), selectors.single(done))
 
-const accessLevel = (runQuery, params, done) => {
+const accessLevel = (runQuery, query, done) => {
   runQuery(QUERIES.getCollaboration({
-    useraccount: params.accountid,
-    installation: params.installationid
+    useraccount: query.params.accountid,
+    installation: query.params.installationid
   }), selectors.field('permission', done))
 }
 
 //  * accountid
-const byUser = (runQuery, params, done) => runQuery(QUERIES.byUser(params.accountid), selectors.rows(done))
+const byUser = (runQuery, query, done) => runQuery(QUERIES.byUser(query.params.accountid), selectors.rows(done))
 
 //  * data
 //    * name

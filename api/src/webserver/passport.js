@@ -15,7 +15,9 @@ function Passport(controllers) {
   })
   passport.deserializeUser((req, id, done) => {
     users.get(connection(req.id, id), {
-      id
+      params: {
+        id  
+      }
     }, (err, user) => {
       if(err){
         logger.error('deserializeUser', req.id, {

@@ -19,6 +19,15 @@ create table "collaboration" (
   "permission"        text not null
 );
 
+create table "resource" (
+  "id"                serial primary key not null,
+  "installation"      int references "installation" (id) on delete cascade,
+  "name"              text not null,
+  "type"              text not null,
+  "labels"            text[][],
+  "meta"              json
+);
+
 create table "job" (
   "id"                serial primary key not null,
   "installation"      int references "installation" (id) on delete cascade,
@@ -28,6 +37,7 @@ create table "job" (
 
 create table "job_access" (
   "id"                serial primary key not null,
+  "installation"      int references "installation" (id) on delete cascade,
   "useraccount"       int references "useraccount" (id)  on delete cascade,
   "job"               int references "job" (id) on delete cascade,
   "permission"        text not null

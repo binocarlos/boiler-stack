@@ -15,7 +15,9 @@ const CommandLogController = (eventBus) => {
   //  * data
   const create = (db, query, done) => {
     CommandLogModel.create(db.run, {
-      data: JSON.stringify(query.data)
+      data: {
+        data: JSON.stringify(query.data)
+      }
     }, done)
   }
 
