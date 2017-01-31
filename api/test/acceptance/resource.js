@@ -88,6 +88,21 @@ tape('acceptance - list resources', (t) => {
   })
 })
 
+tape('acceptance - list resources - no installation id', (t) => {
+  const userData = tools.UserData()
+
+  createSingleResource(userData, (err, base) => {
+
+    tools.listResources(null, (err, results) => {
+
+      t.equal(results.statusCode, 403, '403 status no installation id')
+      
+      t.end()
+    })
+
+  })
+})
+
 tape('acceptance - save resource', (t) => {
 
   const userData = tools.UserData()
@@ -110,6 +125,30 @@ tape('acceptance - save resource', (t) => {
 
   })
 
+})
+
+tape('acceptance - save resource - no installation id', (t) => {
+
+  const userData = tools.UserData()
+
+  createSingleResource(userData, (err, base) => {
+
+    let resource = base.folder.body
+    const resourceid = resource.id
+    delete(resource.id)
+
+    resource.meta.height = 20
+
+    tools.saveResource(null, resourceid, resource, (err, results) => {
+
+      t.equal(results.statusCode, 403, '403 status no installation id')
+      
+      t.end()
+    })
+
+  })
+
+  
 })
 
 tape('acceptance - delete resource', (t) => {
@@ -136,6 +175,59 @@ tape('acceptance - delete resource', (t) => {
 
     t.equal(delresults.statusCode, 200, '200 code')
     t.equal(delresults.body.length, 0, 'no resources in list')
+
+    t.end()
+  })
+
+  
+})
+
+tape('acceptance - cross installation get resource', (t) => {
+
+  const userData1 = tools.UserData('bob1')
+  const userData2 = tools.UserData('bob2')
+
+  let users = null
+
+  async.waterfall([
+
+    (next) => {
+      async.series({
+        user1: (unext) => createSingleResource(userData1, unext),
+        user2: (unext) => createSingleResource(userData2, unext)
+      }, next)
+    },
+
+    (results, next) => {
+      const installationid1 = results.user1.user.meta.activeInstallation
+      const installationid2 = results.user2.user.meta.activeInstallation
+      const resourceid1 = results.user1.folder.body.id
+      const resourceid2 = results.user2.folder.body.id
+
+      users = {
+        installationid1,
+        installationid2,
+        resourceid1,
+        resourceid2
+      }
+
+      tools.login(userData1, next)
+    },
+
+    (login, next) => {
+
+      async.series({
+        canaccess: (nexts) => tools.getResource(users.installationid1, users.resourceid1, nexts),
+        cantaccess: (nexts) => tools.getResource(users.installationid1, users.resourceid2, nexts),
+      }, next)
+
+    }
+
+  ], (err, results) => {
+    if(err) t.error(err)
+
+    t.equal(results.canaccess.statusCode, 200, '200 can access')
+    t.equal(results.cantaccess.statusCode, 403, '403 cant access')
 
     t.end()
   })
