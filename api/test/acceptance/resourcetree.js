@@ -68,3 +68,29 @@ tape('acceptance - create resource tree', (t) => {
     t.end()
   })
 })
+
+tape('acceptance - delete resource tree', (t) => {
+  const userData = tools.UserData()
+
+  createResourceTree(userData, (err, base) => {
+
+    const topfolder = base.folder.body
+    const middlefolder = topfolder.children[0]
+    const lowerfolder = middlefolder.children[0]
+
+    async.series({
+      delete: (next) => tools.deleteResource(base.installationid, middlefolder.id, next),
+      list: (next) => tools.listResources(base.installationid, next)
+    }, (err, results) => {
+      if(err) t.error(err)
+
+      t.equal(results.delete.statusCode, 200, 'delete 200 code')
+      t.equal(results.list.statusCode, 200, 'list 200 code')
+      t.equal(results.list.body.length, 1, 'only 1 resource left')
+      t.equal(results.list.body[0].id, topfolder.id, 'only topfolder resource left')
+      
+      t.end()
+    })
+
+  })
+})
